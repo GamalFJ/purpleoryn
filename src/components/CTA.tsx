@@ -1,9 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Zap } from "lucide-react";
-
 const CTA = () => {
-  return (
-    <section className="py-24 relative overflow-hidden">
+  return <section className="py-24 relative overflow-hidden">
       {/* Background glow */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/10 rounded-full blur-3xl" />
@@ -29,22 +27,15 @@ const CTA = () => {
               Stop wasting time on repetitive tasks. Let's automate your workflows and scale your business with AI-powered systems.
             </p>
             
-            <Button 
-              variant="hero" 
-              size="xl"
-              className="group"
-              asChild
-            >
-              <a href="https://www.fiverr.com" target="_blank" rel="noopener noreferrer">
-                Hire Me on Fiverr
+            <Button variant="hero" size="xl" className="group" asChild>
+              <a target="_blank" rel="noopener noreferrer" href="http://www.fiverr.com/s/qDBW55d">
+                Let's Get Started  
                 <ArrowRight className="w-5 h-5 ml-1 group-hover:translate-x-1 transition-transform" />
               </a>
             </Button>
           </div>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default CTA;
