@@ -1,5 +1,12 @@
 import { useState } from "react";
 import workflowImage from "@/assets/arkytek-workflow.png";
+import servicesImage from "@/assets/arkytek-services.png";
+import formImage from "@/assets/arkytek-form.png";
+import docs1Image from "@/assets/arkytek-docs-1.png";
+import docs3Image from "@/assets/arkytek-docs-3.jpg";
+import docs4Image from "@/assets/arkytek-docs-4.jpg";
+import heroImage from "@/assets/arkytek-hero.png";
+import projectsImage from "@/assets/arkytek-projects.png";
 import { CheckCircle2, X, ChevronLeft, ChevronRight, ZoomIn } from "lucide-react";
 import {
   Dialog,
@@ -9,9 +16,44 @@ import {
 
 const caseStudyImages = [
   {
+    src: heroImage,
+    alt: "ArKyTeK website hero section",
+    caption: "ArKyTeK Landing Page"
+  },
+  {
     src: workflowImage,
     alt: "ArKyTeK automation workflow diagram showing form submission, Airtable integration, and email automation",
     caption: "Main Workflow Diagram"
+  },
+  {
+    src: servicesImage,
+    alt: "ArKyTeK services section showing interior design, renovation, and architectural services",
+    caption: "Services Section"
+  },
+  {
+    src: projectsImage,
+    alt: "ArKyTeK project types including residential, cafe, salon, and more",
+    caption: "Project Categories"
+  },
+  {
+    src: formImage,
+    alt: "ArKyTeK client intake form for project submissions",
+    caption: "Client Intake Form"
+  },
+  {
+    src: docs1Image,
+    alt: "ArKyTeK documentation guide header",
+    caption: "Documentation Guide"
+  },
+  {
+    src: docs3Image,
+    alt: "ArKyTeK troubleshooting documentation",
+    caption: "Troubleshooting Guide"
+  },
+  {
+    src: docs4Image,
+    alt: "ArKyTeK support contact information",
+    caption: "Support & Assistance"
   }
 ];
 
@@ -45,7 +87,7 @@ const CaseStudy = () => {
   return (
     <section id="portfolio" className="py-24 relative">
       {/* Background accent */}
-      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1/3 h-96 bg-primary/5 blur-3xl rounded-full" />
+      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1/3 h-96 bg-primary/3 blur-3xl rounded-full" />
       
       <div className="container mx-auto px-6 relative">
         <div className="text-center mb-16">
@@ -95,33 +137,29 @@ const CaseStudy = () => {
           
           {/* Image Gallery */}
           <div className="order-1 lg:order-2">
-            <div className="grid gap-4">
+            <div className="grid grid-cols-2 gap-3">
               {caseStudyImages.map((image, index) => (
                 <div 
                   key={index}
-                  className="glass-card p-3 relative group cursor-pointer"
+                  className="glass-card p-2 relative group cursor-pointer aspect-video"
                   onClick={() => openLightbox(index)}
                 >
-                  <div className="absolute -inset-1 bg-gradient-to-r from-primary/10 to-accent/10 rounded-2xl blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  <div className="relative overflow-hidden rounded-xl">
+                  <div className="relative overflow-hidden rounded-lg h-full">
                     <img 
                       src={image.src}
                       alt={image.alt}
-                      className="w-full rounded-xl transition-transform duration-300 group-hover:scale-[1.02]"
+                      className="w-full h-full object-cover rounded-lg transition-transform duration-300 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-background/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                      <div className="flex items-center gap-2 text-foreground font-medium">
-                        <ZoomIn className="w-5 h-5" />
-                        <span>Click to enlarge</span>
-                      </div>
+                      <ZoomIn className="w-6 h-6 text-foreground" />
                     </div>
                   </div>
-                  {image.caption && (
-                    <p className="text-sm text-muted-foreground mt-2 text-center">{image.caption}</p>
-                  )}
                 </div>
               ))}
             </div>
+            <p className="text-sm text-muted-foreground mt-4 text-center">
+              Click any image to enlarge
+            </p>
           </div>
         </div>
       </div>
@@ -137,42 +175,36 @@ const CaseStudy = () => {
           {selectedImageIndex !== null && (
             <div className="relative flex items-center justify-center p-4">
               {/* Navigation arrows */}
-              {caseStudyImages.length > 1 && (
-                <>
-                  <button
-                    onClick={(e) => { e.stopPropagation(); goToPrevious(); }}
-                    className="absolute left-4 z-50 p-2 rounded-full bg-background/80 hover:bg-background border border-glass-border transition-colors"
-                  >
-                    <ChevronLeft className="w-6 h-6" />
-                  </button>
-                  <button
-                    onClick={(e) => { e.stopPropagation(); goToNext(); }}
-                    className="absolute right-4 z-50 p-2 rounded-full bg-background/80 hover:bg-background border border-glass-border transition-colors"
-                  >
-                    <ChevronRight className="w-6 h-6" />
-                  </button>
-                </>
-              )}
+              <button
+                onClick={(e) => { e.stopPropagation(); goToPrevious(); }}
+                className="absolute left-4 z-50 p-2 rounded-full bg-background/80 hover:bg-background border border-glass-border transition-colors"
+              >
+                <ChevronLeft className="w-6 h-6" />
+              </button>
+              <button
+                onClick={(e) => { e.stopPropagation(); goToNext(); }}
+                className="absolute right-14 z-50 p-2 rounded-full bg-background/80 hover:bg-background border border-glass-border transition-colors"
+              >
+                <ChevronRight className="w-6 h-6" />
+              </button>
               
               {/* Image */}
-              <div className="flex flex-col items-center">
+              <div className="flex flex-col items-center max-w-4xl">
                 <img
                   src={caseStudyImages[selectedImageIndex].src}
                   alt={caseStudyImages[selectedImageIndex].alt}
-                  className="max-w-full max-h-[80vh] object-contain rounded-lg"
+                  className="max-w-full max-h-[75vh] object-contain rounded-lg"
                 />
                 {caseStudyImages[selectedImageIndex].caption && (
-                  <p className="text-muted-foreground mt-4 text-center">
+                  <p className="text-foreground font-medium mt-4 text-center">
                     {caseStudyImages[selectedImageIndex].caption}
                   </p>
                 )}
                 
                 {/* Image counter */}
-                {caseStudyImages.length > 1 && (
-                  <p className="text-sm text-muted-foreground mt-2">
-                    {selectedImageIndex + 1} / {caseStudyImages.length}
-                  </p>
-                )}
+                <p className="text-sm text-muted-foreground mt-2">
+                  {selectedImageIndex + 1} / {caseStudyImages.length}
+                </p>
               </div>
             </div>
           )}
