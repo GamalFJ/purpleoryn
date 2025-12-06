@@ -32,8 +32,8 @@ const Hero = () => {
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-fade-in-delay-3">
               <Button variant="hero" size="xl" asChild>
-                <a href="https://www.fiverr.com" target="_blank" rel="noopener noreferrer">
-                  Hire Me on Fiverr
+                <a target="_blank" rel="noopener noreferrer" href="http://www.fiverr.com/s/qDBW55d">
+                  Let's Get Started  
                   <ArrowRight className="w-5 h-5 ml-1" />
                 </a>
               </Button>
