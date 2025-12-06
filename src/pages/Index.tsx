@@ -5,6 +5,7 @@ import CaseStudy from "@/components/CaseStudy";
 import Process from "@/components/Process";
 import WhyUs from "@/components/WhyUs";
 import CTA from "@/components/CTA";
+import Newsletter from "@/components/Newsletter";
 import Footer from "@/components/Footer";
 import backgroundImage from "@/assets/background.png";
 
@@ -33,6 +34,7 @@ const Index = () => {
           <Process />
           <WhyUs />
           <CTA />
+          <Newsletter />
         </main>
         <Footer />
       </div>

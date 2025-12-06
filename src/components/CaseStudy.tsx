@@ -1,7 +1,47 @@
+import { useState } from "react";
 import workflowImage from "@/assets/arkytek-workflow.png";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, X, ChevronLeft, ChevronRight, ZoomIn } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogClose,
+} from "@/components/ui/dialog";
+
+const caseStudyImages = [
+  {
+    src: workflowImage,
+    alt: "ArKyTeK automation workflow diagram showing form submission, Airtable integration, and email automation",
+    caption: "Main Workflow Diagram"
+  }
+];
 
 const CaseStudy = () => {
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
+
+  const openLightbox = (index: number) => {
+    setSelectedImageIndex(index);
+  };
+
+  const closeLightbox = () => {
+    setSelectedImageIndex(null);
+  };
+
+  const goToPrevious = () => {
+    if (selectedImageIndex !== null) {
+      setSelectedImageIndex(
+        selectedImageIndex === 0 ? caseStudyImages.length - 1 : selectedImageIndex - 1
+      );
+    }
+  };
+
+  const goToNext = () => {
+    if (selectedImageIndex !== null) {
+      setSelectedImageIndex(
+        selectedImageIndex === caseStudyImages.length - 1 ? 0 : selectedImageIndex + 1
+      );
+    }
+  };
+
   return (
     <section id="portfolio" className="py-24 relative">
       {/* Background accent */}
@@ -15,7 +55,7 @@ const CaseStudy = () => {
           </h2>
         </div>
         
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="grid lg:grid-cols-2 gap-12 items-start">
           {/* Content */}
           <div className="space-y-8 order-2 lg:order-1">
             <div className="glass-card p-6">
@@ -53,19 +93,91 @@ const CaseStudy = () => {
             </div>
           </div>
           
-          {/* Workflow Image */}
+          {/* Image Gallery */}
           <div className="order-1 lg:order-2">
-            <div className="glass-card p-4 relative group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 to-accent/20 rounded-2xl blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <img 
-                src={workflowImage}
-                alt="ArKyTeK automation workflow diagram showing form submission, Airtable integration, and email automation"
-                className="relative w-full rounded-xl"
-              />
+            <div className="grid gap-4">
+              {caseStudyImages.map((image, index) => (
+                <div 
+                  key={index}
+                  className="glass-card p-3 relative group cursor-pointer"
+                  onClick={() => openLightbox(index)}
+                >
+                  <div className="absolute -inset-1 bg-gradient-to-r from-primary/10 to-accent/10 rounded-2xl blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="relative overflow-hidden rounded-xl">
+                    <img 
+                      src={image.src}
+                      alt={image.alt}
+                      className="w-full rounded-xl transition-transform duration-300 group-hover:scale-[1.02]"
+                    />
+                    <div className="absolute inset-0 bg-background/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                      <div className="flex items-center gap-2 text-foreground font-medium">
+                        <ZoomIn className="w-5 h-5" />
+                        <span>Click to enlarge</span>
+                      </div>
+                    </div>
+                  </div>
+                  {image.caption && (
+                    <p className="text-sm text-muted-foreground mt-2 text-center">{image.caption}</p>
+                  )}
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </div>
+
+      {/* Lightbox Modal */}
+      <Dialog open={selectedImageIndex !== null} onOpenChange={closeLightbox}>
+        <DialogContent className="max-w-[95vw] max-h-[95vh] p-0 bg-background/95 backdrop-blur-xl border-glass-border">
+          <DialogClose className="absolute right-4 top-4 z-50 rounded-full p-2 bg-background/80 hover:bg-background border border-glass-border transition-colors">
+            <X className="h-5 w-5" />
+            <span className="sr-only">Close</span>
+          </DialogClose>
+          
+          {selectedImageIndex !== null && (
+            <div className="relative flex items-center justify-center p-4">
+              {/* Navigation arrows */}
+              {caseStudyImages.length > 1 && (
+                <>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); goToPrevious(); }}
+                    className="absolute left-4 z-50 p-2 rounded-full bg-background/80 hover:bg-background border border-glass-border transition-colors"
+                  >
+                    <ChevronLeft className="w-6 h-6" />
+                  </button>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); goToNext(); }}
+                    className="absolute right-4 z-50 p-2 rounded-full bg-background/80 hover:bg-background border border-glass-border transition-colors"
+                  >
+                    <ChevronRight className="w-6 h-6" />
+                  </button>
+                </>
+              )}
+              
+              {/* Image */}
+              <div className="flex flex-col items-center">
+                <img
+                  src={caseStudyImages[selectedImageIndex].src}
+                  alt={caseStudyImages[selectedImageIndex].alt}
+                  className="max-w-full max-h-[80vh] object-contain rounded-lg"
+                />
+                {caseStudyImages[selectedImageIndex].caption && (
+                  <p className="text-muted-foreground mt-4 text-center">
+                    {caseStudyImages[selectedImageIndex].caption}
+                  </p>
+                )}
+                
+                {/* Image counter */}
+                {caseStudyImages.length > 1 && (
+                  <p className="text-sm text-muted-foreground mt-2">
+                    {selectedImageIndex + 1} / {caseStudyImages.length}
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </section>
   );
 };
