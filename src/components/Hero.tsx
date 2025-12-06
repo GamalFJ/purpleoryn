@@ -1,13 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
 import founder from "@/assets/founder.png";
-
 const Hero = () => {
-  return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+  return <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
       {/* Background gradient orbs */}
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-glow-pulse" />
-      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-accent/15 rounded-full blur-3xl animate-glow-pulse" style={{ animationDelay: "1.5s" }} />
+      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-accent/15 rounded-full blur-3xl animate-glow-pulse" style={{
+      animationDelay: "1.5s"
+    }} />
       
       <div className="container mx-auto px-6 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -31,22 +31,14 @@ const Hero = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-fade-in-delay-3">
-              <Button 
-                variant="hero" 
-                size="xl"
-                asChild
-              >
+              <Button variant="hero" size="xl" asChild>
                 <a href="https://www.fiverr.com" target="_blank" rel="noopener noreferrer">
                   Hire Me on Fiverr
                   <ArrowRight className="w-5 h-5 ml-1" />
                 </a>
               </Button>
               
-              <Button 
-                variant="glass" 
-                size="xl"
-                asChild
-              >
+              <Button variant="glass" size="xl" asChild>
                 <a href="#portfolio">
                   See Portfolio
                 </a>
@@ -59,11 +51,7 @@ const Hero = () => {
             <div className="absolute inset-0 bg-gradient-to-b from-primary/20 via-transparent to-transparent rounded-full blur-2xl" />
             <div className="relative">
               <div className="absolute -inset-4 bg-gradient-to-r from-primary/30 to-accent/30 rounded-full blur-xl animate-glow-pulse" />
-              <img 
-                src={founder} 
-                alt="Gamal Jastram - Founder of Purple Cove Labs"
-                className="relative z-10 w-80 h-auto object-contain animate-float"
-              />
+              <img alt="Gamal Jastram - Founder of Purple Cove Labs" className="relative z-10 w-80 h-auto object-contain animate-float border-glass-bg" src="/lovable-uploads/535ca5fb-7b62-459d-8d0b-dbc04db5be63.png" />
             </div>
           </div>
         </div>
@@ -75,8 +63,6 @@ const Hero = () => {
           <div className="w-1 h-3 bg-primary rounded-full animate-pulse" />
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default Hero;
