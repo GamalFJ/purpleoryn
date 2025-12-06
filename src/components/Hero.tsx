@@ -3,10 +3,10 @@ import { ArrowRight, Sparkles } from "lucide-react";
 import founder from "@/assets/founder.png";
 const Hero = () => {
   return <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-      {/* Background gradient orbs - soft glow */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-glow-pulse" />
-      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-accent/8 rounded-full blur-3xl animate-glow-pulse" style={{
-      animationDelay: "2s"
+      {/* Background gradient orbs - very soft ambient glow */}
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-glow-pulse" />
+      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-accent/5 rounded-full blur-3xl animate-glow-pulse" style={{
+      animationDelay: "3s"
     }} />
       
       <div className="container mx-auto px-6 relative z-10">
@@ -48,9 +48,9 @@ const Hero = () => {
           
           {/* Right content - Founder image */}
           <div className="relative hidden lg:flex justify-center items-center">
-            <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-transparent to-transparent rounded-full blur-2xl" />
+            <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent rounded-full blur-2xl" />
             <div className="relative">
-              <div className="absolute -inset-4 bg-gradient-to-r from-primary/15 to-accent/15 rounded-full blur-2xl animate-glow-pulse" />
+              <div className="absolute -inset-4 bg-gradient-to-r from-primary/8 to-accent/8 rounded-full blur-3xl animate-glow-pulse" />
               <img alt="Gamal Jastram - Founder of Purple Cove Labs" src="/lovable-uploads/535ca5fb-7b62-459d-8d0b-dbc04db5be63.png" className="relative z-10 w-[28rem] h-auto animate-float border-glass-bg object-fill" />
             </div>
           </div>
