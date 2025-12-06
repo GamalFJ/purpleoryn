@@ -1,6 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import coveConnectImage from "@/assets/cove-connect.png";
+import coveConnectBanner from "@/assets/cove-connect-banner.png";
 const Newsletter = () => {
   return <section className="py-24 relative">
       {/* Background accent */}
@@ -14,8 +14,8 @@ const Newsletter = () => {
             <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-accent/10 rounded-full blur-3xl" />
             
             <div className="relative z-10">
-              <div className="w-24 h-24 rounded-xl overflow-hidden mb-6">
-                <img src={coveConnectImage} alt="Cove Connect Newsletter" className="w-full h-full object-cover" />
+              <div className="w-full max-w-lg rounded-xl overflow-hidden mb-6">
+                <img src={coveConnectBanner} alt="Cove Connect Newsletter" className="w-full h-auto object-cover" />
               </div>
               
               <h2 className="text-2xl md:text-3xl font-bold mb-4">
