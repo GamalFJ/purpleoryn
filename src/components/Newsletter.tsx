@@ -25,7 +25,7 @@ const Newsletter = () => {
               <p className="text-muted-foreground mb-8 max-w-lg mx-auto">Get exclusive insights on AI automation, business systems, product updates and  practical tips to scale your operations. Join the Cove Crew            </p>
               
               <Button variant="hero" size="xl" asChild className="btn-glow">
-                <a target="_blank" rel="noopener noreferrer" href="https://coveconnect.substack.com/" className="bg-[#f65c0f]">
+                <a target="_blank" rel="noopener noreferrer" href="https://coveconnect.substack.com/" className="bg-[#f65c10]">
                   Subscribe to Cove Connect  
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </a>
