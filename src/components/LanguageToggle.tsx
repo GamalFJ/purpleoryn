@@ -40,7 +40,7 @@ const LanguageToggle = () => {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-36 rounded-xl glass-card border border-glass-border/50 bg-card shadow-lg z-50 overflow-hidden animate-fade-in">
+        <div className="absolute right-0 mt-2 w-44 rounded-xl glass-card border border-glass-border/50 bg-card shadow-lg z-50 overflow-hidden animate-fade-in">
           {languages.map((lang) => (
             <button
               key={lang.code}
@@ -52,8 +52,8 @@ const LanguageToggle = () => {
                 language === lang.code ? "bg-primary/15 text-primary" : "text-foreground"
               }`}
             >
-              <span className="font-semibold">{lang.label}</span>
-              <span className="text-muted-foreground text-xs">{lang.fullName}</span>
+              <span className="font-semibold flex-shrink-0">{lang.label}</span>
+              <span className="text-muted-foreground text-xs whitespace-nowrap">{lang.fullName}</span>
             </button>
           ))}
         </div>
