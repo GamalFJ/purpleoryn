@@ -19,7 +19,7 @@ interface Testimonial {
 
 const defaultTestimonials: Omit<Testimonial, "id" | "created_at">[] = [
   {
-    name: "Marcus Chen",
+    name: "Kathleen P. Thomas",
     role: "CEO",
     company: "TechFlow Solutions",
     quote: "Purple Cove Labs delivered an AI system that cut our manual processing time by 80%. The multi-agent architecture they built handles our entire client onboarding now.",
