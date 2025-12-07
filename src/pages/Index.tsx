@@ -6,6 +6,7 @@ import OngoingBuilds from "@/components/OngoingBuilds";
 import Process from "@/components/Process";
 import WhyUs from "@/components/WhyUs";
 import Pricing from "@/components/Pricing";
+import Testimonials from "@/components/Testimonials";
 import CTA from "@/components/CTA";
 import Newsletter from "@/components/Newsletter";
 import Footer from "@/components/Footer";
@@ -37,6 +38,7 @@ const Index = () => {
           <Process />
           <WhyUs />
           <Pricing />
+          <Testimonials />
           <CTA />
           <Newsletter />
         </main>
