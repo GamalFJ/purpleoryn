@@ -1,39 +1,42 @@
 import { Bot, Code2, Rocket, Wrench } from "lucide-react";
-
-const services = [
-  {
-    icon: Bot,
-    title: "AI Automation Pipelines",
-    description: "Multi-agent workflows and intelligent backend logic that handle complex business processes autonomously."
-  },
-  {
-    icon: Code2,
-    title: "Custom Web Apps & Dashboards",
-    description: "Full-stack applications with beautiful frontends, robust backends, data integrations, and API connections."
-  },
-  {
-    icon: Rocket,
-    title: "Tool Productization & Onboarding",
-    description: "Professional landing pages, seamless user flows, CRM integrations, and staging environments."
-  },
-  {
-    icon: Wrench,
-    title: "Maintenance & Scaling Support",
-    description: "Ongoing monitoring, updates, and scalability solutions to grow with your business needs."
-  }
-];
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Services = () => {
+  const { t } = useLanguage();
+
+  const services = [
+    {
+      icon: Bot,
+      titleKey: "services.items.aiPipelines.title",
+      descriptionKey: "services.items.aiPipelines.description",
+    },
+    {
+      icon: Code2,
+      titleKey: "services.items.webApps.title",
+      descriptionKey: "services.items.webApps.description",
+    },
+    {
+      icon: Rocket,
+      titleKey: "services.items.productization.title",
+      descriptionKey: "services.items.productization.description",
+    },
+    {
+      icon: Wrench,
+      titleKey: "services.items.maintenance.title",
+      descriptionKey: "services.items.maintenance.description",
+    },
+  ];
+
   return (
     <section id="services" className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 relative">
       <div className="container mx-auto max-w-6xl">
         {/* Section header */}
         <div className="text-center mb-10 sm:mb-16">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
-            What I <span className="gradient-text">Build</span>
+            {t("services.title")} <span className="gradient-text">{t("services.titleHighlight")}</span>
           </h2>
           <p className="text-muted-foreground text-sm sm:text-base md:text-lg max-w-2xl mx-auto">
-            End-to-end AI solutions and automation systems that transform how your business operates.
+            {t("services.subtitle")}
           </p>
         </div>
         
@@ -41,7 +44,7 @@ const Services = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {services.map((service, index) => (
             <article 
-              key={service.title}
+              key={service.titleKey}
               className="glass-card-hover p-5 sm:p-6 md:p-8 group"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
@@ -53,11 +56,11 @@ const Services = () => {
               </div>
               
               <h3 className="text-lg sm:text-xl font-semibold mb-2 sm:mb-3 text-foreground group-hover:text-primary transition-colors duration-300">
-                {service.title}
+                {t(service.titleKey)}
               </h3>
               
               <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">
-                {service.description}
+                {t(service.descriptionKey)}
               </p>
             </article>
           ))}

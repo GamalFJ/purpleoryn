@@ -1,7 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Zap } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const CTA = () => {
+  const { t } = useLanguage();
+
   return (
     <section className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 relative overflow-hidden">
       {/* Background glow */}
@@ -17,21 +20,21 @@ const CTA = () => {
           <div className="relative z-10">
             <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-primary/10 border border-primary/30 text-primary text-xs sm:text-sm font-medium mb-4 sm:mb-6">
               <Zap className="w-3 h-3 sm:w-4 sm:h-4" />
-              Let's Build Something Great
+              {t("cta.badge")}
             </div>
             
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6">
-              Ready to Turn Chaos <br className="hidden sm:block" />
-              <span className="gradient-text neon-text">into a System?</span>
+              {t("cta.title")} <br className="hidden sm:block" />
+              <span className="gradient-text neon-text">{t("cta.titleHighlight")}</span>
             </h2>
             
             <p className="text-muted-foreground text-sm sm:text-base md:text-lg mb-6 sm:mb-8 md:mb-10 max-w-xl mx-auto">
-              Stop wasting time on repetitive tasks. Let's automate your workflows and scale your business with AI-powered systems.
+              {t("cta.subtitle")}
             </p>
             
             <Button variant="hero" size="xl" className="group w-full sm:w-auto min-h-[48px]" asChild>
               <a target="_blank" rel="noopener noreferrer" href="http://www.fiverr.com/s/qDBW55d">
-                Let's Get Started  
+                {t("cta.button")}
                 <ArrowRight className="w-5 h-5 ml-1 group-hover:translate-x-1 transition-transform" />
               </a>
             </Button>

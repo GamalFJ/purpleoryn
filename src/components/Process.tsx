@@ -1,33 +1,36 @@
 import { MessageSquare, PenTool, Rocket, HeartHandshake } from "lucide-react";
-
-const steps = [
-  {
-    number: "01",
-    icon: MessageSquare,
-    title: "Share Your Requirements",
-    description: "Tell me about your business needs, pain points, and goals."
-  },
-  {
-    number: "02",
-    icon: PenTool,
-    title: "Architecture & Planning",
-    description: "I design the system architecture and create a detailed project plan."
-  },
-  {
-    number: "03",
-    icon: Rocket,
-    title: "Build & Deploy",
-    description: "I develop, test, deploy, and document your complete solution."
-  },
-  {
-    number: "04",
-    icon: HeartHandshake,
-    title: "Handoff & Support",
-    description: "You receive your tool with optional ongoing maintenance and scaling."
-  }
-];
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Process = () => {
+  const { t } = useLanguage();
+
+  const steps = [
+    {
+      number: "01",
+      icon: MessageSquare,
+      titleKey: "process.steps.step1.title",
+      descriptionKey: "process.steps.step1.description",
+    },
+    {
+      number: "02",
+      icon: PenTool,
+      titleKey: "process.steps.step2.title",
+      descriptionKey: "process.steps.step2.description",
+    },
+    {
+      number: "03",
+      icon: Rocket,
+      titleKey: "process.steps.step3.title",
+      descriptionKey: "process.steps.step3.description",
+    },
+    {
+      number: "04",
+      icon: HeartHandshake,
+      titleKey: "process.steps.step4.title",
+      descriptionKey: "process.steps.step4.description",
+    },
+  ];
+
   return (
     <section id="process" className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 relative overflow-hidden">
       {/* Background gradient */}
@@ -36,7 +39,7 @@ const Process = () => {
       <div className="container mx-auto max-w-6xl relative">
         <div className="text-center mb-10 sm:mb-16">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">
-            How It <span className="gradient-text">Works</span>
+            {t("process.title")} <span className="gradient-text">{t("process.titleHighlight")}</span>
           </h2>
         </div>
         
@@ -60,11 +63,11 @@ const Process = () => {
                 </div>
                 
                 <h3 className="text-base sm:text-lg font-semibold mb-2 sm:mb-3 text-foreground">
-                  {step.title}
+                  {t(step.titleKey)}
                 </h3>
                 
                 <p className="text-muted-foreground text-xs sm:text-sm">
-                  {step.description}
+                  {t(step.descriptionKey)}
                 </p>
               </div>
             </div>

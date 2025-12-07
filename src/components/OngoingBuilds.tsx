@@ -11,6 +11,7 @@ import cwScreenshot3 from "@/assets/cw-screenshot-3.png";
 import cwScreenshot4 from "@/assets/cw-screenshot-4.png";
 import cwScreenshot5 from "@/assets/cw-screenshot-5.png";
 import cwScreenshot6 from "@/assets/cw-screenshot-6.png";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const screenshots = [
   { src: cwScreenshot1, alt: "Client Whisperer landing page", caption: "Landing Page" },
@@ -22,6 +23,7 @@ const screenshots = [
 ];
 
 const OngoingBuilds = () => {
+  const { t } = useLanguage();
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -74,18 +76,19 @@ const OngoingBuilds = () => {
     }
   };
 
+  const featureIcons = [Zap, FileText, Mic];
   const features = [
-    { icon: Zap, text: "Summarize project, scope, and pricing automatically" },
-    { icon: FileText, text: "Keep all your proposals organized in one place" },
-    { icon: Mic, text: "Add a voice pitch using an external TTS backend" }
+    t("ongoingBuilds.product.features.0"),
+    t("ongoingBuilds.product.features.1"),
+    t("ongoingBuilds.product.features.2"),
   ];
 
   const benefits = [
-    "AI-powered proposal generation",
-    "Multiple tone options",
-    "Organized proposal management",
-    "Voice pitch integration",
-    "Export to multiple formats"
+    t("ongoingBuilds.product.benefits.0"),
+    t("ongoingBuilds.product.benefits.1"),
+    t("ongoingBuilds.product.benefits.2"),
+    t("ongoingBuilds.product.benefits.3"),
+    t("ongoingBuilds.product.benefits.4"),
   ];
 
   return (
@@ -95,9 +98,9 @@ const OngoingBuilds = () => {
       
       <div className="container mx-auto max-w-6xl relative">
         <div className="text-center mb-10 sm:mb-16">
-          <span className="text-primary text-xs sm:text-sm font-semibold tracking-wider uppercase">Current Ongoing Builds</span>
+          <span className="text-primary text-xs sm:text-sm font-semibold tracking-wider uppercase">{t("ongoingBuilds.label")}</span>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mt-2">
-            Coming <span className="gradient-text">Soon</span>
+            {t("ongoingBuilds.title")} <span className="gradient-text">{t("ongoingBuilds.titleHighlight")}</span>
           </h2>
         </div>
         
@@ -110,24 +113,27 @@ const OngoingBuilds = () => {
                 CW
               </div>
               <div>
-                <h3 className="text-lg sm:text-xl font-bold text-foreground">Client Whisperer by Oryn AI</h3>
-                <p className="text-muted-foreground text-xs sm:text-sm">Your Smart Proposal Assistant</p>
+                <h3 className="text-lg sm:text-xl font-bold text-foreground">{t("ongoingBuilds.product.name")}</h3>
+                <p className="text-muted-foreground text-xs sm:text-sm">{t("ongoingBuilds.product.tagline")}</p>
               </div>
             </div>
             
             {/* Tagline */}
             <h4 className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground mb-6 sm:mb-8 leading-tight">
-              Turn client notes into ready-to-send proposals in under a minute.
+              {t("ongoingBuilds.product.headline")}
             </h4>
             
             {/* Features List */}
             <div className="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
-              {features.map((feature, index) => (
-                <div key={index} className="flex items-start gap-2 sm:gap-3 text-muted-foreground text-sm sm:text-base">
-                  <feature.icon className="w-4 h-4 sm:w-5 sm:h-5 text-primary mt-0.5 shrink-0" />
-                  <span>{feature.text}</span>
-                </div>
-              ))}
+              {features.map((feature, index) => {
+                const Icon = featureIcons[index];
+                return (
+                  <div key={index} className="flex items-start gap-2 sm:gap-3 text-muted-foreground text-sm sm:text-base">
+                    <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-primary mt-0.5 shrink-0" />
+                    <span>{feature}</span>
+                  </div>
+                );
+              })}
             </div>
             
             {/* Divider */}
@@ -135,7 +141,7 @@ const OngoingBuilds = () => {
             
             {/* Benefits */}
             <div>
-              <h5 className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4">What you'll get:</h5>
+              <h5 className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4">{t("ongoingBuilds.product.whatYouGet")}</h5>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                 {benefits.map((benefit, index) => (
                   <div key={index} className="flex items-center gap-2 text-foreground">
@@ -150,12 +156,12 @@ const OngoingBuilds = () => {
             <div className="mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-glass-border">
               <h5 className="text-xs sm:text-sm text-muted-foreground mb-2 sm:mb-3 flex items-center gap-2">
                 <Bell className="w-3 h-3 sm:w-4 sm:h-4 text-primary" />
-                Get notified when we launch
+                {t("ongoingBuilds.product.notifyTitle")}
               </h5>
               <form onSubmit={handleNotifySubmit} className="flex flex-col sm:flex-row gap-2">
                 <Input
                   type="email"
-                  placeholder="Enter your email"
+                  placeholder={t("ongoingBuilds.product.emailPlaceholder")}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -167,7 +173,7 @@ const OngoingBuilds = () => {
                   disabled={isSubmitting}
                   className="shrink-0 min-h-[48px] w-full sm:w-auto"
                 >
-                  {isSubmitting ? "..." : "Notify Me"}
+                  {isSubmitting ? "..." : t("ongoingBuilds.product.notifyButton")}
                 </Button>
               </form>
             </div>
@@ -175,7 +181,7 @@ const OngoingBuilds = () => {
             {/* Footer */}
             <div className="mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-glass-border">
               <p className="text-xs sm:text-sm text-muted-foreground text-center">
-                A Product by <span className="text-primary font-medium">Purple Cove Labs</span>
+                {t("ongoingBuilds.product.byPurpleCove")} <span className="text-primary font-medium">Purple Cove Labs</span>
               </p>
             </div>
           </div>
@@ -204,7 +210,7 @@ const OngoingBuilds = () => {
               ))}
             </div>
             <p className="text-xs sm:text-sm text-muted-foreground mt-3 sm:mt-4 text-center">
-              Tap any image to enlarge
+              {t("ongoingBuilds.tapToEnlarge")}
             </p>
           </div>
         </div>
