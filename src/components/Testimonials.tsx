@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { z } from "zod";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 // Validation schema for testimonial submissions
 const testimonialSchema = z.object({
@@ -51,6 +52,7 @@ const defaultTestimonials: Omit<Testimonial, "id" | "created_at">[] = [
 ];
 
 const Testimonials = () => {
+  const { t } = useLanguage();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -120,11 +122,11 @@ const Testimonials = () => {
       <div className="container mx-auto max-w-6xl">
         <header className="text-center mb-10 sm:mb-16 animate-fade-in">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
-            Client{" "}
-            <span className="gradient-text">Recommendations</span>
+            {t("testimonials.title")}{" "}
+            <span className="gradient-text">{t("testimonials.titleHighlight")}</span>
           </h2>
           <p className="text-muted-foreground text-sm sm:text-base md:text-lg max-w-2xl mx-auto mb-6 sm:mb-8">
-            Real results from real businesses. See what founders and teams say about working with Purple Cove Labs.
+            {t("testimonials.subtitle")}
           </p>
           <Button
             onClick={() => setIsFormOpen(!isFormOpen)}
@@ -134,12 +136,12 @@ const Testimonials = () => {
             {isFormOpen ? (
               <>
                 <X className="w-4 h-4 mr-2" />
-                Close Form
+                {t("testimonials.closeForm")}
               </>
             ) : (
               <>
                 <Plus className="w-4 h-4 mr-2" />
-                Leave a Recommendation
+                {t("testimonials.leaveRecommendation")}
               </>
             )}
           </Button>
@@ -151,18 +153,18 @@ const Testimonials = () => {
             onSubmit={handleSubmit}
             className="glass-card p-4 sm:p-6 md:p-8 mb-8 sm:mb-12 max-w-2xl mx-auto animate-fade-in"
           >
-            <h3 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 text-center">Share Your Experience</h3>
+            <h3 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 text-center">{t("testimonials.formTitle")}</h3>
             <div className="grid gap-3 sm:gap-4">
               <div className="grid sm:grid-cols-2 gap-3 sm:gap-4">
                 <Input
-                  placeholder="Your Name"
+                  placeholder={t("testimonials.placeholders.name")}
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   maxLength={100}
                   className="bg-background/50 border-border/50 min-h-[48px]"
                 />
                 <Input
-                  placeholder="Your Role (e.g., CEO, Founder)"
+                  placeholder={t("testimonials.placeholders.role")}
                   value={formData.role}
                   onChange={(e) => setFormData({ ...formData, role: e.target.value })}
                   maxLength={100}
@@ -170,14 +172,14 @@ const Testimonials = () => {
                 />
               </div>
               <Input
-                placeholder="Company Name"
+                placeholder={t("testimonials.placeholders.company")}
                 value={formData.company}
                 onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                 maxLength={100}
                 className="bg-background/50 border-border/50 min-h-[48px]"
               />
               <Textarea
-                placeholder="Tell us about your experience working with Purple Cove Labs..."
+                placeholder={t("testimonials.placeholders.quote")}
                 value={formData.quote}
                 onChange={(e) => setFormData({ ...formData, quote: e.target.value })}
                 maxLength={500}
@@ -187,7 +189,7 @@ const Testimonials = () => {
               
               {/* Star Rating */}
               <div className="flex items-center gap-2">
-                <span className="text-xs sm:text-sm text-muted-foreground">Rating:</span>
+                <span className="text-xs sm:text-sm text-muted-foreground">{t("testimonials.rating")}</span>
                 <div className="flex gap-1">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <button
@@ -214,11 +216,11 @@ const Testimonials = () => {
                 className="btn-glow w-full min-h-[48px]"
               >
                 {submitMutation.isPending ? (
-                  "Submitting..."
+                  t("testimonials.submitting")
                 ) : (
                   <>
                     <Send className="w-4 h-4 mr-2" />
-                    Submit Recommendation
+                    {t("testimonials.submit")}
                   </>
                 )}
               </Button>

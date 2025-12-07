@@ -13,6 +13,7 @@ import {
   DialogContent,
   DialogClose,
 } from "@/components/ui/dialog";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const caseStudyImages = [
   {
@@ -58,6 +59,7 @@ const caseStudyImages = [
 ];
 
 const CaseStudy = () => {
+  const { t } = useLanguage();
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
 
   const openLightbox = (index: number) => {
@@ -84,6 +86,14 @@ const CaseStudy = () => {
     }
   };
 
+  // Get solution items from translations
+  const solutionItems = [
+    t("caseStudy.solution.items.0"),
+    t("caseStudy.solution.items.1"),
+    t("caseStudy.solution.items.2"),
+    t("caseStudy.solution.items.3"),
+  ];
+
   return (
     <section id="portfolio" className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 relative">
       {/* Background accent */}
@@ -91,9 +101,9 @@ const CaseStudy = () => {
       
       <div className="container mx-auto max-w-6xl relative">
         <div className="text-center mb-10 sm:mb-16">
-          <span className="text-primary text-xs sm:text-sm font-semibold tracking-wider uppercase">Case Study</span>
+          <span className="text-primary text-xs sm:text-sm font-semibold tracking-wider uppercase">{t("caseStudy.label")}</span>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mt-2">
-            ArKyTeK — <span className="gradient-text">Onboarding Engine Build</span>
+            {t("caseStudy.title")} <span className="gradient-text">{t("caseStudy.titleHighlight")}</span>
           </h2>
         </div>
         
@@ -101,21 +111,16 @@ const CaseStudy = () => {
           {/* Content */}
           <div className="space-y-4 sm:space-y-6 lg:space-y-8 order-2 lg:order-1">
             <div className="glass-card p-4 sm:p-6">
-              <h3 className="text-base sm:text-lg font-semibold text-primary mb-2 sm:mb-3">The Situation</h3>
+              <h3 className="text-base sm:text-lg font-semibold text-primary mb-2 sm:mb-3">{t("caseStudy.situation.title")}</h3>
               <p className="text-muted-foreground text-sm sm:text-base">
-                ArKyTeK, a freelance architecture firm, needed an automated client onboarding system to handle form submissions, schedule consultations, and maintain organized client records.
+                {t("caseStudy.situation.description")}
               </p>
             </div>
             
             <div className="glass-card p-4 sm:p-6">
-              <h3 className="text-base sm:text-lg font-semibold text-primary mb-2 sm:mb-3">The Solution</h3>
+              <h3 className="text-base sm:text-lg font-semibold text-primary mb-2 sm:mb-3">{t("caseStudy.solution.title")}</h3>
               <ul className="space-y-2 sm:space-y-3">
-                {[
-                  "Built n8n automation workflows for form processing",
-                  "Integrated Airtable for client data management",
-                  "Automated email notifications and booking confirmations",
-                  "Created Cal.com integration for scheduling"
-                ].map((item, i) => (
+                {solutionItems.map((item, i) => (
                   <li key={i} className="flex items-start gap-2 sm:gap-3 text-muted-foreground text-sm sm:text-base">
                     <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-primary mt-0.5 shrink-0" />
                     <span>{item}</span>
@@ -125,12 +130,12 @@ const CaseStudy = () => {
             </div>
             
             <div className="glass-card p-4 sm:p-6 border-primary/40">
-              <h3 className="text-base sm:text-lg font-semibold text-primary mb-2 sm:mb-3">The Outcome</h3>
+              <h3 className="text-base sm:text-lg font-semibold text-primary mb-2 sm:mb-3">{t("caseStudy.outcome.title")}</h3>
               <p className="text-foreground font-medium mb-1 sm:mb-2 text-sm sm:text-base">
-                Fully automated client intake system
+                {t("caseStudy.outcome.headline")}
               </p>
               <p className="text-muted-foreground text-xs sm:text-sm">
-                The architect now receives organized client folders, automatic notifications, and scheduled meetings without any manual work. We continue to maintain and expand the system together.
+                {t("caseStudy.outcome.description")}
               </p>
             </div>
           </div>
@@ -159,7 +164,7 @@ const CaseStudy = () => {
               ))}
             </div>
             <p className="text-xs sm:text-sm text-muted-foreground mt-3 sm:mt-4 text-center">
-              Tap any image to enlarge
+              {t("caseStudy.tapToEnlarge")}
             </p>
           </div>
         </div>

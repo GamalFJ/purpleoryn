@@ -1,8 +1,11 @@
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import coveConnectBanner from "@/assets/cove-connect-banner.png";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Newsletter = () => {
+  const { t } = useLanguage();
+
   return (
     <section className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 relative">
       {/* Background accent */}
@@ -26,12 +29,12 @@ const Newsletter = () => {
               </div>
               
               <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4">
-                Stay in the <span className="gradient-text">Loop</span>
+                {t("newsletter.title")} <span className="gradient-text">{t("newsletter.titleHighlight")}</span>
               </h2>
               
               <Button variant="hero" size="xl" asChild className="btn-glow w-full sm:w-auto min-h-[48px]">
                 <a target="_blank" rel="noopener noreferrer" href="https://coveconnect.substack.com/" className="bg-[#f65c0f]">
-                  Go to Cove Connect  
+                  {t("newsletter.button")}
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </a>
               </Button>

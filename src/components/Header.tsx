@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import logo from "@/assets/logo.png";
+import LanguageToggle from "@/components/LanguageToggle";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface HeaderProps {
   className?: string;
@@ -8,12 +10,13 @@ interface HeaderProps {
 
 const Header = ({ className }: HeaderProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { t } = useLanguage();
 
   const navLinks = [
-    { href: "#services", label: "Services" },
-    { href: "#portfolio", label: "Portfolio" },
-    { href: "#process", label: "Process" },
-    { href: "#why-us", label: "Why Us" },
+    { href: "#services", label: t("header.services") },
+    { href: "#portfolio", label: t("header.portfolio") },
+    { href: "#process", label: t("header.process") },
+    { href: "#why-us", label: t("header.whyUs") },
   ];
 
   const handleNavClick = () => {
@@ -48,14 +51,15 @@ const Header = ({ className }: HeaderProps) => {
             ))}
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <LanguageToggle />
             <a 
               target="_blank" 
               rel="noopener noreferrer" 
               className="glass-card px-4 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-foreground hover:border-primary/60 transition-all duration-300 min-h-[44px] flex items-center" 
               href="https://www.fiverr.com/s/xXgzkKx"
             >
-              Hire Me
+              {t("header.hireMe")}
             </a>
 
             {/* Mobile Menu Toggle */}

@@ -1,7 +1,10 @@
 import logo from "@/assets/logo.png";
 import { Linkedin, Instagram } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Footer = () => {
+  const { t } = useLanguage();
+
   return (
     <footer className="py-8 sm:py-12 border-t border-border/50 relative px-4 sm:px-6">
       <div className="container mx-auto">
@@ -40,7 +43,7 @@ const Footer = () => {
           
           {/* Copyright */}
           <p className="text-muted-foreground text-xs sm:text-sm text-center max-w-xs sm:max-w-none">
-            © 2025 Purple Cove Labs | Powered by Oryn AI. All rights reserved.
+            {t("footer.copyright")}
           </p>
         </div>
       </div>

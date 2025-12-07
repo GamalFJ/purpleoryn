@@ -1,7 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Hero = () => {
+  const { t } = useLanguage();
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 px-4 sm:px-6">
       {/* Background gradient orbs - very soft ambient glow */}
@@ -18,31 +21,31 @@ const Hero = () => {
             <div className="animate-fade-in">
               <span className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full glass-card text-xs sm:text-sm text-primary font-medium">
                 <Sparkles className="w-3 h-3 sm:w-4 sm:h-4" />
-                AI Automation Expert
+                {t("hero.badge")}
               </span>
             </div>
             
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight animate-fade-in-delay-1">
-              <span className="text-foreground">AI-POWERED SYSTEMS</span>
+              <span className="text-foreground">{t("hero.headline1")}</span>
               <br />
-              <span className="gradient-text neon-text">BUILT FOR BUSINESS SCALE</span>
+              <span className="gradient-text neon-text">{t("hero.headline2")}</span>
             </h1>
             
             <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-xl mx-auto lg:mx-0 animate-fade-in-delay-2">
-              Automation · AI Agents · Custom Web Tools — <span className="text-foreground font-medium">Done-for-You</span>
+              {t("hero.tagline")} <span className="text-foreground font-medium">{t("hero.doneForYou")}</span>
             </p>
             
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start animate-fade-in-delay-3">
               <Button variant="hero" size="xl" className="w-full sm:w-auto min-h-[48px]" asChild>
                 <a target="_blank" rel="noopener noreferrer" href="http://www.fiverr.com/s/qDBW55d">
-                  Let's Get Started  
+                  {t("hero.cta1")}
                   <ArrowRight className="w-5 h-5 ml-1" />
                 </a>
               </Button>
               
               <Button variant="glass" size="xl" className="w-full sm:w-auto min-h-[48px]" asChild>
                 <a href="#portfolio">
-                  See Portfolio
+                  {t("hero.cta2")}
                 </a>
               </Button>
             </div>
@@ -54,7 +57,7 @@ const Hero = () => {
             <div className="relative">
               <div className="absolute -inset-4 bg-gradient-to-r from-primary/8 to-accent/8 rounded-full blur-3xl animate-glow-pulse" />
               <img 
-                alt="Gamal Jastram - Founder of Purple Cove Labs" 
+                alt={t("hero.founderAlt")}
                 className="relative z-10 w-full max-w-[28rem] h-auto animate-float border-glass-bg object-contain" 
                 src="/lovable-uploads/99bfa2b1-73f5-4f57-9b57-4f170094e155.png" 
                 loading="lazy"
