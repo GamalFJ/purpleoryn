@@ -75,18 +75,39 @@
 
   html {
     scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
   }
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
     font-family: 'Sora', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Responsive typography using clamp */
+  h1 {
+    font-size: clamp(1.875rem, 5vw, 3.75rem);
+  }
+
+  h2 {
+    font-size: clamp(1.5rem, 4vw, 2.25rem);
+  }
+
+  h3 {
+    font-size: clamp(1.125rem, 3vw, 1.5rem);
+  }
+
+  p {
+    font-size: clamp(0.875rem, 2.5vw, 1.125rem);
   }
 }
 
 @layer components {
-  /* Glass morphic card */
+  /* Glass morphic card - responsive */
   .glass-card {
     @apply relative rounded-2xl border border-glass-border/30 bg-glass-bg/40 backdrop-blur-xl;
+    @apply w-full max-w-full;
     box-shadow: 
       0 8px 32px 0 rgba(139, 92, 246, 0.1),
       inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
@@ -96,12 +117,20 @@
     @apply glass-card transition-all duration-300;
   }
 
-  .glass-card-hover:hover {
-    @apply scale-[1.03] border-primary/50;
-    box-shadow: 
-      0 8px 40px 0 rgba(139, 92, 246, 0.25),
-      0 0 60px -12px rgba(139, 92, 246, 0.4),
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+  /* Disable hover scale on touch devices for better UX */
+  @media (hover: hover) and (pointer: fine) {
+    .glass-card-hover:hover {
+      @apply scale-[1.03] border-primary/50;
+      box-shadow: 
+        0 8px 40px 0 rgba(139, 92, 246, 0.25),
+        0 0 60px -12px rgba(139, 92, 246, 0.4),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  /* Touch-friendly tap state */
+  .glass-card-hover:active {
+    @apply scale-[0.98] border-primary/50;
   }
 
   /* Neon glow effects */
@@ -217,5 +246,20 @@
   .bg-overlay::before {
     content: '';
     @apply absolute inset-0 bg-background/50;
+  }
+
+  /* Touch-friendly targets - minimum 44px */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
+
+  /* Responsive images */
+  .img-responsive {
+    @apply w-full max-w-full h-auto;
+  }
+
+  /* Container responsive padding */
+  .section-padding {
+    @apply py-16 px-4 sm:py-20 sm:px-6 md:py-24;
   }
 }

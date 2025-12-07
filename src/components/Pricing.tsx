@@ -59,19 +59,19 @@ const pricingTiers = [
 
 const Pricing = () => {
   return (
-    <section id="pricing" className="py-24 px-4">
+    <section id="pricing" className="py-16 sm:py-20 md:py-24 px-4 sm:px-6">
       <div className="container mx-auto max-w-6xl">
-        <header className="text-center mb-16 animate-fade-in">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+        <header className="text-center mb-10 sm:mb-16 animate-fade-in">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
             Simple, Transparent{" "}
             <span className="gradient-text">Pricing</span>
           </h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+          <p className="text-muted-foreground text-sm sm:text-base md:text-lg max-w-2xl mx-auto">
             Choose the package that fits your business needs. Every tier delivers a production-ready AI system you can use immediately.
           </p>
         </header>
 
-        <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           {pricingTiers.map((tier, index) => (
             <article
               key={tier.name}
@@ -91,34 +91,35 @@ const Pricing = () => {
               )}
 
               {/* Cover Image */}
-              <div className="relative h-40 overflow-hidden">
+              <div className="relative h-32 sm:h-40 overflow-hidden">
                 <img
                   src={tier.image}
                   alt={`${tier.name} illustration`}
                   className="w-full h-full object-cover"
+                  loading="lazy"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent" />
               </div>
 
               {/* Content */}
-              <div className="p-6 flex flex-col flex-1">
-                <h3 className="text-xl font-bold mb-1">{tier.name}</h3>
-                <p className="text-muted-foreground text-sm mb-4">
+              <div className="p-4 sm:p-6 flex flex-col flex-1">
+                <h3 className="text-lg sm:text-xl font-bold mb-1">{tier.name}</h3>
+                <p className="text-muted-foreground text-xs sm:text-sm mb-3 sm:mb-4">
                   {tier.description}
                 </p>
 
-                <div className="mb-4">
-                  <span className="text-3xl font-bold gradient-text">
+                <div className="mb-3 sm:mb-4">
+                  <span className="text-2xl sm:text-3xl font-bold gradient-text">
                     {tier.price}
                   </span>
-                  <span className="text-muted-foreground text-sm ml-2">
+                  <span className="text-muted-foreground text-xs sm:text-sm ml-2">
                     / {tier.delivery}
                   </span>
                 </div>
 
-                <ul className="space-y-3 mb-6 flex-1">
+                <ul className="space-y-2 sm:space-y-3 mb-4 sm:mb-6 flex-1">
                   {tier.features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-2 text-sm">
+                    <li key={feature} className="flex items-start gap-2 text-xs sm:text-sm">
                       <Check className="w-4 h-4 text-primary mt-0.5 shrink-0" />
                       <span className="text-foreground/90">{feature}</span>
                     </li>
@@ -128,7 +129,7 @@ const Pricing = () => {
                 <Button
                   variant={tier.highlight ? "hero" : "outline"}
                   size="lg"
-                  className="w-full group"
+                  className="w-full group min-h-[48px]"
                   asChild
                 >
                   <a href={FIVERR_GIG_URL} target="_blank" rel="noopener noreferrer">

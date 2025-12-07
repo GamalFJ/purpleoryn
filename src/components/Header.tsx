@@ -1,40 +1,94 @@
+import { useState } from "react";
+import { Menu, X } from "lucide-react";
 import logo from "@/assets/logo.png";
+
 interface HeaderProps {
   className?: string;
 }
-const Header = ({
-  className
-}: HeaderProps) => {
-  return <header className={`fixed top-0 left-0 right-0 z-50 ${className}`}>
-      <div className="container mx-auto px-6 py-4">
+
+const Header = ({ className }: HeaderProps) => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const navLinks = [
+    { href: "#services", label: "Services" },
+    { href: "#portfolio", label: "Portfolio" },
+    { href: "#process", label: "Process" },
+    { href: "#why-us", label: "Why Us" },
+  ];
+
+  const handleNavClick = () => {
+    setIsMobileMenuOpen(false);
+  };
+
+  return (
+    <header className={`fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg ${className}`}>
+      <div className="container mx-auto px-4 sm:px-6 py-3 sm:py-4">
         <nav className="flex items-center justify-between">
-          <a href="#" className="flex items-center gap-3 group">
-            <img src={logo} alt="Purple Cove Labs Logo" className="h-12 w-12 rounded-full transition-transform duration-300 group-hover:scale-110" />
-            <span className="text-lg font-bold text-foreground hidden sm:block">
+          <a href="#" className="flex items-center gap-2 sm:gap-3 group">
+            <img 
+              src={logo} 
+              alt="Purple Cove Labs Logo" 
+              className="h-10 w-10 sm:h-12 sm:w-12 rounded-full transition-transform duration-300 group-hover:scale-110" 
+            />
+            <span className="text-base sm:text-lg font-bold text-foreground hidden sm:block">
               Purple Cove Labs
             </span>
           </a>
           
-          <div className="hidden md:flex items-center gap-8">
-            <a href="#services" className="text-muted-foreground hover:text-foreground transition-colors duration-200">
-              Services
-            </a>
-            <a href="#portfolio" className="text-muted-foreground hover:text-foreground transition-colors duration-200">
-              Portfolio
-            </a>
-            <a href="#process" className="text-muted-foreground hover:text-foreground transition-colors duration-200">
-              Process
-            </a>
-            <a href="#why-us" className="text-muted-foreground hover:text-foreground transition-colors duration-200">
-              Why Us
-            </a>
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center gap-6 lg:gap-8">
+            {navLinks.map((link) => (
+              <a 
+                key={link.href}
+                href={link.href} 
+                className="text-muted-foreground hover:text-foreground transition-colors duration-200 text-sm lg:text-base"
+              >
+                {link.label}
+              </a>
+            ))}
           </div>
 
-          <a target="_blank" rel="noopener noreferrer" className="glass-card px-5 py-2.5 text-sm font-semibold text-foreground hover:border-primary/60 transition-all duration-300" href="https://www.fiverr.com/s/xXgzkKx">
-            Hire Me
-          </a>
+          <div className="flex items-center gap-3">
+            <a 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="glass-card px-4 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-foreground hover:border-primary/60 transition-all duration-300 min-h-[44px] flex items-center" 
+              href="https://www.fiverr.com/s/xXgzkKx"
+            >
+              Hire Me
+            </a>
+
+            {/* Mobile Menu Toggle */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden p-2 text-foreground min-h-[44px] min-w-[44px] flex items-center justify-center"
+              aria-label="Toggle mobile menu"
+            >
+              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
         </nav>
+
+        {/* Mobile Navigation */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden mt-4 pb-4 border-t border-border/30 animate-fade-in">
+            <div className="flex flex-col gap-2 pt-4">
+              {navLinks.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  onClick={handleNavClick}
+                  className="text-muted-foreground hover:text-foreground transition-colors duration-200 py-3 px-2 text-base min-h-[44px] flex items-center"
+                >
+                  {link.label}
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
-    </header>;
+    </header>
+  );
 };
+
 export default Header;
