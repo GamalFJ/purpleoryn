@@ -25,31 +25,31 @@ const differentiators = [
 
 const WhyUs = () => {
   return (
-    <section id="why-us" className="py-24 relative">
-      <div className="container mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold">
+    <section id="why-us" className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 relative">
+      <div className="container mx-auto max-w-4xl">
+        <div className="text-center mb-10 sm:mb-16">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">
             Why Choose <span className="gradient-text">Purple Cove Labs</span>
           </h2>
         </div>
         
-        <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-          {differentiators.map((item, index) => (
+        <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
+          {differentiators.map((item) => (
             <div 
               key={item.title}
-              className="glass-card-hover p-8 flex gap-5"
+              className="glass-card-hover p-5 sm:p-6 md:p-8 flex gap-4 sm:gap-5"
             >
               <div className="shrink-0">
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/30">
-                  <item.icon className="w-6 h-6 text-primary" />
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/30">
+                  <item.icon className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
                 </div>
               </div>
               
               <div>
-                <h3 className="text-lg font-semibold mb-2 text-foreground">
+                <h3 className="text-base sm:text-lg font-semibold mb-1 sm:mb-2 text-foreground">
                   {item.title}
                 </h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">
+                <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">
                   {item.description}
                 </p>
               </div>
