@@ -1,11 +1,11 @@
 import { useState, useRef, useEffect } from "react";
-import { ChevronDown, Globe } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const languages = [
-  { code: "en" as const, label: "EN", fullName: "English" },
-  { code: "fr" as const, label: "FR", fullName: "Français" },
-  { code: "es" as const, label: "ES", fullName: "Español" },
+  { code: "en" as const, label: "EN", fullName: "English", flag: "🇬🇧" },
+  { code: "fr" as const, label: "FR", fullName: "Français", flag: "🇫🇷" },
+  { code: "es" as const, label: "ES", fullName: "Español", flag: "🇪🇸" },
 ];
 
 const LanguageToggle = () => {
@@ -34,13 +34,13 @@ const LanguageToggle = () => {
         aria-label="Select language"
         aria-expanded={isOpen}
       >
-        <Globe className="w-4 h-4 text-primary" />
+        <span className="text-base">{currentLang.flag}</span>
         <span>{currentLang.label}</span>
         <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-36 rounded-xl glass-card border border-glass-border/50 bg-card shadow-lg z-50 overflow-hidden animate-fade-in">
+        <div className="absolute right-0 mt-2 w-44 rounded-xl glass-card border border-glass-border/50 bg-card shadow-lg z-50 overflow-hidden animate-fade-in">
           {languages.map((lang) => (
             <button
               key={lang.code}
@@ -52,8 +52,8 @@ const LanguageToggle = () => {
                 language === lang.code ? "bg-primary/15 text-primary" : "text-foreground"
               }`}
             >
-              <span className="font-semibold">{lang.label}</span>
-              <span className="text-muted-foreground text-xs">{lang.fullName}</span>
+              <span className="text-lg">{lang.flag}</span>
+              <span className="font-medium">{lang.fullName}</span>
             </button>
           ))}
         </div>
