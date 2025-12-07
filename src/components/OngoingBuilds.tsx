@@ -104,8 +104,8 @@ const OngoingBuilds = () => {
         <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-start">
           {/* Content Card */}
           <div className="glass-card p-5 sm:p-6 md:p-8 relative overflow-hidden order-2 lg:order-1">
-            {/* Coming Soon Badge */}
-            <div className="absolute top-3 sm:top-4 right-3 sm:right-4">
+            {/* Coming Soon Badge - positioned in flow on mobile, absolute on larger screens */}
+            <div className="flex justify-end mb-4 sm:mb-0 sm:absolute sm:top-4 sm:right-4">
               <span className="inline-flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1 rounded-full bg-primary/20 text-primary text-xs sm:text-sm font-medium border border-primary/30">
                 <Clock className="w-3 h-3 sm:w-4 sm:h-4" />
                 Coming Soon
@@ -113,7 +113,7 @@ const OngoingBuilds = () => {
             </div>
             
             {/* Header */}
-            <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6 mt-8 sm:mt-0">
+            <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
               <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-primary flex items-center justify-center text-primary-foreground font-bold text-base sm:text-lg">
                 CW
               </div>
