@@ -12,10 +12,10 @@ const Footer = () => {
           
           {/* Social Icons */}
           <div className="flex items-center gap-6">
-            <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" className="p-3 rounded-full glass-card hover:border-primary/50 hover:scale-110 transition-all duration-300" aria-label="Instagram">
+            <a href="https://www.instagram.com/purplecovelabs.ai/" target="_blank" rel="noopener noreferrer" className="p-3 rounded-full glass-card hover:border-primary/50 hover:scale-110 transition-all duration-300" aria-label="Instagram">
               <Instagram className="w-5 h-5 text-foreground hover:text-primary transition-colors" />
             </a>
-            <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" className="p-3 rounded-full glass-card hover:border-primary/50 hover:scale-110 transition-all duration-300" aria-label="LinkedIn">
+            <a href="https://www.linkedin.com/in/gamal-jastram-8a88b7175/" target="_blank" rel="noopener noreferrer" className="p-3 rounded-full glass-card hover:border-primary/50 hover:scale-110 transition-all duration-300" aria-label="LinkedIn">
               <Linkedin className="w-5 h-5 text-foreground hover:text-primary transition-colors" />
             </a>
           </div>
