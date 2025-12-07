@@ -51,7 +51,7 @@ const Hero = () => {
             <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent rounded-full blur-2xl" />
             <div className="relative">
               <div className="absolute -inset-4 bg-gradient-to-r from-primary/8 to-accent/8 rounded-full blur-3xl animate-glow-pulse" />
-              <img alt="Gamal Jastram - Founder of Purple Cove Labs" src="/lovable-uploads/535ca5fb-7b62-459d-8d0b-dbc04db5be63.png" className="relative z-10 w-[28rem] h-auto animate-float border-glass-bg object-fill" />
+              <img alt="Gamal Jastram - Founder of Purple Cove Labs" className="relative z-10 w-[28rem] h-auto animate-float border-glass-bg object-fill" src="/lovable-uploads/99bfa2b1-73f5-4f57-9b57-4f170094e155.png" />
             </div>
           </div>
         </div>
