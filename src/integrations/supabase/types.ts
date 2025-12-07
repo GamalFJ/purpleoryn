@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      testimonials: {
+        Row: {
+          company: string
+          created_at: string
+          id: string
+          name: string
+          quote: string
+          rating: number
+          role: string
+        }
+        Insert: {
+          company: string
+          created_at?: string
+          id?: string
+          name: string
+          quote: string
+          rating?: number
+          role: string
+        }
+        Update: {
+          company?: string
+          created_at?: string
+          id?: string
+          name?: string
+          quote?: string
+          rating?: number
+          role?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
