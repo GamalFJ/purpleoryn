@@ -34,6 +34,20 @@ const Newsletter = () => {
               <p className="text-sm text-muted-foreground mt-4">
                 Free weekly insights. Unsubscribe anytime.
               </p>
+              
+              {/* Substack Embed */}
+              <div className="mt-8">
+                <iframe 
+                  src="https://coveconnect.substack.com/embed" 
+                  width="100%" 
+                  height="320" 
+                  className="rounded-lg border border-border/20 max-w-[480px] mx-auto"
+                  style={{ background: 'white' }}
+                  frameBorder="0" 
+                  scrolling="no"
+                  title="Cove Connect Newsletter Subscription"
+                />
+              </div>
             </div>
           </div>
         </div>
