@@ -31,9 +31,7 @@ const Newsletter = () => {
                 </a>
               </Button>
               
-              <p className="text-sm text-muted-foreground mt-4">
-                Free weekly insights. Unsubscribe anytime.
-              </p>
+              
               
               {/* Substack Embed */}
               <div className="mt-8">
