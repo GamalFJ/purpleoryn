@@ -1,6 +1,9 @@
 import { useState } from "react";
-import { Zap, FileText, Mic, Clock, CheckCircle2, ZoomIn, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { Zap, FileText, Mic, Clock, CheckCircle2, ZoomIn, X, ChevronLeft, ChevronRight, Bell } from "lucide-react";
 import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
 import cwScreenshot1 from "@/assets/cw-screenshot-1.jpg";
 import cwScreenshot2 from "@/assets/cw-screenshot-2.jpg";
 import cwScreenshot3 from "@/assets/cw-screenshot-3.png";
@@ -34,6 +37,25 @@ const screenshots = [{
 }];
 const OngoingBuilds = () => {
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
+  const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
+
+  const handleNotifySubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim()) return;
+    
+    setIsSubmitting(true);
+    // Simulate submission
+    await new Promise(resolve => setTimeout(resolve, 800));
+    
+    toast({
+      title: "You're on the list!",
+      description: "We'll notify you when Client Whisperer launches.",
+    });
+    setEmail("");
+    setIsSubmitting(false);
+  };
   const openLightbox = (index: number) => {
     setSelectedImageIndex(index);
   };
@@ -118,6 +140,32 @@ const OngoingBuilds = () => {
                     <span className="text-sm">{benefit}</span>
                   </div>)}
               </div>
+            </div>
+            
+            {/* Notify Me Form */}
+            <div className="mt-8 pt-6 border-t border-glass-border">
+              <h5 className="text-sm text-muted-foreground mb-3 flex items-center gap-2">
+                <Bell className="w-4 h-4 text-primary" />
+                Get notified when we launch
+              </h5>
+              <form onSubmit={handleNotifySubmit} className="flex gap-2">
+                <Input
+                  type="email"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="flex-1 bg-background/50 border-glass-border focus:border-primary"
+                />
+                <Button 
+                  type="submit" 
+                  variant="default"
+                  disabled={isSubmitting}
+                  className="shrink-0"
+                >
+                  {isSubmitting ? "..." : "Notify Me"}
+                </Button>
+              </form>
             </div>
             
             {/* Footer */}
