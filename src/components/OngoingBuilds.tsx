@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 import cwScreenshot1 from "@/assets/cw-screenshot-1.jpg";
 import cwScreenshot2 from "@/assets/cw-screenshot-2.jpg";
 import cwScreenshot3 from "@/assets/cw-screenshot-3.png";
@@ -46,14 +47,32 @@ const OngoingBuilds = () => {
     if (!email.trim()) return;
     
     setIsSubmitting(true);
-    // Simulate submission
-    await new Promise(resolve => setTimeout(resolve, 800));
     
-    toast({
-      title: "You're on the list!",
-      description: "We'll notify you when Client Whisperer launches.",
-    });
-    setEmail("");
+    const { error } = await supabase
+      .from('waitlist_signups')
+      .insert({ email: email.trim(), product: 'client-whisperer' });
+    
+    if (error) {
+      if (error.code === '23505') {
+        toast({
+          title: "Already registered!",
+          description: "This email is already on the waitlist.",
+        });
+      } else {
+        toast({
+          title: "Something went wrong",
+          description: "Please try again later.",
+          variant: "destructive",
+        });
+      }
+    } else {
+      toast({
+        title: "You're on the list!",
+        description: "We'll notify you when Client Whisperer launches.",
+      });
+      setEmail("");
+    }
+    
     setIsSubmitting(false);
   };
   const openLightbox = (index: number) => {
