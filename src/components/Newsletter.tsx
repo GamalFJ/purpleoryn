@@ -22,11 +22,11 @@ const Newsletter = () => {
                 Stay in the <span className="gradient-text">Loop</span>
               </h2>
               
-              <p className="text-muted-foreground mb-8 max-w-lg mx-auto">Get exclusive insights on AI automation, business systems, product updates and  practical tips to scale your operations. Join the Cove Crew            </p>
+              
               
               <Button variant="hero" size="xl" asChild className="btn-glow">
-                <a target="_blank" rel="noopener noreferrer" href="https://coveconnect.substack.com/" className="bg-[#f65c10]">
-                  Subscribe to Cove Connect  
+                <a target="_blank" rel="noopener noreferrer" href="https://coveconnect.substack.com/" className="bg-[#f65c0f]">
+                  Go to Cove Connect  
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </a>
               </Button>
@@ -37,16 +37,9 @@ const Newsletter = () => {
               
               {/* Substack Embed */}
               <div className="mt-8">
-                <iframe 
-                  src="https://coveconnect.substack.com/embed" 
-                  width="100%" 
-                  height="320" 
-                  className="rounded-lg border border-border/20 max-w-[480px] mx-auto"
-                  style={{ background: 'white' }}
-                  frameBorder="0" 
-                  scrolling="no"
-                  title="Cove Connect Newsletter Subscription"
-                />
+                <iframe src="https://coveconnect.substack.com/embed" width="100%" height="320" className="rounded-lg border border-border/20 max-w-[480px] mx-auto" style={{
+                background: 'white'
+              }} frameBorder="0" scrolling="no" title="Cove Connect Newsletter Subscription" />
               </div>
             </div>
           </div>
