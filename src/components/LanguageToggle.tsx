@@ -3,9 +3,9 @@ import { ChevronDown, Globe } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const languages = [
-  { code: "en" as const, label: "EN", fullName: "English" },
-  { code: "fr" as const, label: "FR", fullName: "Français" },
-  { code: "es" as const, label: "ES", fullName: "Español" },
+  { code: "en" as const, label: "EN", fullName: "English", flag: "🇬🇧" },
+  { code: "fr" as const, label: "FR", fullName: "Français", flag: "🇫🇷" },
+  { code: "es" as const, label: "ES", fullName: "Español", flag: "🇪🇸" },
 ];
 
 const LanguageToggle = () => {
@@ -40,7 +40,7 @@ const LanguageToggle = () => {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-20 rounded-xl glass-card border border-glass-border/50 bg-card shadow-lg z-50 overflow-hidden animate-fade-in">
+        <div className="absolute right-0 mt-2 w-24 rounded-xl glass-card border border-glass-border/50 bg-card shadow-lg z-50 overflow-hidden animate-fade-in">
           {languages.map((lang) => (
             <button
               key={lang.code}
@@ -48,11 +48,12 @@ const LanguageToggle = () => {
                 setLanguage(lang.code);
                 setIsOpen(false);
               }}
-              className={`w-full flex items-center justify-center py-2.5 text-sm font-semibold transition-colors hover:bg-primary/10 ${
+              className={`w-full flex items-center justify-center gap-2 py-2.5 text-sm font-semibold transition-colors hover:bg-primary/10 ${
                 language === lang.code ? "bg-primary/15 text-primary" : "text-foreground"
               }`}
             >
-              {lang.label}
+              <span>{lang.flag}</span>
+              <span>{lang.label}</span>
             </button>
           ))}
         </div>
