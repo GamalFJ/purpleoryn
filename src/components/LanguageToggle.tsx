@@ -40,7 +40,7 @@ const LanguageToggle = () => {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-44 rounded-xl glass-card border border-glass-border/50 bg-card shadow-lg z-50 overflow-hidden animate-fade-in">
+        <div className="absolute right-0 mt-2 w-20 rounded-xl glass-card border border-glass-border/50 bg-card shadow-lg z-50 overflow-hidden animate-fade-in">
           {languages.map((lang) => (
             <button
               key={lang.code}
@@ -48,12 +48,11 @@ const LanguageToggle = () => {
                 setLanguage(lang.code);
                 setIsOpen(false);
               }}
-              className={`w-full flex items-center gap-3 px-4 py-3 text-sm transition-colors hover:bg-primary/10 ${
+              className={`w-full flex items-center justify-center py-2.5 text-sm font-semibold transition-colors hover:bg-primary/10 ${
                 language === lang.code ? "bg-primary/15 text-primary" : "text-foreground"
               }`}
             >
-              <span className="font-semibold flex-shrink-0">{lang.label}</span>
-              <span className="text-muted-foreground text-xs whitespace-nowrap">{lang.fullName}</span>
+              {lang.label}
             </button>
           ))}
         </div>
