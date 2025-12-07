@@ -10,6 +10,7 @@ import Testimonials from "@/components/Testimonials";
 import CTA from "@/components/CTA";
 import Newsletter from "@/components/Newsletter";
 import Footer from "@/components/Footer";
+import ScrollReveal from "@/components/ScrollReveal";
 import backgroundImage from "@/assets/background.png";
 
 const Index = () => {
@@ -32,15 +33,33 @@ const Index = () => {
         <Header />
         <main>
           <Hero />
-          <Services />
-          <Process />
-          <CaseStudy />
-          <Testimonials />
-          <WhyUs />
-          <Pricing />
-          <OngoingBuilds />
-          <CTA />
-          <Newsletter />
+          <ScrollReveal>
+            <Services />
+          </ScrollReveal>
+          <ScrollReveal delay={100}>
+            <Process />
+          </ScrollReveal>
+          <ScrollReveal delay={100}>
+            <CaseStudy />
+          </ScrollReveal>
+          <ScrollReveal delay={100}>
+            <Testimonials />
+          </ScrollReveal>
+          <ScrollReveal delay={100}>
+            <WhyUs />
+          </ScrollReveal>
+          <ScrollReveal delay={100}>
+            <Pricing />
+          </ScrollReveal>
+          <ScrollReveal delay={100}>
+            <OngoingBuilds />
+          </ScrollReveal>
+          <ScrollReveal delay={100}>
+            <CTA />
+          </ScrollReveal>
+          <ScrollReveal delay={100}>
+            <Newsletter />
+          </ScrollReveal>
         </main>
         <Footer />
       </div>
