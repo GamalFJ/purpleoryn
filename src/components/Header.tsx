@@ -1,20 +1,15 @@
 import logo from "@/assets/logo.png";
-
 interface HeaderProps {
   className?: string;
 }
-
-const Header = ({ className }: HeaderProps) => {
-  return (
-    <header className={`fixed top-0 left-0 right-0 z-50 ${className}`}>
+const Header = ({
+  className
+}: HeaderProps) => {
+  return <header className={`fixed top-0 left-0 right-0 z-50 ${className}`}>
       <div className="container mx-auto px-6 py-4">
         <nav className="flex items-center justify-between">
           <a href="#" className="flex items-center gap-3 group">
-            <img 
-              src={logo} 
-              alt="Purple Cove Labs Logo" 
-              className="h-12 w-12 rounded-full transition-transform duration-300 group-hover:scale-110"
-            />
+            <img src={logo} alt="Purple Cove Labs Logo" className="h-12 w-12 rounded-full transition-transform duration-300 group-hover:scale-110" />
             <span className="text-lg font-bold text-foreground hidden sm:block">
               Purple Cove Labs
             </span>
@@ -35,18 +30,11 @@ const Header = ({ className }: HeaderProps) => {
             </a>
           </div>
 
-          <a 
-            href="https://www.fiverr.com" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="glass-card px-5 py-2.5 text-sm font-semibold text-foreground hover:border-primary/60 transition-all duration-300"
-          >
+          <a target="_blank" rel="noopener noreferrer" className="glass-card px-5 py-2.5 text-sm font-semibold text-foreground hover:border-primary/60 transition-all duration-300" href="https://www.fiverr.com/s/xXgzkKx">
             Hire Me
           </a>
         </nav>
       </div>
-    </header>
-  );
+    </header>;
 };
-
 export default Header;
