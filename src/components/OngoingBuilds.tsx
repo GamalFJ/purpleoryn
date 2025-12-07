@@ -1,19 +1,58 @@
-import { Zap, FileText, Mic, Clock, CheckCircle2 } from "lucide-react";
+import { useState } from "react";
+import { Zap, FileText, Mic, Clock, CheckCircle2, ZoomIn, X, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogClose,
+} from "@/components/ui/dialog";
+
+import cwScreenshot1 from "@/assets/cw-screenshot-1.jpg";
+import cwScreenshot2 from "@/assets/cw-screenshot-2.jpg";
+import cwScreenshot3 from "@/assets/cw-screenshot-3.png";
+import cwScreenshot4 from "@/assets/cw-screenshot-4.png";
+import cwScreenshot5 from "@/assets/cw-screenshot-5.png";
+import cwScreenshot6 from "@/assets/cw-screenshot-6.png";
+
+const screenshots = [
+  { src: cwScreenshot1, alt: "Client Whisperer landing page", caption: "Landing Page" },
+  { src: cwScreenshot2, alt: "Client Whisperer sign up page", caption: "Get Started" },
+  { src: cwScreenshot3, alt: "Client Whisperer full homepage", caption: "Homepage Overview" },
+  { src: cwScreenshot4, alt: "Client Whisperer new proposal form", caption: "New Proposal Form" },
+  { src: cwScreenshot5, alt: "Client Whisperer service and style options", caption: "Service & Style Selection" },
+  { src: cwScreenshot6, alt: "Client Whisperer review and generate", caption: "Review & Generate" },
+];
 
 const OngoingBuilds = () => {
-  const features = [
-    {
-      icon: Zap,
-      text: "Summarize project, scope, and pricing automatically"
-    },
-    {
-      icon: FileText,
-      text: "Keep all your proposals organized in one place"
-    },
-    {
-      icon: Mic,
-      text: "Add a voice pitch using an external TTS backend"
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
+
+  const openLightbox = (index: number) => {
+    setSelectedImageIndex(index);
+  };
+
+  const closeLightbox = () => {
+    setSelectedImageIndex(null);
+  };
+
+  const goToPrevious = () => {
+    if (selectedImageIndex !== null) {
+      setSelectedImageIndex(
+        selectedImageIndex === 0 ? screenshots.length - 1 : selectedImageIndex - 1
+      );
     }
+  };
+
+  const goToNext = () => {
+    if (selectedImageIndex !== null) {
+      setSelectedImageIndex(
+        selectedImageIndex === screenshots.length - 1 ? 0 : selectedImageIndex + 1
+      );
+    }
+  };
+
+  const features = [
+    { icon: Zap, text: "Summarize project, scope, and pricing automatically" },
+    { icon: FileText, text: "Keep all your proposals organized in one place" },
+    { icon: Mic, text: "Add a voice pitch using an external TTS backend" }
   ];
 
   const benefits = [
@@ -37,9 +76,9 @@ const OngoingBuilds = () => {
           </h2>
         </div>
         
-        <div className="max-w-4xl mx-auto">
-          {/* Main Feature Card */}
-          <div className="glass-card p-8 relative overflow-hidden">
+        <div className="grid lg:grid-cols-2 gap-12 items-start">
+          {/* Content Card */}
+          <div className="glass-card p-8 relative overflow-hidden order-2 lg:order-1">
             {/* Coming Soon Badge */}
             <div className="absolute top-4 right-4">
               <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/20 text-primary text-sm font-medium border border-primary/30">
@@ -97,8 +136,82 @@ const OngoingBuilds = () => {
               </p>
             </div>
           </div>
+
+          {/* Image Gallery */}
+          <div className="order-1 lg:order-2">
+            <div className="grid grid-cols-2 gap-3">
+              {screenshots.map((image, index) => (
+                <div 
+                  key={index}
+                  className="glass-card p-2 relative group cursor-pointer aspect-video"
+                  onClick={() => openLightbox(index)}
+                >
+                  <div className="relative overflow-hidden rounded-lg h-full">
+                    <img 
+                      src={image.src}
+                      alt={image.alt}
+                      className="w-full h-full object-cover rounded-lg transition-transform duration-300 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-background/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                      <ZoomIn className="w-6 h-6 text-foreground" />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <p className="text-sm text-muted-foreground mt-4 text-center">
+              Click any image to enlarge
+            </p>
+          </div>
         </div>
       </div>
+
+      {/* Lightbox Modal */}
+      <Dialog open={selectedImageIndex !== null} onOpenChange={closeLightbox}>
+        <DialogContent className="max-w-[95vw] max-h-[95vh] p-0 bg-background/95 backdrop-blur-xl border-glass-border">
+          <DialogClose className="absolute right-4 top-4 z-50 rounded-full p-2 bg-background/80 hover:bg-background border border-glass-border transition-colors">
+            <X className="h-5 w-5" />
+            <span className="sr-only">Close</span>
+          </DialogClose>
+          
+          {selectedImageIndex !== null && (
+            <div className="relative flex items-center justify-center p-4">
+              {/* Navigation arrows */}
+              <button
+                onClick={(e) => { e.stopPropagation(); goToPrevious(); }}
+                className="absolute left-4 z-50 p-2 rounded-full bg-background/80 hover:bg-background border border-glass-border transition-colors"
+              >
+                <ChevronLeft className="w-6 h-6" />
+              </button>
+              <button
+                onClick={(e) => { e.stopPropagation(); goToNext(); }}
+                className="absolute right-14 z-50 p-2 rounded-full bg-background/80 hover:bg-background border border-glass-border transition-colors"
+              >
+                <ChevronRight className="w-6 h-6" />
+              </button>
+              
+              {/* Image */}
+              <div className="flex flex-col items-center max-w-4xl">
+                <img
+                  src={screenshots[selectedImageIndex].src}
+                  alt={screenshots[selectedImageIndex].alt}
+                  className="max-w-full max-h-[75vh] object-contain rounded-lg"
+                />
+                {screenshots[selectedImageIndex].caption && (
+                  <p className="text-foreground font-medium mt-4 text-center">
+                    {screenshots[selectedImageIndex].caption}
+                  </p>
+                )}
+                
+                {/* Image counter */}
+                <p className="text-sm text-muted-foreground mt-2">
+                  {selectedImageIndex + 1} / {screenshots.length}
+                </p>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </section>
   );
 };
