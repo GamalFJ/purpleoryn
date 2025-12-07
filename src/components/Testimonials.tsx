@@ -22,7 +22,7 @@ const defaultTestimonials: Omit<Testimonial, "id" | "created_at">[] = [
     name: "Kathleen P. Thomas",
     role: "Founder",
     company: "ArKyTek",
-    quote: "Purple Cove Labs delivered an AI system that cut our manual processing time by 80%. The multi-agent architecture they built handles our entire client onboarding now.",
+    quote: "Purple Cove Labs delivered a web page, a form submission automated workflow and has given our business a digital backbone, thus cutting off manual process and decreasing client friction by 90%. They now handle our entire backend and AI systems.",
     rating: 5,
   },
   {
