@@ -6,7 +6,16 @@ import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { z } from "zod";
 
+// Validation schema for testimonial submissions
+const testimonialSchema = z.object({
+  name: z.string().trim().min(1, "Name is required").max(100, "Name must be less than 100 characters"),
+  role: z.string().trim().min(1, "Role is required").max(100, "Role must be less than 100 characters"),
+  company: z.string().trim().min(1, "Company is required").max(100, "Company must be less than 100 characters"),
+  quote: z.string().trim().min(10, "Testimonial must be at least 10 characters").max(500, "Testimonial must be less than 500 characters"),
+  rating: z.number().min(1, "Rating must be at least 1").max(5, "Rating must be at most 5"),
+});
 interface Testimonial {
   id: string;
   name: string;
@@ -66,12 +75,12 @@ const Testimonials = () => {
   });
 
   const submitMutation = useMutation({
-    mutationFn: async (data: typeof formData) => {
+    mutationFn: async (data: z.infer<typeof testimonialSchema>) => {
       const { error } = await supabase.from("testimonials").insert({
-        name: data.name.trim(),
-        role: data.role.trim(),
-        company: data.company.trim(),
-        quote: data.quote.trim(),
+        name: data.name,
+        role: data.role,
+        company: data.company,
+        quote: data.quote,
         rating: data.rating,
       });
       if (error) throw error;
@@ -89,11 +98,16 @@ const Testimonials = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name || !formData.role || !formData.company || !formData.quote) {
-      toast.error("Please fill in all fields.");
+    
+    // Validate form data with zod schema
+    const validation = testimonialSchema.safeParse(formData);
+    if (!validation.success) {
+      const firstError = validation.error.errors[0];
+      toast.error(firstError.message);
       return;
     }
-    submitMutation.mutate(formData);
+    
+    submitMutation.mutate(validation.data);
   };
 
   // Combine database testimonials with defaults (show DB ones first)
