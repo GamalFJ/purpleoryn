@@ -130,12 +130,14 @@ const Pricing = () => {
                     {t(tier.descriptionKey)}
                   </p>
 
-                  <div className="mb-3 sm:mb-4">
+                  <div className="mb-2">
                     <span className="text-2xl sm:text-3xl font-bold gradient-text">
                       {tier.price}
                     </span>
-                    <span className="text-muted-foreground text-xs sm:text-sm ml-2">
-                      / {tier.delivery}
+                  </div>
+                  <div className="mb-3 sm:mb-4">
+                    <span className="text-muted-foreground text-xs sm:text-sm">
+                      {t("pricing.delivery")}: {tier.delivery}
                     </span>
                   </div>
 

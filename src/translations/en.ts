@@ -129,6 +129,7 @@ export const en = {
     titleHighlight: "Pricing",
     subtitle: "Choose the package that fits your business needs. Every tier delivers a production-ready AI system you can use immediately.",
     getStarted: "Get Started",
+    delivery: "Delivery",
     tiers: {
       starter: {
         name: "Workflow Kickstart",

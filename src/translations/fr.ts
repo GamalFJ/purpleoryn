@@ -129,6 +129,7 @@ export const fr = {
     titleHighlight: "Transparente",
     subtitle: "Choisissez le forfait qui correspond à vos besoins. Chaque niveau offre un système IA prêt à l'emploi.",
     getStarted: "Commencer",
+    delivery: "Livraison",
     tiers: {
       starter: {
         name: "Démarrage Workflow",
