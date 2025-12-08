@@ -129,6 +129,7 @@ export const es = {
     titleHighlight: "Transparentes",
     subtitle: "Elige el paquete que se adapte a tus necesidades. Cada nivel entrega un sistema IA listo para producción.",
     getStarted: "Empezar",
+    delivery: "Entrega",
     tiers: {
       starter: {
         name: "Inicio de Workflow",
