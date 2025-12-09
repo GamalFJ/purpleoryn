@@ -58,6 +58,11 @@ export default {
           primary: "hsl(var(--glow-primary))",
           accent: "hsl(var(--glow-accent))",
         },
+        christmas: {
+          red: "hsl(var(--christmas-red))",
+          gold: "hsl(var(--christmas-gold))",
+          green: "hsl(var(--christmas-green))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

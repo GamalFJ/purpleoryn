@@ -1,4 +1,22 @@
 export const es = {
+  decemberSpecial: {
+    badge: "Especial de Diciembre",
+    title: "Oferta Especial Solo en Diciembre",
+    price: "US$ 600",
+    urgency: "Limitado a los primeros 5 clientes o hasta el 31 de diciembre de 2025",
+    includes: "Incluye",
+    feature1: "Flujo de automatización de 3–6 nodos",
+    feature2: "1 agente básico de IA o automatización (si es necesario)",
+    feature3: "Componente de UI simple o interfaz basada en formularios",
+    feature4: "Hasta 1 integración webhook / API",
+    feature5: "Despliegue básico / configuración de hosting simple",
+    feature6: "Documentación ligera + guía de usuario",
+    feature7: "1 revisión de corrección de errores / ajuste menor incluida",
+    bonus: "Auditoría de flujo de trabajo GRATIS de 30 minutos + consulta",
+    tagline: "Perfecto para fundadores independientes o micro-negocios que buscan una prueba de concepto rápida y económica antes de escalar.",
+    cta: "Comenzar — Especial US$ 600",
+    imagePlaceholder: "Sube tu imagen de portada festiva"
+  },
   header: {
     services: "Servicios",
     portfolio: "Portafolio",

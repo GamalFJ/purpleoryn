@@ -1,4 +1,22 @@
 export const en = {
+  decemberSpecial: {
+    badge: "December Special",
+    title: "December-Only Launch Special",
+    price: "US$ 600",
+    urgency: "Limited to first 5 clients or until December 31, 2025",
+    includes: "Includes",
+    feature1: "3–6 node automation workflow",
+    feature2: "1 basic AI or automation agent (if needed)",
+    feature3: "Simple UI component or basic form-based interface",
+    feature4: "Up to 1 webhook / API integration",
+    feature5: "Basic deployment / simple hosting setup",
+    feature6: "Lightweight documentation + user guide",
+    feature7: "1 bug-fix / minor-tweak revision included",
+    bonus: "FREE 30-minute workflow audit & consultation",
+    tagline: "Perfect for solo founders or micro-businesses wanting a quick, low-cost proof-of-concept before scaling.",
+    cta: "Get Started — US$ 600 Special",
+    imagePlaceholder: "Upload your festive cover image"
+  },
   header: {
     services: "Services",
     portfolio: "Portfolio",
