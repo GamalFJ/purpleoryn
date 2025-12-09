@@ -1,4 +1,4 @@
-import { Check, ArrowRight, Phone } from "lucide-react";
+import { Check, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import pricingStarterImg from "@/assets/pricing-starter.png";
 import pricingStandardImg from "@/assets/pricing-standard.png";
@@ -169,24 +169,28 @@ const Pricing = () => {
                     ))}
                   </ul>
 
-                  <Button
-                    variant={tier.highlight ? "hero" : "outline"}
-                    size="default"
-                    className="w-full group min-h-[44px]"
-                    asChild
-                  >
-                    {tier.isEnterprise ? (
-                      <a href={CONTACT_URL} target="_blank" rel="noopener noreferrer">
-                        <Phone className="w-4 h-4 mr-2" />
-                        {t("pricing.requestQuote")}
-                      </a>
-                    ) : (
+                  {tier.isEnterprise ? (
+                    <Button
+                      variant="outline"
+                      size="default"
+                      className="w-full min-h-[44px] cursor-not-allowed opacity-70"
+                      disabled
+                    >
+                      {t("pricing.availableSoon")}
+                    </Button>
+                  ) : (
+                    <Button
+                      variant={tier.highlight ? "hero" : "outline"}
+                      size="default"
+                      className="w-full group min-h-[44px]"
+                      asChild
+                    >
                       <a href={FIVERR_GIG_URL} target="_blank" rel="noopener noreferrer">
                         {t("pricing.getStarted")}
                         <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
                       </a>
-                    )}
-                  </Button>
+                    </Button>
+                  )}
                 </div>
               </article>
             );

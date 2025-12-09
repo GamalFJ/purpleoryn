@@ -148,6 +148,7 @@ export const fr = {
     subtitle: "Choisissez le forfait qui correspond à vos besoins. Chaque niveau offre un système IA prêt à l'emploi.",
     getStarted: "Commencer",
     requestQuote: "Demander un Devis",
+    availableSoon: "Bientôt Disponible",
     delivery: "Livraison",
     tiers: {
       starter: {
