@@ -175,7 +175,7 @@ export const fr = {
           "Jusqu'à 4 intégrations API / webhook",
           "Déploiement et configuration d'environnement (cloud ou serveur)",
           "Logging de workflow, gestion d'erreurs et garde-fous basiques",
-          "Documentation système + diagramme d'architecture",
+          "Documentation système",
           "2 révisions incluses",
         ],
       },

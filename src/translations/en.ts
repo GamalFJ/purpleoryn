@@ -175,7 +175,7 @@ export const en = {
           "Up to 4 API / webhook integrations",
           "Deployment & environment setup (cloud or server)",
           "Workflow logging, error-handling & basic guardrails",
-          "System documentation + architecture diagram",
+          "System documentation",
           "2 revisions included",
         ],
       },
