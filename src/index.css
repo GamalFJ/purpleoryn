@@ -43,6 +43,11 @@
     --glow-accent: 280 100% 70%;
     --glass-bg: 270 40% 15%;
     --glass-border: 270 50% 40%;
+    
+    /* Christmas accent colors */
+    --christmas-red: 0 84% 60%;
+    --christmas-gold: 38 92% 50%;
+    --christmas-green: 142 76% 36%;
   }
 
   .dark {
@@ -261,5 +266,48 @@
   /* Container responsive padding */
   .section-padding {
     @apply py-16 px-4 sm:py-20 sm:px-6 md:py-24;
+  }
+
+  /* Christmas special styles */
+  .christmas-glow {
+    border: 1px solid hsl(var(--christmas-red) / 0.3);
+    animation: christmas-pulse 8s ease-in-out infinite;
+  }
+
+  @keyframes christmas-pulse {
+    0%, 100% {
+      box-shadow: 
+        0 0 20px hsl(var(--christmas-red) / 0.1),
+        0 0 40px hsl(var(--primary) / 0.1);
+    }
+    50% {
+      box-shadow: 
+        0 0 30px hsl(var(--christmas-red) / 0.2),
+        0 0 60px hsl(var(--christmas-gold) / 0.15),
+        0 0 80px hsl(var(--primary) / 0.1);
+    }
+  }
+
+  .festive-badge {
+    background: linear-gradient(135deg, hsl(var(--christmas-red)), hsl(var(--christmas-gold)));
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+
+  .christmas-gradient-text {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, hsl(var(--christmas-gold)) 0%, hsl(var(--christmas-red)) 50%, hsl(var(--christmas-gold)) 100%);
+  }
+
+  .christmas-cta {
+    background: linear-gradient(135deg, hsl(var(--christmas-red)), hsl(var(--primary)));
+    border: none;
+  }
+
+  .christmas-cta:hover {
+    background: linear-gradient(135deg, hsl(var(--christmas-red) / 0.9), hsl(var(--primary) / 0.9));
+    box-shadow: 
+      0 0 20px hsl(var(--christmas-red) / 0.4),
+      0 0 40px hsl(var(--primary) / 0.2);
   }
 }

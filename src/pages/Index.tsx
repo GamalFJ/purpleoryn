@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
+import DecemberSpecial from "@/components/DecemberSpecial";
 import Services from "@/components/Services";
 import CaseStudy from "@/components/CaseStudy";
 import OngoingBuilds from "@/components/OngoingBuilds";
@@ -33,6 +34,9 @@ const Index = () => {
         <Header />
         <main>
           <Hero />
+          <ScrollReveal>
+            <DecemberSpecial />
+          </ScrollReveal>
           <ScrollReveal>
             <Services />
           </ScrollReveal>
