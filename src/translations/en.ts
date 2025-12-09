@@ -148,6 +148,7 @@ export const en = {
     subtitle: "Choose the package that fits your business needs. Every tier delivers a production-ready AI system you can use immediately.",
     getStarted: "Get Started",
     requestQuote: "Request a Quote",
+    availableSoon: "Available Soon",
     delivery: "Delivery",
     tiers: {
       starter: {

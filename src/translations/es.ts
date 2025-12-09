@@ -148,6 +148,7 @@ export const es = {
     subtitle: "Elige el paquete que se adapte a tus necesidades. Cada nivel entrega un sistema IA listo para producción.",
     getStarted: "Empezar",
     requestQuote: "Solicitar Cotización",
+    availableSoon: "Próximamente",
     delivery: "Entrega",
     tiers: {
       starter: {
