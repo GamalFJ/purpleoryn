@@ -1,10 +1,14 @@
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Check, Gift } from "lucide-react";
 import decemberCover from "@/assets/december-special-cover.png";
+import DecemberSpecialModal from "./DecemberSpecialModal";
+import { useState } from "react";
 
 const DecemberSpecial = () => {
   const { t } = useLanguage();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const features = [
     "decemberSpecial.feature1",
@@ -87,16 +91,15 @@ const DecemberSpecial = () => {
 
           {/* CTA Button */}
           <div className="text-center">
-            <a
-              href="https://fiverr.com/s/qDBW55d"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Button variant="hero" size="xl" className="christmas-cta w-full sm:w-auto">
-                <Gift className="w-5 h-5 mr-2" />
-                {t("decemberSpecial.cta")}
-              </Button>
-            </a>
+            <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+              <DialogTrigger asChild>
+                <Button variant="hero" size="xl" className="christmas-cta w-full sm:w-auto">
+                  <Gift className="w-5 h-5 mr-2" />
+                  {t("decemberSpecial.cta")}
+                </Button>
+              </DialogTrigger>
+              <DecemberSpecialModal onClose={() => setIsModalOpen(false)} />
+            </Dialog>
           </div>
         </div>
       </div>
