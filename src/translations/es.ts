@@ -17,6 +17,30 @@ export const es = {
     cta: "Comenzar — Especial US$ 600",
     imagePlaceholder: "Sube tu imagen de portada festiva"
   },
+  decemberModal: {
+    title: "Reclama Tu Especial de Diciembre",
+    subtitle: "Completa el formulario y me pondré en contacto contigo en 24 horas.",
+    fullName: "Nombre Completo",
+    fullNamePlaceholder: "Tu nombre completo",
+    businessName: "Nombre del Negocio",
+    businessNamePlaceholder: "Tu empresa o nombre del proyecto",
+    email: "Correo Electrónico",
+    emailPlaceholder: "tu@ejemplo.com",
+    projectType: "Tipo de Proyecto",
+    projectTypePlaceholder: "Selecciona un tipo de proyecto",
+    projectTypes: {
+      automation: "Automatización",
+      aiAgent: "Agente IA",
+      landingPage: "Página de Aterrizaje",
+      businessTool: "Herramienta de Negocio (app)",
+      combined: "Automatización + Agente + Página o Herramienta",
+      notSure: "No estoy seguro"
+    },
+    projectDetails: "¿Qué necesitas?",
+    projectDetailsPlaceholder: "Describe tu proyecto, objetivos y requisitos específicos...",
+    submit: "Enviar",
+    successMessage: "¡Formulario enviado con éxito! Me pondré en contacto pronto."
+  },
   header: {
     services: "Servicios",
     portfolio: "Portafolio",

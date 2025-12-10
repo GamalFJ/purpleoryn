@@ -17,6 +17,30 @@ export const en = {
     cta: "Get Started — US$ 600 Special",
     imagePlaceholder: "Upload your festive cover image"
   },
+  decemberModal: {
+    title: "Claim Your December Special",
+    subtitle: "Fill out the form and I'll get back to you within 24 hours.",
+    fullName: "Full Name",
+    fullNamePlaceholder: "Your full name",
+    businessName: "Business Name",
+    businessNamePlaceholder: "Your company or project name",
+    email: "Email",
+    emailPlaceholder: "you@example.com",
+    projectType: "Project Type",
+    projectTypePlaceholder: "Select a project type",
+    projectTypes: {
+      automation: "Automation",
+      aiAgent: "AI Agent",
+      landingPage: "Landing Page",
+      businessTool: "Business Tool (app)",
+      combined: "Automation + Agent + Landing Page or Tool",
+      notSure: "I'm not sure"
+    },
+    projectDetails: "What do you need?",
+    projectDetailsPlaceholder: "Describe your project, goals, and any specific requirements...",
+    submit: "Submit",
+    successMessage: "Form submitted successfully! I'll be in touch soon."
+  },
   header: {
     services: "Services",
     portfolio: "Portfolio",

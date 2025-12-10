@@ -17,6 +17,30 @@ export const fr = {
     cta: "Commencer — Spécial US$ 600",
     imagePlaceholder: "Téléchargez votre image de couverture festive"
   },
+  decemberModal: {
+    title: "Réclamez Votre Offre Spéciale Décembre",
+    subtitle: "Remplissez le formulaire et je vous répondrai sous 24 heures.",
+    fullName: "Nom Complet",
+    fullNamePlaceholder: "Votre nom complet",
+    businessName: "Nom de l'Entreprise",
+    businessNamePlaceholder: "Votre entreprise ou nom de projet",
+    email: "Email",
+    emailPlaceholder: "vous@exemple.com",
+    projectType: "Type de Projet",
+    projectTypePlaceholder: "Sélectionnez un type de projet",
+    projectTypes: {
+      automation: "Automatisation",
+      aiAgent: "Agent IA",
+      landingPage: "Page d'Atterrissage",
+      businessTool: "Outil Métier (app)",
+      combined: "Automatisation + Agent + Page ou Outil",
+      notSure: "Je ne suis pas sûr"
+    },
+    projectDetails: "De quoi avez-vous besoin ?",
+    projectDetailsPlaceholder: "Décrivez votre projet, vos objectifs et exigences spécifiques...",
+    submit: "Soumettre",
+    successMessage: "Formulaire soumis avec succès ! Je vous contacterai bientôt."
+  },
   header: {
     services: "Services",
     portfolio: "Portfolio",
