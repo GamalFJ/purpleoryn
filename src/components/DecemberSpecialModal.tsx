@@ -20,6 +20,7 @@ import { Gift, X } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
+import { supabase } from "@/integrations/supabase/client";
 
 interface DecemberSpecialModalProps {
   onClose: () => void;
@@ -70,15 +71,16 @@ const DecemberSpecialModal = ({ onClose }: DecemberSpecialModalProps) => {
     try {
       const validatedData = formSchema.parse(formData);
       
-      // Log form data - ready for n8n webhook integration
-      console.log("December Special Form Submitted:", validatedData);
-      
-      // TODO: Replace with n8n webhook
-      // await fetch('YOUR_N8N_WEBHOOK_URL', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(validatedData)
-      // });
+      // Call the edge function to forward data to n8n webhook
+      const { data, error } = await supabase.functions.invoke('december-special-webhook', {
+        body: validatedData,
+      });
+
+      if (error) {
+        console.error('Error submitting form:', error);
+        toast.error('Failed to submit form. Please try again.');
+        return;
+      }
 
       toast.success(t("decemberModal.successMessage"));
       onClose();
@@ -91,6 +93,9 @@ const DecemberSpecialModal = ({ onClose }: DecemberSpecialModalProps) => {
           }
         });
         setErrors(fieldErrors);
+      } else {
+        console.error('Unexpected error:', error);
+        toast.error('Something went wrong. Please try again.');
       }
     } finally {
       setIsSubmitting(false);
