@@ -49,12 +49,12 @@ const DecemberSpecialModal = ({ onClose }: DecemberSpecialModalProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const projectTypeOptions = [
-    { value: "automation", label: t("decemberModal.projectTypes.automation") },
-    { value: "aiAgent", label: t("decemberModal.projectTypes.aiAgent") },
-    { value: "landingPage", label: t("decemberModal.projectTypes.landingPage") },
-    { value: "businessTool", label: t("decemberModal.projectTypes.businessTool") },
-    { value: "combined", label: t("decemberModal.projectTypes.combined") },
-    { value: "notSure", label: t("decemberModal.projectTypes.notSure") },
+    { value: "Automation", label: t("decemberModal.projectTypes.automation") },
+    { value: "AI Agent", label: t("decemberModal.projectTypes.aiAgent") },
+    { value: "Landing Page", label: t("decemberModal.projectTypes.landingPage") },
+    { value: "Business Tool (App)", label: t("decemberModal.projectTypes.businessTool") },
+    { value: "Automation + Agent + Landing Page or Tool", label: t("decemberModal.projectTypes.combined") },
+    { value: "I'm Not Sure", label: t("decemberModal.projectTypes.notSure") },
   ];
 
   const handleInputChange = (field: keyof FormData, value: string) => {
