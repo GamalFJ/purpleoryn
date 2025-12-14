@@ -16,7 +16,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Gift, X } from "lucide-react";
+import { Gift, X, CheckCircle, Mail } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -47,6 +47,7 @@ const DecemberSpecialModal = ({ onClose }: DecemberSpecialModalProps) => {
   });
   const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const projectTypeOptions = [
     { value: "Automation", label: t("decemberModal.projectTypes.automation") },
@@ -82,8 +83,8 @@ const DecemberSpecialModal = ({ onClose }: DecemberSpecialModalProps) => {
         return;
       }
 
+      setIsSubmitted(true);
       toast.success(t("decemberModal.successMessage"));
-      onClose();
     } catch (error) {
       if (error instanceof z.ZodError) {
         const fieldErrors: Partial<Record<keyof FormData, string>> = {};
@@ -101,6 +102,53 @@ const DecemberSpecialModal = ({ onClose }: DecemberSpecialModalProps) => {
       setIsSubmitting(false);
     }
   };
+
+  // Thank you view after successful submission
+  if (isSubmitted) {
+    return (
+      <DialogContent className="december-modal-content sm:max-w-[500px] border-0 p-0">
+        <button
+          onClick={onClose}
+          className="december-modal-close absolute right-4 top-4 z-10 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+          aria-label="Close"
+        >
+          <X className="h-5 w-5" />
+        </button>
+
+        <div className="p-6 sm:p-8 text-center">
+          <div className="flex justify-center mb-4">
+            <div className="p-4 rounded-full bg-christmas-green/20 border border-christmas-gold/30">
+              <CheckCircle className="w-10 h-10 text-christmas-green" />
+            </div>
+          </div>
+          
+          <h2 className="text-2xl font-bold christmas-gradient-text mb-3">
+            {t("decemberModal.thankYouTitle")}
+          </h2>
+          
+          <p className="text-muted-foreground mb-6">
+            {t("decemberModal.thankYouMessage")}
+          </p>
+
+          <div className="flex items-center justify-center gap-2 p-4 rounded-lg bg-primary/10 border border-primary/20 mb-6">
+            <Mail className="w-5 h-5 text-christmas-gold" />
+            <span className="text-sm text-foreground/80">
+              {t("decemberModal.checkEmail")}
+            </span>
+          </div>
+
+          <Button
+            variant="hero"
+            size="xl"
+            className="christmas-cta w-full"
+            onClick={onClose}
+          >
+            {t("decemberModal.closeButton")}
+          </Button>
+        </div>
+      </DialogContent>
+    );
+  }
 
   return (
     <DialogContent className="december-modal-content sm:max-w-[500px] max-h-[90vh] overflow-y-auto border-0 p-0">

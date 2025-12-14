@@ -39,7 +39,11 @@ export const en = {
     projectDetails: "What do you need?",
     projectDetailsPlaceholder: "Describe your project, goals, and any specific requirements...",
     submit: "Submit",
-    successMessage: "Form submitted successfully! I'll be in touch soon."
+    successMessage: "Form submitted successfully! I'll be in touch soon.",
+    thankYouTitle: "Thank You!",
+    thankYouMessage: "Your request has been received. I'll review your project details and get back to you within 24 hours.",
+    checkEmail: "Check your email for the next steps",
+    closeButton: "Got It"
   },
   header: {
     services: "Services",
