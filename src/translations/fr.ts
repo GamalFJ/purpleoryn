@@ -11,7 +11,7 @@ export const fr = {
     feature4: "Jusqu'à 1 intégration webhook / API",
     feature5: "Déploiement basique / configuration d'hébergement simple",
     feature6: "Documentation légère + guide utilisateur",
-    feature7: "Jusqu'à 3 webhooks",
+    feature7: "1 révision correction de bug / ajustement mineur incluse",
     bonus: "Audit de workflow GRATUIT de 30 minutes + consultation",
     tagline: "Parfait pour les fondateurs solo ou micro-entreprises souhaitant une preuve de concept rapide et économique avant de se développer.",
     cta: "Commencer — Spécial US$ 600",
