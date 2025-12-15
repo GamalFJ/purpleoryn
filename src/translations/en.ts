@@ -5,7 +5,7 @@ export const en = {
     price: "US$ 600",
     urgency: "Limited to first 5 clients or until December 31, 2025",
     includes: "Includes",
-    feature1: "3–6 node automation workflow",
+    feature1: "4–10 node automation workflow",
     feature2: "1 basic AI or automation agent (if needed)",
     feature3: "Simple UI component or basic form-based interface",
     feature4: "Up to 1 webhook / API integration",
