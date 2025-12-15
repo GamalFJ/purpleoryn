@@ -8,7 +8,7 @@ export const fr = {
     feature1: "Flux d'automatisation de 4–10 nœuds",
     feature2: "1 agent IA ou d'automatisation de base (si nécessaire)",
     feature3: "Composant UI simple ou interface basée sur formulaire",
-    feature4: "Jusqu'à 1 intégration webhook / API",
+    feature4: "Jusqu'à 3 webhooks",
     feature5: "Déploiement basique / configuration d'hébergement simple",
     feature6: "Documentation légère + guide utilisateur",
     feature7: "1 révision correction de bug / ajustement mineur incluse",
