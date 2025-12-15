@@ -5,7 +5,7 @@ export const fr = {
     price: "US$ 600",
     urgency: "Limité aux 5 premiers clients ou jusqu'au 31 décembre 2025",
     includes: "Comprend",
-    feature1: "Flux d'automatisation de 3–6 nœuds",
+    feature1: "Flux d'automatisation de 4–10 nœuds",
     feature2: "1 agent IA ou d'automatisation de base (si nécessaire)",
     feature3: "Composant UI simple ou interface basée sur formulaire",
     feature4: "Jusqu'à 1 intégration webhook / API",
