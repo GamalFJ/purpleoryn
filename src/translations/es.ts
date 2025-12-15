@@ -8,7 +8,7 @@ export const es = {
     feature1: "Flujo de automatización de 4–10 nodos",
     feature2: "1 agente básico de IA o automatización (si es necesario)",
     feature3: "Componente de UI simple o interfaz basada en formularios",
-    feature4: "Hasta 1 integración webhook / API",
+    feature4: "Hasta 3 webhooks",
     feature5: "Despliegue básico / configuración de hosting simple",
     feature6: "Documentación ligera + guía de usuario",
     feature7: "1 revisión de corrección de errores / ajuste menor incluida",

@@ -8,7 +8,7 @@ export const en = {
     feature1: "4–10 node automation workflow",
     feature2: "1 basic AI or automation agent (if needed)",
     feature3: "Simple UI component or basic form-based interface",
-    feature4: "Up to 1 webhook / API integration",
+    feature4: "Up to 3 webhooks",
     feature5: "Basic deployment / simple hosting setup",
     feature6: "Lightweight documentation + user guide",
     feature7: "1 bug-fix / minor-tweak revision included",
