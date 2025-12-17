@@ -25,7 +25,7 @@ const Pricing = () => {
     },
     {
       nameKey: "pricing.tiers.standard.name",
-      price: "$4,999.99",
+      price: "$4,995.99",
       descriptionKey: "pricing.tiers.standard.description",
       image: pricingStandardImg,
       delivery: "14 days",
