@@ -9,37 +9,37 @@ const XIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-// Custom Beacons icon
+// Beacons.ai icon - three circles in triangular pattern
 const BeaconsIcon = ({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="none" />
-    <circle cx="12" cy="12" r="4" fill="currentColor" />
+    <circle cx="12" cy="6" r="3.5" />
+    <circle cx="6" cy="16" r="3.5" />
+    <circle cx="18" cy="16" r="3.5" />
   </svg>
 );
 
-// Payment icons in full color
+// Visa logo - blue text
 const VisaIcon = () => (
-  <svg viewBox="0 0 48 32" className="h-6 sm:h-8 w-auto">
-    <rect width="48" height="32" rx="4" fill="#1A1F71" />
-    <path d="M19.5 21h-3l2-10h3l-2 10zm7.5-10l-2.8 7-1-5.2c-.2-.8-.6-1-1.3-1h-3.8l-.1.4c1.3.3 2.5.8 3.3 1.3l2.7 7.5h3l4.5-10h-3.5zm10.3 6.8l1.5-4 .9 4h-2.4zm3.7 3.2h2.8l-2.4-10h-2.5c-.6 0-1.1.3-1.3 1l-4.6 9h3.2l.6-1.8h3.9l.3 1.8zm-16.5-6.5l.4-2.3c-.8-.3-1.6-.5-2.5-.5-2.7 0-4.6 1.4-4.6 3.5 0 1.5 1.4 2.4 2.4 2.9 1.1.5 1.4.9 1.4 1.3 0 .7-.8 1-1.6 1-.9 0-2-.2-2.9-.6l-.4 2.3c.8.3 2 .5 3.3.5 2.9 0 4.8-1.4 4.8-3.6 0-1.2-.7-2.1-2.3-2.8-1-.4-1.5-.7-1.5-1.2 0-.4.5-.8 1.5-.8.9 0 1.6.2 2 .3z" fill="#fff"/>
+  <svg viewBox="0 0 50 16" className="h-5 sm:h-6 w-auto">
+    <path d="M19.5 0.5L16.5 15.5H12.5L15.5 0.5H19.5ZM35.5 10.2L37.7 4L39 10.2H35.5ZM40.3 15.5H44L40.8 0.5H37.3C36.5 0.5 35.8 1 35.5 1.7L29 15.5H33.2L34 13.3H39.2L39.7 15.5H40.3ZM29.8 10.5C29.8 5.8 23.3 5.5 23.3 3.5C23.3 2.8 24 2.1 25.4 1.9C26.1 1.8 28 1.7 30.1 2.7L31 0.9C29.8 0.5 28.3 0 26.4 0C22.5 0 19.8 2 19.8 4.9C19.8 9.3 26.3 9.6 26.3 11.8C26.3 12.7 25.3 13.5 23.7 13.5C21.8 13.5 20 12.8 19 12.2L18 14.1C19.1 14.8 21.1 15.4 23.2 15.4C27.4 15.5 29.8 13.6 29.8 10.5ZM13 0.5L6.5 15.5H2.2L-1 3.3C-1.2 2.5 -1.4 2.2 -2 1.9C-3 1.4 -4.6 0.9 -6 0.5L-5.9 0.5H0.8C1.7 0.5 2.5 1.1 2.7 2.1L4.3 10.4L8.4 0.5H13Z" transform="translate(8, 0)" fill="#1A1F71"/>
   </svg>
 );
 
+// Mastercard logo - overlapping circles
 const MastercardIcon = () => (
-  <svg viewBox="0 0 48 32" className="h-6 sm:h-8 w-auto">
-    <rect width="48" height="32" rx="4" fill="#fff" />
-    <circle cx="18" cy="16" r="8" fill="#EB001B" />
-    <circle cx="30" cy="16" r="8" fill="#F79E1B" />
-    <path d="M24 9.6c1.9 1.5 3.1 3.8 3.1 6.4s-1.2 4.9-3.1 6.4c-1.9-1.5-3.1-3.8-3.1-6.4s1.2-4.9 3.1-6.4z" fill="#FF5F00" />
+  <svg viewBox="0 0 40 24" className="h-5 sm:h-6 w-auto">
+    <circle cx="14" cy="12" r="10" fill="#EB001B" />
+    <circle cx="26" cy="12" r="10" fill="#F79E1B" />
+    <path d="M20 4.4c2.4 1.9 3.9 4.7 3.9 7.6s-1.5 5.7-3.9 7.6c-2.4-1.9-3.9-4.7-3.9-7.6s1.5-5.7 3.9-7.6z" fill="#FF5F00" />
   </svg>
 );
 
+// PayPal logo
 const PayPalIcon = () => (
-  <svg viewBox="0 0 48 32" className="h-6 sm:h-8 w-auto">
-    <rect width="48" height="32" rx="4" fill="#fff" />
-    <path d="M19.5 8h5.8c3.8 0 5.2 2 4.9 4.8-.4 3.8-2.8 5.9-6.4 5.9h-1.5c-.5 0-.9.3-1 .9l-.8 5.1c-.1.4-.4.7-.8.7h-3.3c-.4 0-.6-.3-.5-.7l2.6-16c.1-.5.5-.7 1-.7z" fill="#003087"/>
-    <path d="M32.2 8.3c.8.9 1.1 2.2.9 3.7-.6 4.6-3.2 7.2-7.7 7.2h-2c-.5 0-.9.4-1 .9l-1 6.3c-.1.4-.4.6-.8.6h-2.8c-.3 0-.5-.2-.4-.6l.4-2.4.8-5.1c.1-.5.5-.9 1-.9h1.5c3.6 0 6-2.1 6.4-5.9.2-1.5.1-2.7-.6-3.5" fill="#002F86"/>
-    <path d="M14.5 8h5.8c.5 0 .9.2 1 .7l-2.6 16c-.1.4.1.7.5.7h3.3c.4 0 .7-.3.8-.7l.8-5.1c.1-.5.5-.9 1-.9h1.5c3.6 0 6-2.1 6.4-5.9.2-1.5-.1-2.8-.9-3.7-.9-1-2.5-1.5-4.4-1.5h-5.8c-.5 0-.9.2-1 .7l-2.6 16c-.1.4.1.7.5.7" fill="#009CDE"/>
+  <svg viewBox="0 0 48 16" className="h-5 sm:h-6 w-auto">
+    <path d="M14.5 1H18.8C21.6 1 23 2.5 22.7 4.8C22.3 7.8 20.3 9.5 17.5 9.5H15.8C15.5 9.5 15.2 9.7 15.1 10L14.4 14.4C14.3 14.7 14.1 14.9 13.8 14.9H11.3C11 14.9 10.8 14.7 10.9 14.4L13.2 1.6C13.3 1.3 13.5 1 14.5 1Z" fill="#003087"/>
+    <path d="M24.5 1H28.8C31.6 1 33 2.5 32.7 4.8C32.3 7.8 30.3 9.5 27.5 9.5H25.8C25.5 9.5 25.2 9.7 25.1 10L24.4 14.4C24.3 14.7 24.1 14.9 23.8 14.9H21.3C21 14.9 20.8 14.7 20.9 14.4L23.2 1.6C23.3 1.3 23.5 1 24.5 1Z" fill="#0070E0"/>
+    <path d="M34 6H37C39 6 40 7 39.8 8.5C39.5 10.5 38 11.5 36 11.5H35C34.8 11.5 34.6 11.7 34.5 11.9L34 14.4C34 14.7 33.8 14.9 33.5 14.9H31.5C31.2 14.9 31 14.7 31.1 14.4L32.7 6.6C32.8 6.3 33 6 34 6Z" fill="#003087"/>
   </svg>
 );
 
@@ -100,8 +100,8 @@ const Footer = () => {
             </a>
           </div>
 
-          {/* Payment Icons */}
-          <div className="flex items-center gap-3 sm:gap-4">
+          {/* Payment Icons - no background */}
+          <div className="flex items-center gap-4 sm:gap-6">
             <VisaIcon />
             <MastercardIcon />
             <PayPalIcon />
