@@ -51,7 +51,7 @@ const Footer = () => {
               <Linkedin className="w-5 h-5 text-foreground hover:text-primary transition-colors" />
             </a>
             <a 
-              href="https://x.com/" 
+              href="https://x.com/TheCodeMagi" 
               target="_blank" 
               rel="noopener noreferrer" 
               className="p-2.5 sm:p-3 rounded-full glass-card hover:border-primary/50 hover:scale-110 transition-all duration-300 min-h-[44px] min-w-[44px] flex items-center justify-center" 
@@ -60,7 +60,7 @@ const Footer = () => {
               <XIcon className="w-5 h-5 text-foreground hover:text-primary transition-colors" />
             </a>
             <a 
-              href="https://beacons.ai/" 
+              href="https://beacons.ai/thecodemagi" 
               target="_blank" 
               rel="noopener noreferrer" 
               className="p-2.5 sm:p-3 rounded-full glass-card hover:border-primary/50 hover:scale-110 transition-all duration-300 min-h-[44px] min-w-[44px] flex items-center justify-center" 
