@@ -5,37 +5,27 @@ import { Check, Gift } from "lucide-react";
 import decemberCover from "@/assets/december-special-cover.png";
 import DecemberSpecialModal from "./DecemberSpecialModal";
 import { useState } from "react";
-
 const DecemberSpecial = () => {
-  const { t } = useLanguage();
+  const {
+    t
+  } = useLanguage();
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const features = [
-    "decemberSpecial.feature1",
-    "decemberSpecial.feature2",
-    "decemberSpecial.feature3",
-    "decemberSpecial.feature4",
-    "decemberSpecial.feature5",
-    "decemberSpecial.feature6",
-    "decemberSpecial.feature7",
-  ];
-
-  return (
-    <section id="december-special" className="section-padding">
+  const features = ["decemberSpecial.feature1", "decemberSpecial.feature2", "decemberSpecial.feature3", "decemberSpecial.feature4", "decemberSpecial.feature5", "decemberSpecial.feature6", "decemberSpecial.feature7"];
+  return <section id="december-special" className="section-padding">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
         <div className="glass-card christmas-glow p-6 sm:p-8 lg:p-10 relative overflow-hidden border-christmas-gold/30">
           {/* Decorative snowflakes */}
           <div className="absolute top-4 right-4 text-white/20 text-4xl animate-pulse">❄️</div>
-          <div className="absolute bottom-4 left-4 text-white/15 text-3xl animate-pulse" style={{ animationDelay: '1s' }}>❄️</div>
-          <div className="absolute top-1/3 left-4 text-white/10 text-2xl animate-pulse" style={{ animationDelay: '2s' }}>❄️</div>
+          <div className="absolute bottom-4 left-4 text-white/15 text-3xl animate-pulse" style={{
+          animationDelay: '1s'
+        }}>❄️</div>
+          <div className="absolute top-1/3 left-4 text-white/10 text-2xl animate-pulse" style={{
+          animationDelay: '2s'
+        }}>❄️</div>
           
           {/* Cover Image */}
           <div className="mb-6 -mx-6 sm:-mx-8 lg:-mx-10 -mt-6 sm:-mt-8 lg:-mt-10 rounded-t-lg overflow-hidden">
-            <img 
-              src={decemberCover} 
-              alt="December Special Offer - Purple Cove Labs" 
-              className="w-full h-auto object-cover"
-            />
+            <img alt="December Special Offer - Purple Cove Labs" className="w-full h-auto object-cover" src="/lovable-uploads/ed6286fa-540a-4ff8-a267-57c3a5faeb09.png" />
           </div>
 
           {/* Festive Badge */}
@@ -67,12 +57,10 @@ const DecemberSpecial = () => {
               {t("decemberSpecial.includes")}:
             </p>
             <ul className="space-y-2">
-              {features.map((featureKey, index) => (
-                <li key={index} className="flex items-start gap-3 text-sm sm:text-base text-foreground/90">
+              {features.map((featureKey, index) => <li key={index} className="flex items-start gap-3 text-sm sm:text-base text-foreground/90">
                   <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
                   <span>{t(featureKey)}</span>
-                </li>
-              ))}
+                </li>)}
             </ul>
           </div>
 
@@ -103,8 +91,6 @@ const DecemberSpecial = () => {
           </div>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default DecemberSpecial;
