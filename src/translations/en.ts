@@ -274,6 +274,6 @@ export const en = {
     button: "Go to Cove Connect",
   },
   footer: {
-    copyright: "© 2025 Purple Cove Labs | Powered by Oryn AI. All rights reserved.",
+    copyright: "© 2026 Purple Cove Labs | Powered by Oryn AI. All rights reserved.",
   },
 };
