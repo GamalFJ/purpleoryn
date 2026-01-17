@@ -3,6 +3,7 @@ import beaconsLogo from "@/assets/beacons-logo.png";
 import mastercardLogo from "@/assets/mastercard-logo.png";
 import paypalLogo from "@/assets/paypal-logo.png";
 import visaLogo from "@/assets/visa-logo.png";
+import fluumLogo from "@/assets/fluum-logo.png";
 import { Linkedin, Instagram } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -81,6 +82,17 @@ const Footer = () => {
           <p className="text-muted-foreground text-xs sm:text-sm text-center max-w-xs sm:max-w-none">
             {t("footer.copyright")}
           </p>
+
+          {/* Fluum Onboarding */}
+          <a 
+            href="https://www.fluum.io" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+          >
+            <span className="text-muted-foreground text-xs sm:text-sm">Onboarding System Powered By</span>
+            <img src={fluumLogo} alt="Fluum" className="h-5 sm:h-6 w-auto" />
+          </a>
         </div>
       </div>
     </footer>
