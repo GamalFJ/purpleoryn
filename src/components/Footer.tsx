@@ -85,7 +85,7 @@ const Footer = () => {
 
           {/* Fluum Onboarding */}
           <a 
-            href="https://www.fluum.io" 
+            href="https://fluum.ai/join/696a8a48b70bae5bebf145ae" 
             target="_blank" 
             rel="noopener noreferrer"
             className="flex items-center gap-2 hover:opacity-80 transition-opacity"
