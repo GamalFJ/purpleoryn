@@ -3,7 +3,8 @@ import beaconsLogo from "@/assets/beacons-logo.png";
 import mastercardLogo from "@/assets/mastercard-logo.png";
 import paypalLogo from "@/assets/paypal-logo.png";
 import visaLogo from "@/assets/visa-logo.png";
-import fluumLogo from "@/assets/fluum-logo.png";
+import fluumIcon from "@/assets/fluum-icon.png";
+import fluumWordmark from "@/assets/fluum-wordmark.png";
 import { Linkedin, Instagram } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -91,7 +92,10 @@ const Footer = () => {
             className="flex items-center gap-2 hover:opacity-80 transition-opacity"
           >
             <span className="text-muted-foreground text-xs sm:text-sm">Onboarding System Powered By</span>
-            <img src={fluumLogo} alt="Fluum" className="h-5 sm:h-6 w-auto" />
+            <div className="relative h-5 sm:h-6 w-5 sm:w-6 flex items-center justify-center">
+              <img src={fluumIcon} alt="Fluum Icon" className="h-5 sm:h-6 w-auto rounded" style={{ mixBlendMode: 'multiply' }} />
+            </div>
+            <img src={fluumWordmark} alt="Fluum" className="h-4 sm:h-5 w-auto" />
           </a>
         </div>
       </div>
