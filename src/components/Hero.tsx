@@ -1,18 +1,16 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-
 const Hero = () => {
-  const { t } = useLanguage();
-
-  return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 px-4 sm:px-6">
+  const {
+    t
+  } = useLanguage();
+  return <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 px-4 sm:px-6">
       {/* Background gradient orbs - very soft ambient glow */}
       <div className="absolute top-1/4 left-1/4 w-48 sm:w-72 md:w-96 h-48 sm:h-72 md:h-96 bg-primary/5 rounded-full blur-3xl animate-glow-pulse" />
-      <div 
-        className="absolute bottom-1/4 right-1/4 w-40 sm:w-60 md:w-80 h-40 sm:h-60 md:h-80 bg-accent/5 rounded-full blur-3xl animate-glow-pulse" 
-        style={{ animationDelay: "3s" }} 
-      />
+      <div className="absolute bottom-1/4 right-1/4 w-40 sm:w-60 md:w-80 h-40 sm:h-60 md:h-80 bg-accent/5 rounded-full blur-3xl animate-glow-pulse" style={{
+      animationDelay: "3s"
+    }} />
       
       <div className="container mx-auto relative z-10">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
@@ -56,12 +54,7 @@ const Hero = () => {
             <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent rounded-full blur-2xl" />
             <div className="relative">
               <div className="absolute -inset-4 bg-gradient-to-r from-primary/8 to-accent/8 rounded-full blur-3xl animate-glow-pulse" />
-              <img 
-                alt={t("hero.founderAlt")}
-                className="relative z-10 w-full max-w-[28rem] h-auto animate-float border-glass-bg object-contain" 
-                src="/lovable-uploads/99bfa2b1-73f5-4f57-9b57-4f170094e155.png" 
-                loading="lazy"
-              />
+              <img alt={t("hero.founderAlt")} className="relative z-10 w-full max-w-[28rem] h-auto animate-float border-glass-bg object-contain" loading="lazy" src="/lovable-uploads/ff603c71-0718-45fb-bda6-277965352f31.png" />
             </div>
           </div>
         </div>
@@ -73,8 +66,6 @@ const Hero = () => {
           <div className="w-1 h-3 bg-primary rounded-full animate-pulse" />
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default Hero;
