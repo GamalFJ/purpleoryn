@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { z } from "zod";
 import cwScreenshot1 from "@/assets/cw-screenshot-1.jpg";
 import cwScreenshot2 from "@/assets/cw-screenshot-2.jpg";
 import cwScreenshot3 from "@/assets/cw-screenshot-3.png";
@@ -12,6 +13,11 @@ import cwScreenshot4 from "@/assets/cw-screenshot-4.png";
 import cwScreenshot5 from "@/assets/cw-screenshot-5.png";
 import cwScreenshot6 from "@/assets/cw-screenshot-6.png";
 import { useLanguage } from "@/contexts/LanguageContext";
+
+// Zod validation for email
+const emailSchema = z.object({
+  email: z.string().trim().email("Please enter a valid email address").max(255, "Email too long")
+});
 
 const screenshots = [
   { src: cwScreenshot1, alt: "Client Whisperer landing page", caption: "Landing Page" },
@@ -33,11 +39,22 @@ const OngoingBuilds = () => {
     e.preventDefault();
     if (!email.trim()) return;
     
+    // Validate email with zod
+    const validation = emailSchema.safeParse({ email: email.trim() });
+    if (!validation.success) {
+      toast({
+        title: "Invalid email",
+        description: validation.error.errors[0]?.message || "Please enter a valid email address",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setIsSubmitting(true);
     
     const { error } = await supabase
       .from('waitlist_signups')
-      .insert({ email: email.trim(), product: 'client-whisperer' });
+      .insert({ email: validation.data.email, product: 'client-whisperer' });
     
     if (error) {
       if (error.code === '23505') {
