@@ -5,7 +5,7 @@ import CaseStudy from "@/components/CaseStudy";
 import OngoingBuilds from "@/components/OngoingBuilds";
 import Process from "@/components/Process";
 import WhyUs from "@/components/WhyUs";
-import Pricing from "@/components/Pricing";
+import StrategySession from "@/components/StrategySession";
 import Testimonials from "@/components/Testimonials";
 import CTA from "@/components/CTA";
 import Newsletter from "@/components/Newsletter";
@@ -49,7 +49,7 @@ const Index = () => {
             <WhyUs />
           </ScrollReveal>
           <ScrollReveal delay={100}>
-            <Pricing />
+            <StrategySession />
           </ScrollReveal>
           <ScrollReveal delay={100}>
             <OngoingBuilds />
