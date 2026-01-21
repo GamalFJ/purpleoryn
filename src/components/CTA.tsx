@@ -33,7 +33,7 @@ const CTA = () => {
             </p>
             
             <Button variant="hero" size="xl" className="group w-full sm:w-auto min-h-[48px]" asChild>
-              <a target="_blank" rel="noopener noreferrer" href="http://www.fiverr.com/s/qDBW55d">
+              <a target="_blank" rel="noopener noreferrer" href="https://fluum.ai/c/strategy-systems-session-709721">
                 {t("cta.button")}
                 <ArrowRight className="w-5 h-5 ml-1 group-hover:translate-x-1 transition-transform" />
               </a>

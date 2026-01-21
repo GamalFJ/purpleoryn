@@ -57,7 +57,7 @@ const Header = ({ className }: HeaderProps) => {
               target="_blank" 
               rel="noopener noreferrer" 
               className="glass-card px-4 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-foreground hover:border-primary/60 transition-all duration-300 min-h-[44px] flex items-center" 
-              href="https://www.fiverr.com/s/xXgzkKx"
+              href="https://fluum.ai/c/strategy-systems-session-709721"
             >
               {t("header.hireMe")}
             </a>
