@@ -50,11 +50,11 @@ const Hero = () => {
           </div>
           
           {/* Right content - Founder image */}
-          <div className="relative hidden lg:flex justify-center items-center">
+          <div className="relative flex justify-center items-center mt-8 lg:mt-0">
             <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent rounded-full blur-2xl" />
             <div className="relative">
               <div className="absolute -inset-4 bg-gradient-to-r from-primary/8 to-accent/8 rounded-full blur-3xl animate-glow-pulse" />
-              <img alt={t("hero.founderAlt")} className="relative z-10 w-full max-w-[28rem] h-auto animate-float border-glass-bg object-contain" loading="lazy" src="/lovable-uploads/ff603c71-0718-45fb-bda6-277965352f31.png" />
+              <img alt={t("hero.founderAlt")} className="relative z-10 w-full max-w-[16rem] sm:max-w-[20rem] lg:max-w-[28rem] h-auto animate-float border-glass-bg object-contain" loading="lazy" src="/lovable-uploads/ff603c71-0718-45fb-bda6-277965352f31.png" />
             </div>
           </div>
         </div>
