@@ -16,6 +16,7 @@ export type Database = {
     Tables: {
       testimonials: {
         Row: {
+          approved: boolean
           company: string
           created_at: string
           id: string
@@ -25,6 +26,7 @@ export type Database = {
           role: string
         }
         Insert: {
+          approved?: boolean
           company: string
           created_at?: string
           id?: string
@@ -34,6 +36,7 @@ export type Database = {
           role: string
         }
         Update: {
+          approved?: boolean
           company?: string
           created_at?: string
           id?: string
