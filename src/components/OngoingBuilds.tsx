@@ -109,19 +109,19 @@ const OngoingBuilds = () => {
   ];
 
   return (
-    <section id="ongoing-builds" className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 relative">
-      {/* Background accent */}
-      <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1/3 h-96 bg-primary/3 blur-3xl rounded-full" />
+    <section id="ongoing-builds" className="py-12 sm:py-16 md:py-20 lg:py-24 px-4 sm:px-6 relative overflow-hidden">
+      {/* Background accent - constrained */}
+      <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1/4 sm:w-1/3 h-64 sm:h-96 bg-primary/3 blur-3xl rounded-full pointer-events-none" />
       
-      <div className="container mx-auto max-w-6xl relative">
-        <div className="text-center mb-10 sm:mb-16">
+      <div className="container mx-auto max-w-6xl relative w-full">
+        <div className="text-center mb-8 sm:mb-12 md:mb-16">
           <span className="text-primary text-xs sm:text-sm font-semibold tracking-wider uppercase">{t("ongoingBuilds.label")}</span>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mt-2">
+          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mt-2">
             {t("ongoingBuilds.title")} <span className="gradient-text">{t("ongoingBuilds.titleHighlight")}</span>
           </h2>
         </div>
         
-        <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 xl:gap-12 items-start">
           {/* Content Card */}
           <div className="glass-card p-5 sm:p-6 md:p-8 relative overflow-hidden order-2 lg:order-1">
             {/* Header */}

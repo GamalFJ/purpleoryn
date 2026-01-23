@@ -32,18 +32,18 @@ const Process = () => {
   ];
 
   return (
-    <section id="process" className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 relative overflow-hidden">
-      {/* Background gradient */}
-      <div className="absolute right-0 top-0 w-1/2 h-full bg-gradient-to-l from-primary/5 to-transparent" />
+    <section id="process" className="py-12 sm:py-16 md:py-20 lg:py-24 px-4 sm:px-6 relative overflow-hidden">
+      {/* Background gradient - constrained */}
+      <div className="absolute right-0 top-0 w-1/3 sm:w-1/2 h-full bg-gradient-to-l from-primary/5 to-transparent pointer-events-none" />
       
-      <div className="container mx-auto max-w-6xl relative">
-        <div className="text-center mb-10 sm:mb-16">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">
+      <div className="container mx-auto max-w-6xl relative w-full">
+        <div className="text-center mb-8 sm:mb-12 md:mb-16">
+          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold">
             {t("process.title")} <span className="gradient-text">{t("process.titleHighlight")}</span>
           </h2>
         </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
           {steps.map((step, index) => (
             <div 
               key={step.number}

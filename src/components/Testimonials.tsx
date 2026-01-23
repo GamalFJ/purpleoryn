@@ -118,20 +118,20 @@ const Testimonials = () => {
     : defaultTestimonials.map((t, i) => ({ ...t, id: `default-${i}`, created_at: "" }));
 
   return (
-    <section id="testimonials" className="py-16 sm:py-20 md:py-24 px-4 sm:px-6">
-      <div className="container mx-auto max-w-6xl">
-        <header className="text-center mb-10 sm:mb-16 animate-fade-in">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
+    <section id="testimonials" className="py-12 sm:py-16 md:py-20 lg:py-24 px-4 sm:px-6 overflow-hidden">
+      <div className="container mx-auto max-w-6xl w-full">
+        <header className="text-center mb-8 sm:mb-12 md:mb-16 animate-fade-in">
+          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-2 sm:mb-3 md:mb-4">
             {t("testimonials.title")}{" "}
             <span className="gradient-text">{t("testimonials.titleHighlight")}</span>
           </h2>
-          <p className="text-muted-foreground text-sm sm:text-base md:text-lg max-w-2xl mx-auto mb-6 sm:mb-8">
+          <p className="text-muted-foreground text-xs sm:text-sm md:text-base lg:text-lg max-w-2xl mx-auto mb-5 sm:mb-6 md:mb-8 px-2">
             {t("testimonials.subtitle")}
           </p>
           <Button
             onClick={() => setIsFormOpen(!isFormOpen)}
             variant="outline"
-            className="border-primary/30 hover:bg-primary/10 min-h-[48px]"
+            className="border-primary/30 hover:bg-primary/10 min-h-[48px] text-sm sm:text-base"
           >
             {isFormOpen ? (
               <>
@@ -151,9 +151,9 @@ const Testimonials = () => {
         {isFormOpen && (
           <form
             onSubmit={handleSubmit}
-            className="glass-card p-4 sm:p-6 md:p-8 mb-8 sm:mb-12 max-w-2xl mx-auto animate-fade-in"
+            className="glass-card p-4 sm:p-5 md:p-6 lg:p-8 mb-6 sm:mb-8 md:mb-12 max-w-2xl mx-auto animate-fade-in"
           >
-            <h3 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 text-center">{t("testimonials.formTitle")}</h3>
+            <h3 className="text-base sm:text-lg md:text-xl font-semibold mb-3 sm:mb-4 md:mb-6 text-center">{t("testimonials.formTitle")}</h3>
             <div className="grid gap-3 sm:gap-4">
               <div className="grid sm:grid-cols-2 gap-3 sm:gap-4">
                 <Input
@@ -229,7 +229,7 @@ const Testimonials = () => {
         )}
 
         {/* Testimonials Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6 lg:gap-8">
           {allTestimonials.slice(0, 6).map((testimonial, index) => (
             <article
               key={testimonial.id}
