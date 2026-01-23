@@ -28,14 +28,14 @@ const Services = () => {
   ];
 
   return (
-    <section id="services" className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 relative">
-      <div className="container mx-auto max-w-6xl">
+    <section id="services" className="py-12 sm:py-16 md:py-20 lg:py-24 px-4 sm:px-6 relative overflow-hidden">
+      <div className="container mx-auto max-w-6xl w-full">
         {/* Section header */}
-        <div className="text-center mb-10 sm:mb-16">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
+        <div className="text-center mb-8 sm:mb-12 md:mb-16">
+          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-2 sm:mb-3 md:mb-4">
             {t("services.title")} <span className="gradient-text">{t("services.titleHighlight")}</span>
           </h2>
-          <p className="text-muted-foreground text-sm sm:text-base md:text-lg max-w-2xl mx-auto">
+          <p className="text-muted-foreground text-xs sm:text-sm md:text-base lg:text-lg max-w-2xl mx-auto px-2">
             {t("services.subtitle")}
           </p>
         </div>

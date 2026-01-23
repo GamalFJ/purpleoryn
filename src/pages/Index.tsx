@@ -16,12 +16,12 @@ import backgroundImage from "@/assets/background.png";
 const Index = () => {
   return (
     <div 
-      className="min-h-screen bg-background relative"
+      className="min-h-screen min-h-[100dvh] bg-background relative w-full max-w-full overflow-x-hidden"
       style={{
         backgroundImage: `url(${backgroundImage})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundAttachment: 'fixed',
+        backgroundAttachment: 'scroll', /* Changed from fixed for better mobile performance */
         backgroundRepeat: 'no-repeat'
       }}
     >
@@ -29,7 +29,7 @@ const Index = () => {
       <div className="fixed inset-0 bg-background/70 pointer-events-none" />
       
       {/* Content */}
-      <div className="relative z-10">
+      <div className="relative z-10 w-full max-w-full overflow-x-hidden">
         <Header />
         <main>
           <Hero />
