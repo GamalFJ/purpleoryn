@@ -151,24 +151,24 @@ const Testimonials = () => {
         {isFormOpen && (
           <form
             onSubmit={handleSubmit}
-            className="glass-card p-4 sm:p-5 md:p-6 lg:p-8 mb-6 sm:mb-8 md:mb-12 max-w-2xl mx-auto animate-fade-in"
+            className="glass-card p-4 sm:p-5 md:p-6 lg:p-8 mb-6 sm:mb-8 md:mb-12 w-full max-w-2xl mx-auto animate-fade-in overflow-hidden"
           >
             <h3 className="text-base sm:text-lg md:text-xl font-semibold mb-3 sm:mb-4 md:mb-6 text-center">{t("testimonials.formTitle")}</h3>
-            <div className="grid gap-3 sm:gap-4">
-              <div className="grid sm:grid-cols-2 gap-3 sm:gap-4">
+            <div className="grid gap-3 sm:gap-4 w-full">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 w-full">
                 <Input
                   placeholder={t("testimonials.placeholders.name")}
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   maxLength={100}
-                  className="bg-background/50 border-border/50 min-h-[48px]"
+                  className="bg-background/50 border-border/50 min-h-[48px] text-base w-full"
                 />
                 <Input
                   placeholder={t("testimonials.placeholders.role")}
                   value={formData.role}
                   onChange={(e) => setFormData({ ...formData, role: e.target.value })}
                   maxLength={100}
-                  className="bg-background/50 border-border/50 min-h-[48px]"
+                  className="bg-background/50 border-border/50 min-h-[48px] text-base w-full"
                 />
               </div>
               <Input
@@ -176,7 +176,7 @@ const Testimonials = () => {
                 value={formData.company}
                 onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                 maxLength={100}
-                className="bg-background/50 border-border/50 min-h-[48px]"
+                className="bg-background/50 border-border/50 min-h-[48px] text-base w-full"
               />
               <Textarea
                 placeholder={t("testimonials.placeholders.quote")}
@@ -184,13 +184,13 @@ const Testimonials = () => {
                 onChange={(e) => setFormData({ ...formData, quote: e.target.value })}
                 maxLength={500}
                 rows={4}
-                className="bg-background/50 border-border/50 resize-none min-h-[120px]"
+                className="bg-background/50 border-border/50 resize-none min-h-[120px] text-base w-full"
               />
               
               {/* Star Rating */}
-              <div className="flex items-center gap-2">
-                <span className="text-xs sm:text-sm text-muted-foreground">{t("testimonials.rating")}</span>
-                <div className="flex gap-1">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-xs sm:text-sm text-muted-foreground shrink-0">{t("testimonials.rating")}</span>
+                <div className="flex gap-0.5">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <button
                       key={star}
