@@ -56,7 +56,7 @@ export const fr = {
     badge: "Expert en Automatisation IA",
     headline1: "SYSTÈMES PROPULSÉS PAR L'IA",
     headline2: "CONÇUS POUR CROÎTRE",
-    tagline: "Automatisation · Agents IA · Outils Web Sur Mesure —",
+    tagline: "Automatisation · Agents IA · Développement Web —",
     doneForYou: "Clé en Main",
     cta1: "Commencer",
     cta2: "Voir le Portfolio",

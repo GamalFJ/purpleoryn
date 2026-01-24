@@ -56,7 +56,7 @@ export const en = {
     badge: "AI Automation Expert",
     headline1: "AI-POWERED SYSTEMS",
     headline2: "BUILT FOR BUSINESS SCALE",
-    tagline: "Automation · AI Agents · Custom Web Tools —",
+    tagline: "Automation · AI Agents · Web Development —",
     doneForYou: "Done-for-You",
     cta1: "Let's Get Started",
     cta2: "See Portfolio",
