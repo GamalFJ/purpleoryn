@@ -50,7 +50,7 @@ export const en = {
     portfolio: "Portfolio",
     process: "Process",
     whyUs: "Why Us",
-    hireMe: "Hire Me",
+    hireMe: "Book Your Session",
   },
   hero: {
     badge: "AI Automation Expert",
