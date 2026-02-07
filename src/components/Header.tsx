@@ -51,7 +51,7 @@ const Header = ({ className }: HeaderProps) => {
             ))}
           </div>
 
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-3 sm:gap-4">
             <LanguageToggle />
             <a 
               target="_blank" 
