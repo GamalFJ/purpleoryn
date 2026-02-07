@@ -34,8 +34,8 @@ const Hero = () => {
             <div className="pt-2">
               <Button
                 variant="outline"
-                size="lg"
-                className="border-primary/50 text-primary hover:bg-primary/10 hover:border-primary gap-2 min-h-[52px]"
+                size="default"
+                className="border-primary/50 text-primary hover:bg-primary/10 hover:border-primary gap-2 text-xs sm:text-sm px-4 py-2 h-auto min-h-[44px]"
                 asChild
               >
                 <a
