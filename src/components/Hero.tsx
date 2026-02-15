@@ -57,6 +57,8 @@ const Hero = () => {
               src={founderImage}
               alt="Gamal Jastram - Founder of Purple Cove Labs"
               className="w-full h-full object-cover rounded-full relative z-10 border-2 border-primary/30"
+              loading="eager"
+              fetchPriority="high"
             />
           </div>
         </div>
