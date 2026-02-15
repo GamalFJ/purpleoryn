@@ -1,17 +1,19 @@
+import { lazy, Suspense } from "react";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
-import Services from "@/components/Services";
-import CaseStudy from "@/components/CaseStudy";
-import OngoingBuilds from "@/components/OngoingBuilds";
-import Process from "@/components/Process";
-import WhyUs from "@/components/WhyUs";
-import StrategySession from "@/components/StrategySession";
-import Testimonials from "@/components/Testimonials";
-import CTA from "@/components/CTA";
-import Newsletter from "@/components/Newsletter";
-import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
 import backgroundImage from "@/assets/background.png";
+
+const Services = lazy(() => import("@/components/Services"));
+const CaseStudy = lazy(() => import("@/components/CaseStudy"));
+const OngoingBuilds = lazy(() => import("@/components/OngoingBuilds"));
+const Process = lazy(() => import("@/components/Process"));
+const WhyUs = lazy(() => import("@/components/WhyUs"));
+const StrategySession = lazy(() => import("@/components/StrategySession"));
+const Testimonials = lazy(() => import("@/components/Testimonials"));
+const CTA = lazy(() => import("@/components/CTA"));
+const Newsletter = lazy(() => import("@/components/Newsletter"));
+const Footer = lazy(() => import("@/components/Footer"));
 
 const Index = () => {
   return (
@@ -33,35 +35,39 @@ const Index = () => {
         <Header />
         <main>
           <Hero />
-          <ScrollReveal>
-            <Services />
-          </ScrollReveal>
-          <ScrollReveal delay={100}>
-            <Process />
-          </ScrollReveal>
-          <ScrollReveal delay={100}>
-            <CaseStudy />
-          </ScrollReveal>
-          <ScrollReveal delay={100}>
-            <Testimonials />
-          </ScrollReveal>
-          <ScrollReveal delay={100}>
-            <WhyUs />
-          </ScrollReveal>
-          <ScrollReveal delay={100}>
-            <StrategySession />
-          </ScrollReveal>
-          <ScrollReveal delay={100}>
-            <OngoingBuilds />
-          </ScrollReveal>
-          <ScrollReveal delay={100}>
-            <CTA />
-          </ScrollReveal>
-          <ScrollReveal delay={100}>
-            <Newsletter />
-          </ScrollReveal>
+          <Suspense fallback={null}>
+            <ScrollReveal>
+              <Services />
+            </ScrollReveal>
+            <ScrollReveal delay={100}>
+              <Process />
+            </ScrollReveal>
+            <ScrollReveal delay={100}>
+              <CaseStudy />
+            </ScrollReveal>
+            <ScrollReveal delay={100}>
+              <Testimonials />
+            </ScrollReveal>
+            <ScrollReveal delay={100}>
+              <WhyUs />
+            </ScrollReveal>
+            <ScrollReveal delay={100}>
+              <StrategySession />
+            </ScrollReveal>
+            <ScrollReveal delay={100}>
+              <OngoingBuilds />
+            </ScrollReveal>
+            <ScrollReveal delay={100}>
+              <CTA />
+            </ScrollReveal>
+            <ScrollReveal delay={100}>
+              <Newsletter />
+            </ScrollReveal>
+          </Suspense>
         </main>
-        <Footer />
+        <Suspense fallback={null}>
+          <Footer />
+        </Suspense>
       </div>
     </div>
   );
