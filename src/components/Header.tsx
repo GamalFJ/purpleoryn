@@ -14,10 +14,11 @@ const Header = ({ className }: HeaderProps) => {
   const { t } = useLanguage();
 
   const navLinks = [
-    { href: "#services", label: t("header.services") },
-    { href: "#portfolio", label: t("header.portfolio") },
-    { href: "#process", label: t("header.process") },
-    { href: "#why-us", label: t("header.whyUs") },
+    { href: "#services", label: t("header.services"), isRoute: false },
+    { href: "#portfolio", label: t("header.portfolio"), isRoute: false },
+    { href: "#process", label: t("header.process"), isRoute: false },
+    { href: "#why-us", label: t("header.whyUs"), isRoute: false },
+    { href: "/pricing", label: t("header.pricing"), isRoute: true },
   ];
 
   const handleNavClick = () => {
