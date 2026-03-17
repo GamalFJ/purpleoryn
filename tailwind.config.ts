@@ -58,6 +58,12 @@ export default {
           primary: "hsl(var(--glow-primary))",
           accent: "hsl(var(--glow-accent))",
         },
+        price: {
+          yellow: "hsl(var(--price-yellow))",
+        },
+        success: {
+          green: "hsl(var(--success-green))",
+        },
         christmas: {
           red: "hsl(var(--christmas-red))",
           gold: "hsl(var(--christmas-gold))",

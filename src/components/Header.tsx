@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import logo from "@/assets/logo.png";
 import LanguageToggle from "@/components/LanguageToggle";
@@ -13,10 +14,11 @@ const Header = ({ className }: HeaderProps) => {
   const { t } = useLanguage();
 
   const navLinks = [
-    { href: "#services", label: t("header.services") },
-    { href: "#portfolio", label: t("header.portfolio") },
-    { href: "#process", label: t("header.process") },
-    { href: "#why-us", label: t("header.whyUs") },
+    { href: "#services", label: t("header.services"), isRoute: false },
+    { href: "#portfolio", label: t("header.portfolio"), isRoute: false },
+    { href: "#process", label: t("header.process"), isRoute: false },
+    { href: "#why-us", label: t("header.whyUs"), isRoute: false },
+    { href: "/pricing", label: t("header.pricing"), isRoute: true },
   ];
 
   const handleNavClick = () => {
@@ -41,13 +43,23 @@ const Header = ({ className }: HeaderProps) => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-6 lg:gap-8">
             {navLinks.map((link) => (
-              <a 
-                key={link.href}
-                href={link.href} 
-                className="text-muted-foreground hover:text-foreground transition-colors duration-200 text-sm lg:text-base"
-              >
-                {link.label}
-              </a>
+              link.isRoute ? (
+                <Link
+                  key={link.href}
+                  to={link.href}
+                  className="text-muted-foreground hover:text-foreground transition-colors duration-200 text-sm lg:text-base"
+                >
+                  {link.label}
+                </Link>
+              ) : (
+                <a 
+                  key={link.href}
+                  href={link.href} 
+                  className="text-muted-foreground hover:text-foreground transition-colors duration-200 text-sm lg:text-base"
+                >
+                  {link.label}
+                </a>
+              )
             ))}
           </div>
 
@@ -78,14 +90,25 @@ const Header = ({ className }: HeaderProps) => {
           <div className="md:hidden mt-4 pb-4 border-t border-border/30 animate-fade-in">
             <div className="flex flex-col gap-2 pt-4">
               {navLinks.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  onClick={handleNavClick}
-                  className="text-muted-foreground hover:text-foreground transition-colors duration-200 py-3 px-2 text-base min-h-[44px] flex items-center"
-                >
-                  {link.label}
-                </a>
+                link.isRoute ? (
+                  <Link
+                    key={link.href}
+                    to={link.href}
+                    onClick={handleNavClick}
+                    className="text-muted-foreground hover:text-foreground transition-colors duration-200 py-3 px-2 text-base min-h-[44px] flex items-center"
+                  >
+                    {link.label}
+                  </Link>
+                ) : (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    onClick={handleNavClick}
+                    className="text-muted-foreground hover:text-foreground transition-colors duration-200 py-3 px-2 text-base min-h-[44px] flex items-center"
+                  >
+                    {link.label}
+                  </a>
+                )
               ))}
             </div>
           </div>
