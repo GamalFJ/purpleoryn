@@ -50,6 +50,7 @@ export const fr = {
     portfolio: "Portfolio",
     process: "Processus",
     whyUs: "Pourquoi Nous",
+    pricing: "Tarifs",
     hireMe: "Réservez Votre Session",
   },
   hero: {
@@ -63,25 +64,26 @@ export const fr = {
     founderAlt: "Gamal Jastram - Fondateur de Purple Cove Labs",
   },
   services: {
-    title: "Ce que je",
-    titleHighlight: "Construis",
-    subtitle: "Solutions IA complètes et systèmes d'automatisation qui transforment le fonctionnement de votre entreprise.",
+    title: "Quatre façons de développer",
+    titleHighlight: "votre entreprise",
+    subtitle: "Chaque service que nous offrons est conçu pour rendre votre entreprise plus rapide, plus intelligente et plus visible.",
+    viewPricing: "Voir tous les services et tarifs",
     items: {
-      aiPipelines: {
-        title: "Pipelines d'Automatisation IA",
-        description: "Flux de travail multi-agents et logique backend intelligente qui gèrent des processus métier complexes de manière autonome.",
+      websites: {
+        title: "Sites Web & Landing Pages",
+        description: "Sites professionnels qui convertissent les visiteurs en clients — optimisés mobile, rapides et prêts à évoluer.",
       },
-      webApps: {
-        title: "Apps Web & Tableaux de Bord",
-        description: "Applications full-stack avec de beaux frontends, des backends robustes, intégrations de données et connexions API.",
+      apps: {
+        title: "Apps Web & MVPs Sur Mesure",
+        description: "Portails clients, outils internes, MVPs SaaS — logiciels entièrement personnalisés selon vos besoins.",
       },
-      productization: {
-        title: "Productisation & Onboarding",
-        description: "Pages d'atterrissage professionnelles, parcours utilisateur fluides, intégrations CRM et environnements de staging.",
+      ai: {
+        title: "Agents IA & Voix",
+        description: "Chatbots IA, agents vocaux et assistants de messagerie qui répondent à vos clients 24/7.",
       },
-      maintenance: {
-        title: "Maintenance & Support Évolutif",
-        description: "Surveillance continue, mises à jour et solutions de scalabilité pour accompagner la croissance de votre entreprise.",
+      automations: {
+        title: "Automatisations Business",
+        description: "Intégrations Zapier, Make, Airtable et CRM qui éliminent le travail manuel et gardent votre pipeline en mouvement.",
       },
     },
   },

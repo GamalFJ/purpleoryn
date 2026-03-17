@@ -50,6 +50,7 @@ export const es = {
     portfolio: "Portafolio",
     process: "Proceso",
     whyUs: "Por Qué Nosotros",
+    pricing: "Precios",
     hireMe: "Reserva Tu Sesión",
   },
   hero: {
@@ -63,25 +64,26 @@ export const es = {
     founderAlt: "Gamal Jastram - Fundador de Purple Cove Labs",
   },
   services: {
-    title: "Lo que",
-    titleHighlight: "Construyo",
-    subtitle: "Soluciones IA completas y sistemas de automatización que transforman el funcionamiento de tu negocio.",
+    title: "Cuatro formas de hacer crecer",
+    titleHighlight: "tu negocio",
+    subtitle: "Cada servicio que ofrecemos está diseñado para hacer tu negocio más rápido, inteligente y visible.",
+    viewPricing: "Ver todos los servicios y precios",
     items: {
-      aiPipelines: {
-        title: "Pipelines de Automatización IA",
-        description: "Flujos de trabajo multi-agente y lógica backend inteligente que manejan procesos empresariales complejos de forma autónoma.",
+      websites: {
+        title: "Sitios Web & Landing Pages",
+        description: "Sitios profesionales que convierten visitantes en clientes — optimizados para móvil, rápidos y listos para crecer.",
       },
-      webApps: {
-        title: "Apps Web & Dashboards",
-        description: "Aplicaciones full-stack con frontends hermosos, backends robustos, integraciones de datos y conexiones API.",
+      apps: {
+        title: "Apps Web & MVPs a Medida",
+        description: "Portales de clientes, herramientas internas, MVPs SaaS — software completamente personalizado según tus necesidades.",
       },
-      productization: {
-        title: "Productización & Onboarding",
-        description: "Páginas de aterrizaje profesionales, flujos de usuario fluidos, integraciones CRM y entornos de staging.",
+      ai: {
+        title: "Agentes IA & Voz",
+        description: "Chatbots IA, agentes de voz y asistentes de correo que responden a tus clientes 24/7.",
       },
-      maintenance: {
-        title: "Mantenimiento & Soporte Escalable",
-        description: "Monitoreo continuo, actualizaciones y soluciones de escalabilidad para crecer con tu negocio.",
+      automations: {
+        title: "Automatizaciones de Negocio",
+        description: "Integraciones con Zapier, Make, Airtable y CRM que eliminan el trabajo manual y mantienen tu pipeline en movimiento.",
       },
     },
   },
