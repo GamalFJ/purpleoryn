@@ -90,14 +90,25 @@ const Header = ({ className }: HeaderProps) => {
           <div className="md:hidden mt-4 pb-4 border-t border-border/30 animate-fade-in">
             <div className="flex flex-col gap-2 pt-4">
               {navLinks.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  onClick={handleNavClick}
-                  className="text-muted-foreground hover:text-foreground transition-colors duration-200 py-3 px-2 text-base min-h-[44px] flex items-center"
-                >
-                  {link.label}
-                </a>
+                link.isRoute ? (
+                  <Link
+                    key={link.href}
+                    to={link.href}
+                    onClick={handleNavClick}
+                    className="text-muted-foreground hover:text-foreground transition-colors duration-200 py-3 px-2 text-base min-h-[44px] flex items-center"
+                  >
+                    {link.label}
+                  </Link>
+                ) : (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    onClick={handleNavClick}
+                    className="text-muted-foreground hover:text-foreground transition-colors duration-200 py-3 px-2 text-base min-h-[44px] flex items-center"
+                  >
+                    {link.label}
+                  </a>
+                )
               ))}
             </div>
           </div>
