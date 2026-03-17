@@ -43,13 +43,23 @@ const Header = ({ className }: HeaderProps) => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-6 lg:gap-8">
             {navLinks.map((link) => (
-              <a 
-                key={link.href}
-                href={link.href} 
-                className="text-muted-foreground hover:text-foreground transition-colors duration-200 text-sm lg:text-base"
-              >
-                {link.label}
-              </a>
+              link.isRoute ? (
+                <Link
+                  key={link.href}
+                  to={link.href}
+                  className="text-muted-foreground hover:text-foreground transition-colors duration-200 text-sm lg:text-base"
+                >
+                  {link.label}
+                </Link>
+              ) : (
+                <a 
+                  key={link.href}
+                  href={link.href} 
+                  className="text-muted-foreground hover:text-foreground transition-colors duration-200 text-sm lg:text-base"
+                >
+                  {link.label}
+                </a>
+              )
             ))}
           </div>
 
