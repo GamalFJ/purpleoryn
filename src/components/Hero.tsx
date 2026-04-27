@@ -104,7 +104,6 @@ const Hero = () => {
                 alt="Gamal Jastram - Fundador de Purple Cove Labs"
                 className="relative z-10 w-full h-full object-contain object-bottom"
                 loading="eager"
-                fetchPriority="high"
               />
             </div>
           </div>
