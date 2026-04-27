@@ -1,74 +1,38 @@
 import { lazy, Suspense } from "react";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
+import StickyMobileCTA from "@/components/StickyMobileCTA";
 import ScrollReveal from "@/components/ScrollReveal";
-import backgroundImage from "@/assets/background.png";
 
-const Services = lazy(() => import("@/components/Services"));
-const CaseStudy = lazy(() => import("@/components/CaseStudy"));
-const OngoingBuilds = lazy(() => import("@/components/OngoingBuilds"));
-const Process = lazy(() => import("@/components/Process"));
-const WhyUs = lazy(() => import("@/components/WhyUs"));
-const StrategySession = lazy(() => import("@/components/StrategySession"));
-const Testimonials = lazy(() => import("@/components/Testimonials"));
-const CTA = lazy(() => import("@/components/CTA"));
-const Newsletter = lazy(() => import("@/components/Newsletter"));
+const Problem = lazy(() => import("@/components/sections/Problem"));
+const Promise = lazy(() => import("@/components/sections/Promise"));
+const Offer = lazy(() => import("@/components/sections/Offer"));
+const HowItWorks = lazy(() => import("@/components/sections/HowItWorks"));
+const SocialProof = lazy(() => import("@/components/sections/SocialProof"));
+const RetainersPreview = lazy(() => import("@/components/sections/RetainersPreview"));
+const FinalCTA = lazy(() => import("@/components/sections/FinalCTA"));
 const Footer = lazy(() => import("@/components/Footer"));
 
 const Index = () => {
   return (
-    <div 
-      className="min-h-screen min-h-[100dvh] bg-background relative w-full max-w-full overflow-x-hidden"
-      style={{
-        backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'scroll', /* Changed from fixed for better mobile performance */
-        backgroundRepeat: 'no-repeat'
-      }}
-    >
-      {/* Dark overlay for better readability */}
-      <div className="fixed inset-0 bg-background/70 pointer-events-none" />
-      
-      {/* Content */}
-      <div className="relative z-10 w-full max-w-full overflow-x-hidden">
-        <Header />
-        <main>
-          <Hero />
-          <Suspense fallback={null}>
-            <ScrollReveal>
-              <Services />
-            </ScrollReveal>
-            <ScrollReveal delay={100}>
-              <Process />
-            </ScrollReveal>
-            <ScrollReveal delay={100}>
-              <CaseStudy />
-            </ScrollReveal>
-            <ScrollReveal delay={100}>
-              <Testimonials />
-            </ScrollReveal>
-            <ScrollReveal delay={100}>
-              <WhyUs />
-            </ScrollReveal>
-            <ScrollReveal delay={100}>
-              <StrategySession />
-            </ScrollReveal>
-            <ScrollReveal delay={100}>
-              <OngoingBuilds />
-            </ScrollReveal>
-            <ScrollReveal delay={100}>
-              <CTA />
-            </ScrollReveal>
-            <ScrollReveal delay={100}>
-              <Newsletter />
-            </ScrollReveal>
-          </Suspense>
-        </main>
+    <div className="min-h-screen min-h-[100dvh] bg-background relative w-full max-w-full overflow-x-hidden">
+      <Header />
+      <main className="relative z-10">
+        <Hero />
         <Suspense fallback={null}>
-          <Footer />
+          <ScrollReveal><Problem /></ScrollReveal>
+          <ScrollReveal delay={100}><Promise /></ScrollReveal>
+          <ScrollReveal delay={100}><Offer /></ScrollReveal>
+          <ScrollReveal delay={100}><HowItWorks /></ScrollReveal>
+          <ScrollReveal delay={100}><SocialProof /></ScrollReveal>
+          <ScrollReveal delay={100}><RetainersPreview /></ScrollReveal>
+          <ScrollReveal delay={100}><FinalCTA /></ScrollReveal>
         </Suspense>
-      </div>
+      </main>
+      <Suspense fallback={null}>
+        <Footer />
+      </Suspense>
+      <StickyMobileCTA />
     </div>
   );
 };

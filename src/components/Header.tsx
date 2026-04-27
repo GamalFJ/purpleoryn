@@ -1,115 +1,97 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
+import { Menu, X, Calendar } from "lucide-react";
 import logo from "@/assets/logo.png";
 import LanguageToggle from "@/components/LanguageToggle";
-import { useLanguage } from "@/contexts/LanguageContext";
+import BookingButton from "@/components/BookingButton";
 
-interface HeaderProps {
-  className?: string;
-}
+const navLinks = [
+  { href: "/", label: "Inicio" },
+  { href: "/portafolio", label: "Portafolio" },
+  { href: "/apps", label: "Apps" },
+  { href: "/planes", label: "Planes" },
+];
 
-const Header = ({ className }: HeaderProps) => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { t } = useLanguage();
-
-  const navLinks = [
-    { href: "#services", label: t("header.services"), isRoute: false },
-    { href: "#portfolio", label: t("header.portfolio"), isRoute: false },
-    { href: "#process", label: t("header.process"), isRoute: false },
-    { href: "#why-us", label: t("header.whyUs"), isRoute: false },
-    { href: "/pricing", label: t("header.pricing"), isRoute: true },
-  ];
-
-  const handleNavClick = () => {
-    setIsMobileMenuOpen(false);
-  };
+const Header = () => {
+  const [open, setOpen] = useState(false);
+  const location = useLocation();
+  const close = () => setOpen(false);
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg ${className}`}>
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/30">
       <div className="container mx-auto px-4 sm:px-6 py-3 sm:py-4">
-        <nav className="flex items-center justify-between">
-          <a href="#" className="flex items-center gap-2 sm:gap-3 group">
-            <img 
-              src={logo} 
-              alt="Purple Cove Labs Logo" 
-              className="h-10 w-10 sm:h-12 sm:w-12 rounded-full transition-transform duration-300 group-hover:scale-110" 
+        <nav className="flex items-center justify-between gap-3">
+          <Link to="/" className="flex items-center gap-2 sm:gap-3 group shrink-0" onClick={close}>
+            <img
+              src={logo}
+              alt="Purple Cove Labs"
+              className="h-10 w-10 sm:h-11 sm:w-11 rounded-full transition-transform duration-300 group-hover:scale-110"
             />
-            <span className="text-base sm:text-lg font-bold text-foreground hidden sm:block">
+            <span className="text-sm sm:text-base font-bold text-foreground hidden sm:block">
               Purple Cove Labs
             </span>
-          </a>
-          
-          {/* Desktop Navigation */}
+          </Link>
+
+          {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-6 lg:gap-8">
-            {navLinks.map((link) => (
-              link.isRoute ? (
+            {navLinks.map((l) => {
+              const active = location.pathname === l.href;
+              return (
                 <Link
-                  key={link.href}
-                  to={link.href}
-                  className="text-muted-foreground hover:text-foreground transition-colors duration-200 text-sm lg:text-base"
+                  key={l.href}
+                  to={l.href}
+                  className={`text-sm lg:text-base transition-colors duration-200 ${
+                    active
+                      ? "text-foreground font-semibold"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
                 >
-                  {link.label}
+                  {l.label}
                 </Link>
-              ) : (
-                <a 
-                  key={link.href}
-                  href={link.href} 
-                  className="text-muted-foreground hover:text-foreground transition-colors duration-200 text-sm lg:text-base"
-                >
-                  {link.label}
-                </a>
-              )
-            ))}
+              );
+            })}
           </div>
 
-          <div className="flex items-center gap-3 sm:gap-4">
+          <div className="flex items-center gap-2 sm:gap-3">
             <LanguageToggle />
-            <a 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="glass-card px-4 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-foreground hover:border-primary/60 transition-all duration-300 min-h-[44px] flex items-center" 
-              href="https://fluum.ai/c/strategy-systems-session-709721"
+            <BookingButton
+              ariaLabel="Agendar Llamada"
+              className="hidden sm:inline-flex items-center justify-center gap-1.5 rounded-full px-4 lg:px-5 py-2 lg:py-2.5 text-xs lg:text-sm font-bold text-primary-foreground bg-gradient-to-r from-primary to-accent hover:scale-[1.03] transition-all duration-300 cursor-pointer min-h-[40px]"
             >
-              {t("header.hireMe")}
-            </a>
+              <Calendar className="w-4 h-4" />
+              <span>Agendar</span>
+            </BookingButton>
 
-            {/* Mobile Menu Toggle */}
             <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              onClick={() => setOpen(!open)}
               className="md:hidden p-2 text-foreground min-h-[44px] min-w-[44px] flex items-center justify-center"
-              aria-label="Toggle mobile menu"
+              aria-label="Menu"
             >
-              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {open ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
         </nav>
 
-        {/* Mobile Navigation */}
-        {isMobileMenuOpen && (
+        {open && (
           <div className="md:hidden mt-4 pb-4 border-t border-border/30 animate-fade-in">
-            <div className="flex flex-col gap-2 pt-4">
-              {navLinks.map((link) => (
-                link.isRoute ? (
-                  <Link
-                    key={link.href}
-                    to={link.href}
-                    onClick={handleNavClick}
-                    className="text-muted-foreground hover:text-foreground transition-colors duration-200 py-3 px-2 text-base min-h-[44px] flex items-center"
-                  >
-                    {link.label}
-                  </Link>
-                ) : (
-                  <a
-                    key={link.href}
-                    href={link.href}
-                    onClick={handleNavClick}
-                    className="text-muted-foreground hover:text-foreground transition-colors duration-200 py-3 px-2 text-base min-h-[44px] flex items-center"
-                  >
-                    {link.label}
-                  </a>
-                )
+            <div className="flex flex-col gap-1 pt-3">
+              {navLinks.map((l) => (
+                <Link
+                  key={l.href}
+                  to={l.href}
+                  onClick={close}
+                  className="text-foreground/90 hover:text-primary transition-colors py-3 px-2 text-base min-h-[44px] flex items-center"
+                >
+                  {l.label}
+                </Link>
               ))}
+              <BookingButton
+                ariaLabel="Agendar Llamada"
+                className="mt-2 w-full inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 min-h-[48px] text-sm font-bold text-primary-foreground bg-gradient-to-r from-primary to-accent cursor-pointer"
+              >
+                <Calendar className="w-4 h-4" />
+                Agendar Llamada
+              </BookingButton>
             </div>
           </div>
         )}

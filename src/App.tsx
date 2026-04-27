@@ -10,7 +10,9 @@ import { LanguageProvider } from "@/contexts/LanguageContext";
 const Index = lazy(() => import("./pages/Index"));
 const Auth = lazy(() => import("./pages/Auth"));
 const Admin = lazy(() => import("./pages/Admin"));
-const Pricing = lazy(() => import("./pages/Pricing"));
+const Planes = lazy(() => import("./pages/Planes"));
+const Portafolio = lazy(() => import("./pages/Portafolio"));
+const Apps = lazy(() => import("./pages/Apps"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -26,7 +28,11 @@ const App = () => (
             <Suspense fallback={<div className="min-h-screen bg-background" />}>
               <Routes>
                 <Route path="/" element={<Index />} />
-                <Route path="/pricing" element={<Pricing />} />
+                <Route path="/portafolio" element={<Portafolio />} />
+                <Route path="/apps" element={<Apps />} />
+                <Route path="/planes" element={<Planes />} />
+                {/* Legacy redirect */}
+                <Route path="/pricing" element={<Planes />} />
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/admin" element={<Admin />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
