@@ -33,14 +33,14 @@ const getNestedValue = (obj: TranslationValue, path: string): string => {
 };
 
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
-  const [language, setLanguageState] = useState<Language>("en");
+  const [language, setLanguageState] = useState<Language>("es");
 
   useEffect(() => {
     const savedLanguage = localStorage.getItem("language") as Language | null;
     if (savedLanguage && ["en", "fr", "es"].includes(savedLanguage)) {
       setLanguageState(savedLanguage);
     }
-    // Always default to English if no valid saved language
+    // Default to Spanish if no valid saved language
   }, []);
 
   const setLanguage = (lang: Language) => {
