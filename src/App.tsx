@@ -1,4 +1,5 @@
 import { lazy, Suspense } from "react";
+import { useCalInit } from "@/hooks/useCalInit";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -18,7 +19,9 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
 
-const App = () => (
+const App = () => {
+  useCalInit();
+  return (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <LanguageProvider>
@@ -46,6 +49,7 @@ const App = () => (
       </LanguageProvider>
     </TooltipProvider>
   </QueryClientProvider>
-);
+  );
+};
 
 export default App;
