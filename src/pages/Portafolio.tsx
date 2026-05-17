@@ -24,6 +24,30 @@ const cases = [
         { v: "+3x", l: "Capacidad de proyectos" },
       ],
     },
+    screenshots: [] as string[],
+  },
+  {
+    name: "Vielma Group",
+    sector: "Constructora & Bienes Raíces",
+    problem:
+      "Seguimiento manual de prospectos, pérdida de leads por tiempos de respuesta lentos y falta de visibilidad en el pipeline de ventas.",
+    solution: [
+      "CRM en Airtable con pipeline de ventas visual",
+      "Agente IA en WhatsApp para calificación inicial de prospectos",
+      "Automatización de seguimientos y recordatorios",
+      "Dashboard de métricas de ventas en tiempo real",
+    ],
+    result: {
+      headline: "Pipeline de ventas automatizado",
+      metrics: [
+        { v: "+55%", l: "Tasa de conversión" },
+        { v: "< 2 min", l: "Tiempo de respuesta inicial" },
+        { v: "100%", l: "Visibilidad del pipeline" },
+      ],
+    },
+    screenshots: [
+      // Populate when ready: "/cases/vielma-group/screenshot-1.png"
+    ] as string[],
   },
   {
     name: "Servicio Profesional",
@@ -44,6 +68,7 @@ const cases = [
         { v: "< 30s", l: "Tiempo de respuesta" },
       ],
     },
+    screenshots: [] as string[],
   },
 ];
 

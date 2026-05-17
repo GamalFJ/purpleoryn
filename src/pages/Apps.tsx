@@ -2,36 +2,29 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import StickyMobileCTA from "@/components/StickyMobileCTA";
 import FinalCTA from "@/components/sections/FinalCTA";
-import { Sparkles, ArrowRight } from "lucide-react";
+import { Sparkles, ArrowRight, BarChart2, Search, Users, TrendingUp } from "lucide-react";
 import BookingButton from "@/components/BookingButton";
 
-const apps = [
+const features = [
   {
-    name: "Client Whisperer",
-    by: "Oryn AI",
-    what: "Convierte notas de clientes en propuestas listas para enviar en menos de un minuto.",
-    forWho: "Freelancers, agencias y consultores que envían múltiples propuestas al mes.",
-    demo: "💬",
-    status: "Próximamente",
-    cta: "Recibir aviso de lanzamiento",
+    icon: Search,
+    title: "Búsqueda inteligente de prospectos",
+    desc: "Identifica prospectos de alto valor en tu mercado usando datos en tiempo real.",
   },
   {
-    name: "Onboarding Engine",
-    by: "Purple Cove Labs",
-    what: "Sistema modular para automatizar onboarding de clientes con formularios, agendas y CRM.",
-    forWho: "Estudios profesionales, agencias y servicios B2B.",
-    demo: "🗂️",
-    status: "Disponible",
-    cta: "Solicitar demo",
+    icon: Users,
+    title: "Enriquecimiento de contactos",
+    desc: "Completa automáticamente información de contacto, empresa y cargo para cada prospecto.",
   },
   {
-    name: "WA Lead Agent",
-    by: "Purple Cove Labs",
-    what: "Agente de WhatsApp con IA que califica leads, agenda citas y los envía a tu CRM.",
-    forWho: "Negocios con alto volumen de mensajes entrantes.",
-    demo: "🤖",
-    status: "Disponible",
-    cta: "Solicitar demo",
+    icon: TrendingUp,
+    title: "Scoring y priorización",
+    desc: "Clasifica automáticamente los mejores prospectos para que tu equipo enfoque su energía.",
+  },
+  {
+    icon: BarChart2,
+    title: "Dashboard de métricas",
+    desc: "Visualiza el pipeline, tasas de conversión y rendimiento del equipo en un solo lugar.",
   },
 ];
 
@@ -50,68 +43,86 @@ const Apps = () => {
               para escalar negocios.
             </h1>
             <p className="text-sm sm:text-base text-muted-foreground max-w-xl mx-auto">
-              Productos propios y plantillas reutilizables — diseñados para
-              implementarse en días, no meses.
+              Productos propios diseñados para implementarse en días, no meses —
+              y generar resultados desde la primera semana.
             </p>
           </div>
         </section>
 
+        {/* Prospect Intelligence Dashboard */}
         <section className="py-8 sm:py-12 px-4 sm:px-6">
-          <div className="container mx-auto max-w-6xl">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
-              {apps.map((a) => (
-                <div
-                  key={a.name}
-                  className="glass-card p-6 sm:p-7 flex flex-col hover:-translate-y-1 hover:border-primary/40 transition-all duration-300"
-                >
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="text-4xl">{a.demo}</div>
-                    <span
-                      className={`text-[10px] font-bold tracking-widest uppercase px-2 py-1 rounded-full ${
-                        a.status === "Disponible"
-                          ? "bg-success-green/15 text-success-green border border-success-green/30"
-                          : "bg-primary/15 text-primary border border-primary/30"
-                      }`}
-                    >
-                      {a.status}
-                    </span>
-                  </div>
+          <div className="container mx-auto max-w-5xl">
+            <div className="glass-card p-6 sm:p-10 lg:p-12 relative overflow-hidden hover:border-primary/40 transition-all duration-300">
+              <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary via-accent to-primary" />
 
-                  <h3 className="font-bold text-foreground text-lg mb-1">
-                    {a.name}
-                  </h3>
-                  <div className="flex items-center gap-1 text-[11px] text-muted-foreground mb-4">
-                    <Sparkles className="w-3 h-3 text-primary" />
-                    <span>por {a.by}</span>
-                  </div>
-
-                  <div className="mb-4">
-                    <div className="text-[10px] font-bold tracking-widest uppercase text-primary mb-1">
-                      Qué hace
+              <div className="flex flex-col lg:flex-row lg:items-start gap-8">
+                <div className="flex-1">
+                  <div className="flex items-start gap-4 mb-6">
+                    <div className="w-16 h-16 shrink-0 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/20 border border-primary/30 flex items-center justify-center">
+                      <BarChart2 className="w-8 h-8 text-primary" />
                     </div>
-                    <p className="text-sm text-foreground/90 leading-relaxed">
-                      {a.what}
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <h2 className="font-extrabold text-xl text-foreground">
+                          Prospect Intelligence Dashboard
+                        </h2>
+                        <span className="text-[10px] font-bold tracking-widest uppercase px-2 py-1 rounded-full bg-success-green/15 text-success-green border border-success-green/30">
+                          Disponible
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                        <Sparkles className="w-3 h-3 text-primary" />
+                        <span>por Purple Cove Labs · Oryn AI</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <p className="text-sm sm:text-base text-foreground/90 leading-relaxed mb-6">
+                    Sistema completo de inteligencia de prospectos que identifica,
+                    enriquece y prioriza tus leads de alto valor — automatizando el
+                    trabajo de investigación para que tu equipo de ventas enfoque su
+                    tiempo donde importa.
+                  </p>
+
+                  {/* Demo video placeholder */}
+                  <div className="rounded-xl bg-glass-bg/40 border border-border/40 aspect-video flex items-center justify-center mb-6">
+                    <p className="text-xs text-muted-foreground">
+                      Video demo próximamente
                     </p>
                   </div>
+                </div>
 
-                  <div className="mb-5 flex-1">
-                    <div className="text-[10px] font-bold tracking-widest uppercase text-accent mb-1">
-                      Para quién
-                    </div>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      {a.forWho}
-                    </p>
+                <div className="lg:w-80 shrink-0">
+                  <div className="text-[10px] font-bold tracking-widest uppercase text-primary mb-3">
+                    Funcionalidades clave
                   </div>
+                  <ul className="space-y-4 mb-8">
+                    {features.map((f) => (
+                      <li key={f.title} className="flex items-start gap-3">
+                        <div className="w-8 h-8 shrink-0 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
+                          <f.icon className="w-4 h-4 text-primary" />
+                        </div>
+                        <div>
+                          <div className="text-sm font-semibold text-foreground mb-0.5">
+                            {f.title}
+                          </div>
+                          <p className="text-xs text-muted-foreground leading-relaxed">
+                            {f.desc}
+                          </p>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
 
                   <BookingButton
-                    ariaLabel={`Agendar llamada sobre ${a.name}`}
-                    className="w-full inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 min-h-[48px] text-sm font-bold text-foreground border border-primary/40 bg-glass-bg/40 hover:border-primary hover:bg-primary/10 transition-all duration-300 cursor-pointer"
+                    ariaLabel="Solicitar demo de Prospect Intelligence Dashboard"
+                    className="w-full inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 min-h-[48px] text-sm font-bold text-primary-foreground bg-gradient-to-r from-primary to-accent hover:scale-[1.02] shadow-[0_0_30px_-5px_hsl(var(--primary)/0.5)] transition-all duration-300 cursor-pointer"
                   >
-                    {a.cta}
+                    Solicitar demo
                     <ArrowRight className="w-4 h-4" />
                   </BookingButton>
                 </div>
-              ))}
+              </div>
             </div>
           </div>
         </section>

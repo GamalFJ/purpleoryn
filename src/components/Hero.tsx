@@ -10,6 +10,10 @@ const Hero = () => {
       <div className="pointer-events-none absolute top-40 -left-32 h-[400px] w-[400px] rounded-full bg-accent/10 blur-3xl" />
 
       <div className="container mx-auto relative z-10 max-w-3xl text-center">
+        <div className="inline-flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-primary bg-primary/10 border border-primary/25 rounded-full px-4 py-1.5 mb-5">
+          🔥 Últimos cupos del mes disponibles
+        </div>
+
         <h1 className="font-extrabold leading-[1.05] tracking-tight">
           <span className="block text-foreground">Sistemas que hacen</span>
           <span className="block text-foreground">crecer tu negocio.</span>
@@ -20,10 +24,9 @@ const Hero = () => {
         </h1>
 
         <p className="mt-5 sm:mt-6 text-sm sm:text-base md:text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed">
-          Automatizamos tus procesos, captamos más clientes y te devolvemos
-          tiempo para enfocarte en lo que importa:{" "}
+          Más de 10 negocios ya automatizan con nosotros. Agenda hoy —{" "}
           <span className="text-primary font-semibold">
-            hacer crecer tu negocio.
+            los cupos se llenan rápido.
           </span>
         </p>
 

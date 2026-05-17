@@ -27,7 +27,7 @@ const plans = [
   },
   {
     name: "Plan Estándar",
-    price: "RD$ 17,995",
+    price: "RD$ 18,000",
     period: "/mes",
     ideal: "Ideal para negocios con automatizaciones, APIs y herramientas conectadas que requieren mantenimiento continuo.",
     features: [
@@ -47,7 +47,7 @@ const plans = [
   },
   {
     name: "Plan AI Partner",
-    price: "RD$ 35,014",
+    price: "RD$ 35,000",
     period: "/mes",
     ideal: "Ideal para negocios que quieren convertir la IA en su ventaja competitiva.",
     features: [

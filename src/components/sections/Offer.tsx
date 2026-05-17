@@ -6,6 +6,7 @@ const bullets = [
   "Agentes IA que responden, califican y agendan 24/7",
   "Apps y portales a medida que centralizan tu operación",
   "Integraciones con WhatsApp, CRM, correo y calendario",
+  "Posicionamiento SEO para captar tráfico orgánico y nuevos clientes",
   "Documentación y capacitación para que tu equipo lo opere",
 ];
 
@@ -46,8 +47,11 @@ const Offer = () => {
           </ul>
 
           <div className="text-center">
+            <p className="text-xs text-muted-foreground mb-4">
+              Implementación en días, no meses — con soporte continuo incluido.
+            </p>
             <BookingButton className="inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 min-h-[52px] text-sm sm:text-base font-bold text-primary-foreground bg-gradient-to-r from-primary to-accent shadow-[0_0_30px_-5px_hsl(var(--primary)/0.6)] hover:shadow-[0_0_45px_-5px_hsl(var(--primary)/0.8)] hover:scale-[1.02] transition-all duration-300 cursor-pointer">
-              Agendar Llamada Estratégica
+              Agendar Llamada Estratégica — Gratis
             </BookingButton>
           </div>
         </div>
