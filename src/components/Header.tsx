@@ -9,6 +9,7 @@ const navLinks = [
   { href: "/", label: "Inicio" },
   { href: "/portafolio", label: "Portafolio" },
   { href: "/apps", label: "Apps" },
+  { href: "/demos", label: "Demos", badge: "Nuevo" },
   { href: "/planes", label: "Planes" },
 ];
 
@@ -40,13 +41,18 @@ const Header = () => {
                 <Link
                   key={l.href}
                   to={l.href}
-                  className={`text-sm lg:text-base transition-colors duration-200 ${
+                  className={`flex items-center gap-1.5 text-sm lg:text-base transition-colors duration-200 ${
                     active
                       ? "text-foreground font-semibold"
                       : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   {l.label}
+                  {l.badge && (
+                    <span className="text-[9px] font-bold tracking-widest uppercase px-1.5 py-0.5 rounded-full bg-primary/20 text-primary border border-primary/30">
+                      {l.badge}
+                    </span>
+                  )}
                 </Link>
               );
             })}
@@ -80,9 +86,14 @@ const Header = () => {
                   key={l.href}
                   to={l.href}
                   onClick={close}
-                  className="text-foreground/90 hover:text-primary transition-colors py-3 px-2 text-base min-h-[44px] flex items-center"
+                  className="text-foreground/90 hover:text-primary transition-colors py-3 px-2 text-base min-h-[44px] flex items-center gap-2"
                 >
                   {l.label}
+                  {l.badge && (
+                    <span className="text-[9px] font-bold tracking-widest uppercase px-1.5 py-0.5 rounded-full bg-primary/20 text-primary border border-primary/30">
+                      {l.badge}
+                    </span>
+                  )}
                 </Link>
               ))}
               <BookingButton

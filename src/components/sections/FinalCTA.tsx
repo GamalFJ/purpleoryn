@@ -11,13 +11,16 @@ const FinalCTA = () => {
         <div className="glass-card p-6 sm:p-10 lg:p-14 text-center relative overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary via-accent to-primary" />
 
+          <div className="inline-flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-destructive bg-destructive/10 border border-destructive/30 rounded-full px-4 py-1.5 mb-5">
+            ⚡ Últimos cupos del mes
+          </div>
           <h2 className="font-extrabold mb-4">
-            Agenda tu llamada y empieza a{" "}
+            Agenda hoy y empieza a{" "}
             <span className="gradient-text">escalar tu negocio</span>
           </h2>
           <p className="text-sm sm:text-base text-muted-foreground mb-8 max-w-lg mx-auto">
-            Una conversación de 20 minutos para identificar qué sistema te dará
-            el mayor retorno. Sin compromiso.
+            20 minutos para identificar qué sistema te dará el mayor retorno.
+            Sin costo, sin compromiso. Los cupos se llenan rápido.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch sm:items-center">

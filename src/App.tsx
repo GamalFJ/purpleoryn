@@ -13,6 +13,7 @@ const Admin = lazy(() => import("./pages/Admin"));
 const Planes = lazy(() => import("./pages/Planes"));
 const Portafolio = lazy(() => import("./pages/Portafolio"));
 const Apps = lazy(() => import("./pages/Apps"));
+const Demos = lazy(() => import("./pages/Demos"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -33,6 +34,7 @@ const App = () => (
                 <Route path="/planes" element={<Planes />} />
                 {/* Legacy redirect */}
                 <Route path="/pricing" element={<Planes />} />
+                <Route path="/demos" element={<Demos />} />
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/admin" element={<Admin />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

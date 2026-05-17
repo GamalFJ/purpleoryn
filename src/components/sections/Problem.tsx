@@ -1,17 +1,21 @@
-import { AlertTriangle, UserX, Repeat } from "lucide-react";
+import { AlertTriangle, UserX, Repeat, BarChart2 } from "lucide-react";
 
 const problems = [
   {
     icon: UserX,
-    text: "Pierdes clientes por procesos manuales",
+    text: "Pierdes clientes por procesos manuales lentos",
   },
   {
     icon: AlertTriangle,
-    text: "Tu negocio depende demasiado de ti",
+    text: "Tu negocio depende demasiado de ti para funcionar",
   },
   {
     icon: Repeat,
-    text: "Pierdes tiempo en tareas repetitivas",
+    text: "Tu equipo pierde horas en tareas repetitivas",
+  },
+  {
+    icon: BarChart2,
+    text: "No tienes visibilidad real de tu operación",
   },
 ];
 
@@ -29,7 +33,7 @@ const Problem = () => {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
           {problems.map((p) => (
             <div
               key={p.text}

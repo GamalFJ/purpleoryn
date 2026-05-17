@@ -20,16 +20,23 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 const getNestedValue = (obj: TranslationValue, path: string): string => {
   const keys = path.split(".");
   let current: TranslationValue = obj;
-  
+
   for (const key of keys) {
     if (typeof current === "object" && current !== null && key in current) {
       current = current[key];
     } else {
-      return path; // Return the key if not found
+      return path;
     }
   }
-  
+
   return typeof current === "string" ? current : path;
+};
+
+const detectBrowserLanguage = (): Language => {
+  const browserLang = navigator.language?.split("-")[0].toLowerCase();
+  if (browserLang === "fr") return "fr";
+  if (browserLang === "en") return "en";
+  return "es";
 };
 
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
@@ -39,8 +46,9 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     const savedLanguage = localStorage.getItem("language") as Language | null;
     if (savedLanguage && ["en", "fr", "es"].includes(savedLanguage)) {
       setLanguageState(savedLanguage);
+    } else {
+      setLanguageState(detectBrowserLanguage());
     }
-    // Default to Spanish if no valid saved language
   }, []);
 
   const setLanguage = (lang: Language) => {
