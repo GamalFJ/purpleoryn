@@ -1,35 +1,25 @@
 import { ReactNode } from "react";
 
-const CAL_LINK = "purple-cove-labs/20-min-cafe-virtual";
+const CAL_URL = "https://cal.com/purple-cove-labs/20-min-cafe-virtual";
 
 interface BookingButtonProps {
   children: ReactNode;
   className?: string;
-  as?: "button" | "div";
   ariaLabel?: string;
+  as?: "button" | "div";
 }
 
-const BookingButton = ({ children, className, as = "button", ariaLabel }: BookingButtonProps) => {
-  const sharedProps = {
-    "data-cal-namespace": "20-min-cafe-virtual",
-    "data-cal-link": CAL_LINK,
-    "data-cal-config": '{"layout":"month_view","theme":"dark"}',
-    className,
-    "aria-label": ariaLabel,
-  };
-
-  if (as === "div") {
-    return (
-      <div role="button" tabIndex={0} {...sharedProps}>
-        {children}
-      </div>
-    );
-  }
-
+const BookingButton = ({ children, className, ariaLabel }: BookingButtonProps) => {
   return (
-    <button type="button" {...sharedProps}>
+    <a
+      href={CAL_URL}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={className}
+      aria-label={ariaLabel}
+    >
       {children}
-    </button>
+    </a>
   );
 };
 
