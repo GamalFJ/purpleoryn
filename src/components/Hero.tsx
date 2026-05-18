@@ -64,7 +64,7 @@ const Hero = () => {
           {/* ── RIGHT: founder photo ── */}
           <div className="flex items-end justify-center lg:justify-end order-1 lg:order-2 pt-0 lg:pt-0">
             <img
-              src="/lovable-uploads/Hero Founder Image 1.0.png"
+              src="/lovable-uploads/ff603c71-0718-45fb-bda6-277965352f31.png"
               alt="Gamal — Purple Cove Labs"
               className="relative z-10 w-[260px] sm:w-[340px] lg:w-[420px] xl:w-[480px] max-h-[55vh] sm:max-h-[70vh] lg:max-h-[80vh] object-contain object-bottom select-none"
               style={{
