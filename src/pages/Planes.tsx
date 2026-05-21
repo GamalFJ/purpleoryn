@@ -1,6 +1,5 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import StickyMobileCTA from "@/components/StickyMobileCTA";
 import FinalCTA from "@/components/sections/FinalCTA";
 import { Check, Star, ArrowRight, MessageCircle } from "lucide-react";
 import BookingButton from "@/components/BookingButton";
@@ -186,7 +185,6 @@ const Planes = () => {
         <FinalCTA />
       </main>
       <Footer />
-      <StickyMobileCTA />
     </div>
   );
 };

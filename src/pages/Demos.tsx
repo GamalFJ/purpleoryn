@@ -3,7 +3,6 @@ import { Helmet } from "react-helmet-async";
 import { ExternalLink } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import StickyMobileCTA from "@/components/StickyMobileCTA";
 import FinalCTA from "@/components/sections/FinalCTA";
 
 type NicheKey = "contable" | "dental" | "veterinaria" | "construccion";
@@ -187,7 +186,6 @@ const Demos = () => {
       </main>
 
       <Footer />
-      <StickyMobileCTA />
     </div>
   );
 };

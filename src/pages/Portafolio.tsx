@@ -1,6 +1,5 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import StickyMobileCTA from "@/components/StickyMobileCTA";
 import FinalCTA from "@/components/sections/FinalCTA";
 import { ArrowRight, Target, Wrench, TrendingUp } from "lucide-react";
 
@@ -173,7 +172,6 @@ const Portafolio = () => {
         <FinalCTA />
       </main>
       <Footer />
-      <StickyMobileCTA />
     </div>
   );
 };

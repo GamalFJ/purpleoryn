@@ -1,6 +1,5 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import StickyMobileCTA from "@/components/StickyMobileCTA";
 import FinalCTA from "@/components/sections/FinalCTA";
 import { Sparkles, ArrowRight, BarChart2, Search, Users, TrendingUp } from "lucide-react";
 import BookingButton from "@/components/BookingButton";
@@ -130,7 +129,6 @@ const Apps = () => {
         <FinalCTA />
       </main>
       <Footer />
-      <StickyMobileCTA />
     </div>
   );
 };
