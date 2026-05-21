@@ -2,7 +2,6 @@ import { lazy, Suspense } from "react";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import PresenciaDigitalExpress from "@/components/PresenciaDigitalExpress";
-import StickyMobileCTA from "@/components/StickyMobileCTA";
 import ScrollReveal from "@/components/ScrollReveal";
 
 const Problem = lazy(() => import("@/components/sections/Problem"));
@@ -28,7 +27,6 @@ const Index = () => {
       <Suspense fallback={null}>
         <Footer />
       </Suspense>
-      <StickyMobileCTA />
     </div>
   );
 };
