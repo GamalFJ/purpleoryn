@@ -1,15 +1,51 @@
-import { Check } from "lucide-react";
+import { Globe, Link2, MessageCircle, Smartphone, Zap, RefreshCw } from "lucide-react";
 
 const WA_URL =
   "https://wa.me/+18096343232?text=Hola,%20me%20interesa%20la%20Presencia%20Digital%20Express";
 
 const items = [
-  "Página profesional con su marca",
-  "Dominio propio por 1 año",
-  "Botón directo a WhatsApp",
-  "Optimizada para móvil",
-  "Entrega en 3 días hábiles",
-  "1 ronda de ajustes incluida",
+  {
+    label: "Página profesional con su marca",
+    Icon: Globe,
+    color: "#7C3AED",
+    bg: "rgba(124,58,237,0.15)",
+    border: "rgba(124,58,237,0.4)",
+  },
+  {
+    label: "Dominio propio por 1 año",
+    Icon: Link2,
+    color: "#0ea5e9",
+    bg: "rgba(14,165,233,0.12)",
+    border: "rgba(14,165,233,0.35)",
+  },
+  {
+    label: "Botón directo a WhatsApp",
+    Icon: MessageCircle,
+    color: "#22c55e",
+    bg: "rgba(34,197,94,0.12)",
+    border: "rgba(34,197,94,0.35)",
+  },
+  {
+    label: "Optimizada para móvil",
+    Icon: Smartphone,
+    color: "#f97316",
+    bg: "rgba(249,115,22,0.12)",
+    border: "rgba(249,115,22,0.35)",
+  },
+  {
+    label: "Entrega en 3 días hábiles",
+    Icon: Zap,
+    color: "#eab308",
+    bg: "rgba(234,179,8,0.12)",
+    border: "rgba(234,179,8,0.35)",
+  },
+  {
+    label: "1 ronda de ajustes incluida",
+    Icon: RefreshCw,
+    color: "#ec4899",
+    bg: "rgba(236,72,153,0.12)",
+    border: "rgba(236,72,153,0.35)",
+  },
 ];
 
 const PresenciaDigitalExpress = () => {
@@ -24,37 +60,55 @@ const PresenciaDigitalExpress = () => {
           style={{ backgroundColor: "#100028" }}
         >
           {/* Top gradient accent line */}
-          <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[#7C3AED] via-[#a855f7] to-[#7C3AED]" />
+          <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[#7C3AED] via-[#ec4899] to-[#0ea5e9]" />
 
-          {/* Ambient glow orb */}
+          {/* Ambient glow orbs */}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute -top-24 -right-24 w-72 h-72 rounded-full blur-3xl opacity-20"
+            className="pointer-events-none absolute -top-24 -right-24 w-72 h-72 rounded-full blur-3xl opacity-15"
             style={{ backgroundColor: "#7C3AED" }}
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -bottom-20 -left-20 w-56 h-56 rounded-full blur-3xl opacity-10"
+            style={{ backgroundColor: "#0ea5e9" }}
           />
 
           {/* Badge */}
           <div className="flex justify-center mb-5">
             <span className="inline-flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-white bg-[#7C3AED]/20 border border-[#7C3AED]/40 rounded-full px-4 py-1.5 animate-urgency-pulse">
-              <span className="w-2 h-2 rounded-full bg-[#a855f7] shrink-0" />
+              <span className="w-2 h-2 rounded-full bg-[#ec4899] shrink-0" />
               Oferta Especial · Disponible Esta Semana
             </span>
           </div>
 
-          {/* Headline — Syne */}
+          {/* Headline — Space Grotesk */}
           <h2
             className="text-center font-extrabold text-2xl sm:text-3xl lg:text-4xl leading-tight mb-4 text-white"
-            style={{ fontFamily: "'Syne', sans-serif" }}
+            style={{ fontFamily: "'Space Grotesk', sans-serif" }}
           >
             Su negocio en línea en{" "}
-            <span style={{ color: "#a855f7" }}>3 días.</span>
+            <span
+              style={{
+                background: "linear-gradient(90deg, #a855f7, #ec4899)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+            >
+              3 días.
+            </span>
           </h2>
 
           {/* Price block */}
           <div className="text-center mb-7">
             <p
               className="text-5xl sm:text-6xl font-extrabold leading-none"
-              style={{ color: "#a855f7", fontFamily: "'Syne', sans-serif" }}
+              style={{
+                fontFamily: "'Space Grotesk', sans-serif",
+                background: "linear-gradient(135deg, #a855f7 0%, #ec4899 60%, #f97316 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
             >
               RD$9,500
             </p>
@@ -71,17 +125,18 @@ const PresenciaDigitalExpress = () => {
 
           {/* Checklist */}
           <ul
-            className="space-y-3 mb-8 max-w-xs mx-auto"
+            className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8"
             style={{ fontFamily: "'DM Sans', sans-serif" }}
           >
-            {items.map((item) => (
-              <li key={item} className="flex items-center gap-3">
-                <span className="shrink-0 w-5 h-5 rounded-full bg-[#7C3AED]/20 border border-[#7C3AED]/50 flex items-center justify-center">
-                  <Check className="w-3 h-3 text-[#a855f7]" strokeWidth={3} />
+            {items.map(({ label, Icon, color, bg, border }) => (
+              <li key={label} className="flex items-center gap-3">
+                <span
+                  className="shrink-0 w-8 h-8 rounded-xl flex items-center justify-center"
+                  style={{ backgroundColor: bg, border: `1px solid ${border}` }}
+                >
+                  <Icon className="w-4 h-4" style={{ color }} strokeWidth={2.5} />
                 </span>
-                <span className="text-sm text-white/85 leading-relaxed">
-                  {item}
-                </span>
+                <span className="text-sm text-white/85 leading-snug">{label}</span>
               </li>
             ))}
           </ul>
@@ -94,8 +149,8 @@ const PresenciaDigitalExpress = () => {
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 rounded-full px-8 py-3.5 min-h-[52px] text-sm sm:text-base font-bold text-white transition-all duration-300 hover:scale-[1.03] hover:brightness-110"
               style={{
-                background: "linear-gradient(135deg, #7C3AED, #9333ea)",
-                boxShadow: "0 0 32px -4px rgba(124, 58, 237, 0.65)",
+                background: "linear-gradient(135deg, #7C3AED, #ec4899)",
+                boxShadow: "0 0 32px -4px rgba(236, 72, 153, 0.5)",
                 fontFamily: "'DM Sans', sans-serif",
               }}
             >
