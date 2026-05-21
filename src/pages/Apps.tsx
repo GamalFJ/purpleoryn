@@ -55,24 +55,24 @@ const Apps = () => {
             <div className="glass-card p-6 sm:p-10 lg:p-12 relative overflow-hidden hover:border-primary/40 transition-all duration-300">
               <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary via-accent to-primary" />
 
-              <div className="flex flex-col lg:flex-row lg:items-start gap-8">
-                <div className="flex-1">
-                  <div className="flex items-start gap-4 mb-6">
-                    <div className="w-16 h-16 shrink-0 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/20 border border-primary/30 flex items-center justify-center">
-                      <BarChart2 className="w-8 h-8 text-primary" />
+              <div className="flex flex-col lg:flex-row lg:items-start gap-8 min-w-0">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start gap-3 sm:gap-4 mb-6 min-w-0">
+                    <div className="w-12 h-12 sm:w-16 sm:h-16 shrink-0 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/20 border border-primary/30 flex items-center justify-center">
+                      <BarChart2 className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
                     </div>
-                    <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <h2 className="font-extrabold text-xl text-foreground">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-2 mb-1">
+                        <h2 className="font-extrabold text-lg sm:text-xl text-foreground break-words">
                           Prospect Intelligence Dashboard
                         </h2>
-                        <span className="text-[10px] font-bold tracking-widest uppercase px-2 py-1 rounded-full bg-success-green/15 text-success-green border border-success-green/30">
+                        <span className="text-[10px] font-bold tracking-widest uppercase px-2 py-1 rounded-full bg-success-green/15 text-success-green border border-success-green/30 whitespace-nowrap">
                           Disponible
                         </span>
                       </div>
-                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                        <Sparkles className="w-3 h-3 text-primary" />
-                        <span>por Purple Cove Labs · Oryn AI</span>
+                      <div className="flex items-center gap-1 text-xs text-muted-foreground flex-wrap">
+                        <Sparkles className="w-3 h-3 text-primary shrink-0" />
+                        <span className="break-words">por Purple Cove Labs · Oryn AI</span>
                       </div>
                     </div>
                   </div>
