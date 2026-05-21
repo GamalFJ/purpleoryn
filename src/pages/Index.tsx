@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
+import PresenciaDigitalExpress from "@/components/PresenciaDigitalExpress";
 import StickyMobileCTA from "@/components/StickyMobileCTA";
 import ScrollReveal from "@/components/ScrollReveal";
 
@@ -16,6 +17,7 @@ const Index = () => {
       <Header />
       <main className="relative z-10">
         <Hero />
+        <PresenciaDigitalExpress />
         <Suspense fallback={null}>
           <ScrollReveal><Problem /></ScrollReveal>
           <ScrollReveal delay={100}><Promise /></ScrollReveal>
