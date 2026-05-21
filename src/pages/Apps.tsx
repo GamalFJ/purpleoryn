@@ -92,17 +92,17 @@ const Apps = () => {
                   </div>
                 </div>
 
-                <div className="lg:w-80 shrink-0">
+                <div className="lg:w-80 shrink-0 min-w-0">
                   <div className="text-[10px] font-bold tracking-widest uppercase text-primary mb-3">
                     Funcionalidades clave
                   </div>
                   <ul className="space-y-4 mb-8">
                     {features.map((f) => (
-                      <li key={f.title} className="flex items-start gap-3">
+                      <li key={f.title} className="flex items-start gap-3 min-w-0">
                         <div className="w-8 h-8 shrink-0 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
                           <f.icon className="w-4 h-4 text-primary" />
                         </div>
-                        <div>
+                        <div className="min-w-0 flex-1">
                           <div className="text-sm font-semibold text-foreground mb-0.5">
                             {f.title}
                           </div>
