@@ -52,7 +52,7 @@ const Apps = () => {
         {/* Prospect Intelligence Dashboard */}
         <section className="py-8 sm:py-12 px-4 sm:px-6">
           <div className="container mx-auto max-w-5xl">
-            <div className="glass-card p-6 sm:p-10 lg:p-12 relative overflow-hidden hover:border-primary/40 transition-all duration-300">
+            <div className="glass-card p-4 sm:p-8 lg:p-12 relative overflow-hidden hover:border-primary/40 transition-all duration-300">
               <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary via-accent to-primary" />
 
               <div className="flex flex-col lg:flex-row lg:items-start gap-8 min-w-0">
