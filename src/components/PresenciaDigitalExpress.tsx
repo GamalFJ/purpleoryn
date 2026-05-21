@@ -1,11 +1,13 @@
-import { Globe, Link2, MessageCircle, Smartphone, Zap, RefreshCw } from "lucide-react";
+import { Globe, Link2, MessageCircle, Smartphone, Zap, RefreshCw, ExternalLink } from "lucide-react";
 
 const WA_URL =
   "https://wa.me/+18096343232?text=Hola,%20me%20interesa%20la%20Presencia%20Digital%20Express";
 
+const DEMO_URL = "https://pagina-de-captura-clinica-dental-so.vercel.app/";
+
 const items = [
   {
-    label: "Página profesional con su marca",
+    label: "Página de Captura con su marca y colores",
     Icon: Globe,
     color: "#7C3AED",
     bg: "rgba(124,58,237,0.15)",
@@ -84,10 +86,10 @@ const PresenciaDigitalExpress = () => {
 
           {/* Headline — Space Grotesk */}
           <h2
-            className="text-center font-extrabold text-2xl sm:text-3xl lg:text-4xl leading-tight mb-4 text-white"
+            className="text-center font-extrabold text-2xl sm:text-3xl lg:text-4xl leading-tight mb-2 text-white"
             style={{ fontFamily: "'Space Grotesk', sans-serif" }}
           >
-            Su negocio en línea en{" "}
+            Su{" "}
             <span
               style={{
                 background: "linear-gradient(90deg, #a855f7, #ec4899)",
@@ -95,9 +97,19 @@ const PresenciaDigitalExpress = () => {
                 WebkitTextFillColor: "transparent",
               }}
             >
-              3 días.
-            </span>
+              Página de Captura
+            </span>{" "}
+            en 3 días.
           </h2>
+
+          {/* What-is clarifier */}
+          <p
+            className="text-center text-xs text-white/50 mb-6 max-w-sm mx-auto leading-relaxed"
+            style={{ fontFamily: "'DM Sans', sans-serif" }}
+          >
+            Una página enfocada en convertir visitantes en clientes —
+            no un sitio web completo.
+          </p>
 
           {/* Price block */}
           <div className="text-center mb-7">
@@ -140,6 +152,39 @@ const PresenciaDigitalExpress = () => {
               </li>
             ))}
           </ul>
+
+          {/* Demo screenshot */}
+          <div className="mb-8">
+            <p
+              className="text-center text-xs font-semibold uppercase tracking-widest text-white/40 mb-3"
+              style={{ fontFamily: "'DM Sans', sans-serif" }}
+            >
+              Ejemplo real — haga clic para ver el demo
+            </p>
+            <a
+              href={DEMO_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group relative block rounded-xl overflow-hidden border border-[#7C3AED]/30 hover:border-[#ec4899]/60 transition-all duration-300"
+              style={{ boxShadow: "0 0 24px -6px rgba(124,58,237,0.3)" }}
+            >
+              <img
+                src="/clinica-dental-demo.jpeg"
+                alt="Demo — Página de Captura Clínica Dental Sonríe"
+                className="w-full object-cover object-top max-h-72 sm:max-h-80"
+              />
+              {/* Hover overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-5">
+                <span
+                  className="inline-flex items-center gap-2 text-sm font-bold text-white bg-[#7C3AED]/80 backdrop-blur-sm rounded-full px-4 py-2"
+                  style={{ fontFamily: "'DM Sans', sans-serif" }}
+                >
+                  <ExternalLink className="w-4 h-4" />
+                  Ver demo en vivo
+                </span>
+              </div>
+            </a>
+          </div>
 
           {/* CTA */}
           <div className="text-center">
