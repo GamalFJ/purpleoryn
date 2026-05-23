@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Globe, Link2, MessageCircle, Smartphone, Zap, RefreshCw, ExternalLink, Building2, Calculator, Heart } from "lucide-react";
 
 const WA_URL =
@@ -9,6 +8,7 @@ const demos = [
     niche: "Clínica Dental",
     description: "Atrae nuevos pacientes y agenda citas al instante",
     url: "https://pagina-de-captura-clinica-dental-so.vercel.app/",
+    img: "/demo-dental.png.jpeg",
     Icon: Smartphone,
     color: "#a855f7",
   },
@@ -16,6 +16,7 @@ const demos = [
     niche: "Constructora",
     description: "Capta proyectos residenciales y comerciales",
     url: "https://pagina-de-captura-constructora-elit.vercel.app/",
+    img: "/demo-constructora.png.jpeg",
     Icon: Building2,
     color: "#0ea5e9",
   },
@@ -23,6 +24,7 @@ const demos = [
     niche: "Contadores",
     description: "Convierte emprendedores en clientes recurrentes",
     url: "https://pagina-de-captura-contadores-del-ca.vercel.app/",
+    img: "/demo-contadoras.png.jpeg",
     Icon: Calculator,
     color: "#22c55e",
   },
@@ -30,6 +32,7 @@ const demos = [
     niche: "Clínica Veterinaria",
     description: "Agenda consultas y fideliza dueños de mascotas",
     url: "https://pagina-de-captura-clinica-veterinar.vercel.app/",
+    img: "/demo-veterinaria.png.jpeg",
     Icon: Heart,
     color: "#ec4899",
   },
@@ -80,24 +83,14 @@ const items = [
   },
 ];
 
-function DemoThumbnail({ url, niche }: { url: string; niche: string }) {
-  const [loaded, setLoaded] = useState(false);
-  const src = `https://api.microlink.io/?url=${encodeURIComponent(url)}&screenshot=true&meta=false&embed=screenshot.url`;
+function DemoThumbnail({ img, niche }: { img: string; niche: string }) {
   return (
-    <div className="relative w-full overflow-hidden" style={{ aspectRatio: "16/9" }}>
-      {!loaded && (
-        <div
-          className="absolute inset-0 animate-pulse"
-          style={{ backgroundColor: "rgba(124,58,237,0.18)" }}
-        />
-      )}
+    <div className="w-full overflow-hidden">
       <img
-        src={src}
+        src={img}
         alt={`Demo ${niche}`}
         loading="lazy"
-        onLoad={() => setLoaded(true)}
-        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
-        style={{ opacity: loaded ? 1 : 0, transition: "opacity 0.3s, transform 0.3s" }}
+        className="w-full h-auto block transition-transform duration-300 group-hover:scale-[1.03]"
       />
     </div>
   );
@@ -215,7 +208,7 @@ const PresenciaDigitalExpress = () => {
               Ejemplos reales por nicho — haga clic para ver el demo
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {demos.map(({ niche, description, url, Icon, color }) => (
+              {demos.map(({ niche, description, url, img, Icon, color }) => (
                 <a
                   key={niche}
                   href={url}
@@ -227,7 +220,7 @@ const PresenciaDigitalExpress = () => {
                     boxShadow: "0 0 18px -6px rgba(124,58,237,0.2)",
                   }}
                 >
-                  <DemoThumbnail url={url} niche={niche} />
+                  <DemoThumbnail img={img} niche={niche} />
                   <div className="flex flex-col gap-3 p-4">
                     <div className="flex items-center gap-3">
                       <span
