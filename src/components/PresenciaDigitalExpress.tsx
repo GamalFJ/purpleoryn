@@ -1,9 +1,38 @@
-import { Globe, Link2, MessageCircle, Smartphone, Zap, RefreshCw, ExternalLink } from "lucide-react";
+import { Globe, Link2, MessageCircle, Smartphone, Zap, RefreshCw, ExternalLink, Building2, Calculator, Heart } from "lucide-react";
 
 const WA_URL =
   "https://wa.me/+18096343232?text=Hola,%20me%20interesa%20la%20Presencia%20Digital%20Express";
 
-const DEMO_URL = "https://pagina-de-captura-clinica-dental-so.vercel.app/";
+const demos = [
+  {
+    niche: "Clínica Dental",
+    description: "Atrae nuevos pacientes y agenda citas al instante",
+    url: "https://pagina-de-captura-clinica-dental-so.vercel.app/",
+    Icon: Smartphone,
+    color: "#a855f7",
+  },
+  {
+    niche: "Constructora",
+    description: "Capta proyectos residenciales y comerciales",
+    url: "https://pagina-de-captura-constructora-elit.vercel.app/",
+    Icon: Building2,
+    color: "#0ea5e9",
+  },
+  {
+    niche: "Contadores",
+    description: "Convierte emprendedores en clientes recurrentes",
+    url: "https://pagina-de-captura-contadores-del-ca.vercel.app/",
+    Icon: Calculator,
+    color: "#22c55e",
+  },
+  {
+    niche: "Clínica Veterinaria",
+    description: "Agenda consultas y fideliza dueños de mascotas",
+    url: "https://pagina-de-captura-clinica-veterinar.vercel.app/",
+    Icon: Heart,
+    color: "#ec4899",
+  },
+];
 
 const items = [
   {
@@ -153,37 +182,60 @@ const PresenciaDigitalExpress = () => {
             ))}
           </ul>
 
-          {/* Demo screenshot */}
+          {/* Demo cards */}
           <div className="mb-8">
             <p
-              className="text-center text-xs font-semibold uppercase tracking-widest text-white/40 mb-3"
+              className="text-center text-xs font-semibold uppercase tracking-widest text-white/40 mb-4"
               style={{ fontFamily: "'DM Sans', sans-serif" }}
             >
-              Ejemplo real — haga clic para ver el demo
+              Ejemplos reales por nicho — haga clic para ver el demo
             </p>
-            <a
-              href={DEMO_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group relative block rounded-xl overflow-hidden border border-[#7C3AED]/30 hover:border-[#ec4899]/60 transition-all duration-300"
-              style={{ boxShadow: "0 0 24px -6px rgba(124,58,237,0.3)" }}
-            >
-              <img
-                src="/clinica-dental-demo.jpeg"
-                alt="Demo — Página de Captura Clínica Dental Sonríe"
-                className="w-full object-cover object-top max-h-72 sm:max-h-80"
-              />
-              {/* Hover overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-5">
-                <span
-                  className="inline-flex items-center gap-2 text-sm font-bold text-white bg-[#7C3AED]/80 backdrop-blur-sm rounded-full px-4 py-2"
-                  style={{ fontFamily: "'DM Sans', sans-serif" }}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {demos.map(({ niche, description, url, Icon, color }) => (
+                <a
+                  key={niche}
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex flex-col gap-3 rounded-xl border border-[#7C3AED]/30 hover:border-[#ec4899]/60 p-4 transition-all duration-300"
+                  style={{
+                    backgroundColor: "rgba(124,58,237,0.07)",
+                    boxShadow: "0 0 18px -6px rgba(124,58,237,0.2)",
+                  }}
                 >
-                  <ExternalLink className="w-4 h-4" />
-                  Ver demo en vivo
-                </span>
-              </div>
-            </a>
+                  <div className="flex items-center gap-3">
+                    <span
+                      className="shrink-0 w-9 h-9 rounded-xl flex items-center justify-center"
+                      style={{
+                        backgroundColor: `${color}18`,
+                        border: `1px solid ${color}40`,
+                      }}
+                    >
+                      <Icon className="w-4 h-4" style={{ color }} strokeWidth={2.5} />
+                    </span>
+                    <span
+                      className="font-bold text-sm text-white leading-snug"
+                      style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+                    >
+                      {niche}
+                    </span>
+                  </div>
+                  <p
+                    className="text-xs text-white/55 leading-relaxed"
+                    style={{ fontFamily: "'DM Sans', sans-serif" }}
+                  >
+                    {description}
+                  </p>
+                  <span
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold mt-auto transition-colors duration-200 group-hover:text-[#ec4899]"
+                    style={{ color, fontFamily: "'DM Sans', sans-serif" }}
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                    Ver Demo →
+                  </span>
+                </a>
+              ))}
+            </div>
           </div>
 
           {/* CTA */}
