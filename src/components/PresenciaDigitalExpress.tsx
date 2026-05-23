@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Globe, Link2, MessageCircle, Smartphone, Zap, RefreshCw, ExternalLink, Building2, Calculator, Heart } from "lucide-react";
 
 const WA_URL =
@@ -78,6 +79,29 @@ const items = [
     border: "rgba(236,72,153,0.35)",
   },
 ];
+
+function DemoThumbnail({ url, niche }: { url: string; niche: string }) {
+  const [loaded, setLoaded] = useState(false);
+  const src = `https://api.microlink.io/?url=${encodeURIComponent(url)}&screenshot=true&meta=false&embed=screenshot.url`;
+  return (
+    <div className="relative w-full overflow-hidden" style={{ aspectRatio: "16/9" }}>
+      {!loaded && (
+        <div
+          className="absolute inset-0 animate-pulse"
+          style={{ backgroundColor: "rgba(124,58,237,0.18)" }}
+        />
+      )}
+      <img
+        src={src}
+        alt={`Demo ${niche}`}
+        loading="lazy"
+        onLoad={() => setLoaded(true)}
+        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+        style={{ opacity: loaded ? 1 : 0, transition: "opacity 0.3s, transform 0.3s" }}
+      />
+    </div>
+  );
+}
 
 const PresenciaDigitalExpress = () => {
   return (
@@ -197,42 +221,45 @@ const PresenciaDigitalExpress = () => {
                   href={url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex flex-col gap-3 rounded-xl border border-[#7C3AED]/30 hover:border-[#ec4899]/60 p-4 transition-all duration-300"
+                  className="group flex flex-col rounded-xl border border-[#7C3AED]/30 hover:border-[#ec4899]/60 overflow-hidden transition-all duration-300"
                   style={{
                     backgroundColor: "rgba(124,58,237,0.07)",
                     boxShadow: "0 0 18px -6px rgba(124,58,237,0.2)",
                   }}
                 >
-                  <div className="flex items-center gap-3">
-                    <span
-                      className="shrink-0 w-9 h-9 rounded-xl flex items-center justify-center"
-                      style={{
-                        backgroundColor: `${color}18`,
-                        border: `1px solid ${color}40`,
-                      }}
+                  <DemoThumbnail url={url} niche={niche} />
+                  <div className="flex flex-col gap-3 p-4">
+                    <div className="flex items-center gap-3">
+                      <span
+                        className="shrink-0 w-9 h-9 rounded-xl flex items-center justify-center"
+                        style={{
+                          backgroundColor: `${color}18`,
+                          border: `1px solid ${color}40`,
+                        }}
+                      >
+                        <Icon className="w-4 h-4" style={{ color }} strokeWidth={2.5} />
+                      </span>
+                      <span
+                        className="font-bold text-sm text-white leading-snug"
+                        style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+                      >
+                        {niche}
+                      </span>
+                    </div>
+                    <p
+                      className="text-xs text-white/55 leading-relaxed"
+                      style={{ fontFamily: "'DM Sans', sans-serif" }}
                     >
-                      <Icon className="w-4 h-4" style={{ color }} strokeWidth={2.5} />
-                    </span>
+                      {description}
+                    </p>
                     <span
-                      className="font-bold text-sm text-white leading-snug"
-                      style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+                      className="inline-flex items-center gap-1.5 text-xs font-semibold mt-auto transition-colors duration-200 group-hover:text-[#ec4899]"
+                      style={{ color, fontFamily: "'DM Sans', sans-serif" }}
                     >
-                      {niche}
+                      <ExternalLink className="w-3.5 h-3.5" />
+                      Ver Demo →
                     </span>
                   </div>
-                  <p
-                    className="text-xs text-white/55 leading-relaxed"
-                    style={{ fontFamily: "'DM Sans', sans-serif" }}
-                  >
-                    {description}
-                  </p>
-                  <span
-                    className="inline-flex items-center gap-1.5 text-xs font-semibold mt-auto transition-colors duration-200 group-hover:text-[#ec4899]"
-                    style={{ color, fontFamily: "'DM Sans', sans-serif" }}
-                  >
-                    <ExternalLink className="w-3.5 h-3.5" />
-                    Ver Demo →
-                  </span>
                 </a>
               ))}
             </div>
