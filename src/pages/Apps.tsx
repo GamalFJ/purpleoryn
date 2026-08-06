@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet-async";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FinalCTA from "@/components/sections/FinalCTA";
@@ -30,6 +31,13 @@ const features = [
 const Apps = () => {
   return (
     <div className="min-h-screen min-h-[100dvh] bg-background relative w-full max-w-full overflow-x-hidden">
+      <Helmet>
+        <title>Productos & Apps — Purple Cove Labs</title>
+        <meta name="description" content="Herramientas de inteligencia de prospectos y automatización construidas por Purple Cove Labs para escalar negocios desde el primer día." />
+        <meta property="og:title" content="Productos & Apps — Purple Cove Labs" />
+        <meta property="og:description" content="Herramientas de inteligencia de prospectos y automatización para escalar tu negocio." />
+        <meta property="og:url" content="https://purpleoryn.com/apps" />
+      </Helmet>
       <Header />
       <main className="relative z-10 pt-24 sm:pt-28">
         <section className="py-10 sm:py-16 px-4 sm:px-6 text-center">

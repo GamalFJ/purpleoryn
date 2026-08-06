@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet-async";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FinalCTA from "@/components/sections/FinalCTA";
@@ -69,6 +70,13 @@ const plans = [
 const Planes = () => {
   return (
     <div className="min-h-screen min-h-[100dvh] bg-background relative w-full max-w-full overflow-x-hidden">
+      <Helmet>
+        <title>Planes de Soporte Mensual — Purple Cove Labs</title>
+        <meta name="description" content="Planes de soporte y mantenimiento continuo para tu sistema: Básico (RD$ 10,675), Estándar (RD$ 18,000) y AI Partner (RD$ 35,000). Cancelables en cualquier momento." />
+        <meta property="og:title" content="Planes de Soporte Mensual — Purple Cove Labs" />
+        <meta property="og:description" content="Planes de soporte y mantenimiento continuo para tu sistema digital. Básico, Estándar y AI Partner — cancelables en cualquier momento." />
+        <meta property="og:url" content="https://purpleoryn.com/planes" />
+      </Helmet>
       <Header />
       <main className="relative z-10 pt-24 sm:pt-28">
         {/* Hero */}

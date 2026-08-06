@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Helmet } from "react-helmet-async";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FinalCTA from "@/components/sections/FinalCTA";
@@ -185,6 +186,13 @@ const Portafolio = () => {
 
   return (
     <div className="min-h-screen min-h-[100dvh] bg-background relative w-full max-w-full overflow-x-hidden">
+      <Helmet>
+        <title>Portafolio — Purple Cove Labs</title>
+        <meta name="description" content="Casos de éxito reales: sitios web, automatizaciones e IA implementados para negocios en la República Dominicana. Ve el sistema, el problema que resolvimos y los resultados medibles." />
+        <meta property="og:title" content="Portafolio — Purple Cove Labs" />
+        <meta property="og:description" content="Casos de éxito reales: sitios web, automatizaciones e IA implementados para negocios dominicanos." />
+        <meta property="og:url" content="https://purpleoryn.com/portafolio" />
+      </Helmet>
       <Header />
       <main className="relative z-10 pt-24 sm:pt-28">
         <section className="py-10 sm:py-16 px-4 sm:px-6 text-center">

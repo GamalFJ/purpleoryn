@@ -59,7 +59,7 @@ const niches: Niche[] = [
 ];
 
 const DEFAULT_TITLE = "Biblioteca de Demos — Purple Cove Labs";
-const DEFAULT_DESCRIPTION = "Demos en vivo para negocios dominicanos.";
+const DEFAULT_DESCRIPTION = "Demos en vivo de sitios web y sistemas de automatización para negocios dominicanos. Explora ejemplos reales por industria: dental, contabilidad, veterinaria, construcción y más.";
 
 const Demos = () => {
   const [activeNiche, setActiveNiche] = useState<NicheKey | null>(null);
