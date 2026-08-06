@@ -1,5 +1,6 @@
-import { Layers, FolderOpen } from "lucide-react";
+import { Layers, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
+import WhatsAppButton from "@/components/WhatsAppButton";
 
 const Hero = () => {
   return (
@@ -22,10 +23,6 @@ const Hero = () => {
 
           {/* ── LEFT: copy ── */}
           <div className="flex flex-col justify-center order-2 lg:order-1 pb-8 lg:pb-0">
-            <div className="inline-flex w-fit items-center gap-2 text-xs font-bold tracking-widest uppercase text-primary bg-primary/10 border border-primary/25 rounded-full px-4 py-1.5 mb-6">
-              🔥 Últimos cupos del mes disponibles
-            </div>
-
             <h1 className="font-extrabold leading-[1.05] tracking-tight mb-5">
               <span className="block text-foreground">Sistemas que hacen</span>
               <span className="block text-foreground">crecer tu negocio.</span>
@@ -36,27 +33,25 @@ const Hero = () => {
             </h1>
 
             <p className="text-sm sm:text-base text-muted-foreground mb-8 max-w-md leading-relaxed">
-              Más de 10 negocios ya automatizan con nosotros.{" "}
+              Sitios web, automatizaciones e IA para negocios en la República
+              Dominicana.{" "}
               <span className="text-primary font-semibold">
-                Los cupos se llenan rápido.
+                Implementación en días, no meses.
               </span>
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-start sm:items-center">
+              <WhatsAppButton className="inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 min-h-[52px] text-sm sm:text-base font-bold text-primary-foreground bg-gradient-to-r from-primary to-accent shadow-[0_0_30px_-5px_hsl(var(--primary)/0.6)] hover:shadow-[0_0_45px_-5px_hsl(var(--primary)/0.8)] hover:scale-[1.02] transition-all duration-300">
+                <MessageCircle className="w-5 h-5 shrink-0" />
+                Conversemos por WhatsApp
+              </WhatsAppButton>
+
               <Link
                 to="/demos"
-                className="inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 min-h-[52px] text-sm sm:text-base font-bold text-primary-foreground bg-gradient-to-r from-primary to-accent shadow-[0_0_30px_-5px_hsl(var(--primary)/0.6)] hover:shadow-[0_0_45px_-5px_hsl(var(--primary)/0.8)] hover:scale-[1.02] transition-all duration-300"
+                className="inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 min-h-[52px] text-sm sm:text-base font-semibold text-foreground border border-primary/40 bg-glass-bg/40 backdrop-blur-md hover:border-primary hover:bg-primary/10 transition-all duration-300"
               >
                 <Layers className="w-5 h-5 shrink-0" />
                 Ver Demos
-              </Link>
-
-              <Link
-                to="/portafolio"
-                className="inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 min-h-[52px] text-sm sm:text-base font-semibold text-foreground border border-primary/40 bg-glass-bg/40 backdrop-blur-md hover:border-primary hover:bg-primary/10 transition-all duration-300"
-              >
-                <FolderOpen className="w-5 h-5 shrink-0" />
-                Ver Portafolio
               </Link>
             </div>
           </div>

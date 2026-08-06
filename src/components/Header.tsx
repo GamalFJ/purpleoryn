@@ -8,10 +8,11 @@ import BookingButton from "@/components/BookingButton";
 const navLinks = [
   { href: "/", label: "Inicio" },
   { href: "/portafolio", label: "Portafolio" },
-  { href: "/apps", label: "Apps" },
   { href: "/demos", label: "Demos", badge: "Nuevo" },
   { href: "/planes", label: "Planes" },
+  { href: "/calculator.html", label: "Cotización" },
 ];
+
 
 const Header = () => {
   const [open, setOpen] = useState(false);
@@ -37,7 +38,21 @@ const Header = () => {
           <div className="hidden md:flex items-center gap-6 lg:gap-8">
             {navLinks.map((l) => {
               const active = location.pathname === l.href;
-              return (
+              const isStatic = l.href.endsWith(".html") || l.href.startsWith("http");
+              return isStatic ? (
+                <a
+                  key={l.href}
+                  href={l.href}
+                  className="flex items-center gap-1.5 text-sm lg:text-base transition-colors duration-200 text-muted-foreground hover:text-foreground"
+                >
+                  {l.label}
+                  {l.badge && (
+                    <span className="text-[9px] font-bold tracking-widest uppercase px-1.5 py-0.5 rounded-full bg-primary/20 text-primary border border-primary/30">
+                      {l.badge}
+                    </span>
+                  )}
+                </a>
+              ) : (
                 <Link
                   key={l.href}
                   to={l.href}
@@ -56,6 +71,7 @@ const Header = () => {
                 </Link>
               );
             })}
+
           </div>
 
           <div className="flex items-center gap-2 sm:gap-3">
@@ -81,21 +97,39 @@ const Header = () => {
         {open && (
           <div className="md:hidden mt-4 pb-4 border-t border-border/30 animate-fade-in">
             <div className="flex flex-col gap-1 pt-3">
-              {navLinks.map((l) => (
-                <Link
-                  key={l.href}
-                  to={l.href}
-                  onClick={close}
-                  className="text-foreground/90 hover:text-primary transition-colors py-3 px-2 text-base min-h-[44px] flex items-center gap-2"
-                >
-                  {l.label}
-                  {l.badge && (
-                    <span className="text-[9px] font-bold tracking-widest uppercase px-1.5 py-0.5 rounded-full bg-primary/20 text-primary border border-primary/30">
-                      {l.badge}
-                    </span>
-                  )}
-                </Link>
-              ))}
+              {navLinks.map((l) => {
+                const isStatic = l.href.endsWith(".html") || l.href.startsWith("http");
+                return isStatic ? (
+                  <a
+                    key={l.href}
+                    href={l.href}
+                    onClick={close}
+                    className="text-foreground/90 hover:text-primary transition-colors py-3 px-2 text-base min-h-[44px] flex items-center gap-2"
+                  >
+                    {l.label}
+                    {l.badge && (
+                      <span className="text-[9px] font-bold tracking-widest uppercase px-1.5 py-0.5 rounded-full bg-primary/20 text-primary border border-primary/30">
+                        {l.badge}
+                      </span>
+                    )}
+                  </a>
+                ) : (
+                  <Link
+                    key={l.href}
+                    to={l.href}
+                    onClick={close}
+                    className="text-foreground/90 hover:text-primary transition-colors py-3 px-2 text-base min-h-[44px] flex items-center gap-2"
+                  >
+                    {l.label}
+                    {l.badge && (
+                      <span className="text-[9px] font-bold tracking-widest uppercase px-1.5 py-0.5 rounded-full bg-primary/20 text-primary border border-primary/30">
+                        {l.badge}
+                      </span>
+                    )}
+                  </Link>
+                );
+              })}
+
               <BookingButton
                 ariaLabel="Agendar Llamada"
                 className="mt-2 w-full inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 min-h-[48px] text-sm font-bold text-primary-foreground bg-gradient-to-r from-primary to-accent cursor-pointer"

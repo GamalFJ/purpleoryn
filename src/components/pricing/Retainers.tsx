@@ -4,7 +4,7 @@ import { Check } from "lucide-react";
 const tiers = [
   {
     nameKey: "pricing.retainers.maintenance.name",
-    price: "$350",
+    price: "RD$ 10,675",
     periodKey: "pricing.retainers.period",
     taglineKey: "pricing.retainers.maintenance.tagline",
     features: ["pricing.retainers.maintenance.f1","pricing.retainers.maintenance.f2","pricing.retainers.maintenance.f3","pricing.retainers.maintenance.f4"],
@@ -13,7 +13,7 @@ const tiers = [
   },
   {
     nameKey: "pricing.retainers.growth.name",
-    price: "$525",
+    price: "RD$ 18,000",
     periodKey: "pricing.retainers.period",
     taglineKey: "pricing.retainers.growth.tagline",
     features: ["pricing.retainers.growth.f1","pricing.retainers.growth.f2","pricing.retainers.growth.f3","pricing.retainers.growth.f4"],
@@ -22,7 +22,7 @@ const tiers = [
   },
   {
     nameKey: "pricing.retainers.aiPartner.name",
-    price: "$950",
+    price: "RD$ 35,000",
     periodKey: "pricing.retainers.period",
     taglineKey: "pricing.retainers.aiPartner.tagline",
     features: ["pricing.retainers.aiPartner.f1","pricing.retainers.aiPartner.f2","pricing.retainers.aiPartner.f3","pricing.retainers.aiPartner.f4","pricing.retainers.aiPartner.f5"],

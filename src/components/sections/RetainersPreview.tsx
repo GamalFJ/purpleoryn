@@ -16,7 +16,7 @@ const plans = [
   },
   {
     name: "Plan Estándar",
-    price: "RD$ 17,995",
+    price: "RD$ 18,000",
     period: "/mes",
     desc: "Mantenimiento profesional y operación continua del ecosistema digital.",
     features: [
@@ -29,7 +29,7 @@ const plans = [
   },
   {
     name: "Plan AI Partner",
-    price: "RD$ 35,014",
+    price: "RD$ 35,000",
     period: "/mes",
     desc: "Todo lo del Estándar, potenciado con Inteligencia Artificial activa.",
     features: [
