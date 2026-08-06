@@ -1,7 +1,7 @@
 import { Globe, Link2, MessageCircle, Smartphone, Zap, RefreshCw, ExternalLink, Building2, Calculator, Heart } from "lucide-react";
 
 const WA_URL =
-  "https://wa.me/+18096343232?text=Hola,%20me%20interesa%20la%20Presencia%20Digital%20Express";
+  "https://wa.me/+18096034113?text=Hola,%20me%20interesa%20la%20Presencia%20Digital%20Express";
 
 const demos = [
   {

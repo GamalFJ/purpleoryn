@@ -23,7 +23,7 @@ const PricingCTA = () => {
               {t("pricing.cta.primary")}
             </a>
             <a
-              href="https://wa.me/18096390000"
+              href="https://wa.me/18096034113"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 glass-card px-6 py-3 text-sm font-semibold text-foreground hover:border-primary/60 transition-all"

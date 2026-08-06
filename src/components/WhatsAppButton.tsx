@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 
-const WA_NUMBER = "18096390000";
+const WA_NUMBER = "18096034113";
 
 const PREFILL = `Hola Purple Cove Labs 👋
 
