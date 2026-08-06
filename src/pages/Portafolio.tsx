@@ -11,7 +11,6 @@ import {
   X,
   ChevronLeft,
   ChevronRight,
-  Play,
 } from "lucide-react";
 import {
   Dialog,
@@ -54,6 +53,7 @@ interface Case {
   };
   screenshots: Screenshot[];
   videoPlaceholder?: boolean;
+  videoUrl?: string;
 }
 
 const vielmaScreenshots: Screenshot[] = [
@@ -323,40 +323,17 @@ const Portafolio = () => {
                   </div>
                 )}
 
-                {/* Video Placeholder */}
-                {c.videoPlaceholder && (
+                {/* Video — add Loom URL to videoUrl field in the case object to enable */}
+                {c.videoPlaceholder && c.videoUrl && (
                   <div className="mt-6 pt-6 border-t border-border/30">
-                    {/* <!-- REPLACE href="#" WITH LOOM URL WHEN READY --> */}
-                    {/*
-                      iframe-ready: to go live, replace the placeholder block below with:
-                      <iframe
-                        src="https://www.loom.com/embed/YOUR_VIDEO_ID"
-                        title="Demo en video — Vielma Group"
-                        className="w-full aspect-video rounded-xl border border-primary/20"
-                        allowFullScreen
-                        allow="autoplay"
-                      />
-                    */}
-                    <div className="relative w-full max-w-2xl mx-auto aspect-video rounded-xl overflow-hidden border border-primary/25 shadow-lg bg-[#0c0c14] flex flex-col items-center justify-center gap-3">
-                      {/* Purple radial glow */}
-                      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_hsl(var(--primary)/0.15)_0%,_transparent_70%)] pointer-events-none" />
-                      {/* Play button */}
-                      <div className="relative w-16 h-16 rounded-full border-2 border-primary bg-primary/20 flex items-center justify-center">
-                        <Play className="w-7 h-7 text-primary fill-primary ml-1" />
-                      </div>
-                      <p className="relative text-sm font-semibold text-foreground">
-                        Demo en video — Vielma Group
-                      </p>
-                      {/* REPLACE href="#" WITH LOOM URL WHEN READY */}
-                      <a
-                        href="#"
-                        className="relative text-xs font-medium text-primary hover:underline underline-offset-2"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        Ver demo en Loom →
-                      </a>
-                    </div>
+                    <iframe
+                      src={c.videoUrl}
+                      title={`Demo en video — ${c.name}`}
+                      className="w-full max-w-2xl mx-auto aspect-video rounded-xl border border-primary/20 block"
+                      allowFullScreen
+                      allow="autoplay"
+                      loading="lazy"
+                    />
                   </div>
                 )}
               </article>
