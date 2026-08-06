@@ -1,3 +1,6 @@
+import { MessageCircle, Calendar } from "lucide-react";
+import BookingButton from "@/components/BookingButton";
+import WhatsAppButton from "@/components/WhatsAppButton";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const PricingCTA = () => {
@@ -14,25 +17,23 @@ const PricingCTA = () => {
             {t("pricing.cta.subtitle")}
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
-            <a
-              href="https://fluum.ai/c/strategy-systems-session-709721"
-              target="_blank"
-              rel="noopener noreferrer"
+            <BookingButton
+              ariaLabel="Agendar llamada estratégica"
               className="inline-flex items-center gap-2 bg-gradient-to-r from-primary to-accent text-primary-foreground font-bold text-sm px-7 py-3 rounded-full hover:opacity-90 transition-opacity"
             >
+              <Calendar className="w-4 h-4" />
               {t("pricing.cta.primary")}
-            </a>
-            <a
-              href="https://wa.me/18096034113"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 glass-card px-6 py-3 text-sm font-semibold text-foreground hover:border-primary/60 transition-all"
-            >
-              💬 WhatsApp
-            </a>
+            </BookingButton>
+            <WhatsAppButton className="inline-flex items-center gap-2 glass-card px-6 py-3 text-sm font-semibold text-foreground hover:border-primary/60 transition-all">
+              <MessageCircle className="w-4 h-4" />
+              WhatsApp
+            </WhatsAppButton>
           </div>
           <p className="text-xs text-muted-foreground mt-5">
-            {t("pricing.cta.email")} <a href="mailto:hello@purpleoryn.com" className="text-primary hover:underline">hello@purpleoryn.com</a>
+            {t("pricing.cta.email")}{" "}
+            <a href="mailto:gamal.jastram@purpleoryn.com" className="text-primary hover:underline">
+              gamal.jastram@purpleoryn.com
+            </a>
           </p>
         </div>
       </div>
