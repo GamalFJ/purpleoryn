@@ -75,7 +75,7 @@ const Header = () => {
           </div>
 
           <div className="flex items-center gap-2 sm:gap-3">
-            <LanguageToggle />
+            {location.pathname === "/planes" && <LanguageToggle />}
             <BookingButton
               ariaLabel="Agendar Llamada"
               className="hidden sm:inline-flex items-center justify-center gap-1.5 rounded-full px-4 lg:px-5 py-2 lg:py-2.5 text-xs lg:text-sm font-bold text-primary-foreground bg-gradient-to-r from-primary to-accent hover:scale-[1.03] transition-all duration-300 cursor-pointer min-h-[40px]"
