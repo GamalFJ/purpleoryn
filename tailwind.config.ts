@@ -87,10 +87,6 @@ export default {
           "0%, 100%": { opacity: "0.7" },
           "50%": { opacity: "0.8" },
         },
-        "urgency-pulse": {
-          "0%, 100%": { transform: "scale(1)", opacity: "1" },
-          "50%": { transform: "scale(1.04)", opacity: "0.85", filter: "brightness(1.25)" },
-        },
         "card-glow": {
           "0%, 100%": { boxShadow: "0 0 32px -6px rgba(124, 58, 237, 0.35), 0 0 0 1px rgba(124, 58, 237, 0.2)" },
           "50%": { boxShadow: "0 0 56px -6px rgba(124, 58, 237, 0.65), 0 0 0 1px rgba(124, 58, 237, 0.45)" },
@@ -101,7 +97,6 @@ export default {
         "accordion-up": "accordion-up 0.2s ease-out",
         "float": "float 8s ease-in-out infinite",
         "glow-pulse": "glow-pulse 10s ease-in-out infinite",
-        "urgency-pulse": "urgency-pulse 2s ease-in-out infinite",
         "card-glow": "card-glow 3s ease-in-out infinite",
       },
     },

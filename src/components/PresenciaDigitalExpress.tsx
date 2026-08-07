@@ -124,9 +124,9 @@ const PresenciaDigitalExpress = () => {
 
           {/* Badge */}
           <div className="flex justify-center mb-5">
-            <span className="inline-flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-white bg-[#7C3AED]/20 border border-[#7C3AED]/40 rounded-full px-4 py-1.5 animate-urgency-pulse">
+            <span className="inline-flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-white bg-[#7C3AED]/20 border border-[#7C3AED]/40 rounded-full px-4 py-1.5">
               <span className="w-2 h-2 rounded-full bg-[#ec4899] shrink-0" />
-              Oferta Especial · Disponible Esta Semana
+              Oferta Especial
             </span>
           </div>
 
@@ -277,8 +277,7 @@ const PresenciaDigitalExpress = () => {
               className="text-xs text-white/45 mt-3 max-w-xs mx-auto leading-relaxed"
               style={{ fontFamily: "'DM Sans', sans-serif" }}
             >
-              Cupos limitados esta semana. Pago 100% adelantado para reservar su
-              fecha.
+              Pago 100% adelantado para reservar su fecha.
             </p>
           </div>
         </div>
