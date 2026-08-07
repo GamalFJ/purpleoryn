@@ -4,7 +4,6 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "@/hooks/useAuth";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 
 const Index = lazy(() => import("./pages/Index"));
@@ -16,6 +15,12 @@ const Apps = lazy(() => import("./pages/Apps"));
 const Demos = lazy(() => import("./pages/Demos"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
+// Lazy so @supabase/supabase-js only loads for visitors who hit /auth or /admin,
+// instead of being bundled into the marketing site's main chunk for every visitor.
+const AuthProvider = lazy(() =>
+  import("@/hooks/useAuth").then((m) => ({ default: m.AuthProvider }))
+);
+
 const App = () => (
   <HelmetProvider>
     <TooltipProvider>
@@ -23,22 +28,34 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <AuthProvider>
-            <Suspense fallback={<div className="min-h-screen bg-background" />}>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/portafolio" element={<Portafolio />} />
-                <Route path="/apps" element={<Apps />} />
-                <Route path="/planes" element={<Planes />} />
-                {/* Legacy redirect */}
-                <Route path="/pricing" element={<Planes />} />
-                <Route path="/demos" element={<Demos />} />
-                <Route path="/auth" element={<Auth />} />
-                <Route path="/admin" element={<Admin />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </Suspense>
-          </AuthProvider>
+          <Suspense fallback={<div className="min-h-screen bg-background" />}>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/portafolio" element={<Portafolio />} />
+              <Route path="/apps" element={<Apps />} />
+              <Route path="/planes" element={<Planes />} />
+              {/* Legacy redirect */}
+              <Route path="/pricing" element={<Planes />} />
+              <Route path="/demos" element={<Demos />} />
+              <Route
+                path="/auth"
+                element={
+                  <AuthProvider>
+                    <Auth />
+                  </AuthProvider>
+                }
+              />
+              <Route
+                path="/admin"
+                element={
+                  <AuthProvider>
+                    <Admin />
+                  </AuthProvider>
+                }
+              />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
         </BrowserRouter>
       </LanguageProvider>
     </TooltipProvider>
