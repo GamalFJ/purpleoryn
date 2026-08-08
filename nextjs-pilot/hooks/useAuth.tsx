@@ -2,7 +2,7 @@
 
 import { useState, useEffect, createContext, useContext, ReactNode } from "react";
 import { User, Session } from "@supabase/supabase-js";
-import { supabase } from "@/integrations/supabase/client";
+import { getSupabaseClient } from "@/integrations/supabase/client";
 
 interface AuthContextType {
   user: User | null;
@@ -23,7 +23,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAdmin, setIsAdmin] = useState(false);
 
   const checkAdminRole = async (userId: string) => {
-    const { data, error } = await supabase
+    const { data, error } = await getSupabaseClient()
       .from("user_roles")
       .select("role")
       .eq("user_id", userId)
@@ -38,6 +38,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
+    const supabase = getSupabaseClient();
+
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
@@ -68,13 +70,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { error } = await getSupabaseClient().auth.signInWithPassword({ email, password });
     return { error: error as Error | null };
   };
 
   const signUp = async (email: string, password: string) => {
     const redirectUrl = `${window.location.origin}/`;
-    const { error } = await supabase.auth.signUp({
+    const { error } = await getSupabaseClient().auth.signUp({
       email,
       password,
       options: { emailRedirectTo: redirectUrl },
@@ -83,7 +85,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    await getSupabaseClient().auth.signOut();
     setIsAdmin(false);
   };
 

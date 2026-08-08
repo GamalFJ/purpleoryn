@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/integrations/supabase/client";
+import { getSupabaseClient } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/toaster";
 import { toast } from "@/hooks/use-toast";
@@ -44,7 +44,7 @@ function AdminDashboard() {
 
   const fetchSignups = async () => {
     setLoadingData(true);
-    const { data, error } = await supabase.from("waitlist_signups").select("*").order("created_at", { ascending: false });
+    const { data, error } = await getSupabaseClient().from("waitlist_signups").select("*").order("created_at", { ascending: false });
 
     if (error) {
       toast({ title: "Error", description: "Failed to fetch waitlist signups.", variant: "destructive" });
