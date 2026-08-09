@@ -23,6 +23,7 @@ const Footer = () => {
             <h4 className="text-xs font-bold tracking-widest uppercase text-foreground mb-3">{t("footer.navLabel")}</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li><Link href="/" className="hover:text-primary">{t("header.nav.inicio")}</Link></li>
+              <li><Link href="/servicios" className="hover:text-primary">{t("header.nav.servicios")}</Link></li>
               <li><Link href="/portafolio" className="hover:text-primary">{t("header.nav.portafolio")}</Link></li>
               <li><Link href="/demos" className="hover:text-primary">{t("header.nav.demos")}</Link></li>
               <li><Link href="/planes" className="hover:text-primary">{t("header.nav.planes")}</Link></li>

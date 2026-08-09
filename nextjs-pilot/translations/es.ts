@@ -1,6 +1,6 @@
 export const es = {
   header: {
-    nav: { inicio: "Inicio", portafolio: "Portafolio", demos: "Demos", planes: "Planes", cotizacion: "Cotización" },
+    nav: { inicio: "Inicio", servicios: "Servicios", portafolio: "Portafolio", demos: "Demos", planes: "Planes", cotizacion: "Cotización" },
     badgeNuevo: "Nuevo",
     agendar: "Agendar",
     agendarLlamada: "Agendar Llamada",
@@ -230,6 +230,52 @@ export const es = {
         ctaLabel: "Conversemos sobre algo similar",
       },
     ],
+  },
+  servicios: {
+    badge: "Servicios",
+    titlePart1: "Sistemas",
+    titleHighlight: "a la medida",
+    titlePart2: "de cada etapa de tu negocio.",
+    subtitle: "Desde una página que capta clientes hasta un agente de IA que opera parte de tu negocio — así es como lo construimos.",
+    categories: [
+      {
+        title: "Sitios Web",
+        desc: "Presencia digital profesional, del tamaño exacto que tu negocio necesita.",
+        services: [
+          { title: "Página de Captura", price: "RD$7,500", badge: "", desc: "Una sola pantalla enfocada en convertir visitantes en clientes por WhatsApp. Ideal si no necesitas un sitio completo — solo presencia profesional y captación rápida." },
+          { title: "Landing Page", price: "RD$12,500", badge: "", desc: "Un one-pager más completo: hero, servicios, precios, portafolio y testimonios en una sola página a medida." },
+          { title: "Full Website", price: "Desde RD$18,000", badge: "", desc: "Sitio multi-página (5–7 páginas) con homepage incluida — la base para negocios que necesitan varias secciones independientes." },
+        ],
+      },
+      {
+        title: "Apps y Automatización",
+        desc: "Elimina el trabajo manual y centraliza tu operación.",
+        services: [
+          { title: "Automatización", price: "Desde RD$10,000", badge: "", desc: "Conectamos tus herramientas para eliminar trabajo manual — desde 2 flujos simples hasta procesos multi-paso interconectados." },
+          { title: "Constructor de Pedido", price: "RD$25,000", badge: "", desc: "Sistema de pedidos a medida con backend completo: clientes, carrito, checkout y zonas de entrega. Adaptable a restaurantes o retail." },
+          { title: "Booking App", price: "Desde RD$3,500", badge: "", desc: "Agenda de citas integrada con entrega automática por WhatsApp, sin que tengas que coordinar nada manualmente." },
+        ],
+      },
+      {
+        title: "Inteligencia Artificial",
+        desc: "IA aplicada a un proceso real de tu negocio, no una demo genérica.",
+        services: [
+          { title: "Asistente de WhatsApp con IA", price: "RD$26,000", badge: "En Piloto", desc: "Conversaciones automatizadas con tus clientes por WhatsApp: calificación de leads y sincronización con tu operación." },
+          { title: "Agente de IA Personalizado", price: "Desde RD$27,000", badge: "", desc: "Un agente a medida diseñado en torno a un proceso específico de tu negocio — como widget de chat o conectado a tus sistemas internos." },
+        ],
+      },
+    ],
+    ongoing: {
+      title: "Soporte Continuo",
+      desc: "Una vez tu sistema está en marcha, nuestros planes mensuales lo mantienen funcionando, mejorando y creciendo — sin que tengas que pensar en ello.",
+      cta: "Ver Planes",
+    },
+    quoteCta: {
+      title: "¿Listo para ver precios exactos?",
+      subtitle: "Arma tu combinación de servicios y obtén tu cotización en segundos.",
+      cotizacionCta: "Armar Cotización",
+      whatsappCta: "Prefiero WhatsApp",
+    },
   },
   planes: {
     badge: "Planes de Asociación Continua",

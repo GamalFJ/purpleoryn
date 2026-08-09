@@ -1,6 +1,6 @@
 export const en = {
   header: {
-    nav: { inicio: "Home", portafolio: "Portfolio", demos: "Demos", planes: "Plans", cotizacion: "Quote" },
+    nav: { inicio: "Home", servicios: "Services", portafolio: "Portfolio", demos: "Demos", planes: "Plans", cotizacion: "Quote" },
     badgeNuevo: "New",
     agendar: "Book a Call",
     agendarLlamada: "Book a Call",
@@ -230,6 +230,52 @@ export const en = {
         ctaLabel: "Let's Talk About Something Similar",
       },
     ],
+  },
+  servicios: {
+    badge: "Services",
+    titlePart1: "Systems",
+    titleHighlight: "built to fit",
+    titlePart2: "every stage of your business.",
+    subtitle: "From a page that captures leads to an AI agent that runs part of your business — here's how we build it.",
+    categories: [
+      {
+        title: "Websites",
+        desc: "Professional digital presence, sized exactly to what your business needs.",
+        services: [
+          { title: "Capture Page", price: "RD$7,500", badge: "", desc: "A single screen focused on converting visitors into WhatsApp leads. Ideal if you don't need a full site — just professional presence and fast lead capture." },
+          { title: "Landing Page", price: "RD$12,500", badge: "", desc: "A fuller one-pager: hero, services, pricing, portfolio, and testimonials, all custom-built into a single page." },
+          { title: "Full Website", price: "Starting at RD$18,000", badge: "", desc: "A multi-page site (5-7 pages) with homepage included — the foundation for businesses that need several independent sections." },
+        ],
+      },
+      {
+        title: "Apps & Automation",
+        desc: "Remove manual work and centralize your operation.",
+        services: [
+          { title: "Automation", price: "Starting at RD$10,000", badge: "", desc: "We connect your tools to remove manual work — from 2 simple flows up to interconnected multi-step processes." },
+          { title: "Ordering App", price: "RD$25,000", badge: "", desc: "A custom ordering system with a full backend: customers, cart, checkout, and delivery zones. Adaptable to restaurants or general retail." },
+          { title: "Booking App", price: "Starting at RD$3,500", badge: "", desc: "Integrated appointment scheduling with automatic WhatsApp handoff, so you never have to coordinate it manually." },
+        ],
+      },
+      {
+        title: "Artificial Intelligence",
+        desc: "AI applied to a real process in your business, not a generic demo.",
+        services: [
+          { title: "AI WhatsApp Assistant", price: "RD$26,000", badge: "In Pilot", desc: "Automated conversations with your customers on WhatsApp: lead qualification and sync with your operation." },
+          { title: "Custom AI Agent", price: "Starting at RD$27,000", badge: "", desc: "A bespoke agent built around a specific process in your business — as a chat widget, or connected to your internal systems." },
+        ],
+      },
+    ],
+    ongoing: {
+      title: "Ongoing Support",
+      desc: "Once your system is live, our monthly plans keep it running, improving, and growing — without you having to think about it.",
+      cta: "View Plans",
+    },
+    quoteCta: {
+      title: "Ready to see exact pricing?",
+      subtitle: "Build your combination of services and get your quote in seconds.",
+      cotizacionCta: "Build a Quote",
+      whatsappCta: "I'd rather WhatsApp",
+    },
   },
   planes: {
     badge: "Ongoing Partnership Plans",
