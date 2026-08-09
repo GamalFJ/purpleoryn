@@ -10,7 +10,7 @@ interface Plan {
   features: string[];
 }
 
-const prices = ["RD$ 10,675", "RD$ 18,000", "RD$ 35,000"];
+const prices = ["RD$ 5,000", "RD$ 9,000", "RD$ 15,000"];
 
 const RetainersPreview = () => {
   const { t, raw } = useLanguage();

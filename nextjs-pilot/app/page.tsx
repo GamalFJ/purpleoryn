@@ -3,7 +3,6 @@ import Hero from "@/components/Hero";
 import ScrollReveal from "@/components/ScrollReveal";
 import Problem from "@/components/sections/Problem";
 import HowItWorks from "@/components/sections/HowItWorks";
-import SocialProof from "@/components/sections/SocialProof";
 import Promise from "@/components/sections/Promise";
 import Offer from "@/components/sections/Offer";
 import RetainersPreview from "@/components/sections/RetainersPreview";
@@ -19,7 +18,6 @@ export default function Home() {
         <Hero />
         <ScrollReveal><Problem /></ScrollReveal>
         <ScrollReveal delay={100}><HowItWorks /></ScrollReveal>
-        <ScrollReveal delay={100}><SocialProof /></ScrollReveal>
         <ScrollReveal delay={100}><Promise /></ScrollReveal>
         <ScrollReveal delay={100}><Offer /></ScrollReveal>
         <ScrollReveal delay={100}><RetainersPreview /></ScrollReveal>

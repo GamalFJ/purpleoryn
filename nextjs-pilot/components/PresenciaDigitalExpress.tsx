@@ -84,7 +84,7 @@ const PresenciaDigitalExpress = () => {
                 WebkitTextFillColor: "transparent",
               }}
             >
-              RD$9,500
+              RD$7,500
             </p>
             <p className="text-sm text-white/55 mt-2" style={{ fontFamily: "var(--font-dm-sans)" }}>
               {t("presenciaDigital.priceNote")}
