@@ -17,7 +17,7 @@ const RetainersPreview = () => {
   const plans = raw("retainersPreview.plans") as Plan[];
 
   return (
-    <section className="py-14 sm:py-20 px-4 sm:px-6 relative">
+    <section className="py-14 sm:py-20 px-4 sm:px-6 relative bg-card/30 border-y border-border/20">
       <div className="container mx-auto max-w-6xl">
         <div className="text-center mb-10 sm:mb-12">
           <div className="inline-flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-primary bg-primary/10 border border-primary/25 rounded-full px-4 py-1.5 mb-4">

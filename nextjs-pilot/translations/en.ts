@@ -16,7 +16,6 @@ export const en = {
     ctaDemos: "See Demos",
   },
   problem: {
-    badge: "The Problem",
     titlePart1: "If your business runs on",
     titleHighlight: "you alone",
     titlePart2: ", it can't scale.",
