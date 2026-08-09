@@ -54,6 +54,7 @@ export const en = {
       "Documentation and training so your team can run it",
     ],
     note: "Live in days, not months — with ongoing support included.",
+    viewServices: "View all services",
   },
   retainersPreview: {
     badge: "Monthly Plans",

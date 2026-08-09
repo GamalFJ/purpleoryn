@@ -54,6 +54,7 @@ export const es = {
       "Documentación y capacitación para que tu equipo lo opere",
     ],
     note: "Implementación en días, no meses — con soporte continuo incluido.",
+    viewServices: "Ver todos los servicios",
   },
   retainersPreview: {
     badge: "Planes Mensuales",

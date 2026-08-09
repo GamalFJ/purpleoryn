@@ -1,6 +1,7 @@
 "use client";
 
-import { Check } from "lucide-react";
+import Link from "next/link";
+import { Check, ArrowRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const Offer = () => {
@@ -35,7 +36,16 @@ const Offer = () => {
             ))}
           </ul>
 
-          <p className="text-center text-xs text-muted-foreground">{t("offer.note")}</p>
+          <div className="text-center">
+            <p className="text-xs text-muted-foreground mb-3">{t("offer.note")}</p>
+            <Link
+              href="/servicios"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-accent transition-colors duration-200"
+            >
+              {t("offer.viewServices")}
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
         </div>
       </div>
     </section>

@@ -54,6 +54,7 @@ export const fr = {
       "Documentation et formation pour que votre équipe puisse l'utiliser",
     ],
     note: "Mise en ligne en jours, pas en mois — avec support continu inclus.",
+    viewServices: "Voir tous les services",
   },
   retainersPreview: {
     badge: "Forfaits Mensuels",

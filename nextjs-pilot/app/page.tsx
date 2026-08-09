@@ -18,8 +18,8 @@ export default function Home() {
         <ScrollReveal><Problem /></ScrollReveal>
         <ScrollReveal delay={100}><HowItWorks /></ScrollReveal>
         <ScrollReveal delay={100}><Offer /></ScrollReveal>
-        <ScrollReveal delay={100}><RetainersPreview /></ScrollReveal>
         <PresenciaDigitalExpress />
+        <ScrollReveal delay={100}><RetainersPreview /></ScrollReveal>
         <ScrollReveal delay={100}><FinalCTA /></ScrollReveal>
       </main>
       <Footer />
