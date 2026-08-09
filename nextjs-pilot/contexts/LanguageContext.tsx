@@ -7,19 +7,26 @@ import { es } from "@/translations/es";
 
 type Language = "en" | "fr" | "es";
 
-type TranslationValue = string | string[] | { [key: string]: TranslationValue };
+type TranslationValue = string | TranslationValue[] | { [key: string]: TranslationValue };
 
 interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
   t: (key: string) => string;
+  // Intentionally `any`: callers assert the specific shape they expect
+  // (string[], or an array of a page-local content interface) - the
+  // union type TranslationValue doesn't structurally overlap with those,
+  // which forces an `unknown` double-cast at every call site for no
+  // real safety benefit, since the shape is defined by the caller anyway.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  raw: (key: string) => any;
 }
 
 const translations = { en, fr, es };
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-const getNestedValue = (obj: TranslationValue, path: string): string => {
+const getNestedValue = (obj: TranslationValue, path: string): TranslationValue | undefined => {
   const keys = path.split(".");
   let current: TranslationValue = obj;
 
@@ -27,11 +34,11 @@ const getNestedValue = (obj: TranslationValue, path: string): string => {
     if (typeof current === "object" && current !== null && !Array.isArray(current) && key in current) {
       current = (current as { [key: string]: TranslationValue })[key];
     } else {
-      return path;
+      return undefined;
     }
   }
 
-  return typeof current === "string" ? current : path;
+  return current;
 };
 
 const detectBrowserLanguage = (): Language => {
@@ -53,16 +60,27 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
+  useEffect(() => {
+    document.documentElement.lang = language;
+  }, [language]);
+
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
     localStorage.setItem("language", lang);
   };
 
   const t = (key: string): string => {
-    return getNestedValue(translations[language], key);
+    const value = getNestedValue(translations[language], key);
+    return typeof value === "string" ? value : key;
   };
 
-  return <LanguageContext.Provider value={{ language, setLanguage, t }}>{children}</LanguageContext.Provider>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const raw = (key: string): any => {
+    const value = getNestedValue(translations[language], key);
+    return value === undefined ? key : value;
+  };
+
+  return <LanguageContext.Provider value={{ language, setLanguage, t, raw }}>{children}</LanguageContext.Provider>;
 };
 
 export const useLanguage = () => {

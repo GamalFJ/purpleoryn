@@ -1,9 +1,14 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { Layers, MessageCircle } from "lucide-react";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Hero = () => {
+  const { t } = useLanguage();
+
   return (
     <section className="relative overflow-hidden bg-background">
       <div
@@ -21,23 +26,22 @@ const Hero = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 lg:gap-8 items-center min-h-[92vh] sm:min-h-screen pt-24 sm:pt-28 pb-12 sm:pb-16">
           <div className="flex flex-col justify-center order-2 lg:order-1 pb-8 lg:pb-0">
             <h1 className="font-extrabold leading-[1.05] tracking-tight mb-5">
-              <span className="block text-foreground">Sistemas que hacen</span>
-              <span className="block text-foreground">crecer tu negocio.</span>
+              <span className="block text-foreground">{t("hero.line1")}</span>
+              <span className="block text-foreground">{t("hero.line2")}</span>
               <span className="block mt-2">
-                <span className="gradient-text">Más ventas.</span>{" "}
-                <span className="text-primary neon-text">Menos trabajo.</span>
+                <span className="gradient-text">{t("hero.highlight1")}</span>{" "}
+                <span className="text-primary neon-text">{t("hero.highlight2")}</span>
               </span>
             </h1>
 
             <p className="text-sm sm:text-base text-muted-foreground mb-8 max-w-md leading-relaxed">
-              Sitios web, automatizaciones e IA para negocios en la República Dominicana.{" "}
-              <span className="text-primary font-semibold">Implementación en días, no meses.</span>
+              {t("hero.subtitle")} <span className="text-primary font-semibold">{t("hero.subtitleHighlight")}</span>
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-start sm:items-center">
               <WhatsAppButton className="inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 min-h-[52px] text-sm sm:text-base font-bold text-primary-foreground bg-gradient-to-r from-primary to-accent shadow-[0_0_30px_-5px_hsl(var(--primary)/0.6)] hover:shadow-[0_0_45px_-5px_hsl(var(--primary)/0.8)] hover:scale-[1.02] transition-all duration-300">
                 <MessageCircle className="w-5 h-5 shrink-0" />
-                Conversemos por WhatsApp
+                {t("hero.ctaWhatsapp")}
               </WhatsAppButton>
 
               <Link
@@ -45,7 +49,7 @@ const Hero = () => {
                 className="inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 min-h-[52px] text-sm sm:text-base font-semibold text-foreground border border-primary/40 bg-glass-bg/40 backdrop-blur-md hover:border-primary hover:bg-primary/10 transition-all duration-300"
               >
                 <Layers className="w-5 h-5 shrink-0" />
-                Ver Demos
+                {t("hero.ctaDemos")}
               </Link>
             </div>
           </div>
@@ -53,7 +57,7 @@ const Hero = () => {
           <div className="flex items-end justify-center lg:justify-end order-1 lg:order-2 pt-0 lg:pt-0">
             <Image
               src="/lovable-uploads/ff603c71-0718-45fb-bda6-277965352f31.png"
-              alt="Gamal Jastram, founder of Purple Cove Labs"
+              alt={t("hero.founderAlt")}
               width={480}
               height={720}
               priority
