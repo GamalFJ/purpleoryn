@@ -392,6 +392,11 @@
       background: linear-gradient(135deg, #a291f0, #534AB7);
     }
 
+    .card-badge.pilot {
+      background: linear-gradient(135deg, #E5A93D, #B8791F);
+      box-shadow: 0 0 10px rgba(229, 169, 61, 0.3);
+    }
+
     .checkmark-indicator {
       width: 22px;
       height: 22px;
@@ -468,75 +473,6 @@
       font-size: 0.85rem;
       color: var(--text-secondary);
       line-height: 1.45;
-    }
-
-    /* Landing Page Stepper Styling */
-    .stepper-panel {
-      display: none;
-      background: rgba(5, 1, 10, 0.6);
-      border: 1px solid rgba(127, 119, 221, 0.2);
-      border-radius: 10px;
-      padding: 0.5rem 0.75rem;
-      margin-top: 0.75rem;
-      margin-bottom: 0.5rem;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.5rem;
-      z-index: 10;
-    }
-
-    .card.active .stepper-panel {
-      display: flex;
-      animation: stepperFade 0.25s forwards ease;
-    }
-
-    @keyframes stepperFade {
-      from { opacity: 0; transform: translateY(-5px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .stepper-label {
-      font-size: 0.7rem;
-      font-weight: 600;
-      color: var(--text-secondary);
-    }
-
-    .stepper-controls {
-      display: flex;
-      align-items: center;
-      gap: 0.65rem;
-    }
-
-    .stepper-btn {
-      width: 24px;
-      height: 24px;
-      background: rgba(127, 119, 221, 0.15);
-      border: 1px solid rgba(127, 119, 221, 0.3);
-      border-radius: 6px;
-      color: #ffffff;
-      font-size: 0.85rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s ease;
-      user-select: none;
-    }
-
-    .stepper-btn:hover {
-      background: var(--color-accent);
-      border-color: var(--color-accent);
-      color: #05010a;
-    }
-
-    .stepper-value {
-      font-family: var(--font-headings);
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: #ffffff;
-      min-width: 14px;
-      text-align: center;
     }
 
     .card-bottom {
@@ -1353,7 +1289,7 @@
           
           <div class="services-grid">
             <!-- Página de Captura -->
-            <div class="card" data-id="one-time-captura" data-type="onetime" data-price="9500" onclick="toggleOneTime('one-time-captura')">
+            <div class="card" data-id="one-time-captura" data-type="onetime" data-price="7500" onclick="toggleOneTime('one-time-captura')">
               <div class="card-top">
                 <span class="card-badge">Oferta de entrada</span>
                 <div class="checkmark-indicator">
@@ -1378,67 +1314,89 @@
               </div>
               <div class="card-middle">
                 <h3 class="card-title">Página de Captura</h3>
-                <p class="card-desc">Página de marca que conecta con WhatsApp enviándote los datos clave del cliente. Reduce chats infinitos y ahorra tiempo. Excelente si no necesitas una web completa pero quieres presencia profesional fuera de Facebook o Instagram.</p>
+                <p class="card-desc">Página de una sola pantalla que conecta con WhatsApp enviándote los datos clave del cliente, con formulario inteligente. Producto ancla — ideal si no necesitas una web completa pero quieres presencia profesional fuera de Facebook o Instagram.</p>
               </div>
               <div class="card-bottom">
                 <span class="price-currency">RD$</span>
-                <span class="price-value">9,500</span>
+                <span class="price-value">7,500</span>
               </div>
             </div>
 
-            <!-- Landing Page (with Stepper for Additional Pages) -->
-            <div class="card" id="card-landing" data-id="one-time-landing" data-type="onetime" data-price="39490">
-              <div onclick="toggleOneTime('one-time-landing')" style="display: flex; flex-direction: column; justify-content: space-between; flex-grow: 1; height: 100%;">
-                <div class="card-top">
-                  <div></div>
-                  <div class="checkmark-indicator">
-                    <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                  </div>
-                </div>
-                <!-- Bespoke SVG illustration -->
-                <div class="card-illustration">
-                  <svg class="service-icon" viewBox="0 0 24 24">
-                    <defs>
-                      <linearGradient id="grad-landing" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color:#7F77DD;stop-opacity:1" />
-                        <stop offset="100%" style="stop-color:#3d0080;stop-opacity:1" />
-                      </linearGradient>
-                    </defs>
-                    <rect x="2" y="3" width="20" height="18" rx="2" stroke="url(#grad-landing)" stroke-width="1.5" fill="none" />
-                    <line x1="2" y1="8" x2="22" y2="8" stroke="url(#grad-landing)" stroke-width="1.5" />
-                    <circle cx="5" cy="5.5" r="1" fill="url(#grad-landing)" />
-                    <circle cx="8" cy="5.5" r="1" fill="url(#grad-landing)" />
-                    <circle cx="11" cy="5.5" r="1" fill="url(#grad-landing)" />
-                    <rect x="5" y="11" width="6" height="5" rx="1" fill="url(#grad-landing)" opacity="0.4" stroke="url(#grad-landing)" stroke-width="1" />
-                    <line x1="14" y1="11" x2="19" y2="11" stroke="url(#grad-landing)" stroke-width="1.5" stroke-linecap="round" />
-                    <line x1="14" y1="14" x2="18" y2="14" stroke="url(#grad-landing)" stroke-width="1.5" stroke-linecap="round" />
-                    <line x1="14" y1="17" x2="17" y2="17" stroke="url(#grad-landing)" stroke-width="1.5" stroke-linecap="round" />
-                  </svg>
-                </div>
-                <div class="card-middle">
-                  <h3 class="card-title">Landing Page</h3>
-                  <p class="card-desc">Sitio web profesional a medida (incluye 5 secciones), adaptado a dispositivos móviles.</p>
+            <!-- Landing Page (One-Pager) -->
+            <div class="card" data-id="one-time-landing" data-type="onetime" data-price="12500" onclick="toggleOneTime('one-time-landing')">
+              <div class="card-top">
+                <div></div>
+                <div class="checkmark-indicator">
+                  <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
                 </div>
               </div>
-
-              <!-- Page Stepper: visible when card is selected -->
-              <div class="stepper-panel" id="landing-stepper-panel">
-                <span class="stepper-label">Páginas adicionales (+RD$ 6,100 c/u):</span>
-                <div class="stepper-controls">
-                  <button class="stepper-btn" onclick="adjustPages(-1, event)" type="button">-</button>
-                  <span class="stepper-value" id="additional-pages-count">0</span>
-                  <button class="stepper-btn" onclick="adjustPages(1, event)" type="button">+</button>
-                </div>
+              <!-- Bespoke SVG illustration -->
+              <div class="card-illustration">
+                <svg class="service-icon" viewBox="0 0 24 24">
+                  <defs>
+                    <linearGradient id="grad-landing" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" style="stop-color:#7F77DD;stop-opacity:1" />
+                      <stop offset="100%" style="stop-color:#3d0080;stop-opacity:1" />
+                    </linearGradient>
+                  </defs>
+                  <rect x="2" y="3" width="20" height="18" rx="2" stroke="url(#grad-landing)" stroke-width="1.5" fill="none" />
+                  <line x1="2" y1="8" x2="22" y2="8" stroke="url(#grad-landing)" stroke-width="1.5" />
+                  <circle cx="5" cy="5.5" r="1" fill="url(#grad-landing)" />
+                  <circle cx="8" cy="5.5" r="1" fill="url(#grad-landing)" />
+                  <circle cx="11" cy="5.5" r="1" fill="url(#grad-landing)" />
+                  <rect x="5" y="11" width="6" height="5" rx="1" fill="url(#grad-landing)" opacity="0.4" stroke="url(#grad-landing)" stroke-width="1" />
+                  <line x1="14" y1="11" x2="19" y2="11" stroke="url(#grad-landing)" stroke-width="1.5" stroke-linecap="round" />
+                  <line x1="14" y1="14" x2="18" y2="14" stroke="url(#grad-landing)" stroke-width="1.5" stroke-linecap="round" />
+                  <line x1="14" y1="17" x2="17" y2="17" stroke="url(#grad-landing)" stroke-width="1.5" stroke-linecap="round" />
+                </svg>
               </div>
-
+              <div class="card-middle">
+                <h3 class="card-title">Landing Page</h3>
+                <p class="card-desc">One-pager más completo: hero, servicios, precios, portafolio y testimonios en una sola página a medida, adaptada a móviles.</p>
+              </div>
               <div class="card-bottom">
                 <span class="price-currency">RD$</span>
-                <span class="price-value" id="landing-price-display">39,490</span>
+                <span class="price-value">12,500</span>
               </div>
             </div>
 
-            <!-- Booking System -->
-            <div class="card" data-id="one-time-booking" data-type="onetime" data-price="30375" onclick="toggleOneTime('one-time-booking')">
+            <!-- Full Website -->
+            <div class="card" data-id="one-time-fullsite" data-type="onetime" data-price="18000" onclick="toggleOneTime('one-time-fullsite')">
+              <div class="card-top">
+                <span class="card-badge popular">Sitio completo</span>
+                <div class="checkmark-indicator">
+                  <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                </div>
+              </div>
+              <!-- Bespoke SVG illustration -->
+              <div class="card-illustration">
+                <svg class="service-icon" viewBox="0 0 24 24">
+                  <defs>
+                    <linearGradient id="grad-fullsite" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" style="stop-color:#7F77DD;stop-opacity:1" />
+                      <stop offset="100%" style="stop-color:#3d0080;stop-opacity:1" />
+                    </linearGradient>
+                  </defs>
+                  <rect x="2" y="4" width="14" height="16" rx="2" stroke="url(#grad-fullsite)" stroke-width="1.5" fill="none" />
+                  <rect x="9" y="9" width="14" height="16" rx="2" fill="rgba(5,1,10,0.6)" stroke="url(#grad-fullsite)" stroke-width="1.5" />
+                  <line x1="2" y1="8.5" x2="16" y2="8.5" stroke="url(#grad-fullsite)" stroke-width="1.2" />
+                  <line x1="9" y1="13.5" x2="23" y2="13.5" stroke="url(#grad-fullsite)" stroke-width="1.2" />
+                  <circle cx="4.5" cy="6.25" r="0.8" fill="url(#grad-fullsite)" />
+                  <circle cx="11.5" cy="11.25" r="0.8" fill="url(#grad-fullsite)" />
+                </svg>
+              </div>
+              <div class="card-middle">
+                <h3 class="card-title">Full Website</h3>
+                <p class="card-desc">Sitio multi-página (5–7 páginas) con homepage incluida. La base ideal para adjuntar Booking App o Agente de IA Personalizado con precio de paquete.</p>
+              </div>
+              <div class="card-bottom">
+                <span class="price-currency">Desde RD$</span>
+                <span class="price-value">18,000</span>
+              </div>
+            </div>
+
+            <!-- Booking App (dependent pricing: standalone vs attached) -->
+            <div class="card" data-id="one-time-booking" data-type="onetime" data-price="5000" onclick="toggleOneTime('one-time-booking')">
               <div class="card-top">
                 <div></div>
                 <div class="checkmark-indicator">
@@ -1463,17 +1421,17 @@
                 </svg>
               </div>
               <div class="card-middle">
-                <h3 class="card-title">Booking System</h3>
-                <p class="card-desc">Agendamiento automático en menos de 3 minutos donde tus clientes completan un formulario y reservan su cita sin que tengas que hacer nada manual, mientras construyes una base de datos con estadísticas clave para tus decisiones de negocio.</p>
+                <h3 class="card-title">Booking App</h3>
+                <p class="card-desc">Calendario de citas integrado + entrega automática por WhatsApp, sin base de datos. RD$5,000 standalone · RD$3,500 si se adjunta a Landing Page o Full Website.</p>
               </div>
               <div class="card-bottom">
                 <span class="price-currency">RD$</span>
-                <span class="price-value">30,375</span>
+                <span class="price-value" id="booking-price-display">5,000</span>
               </div>
             </div>
 
-            <!-- Prospect Intelligence Dashboard -->
-            <div class="card" data-id="one-time-dashboard" data-type="onetime" data-price="15190" onclick="toggleOneTime('one-time-dashboard')">
+            <!-- Constructor de Pedido (Ordering App) -->
+            <div class="card" data-id="one-time-ordering" data-type="onetime" data-price="25000" onclick="toggleOneTime('one-time-ordering')">
               <div class="card-top">
                 <div></div>
                 <div class="checkmark-indicator">
@@ -1484,74 +1442,38 @@
               <div class="card-illustration">
                 <svg class="service-icon" viewBox="0 0 24 24">
                   <defs>
-                    <linearGradient id="grad-prospect" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <linearGradient id="grad-ordering" x1="0%" y1="0%" x2="100%" y2="100%">
                       <stop offset="0%" style="stop-color:#7F77DD;stop-opacity:1" />
                       <stop offset="100%" style="stop-color:#3d0080;stop-opacity:1" />
                     </linearGradient>
                   </defs>
-                  <path d="M12 2L2 7l10 5 10-5-10-5z" stroke="url(#grad-prospect)" stroke-width="1.5" fill="none" />
-                  <path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="url(#grad-prospect)" stroke-width="1.5" fill="none" opacity="0.6" />
-                  <circle cx="12" cy="7" r="2.5" fill="url(#grad-prospect)" />
-                  <circle cx="6" cy="14" r="1.5" fill="url(#grad-prospect)" opacity="0.8" />
-                  <circle cx="18" cy="14" r="1.5" fill="url(#grad-prospect)" opacity="0.8" />
-                  <line x1="12" y1="9.5" x2="6" y2="12.5" stroke="url(#grad-prospect)" stroke-width="1" />
-                  <line x1="12" y1="9.5" x2="18" y2="12.5" stroke="url(#grad-prospect)" stroke-width="1" />
+                  <circle cx="9" cy="20" r="1.4" fill="url(#grad-ordering)" />
+                  <circle cx="18" cy="20" r="1.4" fill="url(#grad-ordering)" />
+                  <path d="M2 3h2l2.4 12.2a2 2 0 002 1.8h9.2a2 2 0 002-1.8L21 7H6" stroke="url(#grad-ordering)" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+                  <path d="M9 10h8M9 13h5" stroke="url(#grad-ordering)" stroke-width="1.2" stroke-linecap="round" opacity="0.7" />
                 </svg>
               </div>
               <div class="card-middle">
-                <h3 class="card-title">Prospect Intelligence</h3>
-                <p class="card-desc">Aplicación a medida que investiga y califica prospectos automáticamente para acelerar tus ventas, optimizando tu cartera de clientes y reduciendo al mínimo el tiempo de prospección.</p>
+                <h3 class="card-title">Constructor de Pedido</h3>
+                <p class="card-desc">Backend completo con Supabase: clientes, pedidos, zonas de entrega, carrito y checkout, más PWA. Adaptable a restaurantes o retail general.</p>
               </div>
               <div class="card-bottom">
                 <span class="price-currency">RD$</span>
-                <span class="price-value">15,190</span>
-              </div>
-            </div>
-
-            <!-- Local Visibility Setup -->
-            <div class="card" data-id="one-time-local" data-type="onetime" data-price="15190" onclick="toggleOneTime('one-time-local')">
-              <div class="card-top">
-                <div></div>
-                <div class="checkmark-indicator">
-                  <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                </div>
-              </div>
-              <!-- Bespoke SVG illustration -->
-              <div class="card-illustration">
-                <svg class="service-icon" viewBox="0 0 24 24">
-                  <defs>
-                    <linearGradient id="grad-local" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" style="stop-color:#7F77DD;stop-opacity:1" />
-                      <stop offset="100%" style="stop-color:#3d0080;stop-opacity:1" />
-                    </linearGradient>
-                  </defs>
-                  <path d="M12 2a8 8 0 00-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 00-8-8z" stroke="url(#grad-local)" stroke-width="1.5" fill="none" />
-                  <circle cx="12" cy="10" r="3" fill="url(#grad-local)" />
-                  <path d="M6 10A6 6 0 0118 10" stroke="url(#grad-local)" stroke-width="1" stroke-linecap="round" opacity="0.5" />
-                  <path d="M9 10a3 3 0 016 0" stroke="url(#grad-local)" stroke-width="1" stroke-linecap="round" opacity="0.7" />
-                </svg>
-              </div>
-              <div class="card-middle">
-                <h3 class="card-title">Local Visibility Setup</h3>
-                <p class="card-desc">Posicionamiento geográfico local y configuración integral para que te encuentren en Google Business.</p>
-              </div>
-              <div class="card-bottom">
-                <span class="price-currency">RD$</span>
-                <span class="price-value">15,190</span>
+                <span class="price-value">25,000</span>
               </div>
             </div>
           </div>
         </section>
 
-        <!-- SECTION 2: Automation Tier -->
+        <!-- SECTION 2: Automation & AI Tier -->
         <section id="section-automation">
           <div class="section-label">Fase 2</div>
-          <h2 class="section-title">Integraciones & Automatización de Procesos</h2>
-          <p class="section-description">Sincroniza tus herramientas favoritas y reduce el trabajo operativo. Solo puedes seleccionar un nivel de automatización (haz clic de nuevo para deseleccionar).</p>
-          
+          <h2 class="section-title">Automatización & Inteligencia Artificial</h2>
+          <p class="section-description">Sincroniza tus herramientas favoritas y añade capacidades de IA a tu operación. Solo puedes seleccionar un nivel de automatización (haz clic de nuevo para deseleccionar); el Asistente de WhatsApp y el Agente de IA se pueden combinar libremente.</p>
+
           <div class="automation-rows">
-            <!-- Basic Automation -->
-            <div class="row-card" data-id="auto-basic" data-type="automation" data-price="12150" onclick="toggleAutomation('auto-basic')">
+            <!-- Automatización (hasta 2 flujos) -->
+            <div class="row-card" data-id="auto-basic" data-type="automation" data-price="10000" onclick="toggleAutomation('auto-basic')">
               <div class="row-left">
                 <div class="row-indicator">
                   <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
@@ -1571,18 +1493,18 @@
                   </svg>
                 </div>
                 <div class="row-info">
-                  <span class="row-title">Basic Automation</span>
-                  <span class="row-desc">Conexión de 1 flujo simple automatizado con un solo trigger o disparador.</span>
+                  <span class="row-title">Automatización</span>
+                  <span class="row-desc">Configuración basada en n8n de hasta 2 flujos automatizados.</span>
                 </div>
               </div>
               <div class="row-right">
                 <span class="price-currency">RD$</span>
-                <span class="price-value">12,150</span>
+                <span class="price-value">10,000</span>
               </div>
             </div>
 
-            <!-- Standard Automation -->
-            <div class="row-card" data-id="auto-standard" data-type="automation" data-price="27340" onclick="toggleAutomation('auto-standard')">
+            <!-- Automatización Multi-Flujo (3-5 flujos) -->
+            <div class="row-card" data-id="auto-multi" data-type="automation" data-price="18000" onclick="toggleAutomation('auto-multi')">
               <div class="row-left">
                 <div class="row-indicator">
                   <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
@@ -1604,48 +1526,84 @@
                   </svg>
                 </div>
                 <div class="row-info">
-                  <span class="row-title">Standard Automation</span>
-                  <span class="row-desc">Automatización de hasta 3 flujos dinámicos interconectados.</span>
+                  <span class="row-title">Automatización Multi-Flujo</span>
+                  <span class="row-desc">Configuración basada en n8n de 3 a 5 flujos dinámicos interconectados.</span>
                 </div>
               </div>
               <div class="row-right">
                 <span class="price-currency">RD$</span>
-                <span class="price-value">27,340</span>
+                <span class="price-value">18,000</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="services-grid" style="margin-top: 1.5rem;">
+            <!-- Asistente de WhatsApp con IA (pilot) -->
+            <div class="card" data-id="one-time-whatsapp-ai" data-type="onetime" data-price="26000" onclick="toggleOneTime('one-time-whatsapp-ai')">
+              <div class="card-top">
+                <span class="card-badge pilot">En piloto</span>
+                <div class="checkmark-indicator">
+                  <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                </div>
+              </div>
+              <!-- Bespoke SVG illustration -->
+              <div class="card-illustration">
+                <svg class="service-icon" viewBox="0 0 24 24">
+                  <defs>
+                    <linearGradient id="grad-whatsapp" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" style="stop-color:#7F77DD;stop-opacity:1" />
+                      <stop offset="100%" style="stop-color:#3d0080;stop-opacity:1" />
+                    </linearGradient>
+                  </defs>
+                  <path d="M4 20l1.2-3.6A8 8 0 1112 20H4z" stroke="url(#grad-whatsapp)" stroke-width="1.5" fill="none" stroke-linejoin="round" />
+                  <path d="M9 10.5c0 2.5 2 4.5 4.5 4.5" stroke="url(#grad-whatsapp)" stroke-width="1.5" stroke-linecap="round" opacity="0.7" />
+                  <circle cx="9" cy="10" r="1" fill="url(#grad-whatsapp)" />
+                  <circle cx="13" cy="10" r="1" fill="url(#grad-whatsapp)" />
+                  <path d="M17.5 5.5l0.7 1.6 1.6 0.7-1.6 0.7-0.7 1.6-0.7-1.6-1.6-0.7 1.6-0.7z" fill="url(#grad-whatsapp)" />
+                </svg>
+              </div>
+              <div class="card-middle">
+                <h3 class="card-title">Asistente de WhatsApp con IA</h3>
+                <p class="card-desc">WhatsApp Cloud API + n8n + Claude para conversaciones automatizadas con tus clientes. Disponible actualmente por cupos limitados mientras está en fase piloto.</p>
+              </div>
+              <div class="card-bottom">
+                <span class="price-currency">RD$</span>
+                <span class="price-value">26,000</span>
               </div>
             </div>
 
-            <!-- Advanced Automation -->
-            <div class="row-card" data-id="auto-advanced" data-type="automation" data-price="51640" onclick="toggleAutomation('auto-advanced')">
-              <div class="row-left">
-                <div class="row-indicator">
+            <!-- Agente de IA Personalizado (dependent pricing) -->
+            <div class="card" data-id="one-time-ai-agent" data-type="onetime" data-price="32000" onclick="toggleOneTime('one-time-ai-agent')">
+              <div class="card-top">
+                <span class="card-badge">Más avanzado</span>
+                <div class="checkmark-indicator">
                   <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
                 </div>
-                <!-- Bespoke SVG illustration -->
-                <div class="row-illustration">
-                  <svg class="service-icon" viewBox="0 0 24 24">
-                    <defs>
-                      <linearGradient id="grad-autoadv" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color:#7F77DD;stop-opacity:1" />
-                        <stop offset="100%" style="stop-color:#3d0080;stop-opacity:1" />
-                      </linearGradient>
-                    </defs>
-                    <rect x="5" y="5" width="14" height="14" rx="2" stroke="url(#grad-autoadv)" stroke-width="1.5" fill="none" />
-                    <circle cx="12" cy="12" r="3" fill="url(#grad-autoadv)" />
-                    <line x1="12" y1="2" x2="12" y2="5" stroke="url(#grad-autoadv)" stroke-width="2" stroke-linecap="round" />
-                    <line x1="12" y1="19" x2="12" y2="22" stroke="url(#grad-autoadv)" stroke-width="2" stroke-linecap="round" />
-                    <line x1="2" y1="12" x2="5" y2="12" stroke="url(#grad-autoadv)" stroke-width="2" stroke-linecap="round" />
-                    <line x1="19" y1="12" x2="22" y2="12" stroke="url(#grad-autoadv)" stroke-width="2" stroke-linecap="round" />
-                    <path d="M7 7l2 2M15 15l2 2M7 17l2-2M15 9l2-2" stroke="url(#grad-autoadv)" stroke-width="1" stroke-linecap="round" opacity="0.6" />
-                  </svg>
-                </div>
-                <div class="row-info">
-                  <span class="row-title">Advanced Automation</span>
-                  <span class="row-desc">Flujos de trabajo complejos multipaso con IA generativa, condicionales y base de datos.</span>
-                </div>
               </div>
-              <div class="row-right">
-                <span class="price-currency">RD$</span>
-                <span class="price-value">51,640</span>
+              <!-- Bespoke SVG illustration -->
+              <div class="card-illustration">
+                <svg class="service-icon" viewBox="0 0 24 24">
+                  <defs>
+                    <linearGradient id="grad-agent" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" style="stop-color:#7F77DD;stop-opacity:1" />
+                      <stop offset="100%" style="stop-color:#3d0080;stop-opacity:1" />
+                    </linearGradient>
+                  </defs>
+                  <rect x="6" y="8" width="12" height="10" rx="2.5" stroke="url(#grad-agent)" stroke-width="1.5" fill="none" />
+                  <circle cx="10" cy="13" r="1.2" fill="url(#grad-agent)" />
+                  <circle cx="14" cy="13" r="1.2" fill="url(#grad-agent)" />
+                  <path d="M12 8V4" stroke="url(#grad-agent)" stroke-width="1.5" stroke-linecap="round" />
+                  <circle cx="12" cy="3" r="1.3" fill="url(#grad-agent)" />
+                  <path d="M3 12h3M18 12h3" stroke="url(#grad-agent)" stroke-width="1.5" stroke-linecap="round" opacity="0.6" />
+                </svg>
+              </div>
+              <div class="card-middle">
+                <h3 class="card-title">Agente de IA Personalizado</h3>
+                <p class="card-desc">Agente a medida diseñado en torno a un proceso específico de tu negocio — widget de chat, herramientas internas o el canal que necesites. Desde RD$32,000 standalone · Desde RD$27,000 si se adjunta a Full Website.</p>
+              </div>
+              <div class="card-bottom">
+                <span class="price-currency">Desde RD$</span>
+                <span class="price-value" id="ai-agent-price-display">32,000</span>
               </div>
             </div>
           </div>
@@ -1659,7 +1617,7 @@
           
           <div class="retainers-grid">
             <!-- Plan Básico -->
-            <div class="card" data-id="ret-basic" data-type="retainer" data-price="10675" onclick="toggleRetainer('ret-basic')">
+            <div class="card" data-id="ret-basic" data-type="retainer" data-price="5000" onclick="toggleRetainer('ret-basic')">
               <div class="card-top">
                 <span class="card-badge retainer">Mantenimiento</span>
                 <div class="checkmark-indicator">
@@ -1681,17 +1639,17 @@
               </div>
               <div class="card-middle">
                 <h3 class="card-title">Plan Básico</h3>
-                <p class="card-desc">Soporte técnico, actualizaciones periódicas de seguridad y monitoreo activo.</p>
+                <p class="card-desc">Hosting y monitoreo de uptime, hasta 2 actualizaciones menores de contenido al mes, corrección de errores y parches de seguridad. Respuesta en 48–72 hrs.</p>
               </div>
               <div class="card-bottom">
                 <span class="price-currency">RD$</span>
-                <span class="price-value">10,675</span>
+                <span class="price-value">5,000</span>
                 <span class="price-period">/mes</span>
               </div>
             </div>
 
             <!-- Plan Estándar -->
-            <div class="card" data-id="ret-standard" data-type="retainer" data-price="18000" onclick="toggleRetainer('ret-standard')">
+            <div class="card" data-id="ret-standard" data-type="retainer" data-price="9000" onclick="toggleRetainer('ret-standard')">
               <div class="card-top">
                 <span class="card-badge retainer popular">Más popular</span>
                 <div class="checkmark-indicator">
@@ -1716,17 +1674,17 @@
               </div>
               <div class="card-middle">
                 <h3 class="card-title">Plan Estándar</h3>
-                <p class="card-desc">Optimización continua, mejoras de UX/UI, análisis mensual y soporte prioritario.</p>
+                <p class="card-desc">Todo lo de Básico, más 1 mejora o página nueva al mes (alcance capado) y respuesta prioritaria en 24–48 hrs.</p>
               </div>
               <div class="card-bottom">
                 <span class="price-currency">RD$</span>
-                <span class="price-value">18,000</span>
+                <span class="price-value">9,000</span>
                 <span class="price-period">/mes</span>
               </div>
             </div>
 
             <!-- AI Partner -->
-            <div class="card" data-id="ret-ai" data-type="retainer" data-price="35000" onclick="toggleRetainer('ret-ai')">
+            <div class="card" data-id="ret-ai" data-type="retainer" data-price="15000" onclick="toggleRetainer('ret-ai')">
               <div class="card-top">
                 <span class="card-badge retainer">AI Partner</span>
                 <div class="checkmark-indicator">
@@ -1752,11 +1710,11 @@
               </div>
               <div class="card-middle">
                 <h3 class="card-title">AI Partner</h3>
-                <p class="card-desc">Socio tecnológico. Co-desarrollo constante, mantenimiento completo e IA aplicada a operaciones.</p>
+                <p class="card-desc">Todo lo de Estándar, más respuesta prioritaria same-day, un touchpoint mensual de estrategia y monitoreo activo de automatizaciones/Agente de IA.</p>
               </div>
               <div class="card-bottom">
                 <span class="price-currency">RD$</span>
-                <span class="price-value">35,000</span>
+                <span class="price-value">15,000</span>
                 <span class="price-period">/mes</span>
               </div>
             </div>
@@ -1927,28 +1885,30 @@
 
     const PRICING_DB = {
       // One-time services
-      'one-time-captura': { name: 'Página de Captura', price: 9500, type: 'onetime', desc: 'Página de marca que conecta con WhatsApp enviándote los datos clave del cliente. Ahorra tiempo y chats infinitos. Excelente si no necesitas una web completa pero quieres presencia profesional fuera de Facebook o Instagram.' },
-      'one-time-landing': { name: 'Landing Page', price: 39490, type: 'onetime', desc: 'Fase 1 — Sitio web profesional a medida (incluye 5 secciones)' },
-      'one-time-booking': { name: 'Booking System', price: 30375, type: 'onetime', desc: 'Fase 1 — Agendamiento automático en menos de 3 minutos donde tus clientes completan un formulario y reservan su cita sin que tengas que hacer nada manual, mientras construyes una base de datos con estadísticas clave para tus decisiones de negocio.' },
-      'one-time-dashboard': { name: 'Prospect Intelligence', price: 15190, type: 'onetime', desc: 'Fase 1 — Aplicación a medida que investiga y califica prospectos automáticamente para acelerar tus ventas, optimizando tu cartera de clientes y reduciendo al mínimo el tiempo de prospección.' },
-      'one-time-local': { name: 'Local Visibility Setup', price: 15190, type: 'onetime', desc: 'Fase 1 — Posicionamiento geográfico local y configuración integral para que te encuentren en Google Business.' },
-      
+      'one-time-captura': { name: 'Página de Captura', price: 7500, type: 'onetime', desc: 'Página de una sola pantalla que conecta con WhatsApp enviándote los datos clave del cliente, con formulario inteligente. Producto ancla — ideal si no necesitas una web completa pero quieres presencia profesional fuera de Facebook o Instagram.' },
+      'one-time-landing': { name: 'Landing Page', price: 12500, type: 'onetime', desc: 'Fase 1 — One-pager más completo: hero, servicios, precios, portafolio y testimonios en una sola página a medida.' },
+      'one-time-fullsite': { name: 'Full Website', price: 18000, type: 'onetime', desc: 'Fase 1 — Sitio multi-página (5–7 páginas) con homepage incluida. Desde RD$18,000.' },
+      'one-time-booking': { name: 'Booking App', price: 5000, type: 'onetime', desc: 'Fase 1 — Calendario de citas integrado + entrega automática por WhatsApp, sin base de datos.' },
+      'one-time-ordering': { name: 'Constructor de Pedido', price: 25000, type: 'onetime', desc: 'Fase 1 — Backend completo con Supabase: clientes, pedidos, zonas de entrega, carrito y checkout, más PWA. Adaptable a restaurantes o retail general.' },
+
       // Automation tiers
-      'auto-basic': { name: 'Basic Automation', price: 12150, type: 'automation', desc: 'Fase 2 — Conexión de 1 flujo simple automatizado con un solo trigger o disparador.' },
-      'auto-standard': { name: 'Standard Automation', price: 27340, type: 'automation', desc: 'Fase 2 — Automatización de hasta 3 flujos dinámicos interconectados.' },
-      'auto-advanced': { name: 'Advanced Automation', price: 51640, type: 'automation', desc: 'Fase 2 — Flujos de trabajo complejos multipaso con IA generativa, condicionales y base de datos.' },
-      
+      'auto-basic': { name: 'Automatización', price: 10000, type: 'automation', desc: 'Fase 2 — Configuración basada en n8n de hasta 2 flujos automatizados.' },
+      'auto-multi': { name: 'Automatización Multi-Flujo', price: 18000, type: 'automation', desc: 'Fase 2 — Configuración basada en n8n de 3 a 5 flujos dinámicos interconectados.' },
+
+      // AI products
+      'one-time-whatsapp-ai': { name: 'Asistente de WhatsApp con IA', price: 26000, type: 'onetime', desc: 'Fase 2 — WhatsApp Cloud API + n8n + Claude para conversaciones automatizadas con tus clientes. Actualmente en fase piloto, cupos limitados.' },
+      'one-time-ai-agent': { name: 'Agente de IA Personalizado', price: 32000, type: 'onetime', desc: 'Fase 2 — Agente a medida diseñado en torno a un proceso específico de tu negocio: widget de chat, herramientas internas o el canal que necesites.' },
+
       // Retainers
-      'ret-basic': { name: 'Plan Básico', price: 10675, type: 'retainer', desc: 'Fase 3 — Soporte y mantenimiento mensual' },
-      'ret-standard': { name: 'Plan Estándar', price: 18000, type: 'retainer', desc: 'Fase 3 — Crecimiento y optimización mensual' },
-      'ret-ai': { name: 'AI Partner', price: 35000, type: 'retainer', desc: 'Fase 3 — Socio de operaciones completas de IA' }
+      'ret-basic': { name: 'Plan Básico', price: 5000, type: 'retainer', desc: 'Fase 3 — Hosting, monitoreo, hasta 2 actualizaciones menores al mes y parches de seguridad.' },
+      'ret-standard': { name: 'Plan Estándar', price: 9000, type: 'retainer', desc: 'Fase 3 — Todo lo de Básico, más 1 mejora o página nueva al mes y soporte prioritario.' },
+      'ret-ai': { name: 'AI Partner', price: 15000, type: 'retainer', desc: 'Fase 3 — Todo lo de Estándar, más estrategia mensual y monitoreo activo de IA/automatizaciones.' }
     };
 
     // User active selections
     let activeOneTime = new Set();
     let activeAutomation = null;
     let activeRetainer = null;
-    let additionalPages = 0;
 
     // Previous pricing tracking for smooth count-up animations
     let prevOneTimeTotal = 0;
@@ -1960,10 +1920,6 @@
       if (activeOneTime.has(id)) {
         activeOneTime.delete(id);
         card.classList.remove('active');
-        // Reset additional pages if deselecting landing page
-        if (id === 'one-time-landing') {
-          resetLandingStepper();
-        }
       } else {
         activeOneTime.add(id);
         card.classList.add('active');
@@ -1971,31 +1927,29 @@
       updateCalculator();
     }
 
-    // Adjust additional pages count
-    function adjustPages(delta, event) {
-      if (event) event.stopPropagation(); // prevent parent card selection toggle
-      
-      additionalPages = Math.max(0, additionalPages + delta);
-      document.getElementById('additional-pages-count').textContent = additionalPages;
-      
-      const basePrice = 39490;
-      const additionalPrice = additionalPages * 6100;
-      const totalPrice = basePrice + additionalPrice;
-      
-      document.getElementById('landing-price-display').textContent = totalPrice.toLocaleString('es-DO');
-      
-      // Update dynamic DB pricing
-      PRICING_DB['one-time-landing'].price = totalPrice;
-      
-      updateCalculator();
+    // Booking App: RD$5,000 standalone, RD$3,500 when attached to Landing Page or Full Website
+    function getBookingAppPrice() {
+      const attached = activeOneTime.has('one-time-landing') || activeOneTime.has('one-time-fullsite');
+      return attached ? 3500 : 5000;
     }
 
-    // Reset Landing stepper back to 0
-    function resetLandingStepper() {
-      additionalPages = 0;
-      document.getElementById('additional-pages-count').textContent = '0';
-      document.getElementById('landing-price-display').textContent = '39,490';
-      PRICING_DB['one-time-landing'].price = 39490;
+    // Agente de IA Personalizado: desde RD$32,000 standalone, desde RD$27,000 when attached to Full Website
+    function getAIAgentPrice() {
+      const attached = activeOneTime.has('one-time-fullsite');
+      return attached ? 27000 : 32000;
+    }
+
+    // Recompute prices for items whose price depends on other active selections,
+    // and refresh their card display so the discount is visible before totals update.
+    function recomputeDependentPrices() {
+      PRICING_DB['one-time-booking'].price = getBookingAppPrice();
+      PRICING_DB['one-time-ai-agent'].price = getAIAgentPrice();
+
+      const bookingPriceEl = document.getElementById('booking-price-display');
+      if (bookingPriceEl) bookingPriceEl.textContent = PRICING_DB['one-time-booking'].price.toLocaleString('es-DO');
+
+      const agentPriceEl = document.getElementById('ai-agent-price-display');
+      if (agentPriceEl) agentPriceEl.textContent = PRICING_DB['one-time-ai-agent'].price.toLocaleString('es-DO');
     }
 
     // Toggle Single-select Automation Rows (can be deselected)
@@ -2110,7 +2064,7 @@
 
     // Dynamic payment structure calculator (50/50 below 60k, 40/30/30 at 60k+)
     function calculatePaymentSchedule(oneTimeTotal, isCapturaSelected) {
-      const capturaPrice = 9500;
+      const capturaPrice = 7500;
       let capturaUpfront = 0;
       let remainingTotal = oneTimeTotal;
       
@@ -2157,6 +2111,8 @@
 
     // Core calculator engine: Recalculate Totals, update list, update WhatsApp & Copy triggers
     function updateCalculator() {
+      recomputeDependentPrices();
+
       let oneTimeTotal = 0;
       let monthlyTotal = 0;
       let selectedItems = [];
@@ -2198,11 +2154,7 @@
       } else {
         listContainer.innerHTML = '';
         selectedItems.forEach(item => {
-          let nameDisplay = item.name;
-          if (item.id === 'one-time-landing' && additionalPages > 0) {
-            nameDisplay += ` (+${additionalPages} ${additionalPages === 1 ? 'pág' : 'págs'})`;
-          }
-          
+          const nameDisplay = item.name;
           const formattedPrice = item.type === 'retainer' ? `${formatRD(item.price)}/mes` : formatRD(item.price);
           const typeLabel = item.type === 'onetime' ? 'Sitio Web' : (item.type === 'automation' ? 'Integración' : 'Mensualidad');
           
@@ -2357,11 +2309,7 @@
       if (onetimeItems.length > 0) {
         message += `${emojiLaptop} *Servicios Web & Plataformas:*\n`;
         onetimeItems.forEach(i => {
-          let nameStr = i.name;
-          if (i.id === 'one-time-landing' && additionalPages > 0) {
-            nameStr += ` (incluye +${additionalPages} páginas adicionales)`;
-          }
-          message += `   • ${nameStr} - RD$ ${i.price.toLocaleString('es-DO')}\n`;
+          message += `   • ${i.name} - RD$ ${i.price.toLocaleString('es-DO')}\n`;
         });
       }
 
@@ -2421,6 +2369,8 @@
 
     // Copy formatted details to clipboard for convenient sharing
     function copyConfiguration() {
+      recomputeDependentPrices();
+
       let oneTimeTotal = 0;
       let monthlyTotal = 0;
       let items = [];
@@ -2471,14 +2421,8 @@
 
       clipboardText += `${emojiDiamond} SERVICIOS SELECCIONADOS:\n`;
       items.forEach(i => {
-        let titleStr = i.name;
-        let descStr = i.desc;
-        if (i.id === 'one-time-landing' && additionalPages > 0) {
-          titleStr += ` (+${additionalPages} páginas adicionales)`;
-          descStr += ` [Incluye +${additionalPages} páginas extras a RD$ 6,100 c/u]`;
-        }
         const priceFormatted = i.type === 'retainer' ? `RD$ ${i.price.toLocaleString('es-DO')}/mes` : `RD$ ${i.price.toLocaleString('es-DO')}`;
-        clipboardText += `- ${titleStr}\n  [${descStr}]\n  Precio: ${priceFormatted}\n\n`;
+        clipboardText += `- ${i.name}\n  [${i.desc}]\n  Precio: ${priceFormatted}\n\n`;
       });
 
       clipboardText += "====================================================\n";
