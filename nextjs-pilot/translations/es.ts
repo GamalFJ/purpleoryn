@@ -14,7 +14,6 @@ export const es = {
     subtitleHighlight: "Implementación en días, no meses.",
     ctaWhatsapp: "Conversemos por WhatsApp",
     ctaDemos: "Ver Demos",
-    founderAlt: "Gamal Jastram, fundador de Purple Cove Labs",
   },
   problem: {
     badge: "El Problema",
@@ -38,17 +37,6 @@ export const es = {
       { n: "03", title: "Optimización", desc: "Medimos resultados, ajustamos y escalamos. Tu sistema mejora cada mes." },
     ],
   },
-  promise: {
-    badge: "La Promesa",
-    title: "Construimos sistemas para que tengas",
-    titleHighlight: "resultados reales.",
-    items: [
-      { title: "Más ventas", desc: "Captamos y calificamos más leads automáticamente, sin esfuerzo manual." },
-      { title: "Más tiempo", desc: "Liberamos horas semanales eliminando tareas repetitivas y manuales." },
-      { title: "Más control", desc: "Visibilidad total de tu operación en tiempo real, en un solo lugar." },
-      { title: "Más escala", desc: "Sistemas que crecen con tu negocio sin aumentar costos operativos." },
-    ],
-  },
   offer: {
     badge: "La Oferta",
     titlePart1: "Diseñamos sistemas que",
@@ -66,7 +54,6 @@ export const es = {
       "Documentación y capacitación para que tu equipo lo opere",
     ],
     note: "Implementación en días, no meses — con soporte continuo incluido.",
-    cta: "Agendar Llamada Estratégica — Gratis",
   },
   retainersPreview: {
     badge: "Planes Mensuales",

@@ -14,7 +14,6 @@ export const en = {
     subtitleHighlight: "Live in days, not months.",
     ctaWhatsapp: "Chat on WhatsApp",
     ctaDemos: "See Demos",
-    founderAlt: "Gamal Jastram, founder of Purple Cove Labs",
   },
   problem: {
     badge: "The Problem",
@@ -38,17 +37,6 @@ export const en = {
       { n: "03", title: "Optimization", desc: "We measure results, adjust, and scale. Your system improves every month." },
     ],
   },
-  promise: {
-    badge: "The Promise",
-    title: "We build systems so you get",
-    titleHighlight: "real results.",
-    items: [
-      { title: "More sales", desc: "We capture and qualify more leads automatically, with no manual effort." },
-      { title: "More time", desc: "We free up weekly hours by eliminating repetitive, manual tasks." },
-      { title: "More control", desc: "Full visibility into your operation in real time, in one place." },
-      { title: "More scale", desc: "Systems that grow with your business without raising operating costs." },
-    ],
-  },
   offer: {
     badge: "The Offer",
     titlePart1: "We design systems that",
@@ -66,7 +54,6 @@ export const en = {
       "Documentation and training so your team can run it",
     ],
     note: "Live in days, not months — with ongoing support included.",
-    cta: "Book a Free Strategy Call",
   },
   retainersPreview: {
     badge: "Monthly Plans",

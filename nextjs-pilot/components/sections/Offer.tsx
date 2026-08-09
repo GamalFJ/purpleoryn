@@ -1,7 +1,6 @@
 "use client";
 
 import { Check } from "lucide-react";
-import BookingButton from "@/components/BookingButton";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const Offer = () => {
@@ -36,12 +35,7 @@ const Offer = () => {
             ))}
           </ul>
 
-          <div className="text-center">
-            <p className="text-xs text-muted-foreground mb-4">{t("offer.note")}</p>
-            <BookingButton className="inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 min-h-[52px] text-sm sm:text-base font-bold text-primary-foreground bg-gradient-to-r from-primary to-accent shadow-[0_0_30px_-5px_hsl(var(--primary)/0.6)] hover:shadow-[0_0_45px_-5px_hsl(var(--primary)/0.8)] hover:scale-[1.02] transition-all duration-300 cursor-pointer">
-              {t("offer.cta")}
-            </BookingButton>
-          </div>
+          <p className="text-center text-xs text-muted-foreground">{t("offer.note")}</p>
         </div>
       </div>
     </section>

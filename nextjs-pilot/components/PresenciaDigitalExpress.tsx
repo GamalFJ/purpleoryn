@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Globe, Link2, MessageCircle, Smartphone, Zap, RefreshCw, ExternalLink, Building2, Calculator, Heart } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
-const WA_URL = "https://wa.me/+18096034113?text=Hola,%20me%20interesa%20la%20Presencia%20Digital%20Express";
+const WA_URL = "https://wa.me/+18096034113?text=Hola,%20me%20interesa%20la%20P%C3%A1gina%20de%20Captura";
 
 const demoMeta = [
   { url: "https://pagina-de-captura-clinica-dental-so.vercel.app/", img: "/demo-dental.png.jpeg", Icon: Smartphone, color: "#a855f7" },

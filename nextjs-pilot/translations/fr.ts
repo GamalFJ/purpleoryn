@@ -14,7 +14,6 @@ export const fr = {
     subtitleHighlight: "Mise en ligne en jours, pas en mois.",
     ctaWhatsapp: "Discutons sur WhatsApp",
     ctaDemos: "Voir les Démos",
-    founderAlt: "Gamal Jastram, fondateur de Purple Cove Labs",
   },
   problem: {
     badge: "Le Problème",
@@ -38,17 +37,6 @@ export const fr = {
       { n: "03", title: "Optimisation", desc: "Nous mesurons les résultats, ajustons et faisons évoluer. Votre système s'améliore chaque mois." },
     ],
   },
-  promise: {
-    badge: "La Promesse",
-    title: "Nous construisons des systèmes pour des",
-    titleHighlight: "résultats réels.",
-    items: [
-      { title: "Plus de ventes", desc: "Nous captons et qualifions plus de leads automatiquement, sans effort manuel." },
-      { title: "Plus de temps", desc: "Nous libérons des heures chaque semaine en éliminant les tâches répétitives." },
-      { title: "Plus de contrôle", desc: "Visibilité totale sur votre activité en temps réel, au même endroit." },
-      { title: "Plus d'évolutivité", desc: "Des systèmes qui grandissent avec votre entreprise sans augmenter les coûts." },
-    ],
-  },
   offer: {
     badge: "L'Offre",
     titlePart1: "Nous concevons des systèmes qui",
@@ -66,7 +54,6 @@ export const fr = {
       "Documentation et formation pour que votre équipe puisse l'utiliser",
     ],
     note: "Mise en ligne en jours, pas en mois — avec support continu inclus.",
-    cta: "Réserver un Appel Stratégique Gratuit",
   },
   retainersPreview: {
     badge: "Forfaits Mensuels",
