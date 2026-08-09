@@ -57,7 +57,7 @@ function DemoThumbnail({ img, niche }: { img: string; niche: string }) {
 
 const PresenciaDigitalExpress = () => {
   return (
-    <section className="py-10 sm:py-14 px-4 sm:px-6" style={{ backgroundColor: "#1a0040" }}>
+    <section id="presencia-digital-express" className="py-10 sm:py-14 px-4 sm:px-6" style={{ backgroundColor: "#1a0040" }}>
       <div className="container mx-auto max-w-2xl">
         <div
           className="relative rounded-2xl border border-[#7C3AED]/50 p-6 sm:p-10 text-white animate-card-glow overflow-hidden"

@@ -1,26 +1,74 @@
 import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FinalCTA from "@/components/sections/FinalCTA";
-import { Sparkles, ArrowRight, BarChart2, Search, Users, TrendingUp } from "lucide-react";
-import BookingButton from "@/components/BookingButton";
+import { ArrowRight, ExternalLink, Search, Users, TrendingUp, ShoppingBag, Smartphone, MessageCircle, Globe, Link2, Zap } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Productos & Apps — Purple Cove Labs",
-  description: "Herramientas de inteligencia de prospectos y automatización construidas por Purple Cove Labs para escalar negocios desde el primer día.",
+  description: "Software real que hemos construido: una app de pedidos en producción, un sistema de páginas de captura y las herramientas internas que usamos para operar.",
   alternates: { canonical: "/apps" },
   openGraph: {
     title: "Productos & Apps — Purple Cove Labs",
-    description: "Herramientas de inteligencia de prospectos y automatización para escalar tu negocio.",
+    description: "Software real que hemos construido: una app de pedidos en producción, un sistema de páginas de captura y las herramientas internas que usamos para operar.",
     url: "https://purpleoryn.com/apps",
   },
 };
 
-const features = [
-  { icon: Search, title: "Búsqueda inteligente de prospectos", desc: "Identifica prospectos de alto valor en tu mercado usando datos en tiempo real." },
-  { icon: Users, title: "Enriquecimiento de contactos", desc: "Completa automáticamente información de contacto, empresa y cargo para cada prospecto." },
-  { icon: TrendingUp, title: "Scoring y priorización", desc: "Clasifica automáticamente los mejores prospectos para que tu equipo enfoque su energía." },
-  { icon: BarChart2, title: "Dashboard de métricas", desc: "Visualiza el pipeline, tasas de conversión y rendimiento del equipo en un solo lugar." },
+const products = [
+  {
+    key: "un-taco-mas",
+    badge: "Cliente real · En producción",
+    badgeClass: "bg-success-green/15 text-success-green border-success-green/30",
+    title: "Un Taco Más — App de Pedidos",
+    subtitle: "Restaurante · Santo Domingo Este",
+    image: "/apps/un-taco-mas.png",
+    imageAlt: "Taco preparado para Un Taco Más",
+    description:
+      "App móvil (PWA) de pedidos para un restaurante real. El cliente arma su pedido con precios en vivo por categoría — tacos, combos, bebidas, extras, postres — completa sus datos de entrega y lo envía directo por WhatsApp. Sin llamadas, sin errores de comunicación, sin depender de un mesero disponible.",
+    features: [
+      { icon: ShoppingBag, title: "Menú digital con precios en vivo", desc: "Categorías, disponibilidad y precios actualizados sin tocar código." },
+      { icon: MessageCircle, title: "Pedido directo a WhatsApp", desc: "El pedido armado llega formateado y listo para confirmar." },
+      { icon: Smartphone, title: "PWA instalable", desc: "El cliente la agrega a su pantalla de inicio como una app nativa." },
+    ],
+    cta: { label: "Ver App en Vivo", href: "https://un-taco-mas.vercel.app", external: true },
+  },
+  {
+    key: "pagina-de-captura",
+    badge: "Desde RD$9,500",
+    badgeClass: "bg-price-yellow/15 text-price-yellow border-price-yellow/30",
+    title: "Página de Captura Express",
+    subtitle: "Entrega en 3 días hábiles",
+    image: "/demo-dental.png.jpeg",
+    imageAlt: "Ejemplo de Página de Captura — Clínica Dental",
+    description:
+      "Una página enfocada 100% en convertir visitantes en clientes — con su marca y colores, dominio propio por 1 año y botón directo a WhatsApp. No es un sitio web completo: es la forma más rápida de tener presencia digital profesional y empezar a recibir contactos.",
+    features: [
+      { icon: Globe, title: "Con su marca y colores", desc: "Diseñada para su negocio, no una plantilla genérica." },
+      { icon: Link2, title: "Dominio propio incluido", desc: "1 año de dominio propio, sin costos ocultos." },
+      { icon: Zap, title: "Entrega en 3 días hábiles", desc: "De la conversación inicial a la página en vivo." },
+    ],
+    cta: { label: "Ver Ejemplos por Nicho", href: "/#presencia-digital-express" },
+  },
+  {
+    key: "prospect-dashboard",
+    badge: "Uso interno · Purple Cove Labs",
+    badgeClass: "bg-primary/15 text-primary border-primary/30",
+    title: "Prospect Intelligence Dashboard",
+    subtitle: "Herramienta interna",
+    image: "/apps/prospect-dashboard-logo.png",
+    imageAlt: "Prospect Intelligence Dashboard",
+    description:
+      "El sistema que usamos internamente para identificar, enriquecer y priorizar prospectos de alto valor para nuestra propia operación — no es un producto a la venta, sino un ejemplo del tipo de herramienta de datos que podemos construir a medida para tu negocio.",
+    features: [
+      { icon: Search, title: "Búsqueda inteligente de prospectos", desc: "Identifica prospectos de alto valor usando datos en tiempo real." },
+      { icon: Users, title: "Enriquecimiento de contactos", desc: "Completa automáticamente contacto, empresa y cargo." },
+      { icon: TrendingUp, title: "Scoring y priorización", desc: "Clasifica los mejores prospectos automáticamente." },
+    ],
+    cta: { label: "Conversemos sobre algo similar", href: "https://wa.me/18096034113", external: true },
+  },
 ];
 
 export default function Apps() {
@@ -34,75 +82,78 @@ export default function Apps() {
               Productos & Apps
             </div>
             <h1 className="font-extrabold mb-4">
-              Herramientas que <span className="gradient-text">construimos</span> para escalar negocios.
+              Software que <span className="gradient-text">ya está funcionando</span>.
             </h1>
             <p className="text-sm sm:text-base text-muted-foreground max-w-xl mx-auto">
-              Productos propios diseñados para implementarse en días, no meses — y generar resultados desde la primera semana.
+              No son mockups. Esto es lo que construimos para clientes reales y para nuestra propia operación.
             </p>
           </div>
         </section>
 
         <section className="py-8 sm:py-12 px-4 sm:px-6">
-          <div className="container mx-auto max-w-5xl">
-            <div className="glass-card p-4 sm:p-8 lg:p-12 relative overflow-hidden hover:border-primary/40 transition-all duration-300">
-              <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary via-accent to-primary" />
+          <div className="container mx-auto max-w-5xl space-y-6 sm:space-y-8">
+            {products.map((p) => (
+              <div
+                key={p.key}
+                className="glass-card p-4 sm:p-8 lg:p-10 relative overflow-hidden hover:border-primary/40 transition-all duration-300"
+              >
+                <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary via-accent to-primary" />
 
-              <div className="flex flex-col lg:flex-row lg:items-start gap-8 min-w-0">
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-start gap-3 sm:gap-4 mb-6 min-w-0">
-                    <div className="w-12 h-12 sm:w-16 sm:h-16 shrink-0 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/20 border border-primary/30 flex items-center justify-center">
-                      <BarChart2 className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex flex-wrap items-center gap-2 mb-1">
-                        <h2 className="font-extrabold text-lg sm:text-xl text-foreground break-words">Prospect Intelligence Dashboard</h2>
-                        <span className="text-[10px] font-bold tracking-widest uppercase px-2 py-1 rounded-full bg-success-green/15 text-success-green border border-success-green/30 whitespace-nowrap">
-                          Disponible
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-1 text-xs text-muted-foreground flex-wrap">
-                        <Sparkles className="w-3 h-3 text-primary shrink-0" />
-                        <span className="break-words">por Purple Cove Labs · Oryn AI</span>
-                      </div>
+                <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 min-w-0">
+                  <div className="lg:w-64 shrink-0">
+                    <div className="relative w-full aspect-square lg:aspect-[4/5] rounded-xl overflow-hidden border border-border/40 bg-glass-bg/40">
+                      <Image src={p.image} alt={p.imageAlt} fill className="object-cover" />
                     </div>
                   </div>
 
-                  <p className="text-sm sm:text-base text-foreground/90 leading-relaxed mb-6">
-                    Sistema completo de inteligencia de prospectos que identifica, enriquece y prioriza tus leads de alto valor —
-                    automatizando el trabajo de investigación para que tu equipo de ventas enfoque su tiempo donde importa.
-                  </p>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-wrap items-center gap-2 mb-1">
+                      <span className={`text-[10px] font-bold tracking-widest uppercase px-2 py-1 rounded-full border whitespace-nowrap ${p.badgeClass}`}>
+                        {p.badge}
+                      </span>
+                    </div>
+                    <h2 className="font-extrabold text-lg sm:text-xl text-foreground break-words mt-2">{p.title}</h2>
+                    <div className="text-xs text-muted-foreground mb-4">{p.subtitle}</div>
 
-                  <div className="rounded-xl bg-glass-bg/40 border border-border/40 aspect-video flex items-center justify-center mb-6">
-                    <p className="text-xs text-muted-foreground">Video demo próximamente</p>
+                    <p className="text-sm sm:text-base text-foreground/90 leading-relaxed mb-6">{p.description}</p>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                      {p.features.map((f) => (
+                        <div key={f.title} className="flex items-start gap-2.5 min-w-0">
+                          <div className="w-7 h-7 shrink-0 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
+                            <f.icon className="w-3.5 h-3.5 text-primary" />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <div className="text-xs font-semibold text-foreground mb-0.5 leading-snug">{f.title}</div>
+                            <p className="text-[11px] text-muted-foreground leading-relaxed">{f.desc}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {p.cta.external ? (
+                      <a
+                        href={p.cta.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 min-h-[48px] text-sm font-bold text-primary-foreground bg-gradient-to-r from-primary to-accent hover:scale-[1.02] shadow-[0_0_30px_-5px_hsl(var(--primary)/0.5)] transition-all duration-300"
+                      >
+                        {p.cta.label}
+                        <ExternalLink className="w-4 h-4" />
+                      </a>
+                    ) : (
+                      <Link
+                        href={p.cta.href}
+                        className="inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 min-h-[48px] text-sm font-bold text-primary-foreground bg-gradient-to-r from-primary to-accent hover:scale-[1.02] shadow-[0_0_30px_-5px_hsl(var(--primary)/0.5)] transition-all duration-300"
+                      >
+                        {p.cta.label}
+                        <ArrowRight className="w-4 h-4" />
+                      </Link>
+                    )}
                   </div>
-                </div>
-
-                <div className="lg:w-80 shrink-0 min-w-0">
-                  <div className="text-[10px] font-bold tracking-widest uppercase text-primary mb-3">Funcionalidades clave</div>
-                  <ul className="space-y-4 mb-8">
-                    {features.map((f) => (
-                      <li key={f.title} className="flex items-start gap-3 min-w-0">
-                        <div className="w-8 h-8 shrink-0 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
-                          <f.icon className="w-4 h-4 text-primary" />
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <div className="text-sm font-semibold text-foreground mb-0.5">{f.title}</div>
-                          <p className="text-xs text-muted-foreground leading-relaxed">{f.desc}</p>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <BookingButton
-                    ariaLabel="Solicitar demo de Prospect Intelligence Dashboard"
-                    className="w-full inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 min-h-[48px] text-sm font-bold text-primary-foreground bg-gradient-to-r from-primary to-accent hover:scale-[1.02] shadow-[0_0_30px_-5px_hsl(var(--primary)/0.5)] transition-all duration-300 cursor-pointer"
-                  >
-                    Solicitar demo
-                    <ArrowRight className="w-4 h-4" />
-                  </BookingButton>
                 </div>
               </div>
-            </div>
+            ))}
           </div>
         </section>
 
