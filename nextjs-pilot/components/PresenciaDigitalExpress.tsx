@@ -41,26 +41,23 @@ const PresenciaDigitalExpress = () => {
   const demos = raw("presenciaDigital.demos") as Demo[];
 
   return (
-    <section id="presencia-digital-express" className="py-10 sm:py-14 px-4 sm:px-6" style={{ backgroundColor: "#1a0040" }}>
+    <section id="presencia-digital-express" className="py-10 sm:py-14 px-4 sm:px-6">
       <div className="container mx-auto max-w-2xl">
-        <div
-          className="relative rounded-2xl border border-[#7C3AED]/50 p-6 sm:p-10 text-white animate-card-glow overflow-hidden"
-          style={{ backgroundColor: "#100028" }}
-        >
+        <div className="relative rounded-2xl border border-primary/50 bg-card p-6 sm:p-10 text-foreground animate-card-glow overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[#7C3AED] via-[#ec4899] to-[#0ea5e9]" />
 
           <div aria-hidden="true" className="pointer-events-none absolute -top-24 -right-24 w-72 h-72 rounded-full blur-3xl opacity-15" style={{ backgroundColor: "#7C3AED" }} />
           <div aria-hidden="true" className="pointer-events-none absolute -bottom-20 -left-20 w-56 h-56 rounded-full blur-3xl opacity-10" style={{ backgroundColor: "#0ea5e9" }} />
 
           <div className="flex justify-center mb-5">
-            <span className="inline-flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-white bg-[#7C3AED]/20 border border-[#7C3AED]/40 rounded-full px-4 py-1.5">
+            <span className="inline-flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-foreground bg-primary/20 border border-primary/40 rounded-full px-4 py-1.5">
               <span className="w-2 h-2 rounded-full bg-[#ec4899] shrink-0" />
               {t("presenciaDigital.badge")}
             </span>
           </div>
 
           <h2
-            className="text-center font-extrabold text-2xl sm:text-3xl lg:text-4xl leading-tight mb-2 text-white"
+            className="text-center font-extrabold text-2xl sm:text-3xl lg:text-4xl leading-tight mb-2 text-foreground"
             style={{ fontFamily: "var(--font-space-grotesk)" }}
           >
             {t("presenciaDigital.headlinePart1")}{" "}
@@ -70,7 +67,7 @@ const PresenciaDigitalExpress = () => {
             {t("presenciaDigital.headlinePart2")}
           </h2>
 
-          <p className="text-center text-xs text-white/50 mb-6 max-w-sm mx-auto leading-relaxed" style={{ fontFamily: "var(--font-dm-sans)" }}>
+          <p className="text-center text-xs text-muted-foreground mb-6 max-w-sm mx-auto leading-relaxed" style={{ fontFamily: "var(--font-dm-sans)" }}>
             {t("presenciaDigital.clarifier")}
           </p>
 
@@ -86,12 +83,12 @@ const PresenciaDigitalExpress = () => {
             >
               RD$7,500
             </p>
-            <p className="text-sm text-white/55 mt-2" style={{ fontFamily: "var(--font-dm-sans)" }}>
+            <p className="text-sm text-muted-foreground mt-2" style={{ fontFamily: "var(--font-dm-sans)" }}>
               {t("presenciaDigital.priceNote")}
             </p>
           </div>
 
-          <div className="border-t border-[#7C3AED]/20 mb-7" />
+          <div className="border-t border-primary/20 mb-7" />
 
           <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8" style={{ fontFamily: "var(--font-dm-sans)" }}>
             {items.map((label, i) => {
@@ -101,14 +98,14 @@ const PresenciaDigitalExpress = () => {
                   <span className="shrink-0 w-8 h-8 rounded-xl flex items-center justify-center" style={{ backgroundColor: bg, border: `1px solid ${border}` }}>
                     <Icon className="w-4 h-4" style={{ color }} strokeWidth={2.5} />
                   </span>
-                  <span className="text-sm text-white/85 leading-snug">{label}</span>
+                  <span className="text-sm text-foreground/85 leading-snug">{label}</span>
                 </li>
               );
             })}
           </ul>
 
           <div className="mb-8">
-            <p className="text-center text-xs font-semibold uppercase tracking-widest text-white/40 mb-4" style={{ fontFamily: "var(--font-dm-sans)" }}>
+            <p className="text-center text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4" style={{ fontFamily: "var(--font-dm-sans)" }}>
               {t("presenciaDigital.demosLabel")}
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -120,7 +117,7 @@ const PresenciaDigitalExpress = () => {
                     href={url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group flex flex-col rounded-xl border border-[#7C3AED]/30 hover:border-[#ec4899]/60 overflow-hidden transition-all duration-300"
+                    className="group flex flex-col rounded-xl border border-primary/30 hover:border-[#ec4899]/60 overflow-hidden transition-all duration-300"
                     style={{ backgroundColor: "rgba(124,58,237,0.07)", boxShadow: "0 0 18px -6px rgba(124,58,237,0.2)" }}
                   >
                     <DemoThumbnail img={img} niche={niche} />
@@ -129,11 +126,11 @@ const PresenciaDigitalExpress = () => {
                         <span className="shrink-0 w-9 h-9 rounded-xl flex items-center justify-center" style={{ backgroundColor: `${color}18`, border: `1px solid ${color}40` }}>
                           <Icon className="w-4 h-4" style={{ color }} strokeWidth={2.5} />
                         </span>
-                        <span className="font-bold text-sm text-white leading-snug" style={{ fontFamily: "var(--font-space-grotesk)" }}>
+                        <span className="font-bold text-sm text-foreground leading-snug" style={{ fontFamily: "var(--font-space-grotesk)" }}>
                           {niche}
                         </span>
                       </div>
-                      <p className="text-xs text-white/55 leading-relaxed" style={{ fontFamily: "var(--font-dm-sans)" }}>
+                      <p className="text-xs text-muted-foreground leading-relaxed" style={{ fontFamily: "var(--font-dm-sans)" }}>
                         {description}
                       </p>
                       <span
@@ -160,7 +157,7 @@ const PresenciaDigitalExpress = () => {
             >
               {t("presenciaDigital.cta")}
             </a>
-            <p className="text-xs text-white/45 mt-3 max-w-xs mx-auto leading-relaxed" style={{ fontFamily: "var(--font-dm-sans)" }}>
+            <p className="text-xs text-muted-foreground mt-3 max-w-xs mx-auto leading-relaxed" style={{ fontFamily: "var(--font-dm-sans)" }}>
               {t("presenciaDigital.paymentNote")}
             </p>
           </div>
