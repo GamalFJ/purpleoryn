@@ -10,12 +10,10 @@ interface ScrollRevealProps {
 
 const ScrollReveal = ({ children, className = "", delay = 0 }: ScrollRevealProps) => {
   const [isVisible, setIsVisible] = useState(false);
-  const [reducedMotion, setReducedMotion] = useState(true);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    setReducedMotion(prefersReducedMotion);
     if (prefersReducedMotion) {
       setIsVisible(true);
       return;
