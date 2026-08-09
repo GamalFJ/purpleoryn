@@ -106,7 +106,7 @@
 @layer components {
   .glass-card {
     @apply relative rounded-2xl border border-glass-border/30 bg-glass-bg/40 backdrop-blur-xl;
-    @apply w-full max-w-full;
+    @apply w-full max-w-full transition-all duration-300 ease-out;
     box-shadow:
       0 8px 32px 0 rgba(139, 92, 246, 0.1),
       inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
@@ -114,31 +114,75 @@
 
   @media (hover: hover) and (pointer: fine) {
     .glass-card:hover {
+      transform: translateY(-3px);
       box-shadow:
-        0 8px 40px 0 rgba(139, 92, 246, 0.25),
+        0 14px 40px 0 rgba(139, 92, 246, 0.25),
         0 0 60px -12px rgba(139, 92, 246, 0.4),
         inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
     }
   }
 
-  .btn-glow {
-    @apply relative overflow-hidden transition-all duration-300;
+  /* Shine-sweep: a light diagonal highlight that sweeps across on hover.
+     Color-agnostic so it composes with any button background. */
+  .btn-shine {
+    @apply relative overflow-hidden;
   }
 
-  .btn-glow::before {
+  .btn-shine::before {
     content: '';
-    @apply absolute inset-0 opacity-0 transition-opacity duration-300;
-    background: radial-gradient(circle at center, hsl(var(--primary) / 0.4) 0%, transparent 70%);
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(115deg, transparent 25%, rgba(255, 255, 255, 0.3) 50%, transparent 75%);
+    transform: translateX(-120%);
+    transition: transform 0.6s ease;
   }
 
-  .btn-glow:hover::before {
-    @apply opacity-100;
+  @media (hover: hover) and (pointer: fine) {
+    .btn-shine:hover::before {
+      transform: translateX(120%);
+    }
   }
 
-  .btn-glow:hover {
-    box-shadow:
-      0 0 20px hsl(var(--primary) / 0.4),
-      0 0 40px hsl(var(--primary) / 0.2);
+  .btn-primary {
+    @apply btn-shine inline-flex items-center justify-center gap-2 rounded-full font-bold text-primary-foreground cursor-pointer;
+    @apply bg-gradient-to-r from-primary to-accent;
+    @apply transition-all duration-300 ease-out;
+    box-shadow: 0 0 30px -5px hsl(var(--primary) / 0.6);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .btn-primary:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 45px -5px hsl(var(--primary) / 0.85);
+    }
+  }
+
+  .btn-primary:active {
+    transform: scale(0.96);
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full font-semibold text-foreground cursor-pointer;
+    @apply border border-primary/40 bg-glass-bg/40 backdrop-blur-md;
+    @apply transition-all duration-300 ease-out;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .btn-secondary:hover {
+      @apply border-primary bg-primary/10;
+      transform: translateY(-2px);
+    }
+  }
+
+  .btn-secondary:active {
+    transform: scale(0.96);
+  }
+
+  .btn-primary:focus-visible,
+  .btn-secondary:focus-visible {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 2px;
   }
 }
 

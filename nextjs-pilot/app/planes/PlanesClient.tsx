@@ -45,7 +45,7 @@ const PlanesClient = () => {
                 return (
                   <div
                     key={p.name}
-                    className={`glass-card p-6 sm:p-7 flex flex-col relative transition-all duration-300 hover:-translate-y-1 ${
+                    className={`glass-card p-6 sm:p-7 flex flex-col relative ${
                       highlight ? "border-primary/60 shadow-[0_0_50px_-10px_hsl(var(--primary)/0.5)]" : "hover:border-primary/40"
                     }`}
                   >
@@ -90,11 +90,7 @@ const PlanesClient = () => {
 
                     <BookingButton
                       ariaLabel={`${t("planes.bookCall")} — ${p.name}`}
-                      className={`w-full inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 min-h-[48px] text-sm font-bold transition-all duration-300 cursor-pointer ${
-                        highlight
-                          ? "text-primary-foreground bg-gradient-to-r from-primary to-accent hover:scale-[1.02]"
-                          : "text-foreground border border-primary/40 bg-glass-bg/40 hover:border-primary hover:bg-primary/10"
-                      }`}
+                      className={`w-full px-5 py-3 min-h-[48px] text-sm ${highlight ? "btn-primary" : "btn-secondary"}`}
                     >
                       {t("planes.bookCall")}
                     </BookingButton>
@@ -105,7 +101,7 @@ const PlanesClient = () => {
 
             <div className="mt-10 text-center">
               <p className="text-sm text-muted-foreground mb-4">{t("planes.needSomethingElse")}</p>
-              <WhatsAppButton className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-foreground border border-primary/40 bg-glass-bg/40 backdrop-blur-md hover:border-primary hover:bg-primary/10 transition-all">
+              <WhatsAppButton className="btn-secondary px-5 py-2.5 text-sm">
                 <MessageCircle className="w-4 h-4" />
                 {t("planes.whatsappCta")}
               </WhatsAppButton>

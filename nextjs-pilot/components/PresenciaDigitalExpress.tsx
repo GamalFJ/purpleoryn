@@ -152,7 +152,7 @@ const PresenciaDigitalExpress = () => {
               href={WA_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-full px-8 py-3.5 min-h-[52px] text-sm sm:text-base font-bold text-white transition-all duration-300 hover:scale-[1.03] hover:brightness-110"
+              className="btn-shine inline-flex items-center justify-center gap-2 rounded-full px-8 py-3.5 min-h-[52px] text-sm sm:text-base font-bold text-white cursor-pointer transition-all duration-300 hover:scale-[1.03] hover:brightness-110 active:scale-[0.96] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
               style={{ background: "linear-gradient(135deg, #7C3AED, #ec4899)", boxShadow: "0 0 32px -4px rgba(236, 72, 153, 0.5)", fontFamily: "var(--font-dm-sans)" }}
             >
               {t("presenciaDigital.cta")}

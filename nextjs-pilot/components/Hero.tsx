@@ -23,7 +23,7 @@ const Hero = () => {
 
       <div className="container mx-auto max-w-3xl px-6 sm:px-10 lg:px-16">
         <div className="flex flex-col items-center text-center justify-center min-h-[70vh] sm:min-h-[75vh] pt-28 sm:pt-32 pb-16 sm:pb-20">
-          <h1 className="font-extrabold leading-[1.05] tracking-tight mb-5">
+          <h1 className="font-extrabold leading-[1.05] tracking-tight mb-5 animate-fade-in" style={{ animationDelay: "0ms", opacity: 0 }}>
             <span className="block text-foreground">{t("hero.line1")}</span>
             <span className="block text-foreground">{t("hero.line2")}</span>
             <span className="block mt-2">
@@ -32,20 +32,20 @@ const Hero = () => {
             </span>
           </h1>
 
-          <p className="text-sm sm:text-base text-muted-foreground mb-8 max-w-md leading-relaxed">
+          <p
+            className="text-sm sm:text-base text-muted-foreground mb-8 max-w-md leading-relaxed animate-fade-in"
+            style={{ animationDelay: "120ms", opacity: 0 }}
+          >
             {t("hero.subtitle")} <span className="text-primary font-semibold">{t("hero.subtitleHighlight")}</span>
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center">
-            <WhatsAppButton className="inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 min-h-[52px] text-sm sm:text-base font-bold text-primary-foreground bg-gradient-to-r from-primary to-accent shadow-[0_0_30px_-5px_hsl(var(--primary)/0.6)] hover:shadow-[0_0_45px_-5px_hsl(var(--primary)/0.8)] hover:scale-[1.02] transition-all duration-300">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center animate-fade-in" style={{ animationDelay: "240ms", opacity: 0 }}>
+            <WhatsAppButton className="btn-primary px-6 py-3.5 min-h-[52px] text-sm sm:text-base">
               <MessageCircle className="w-5 h-5 shrink-0" />
               {t("hero.ctaWhatsapp")}
             </WhatsAppButton>
 
-            <Link
-              href="/demos"
-              className="inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 min-h-[52px] text-sm sm:text-base font-semibold text-foreground border border-primary/40 bg-glass-bg/40 backdrop-blur-md hover:border-primary hover:bg-primary/10 transition-all duration-300"
-            >
+            <Link href="/demos" className="btn-secondary px-6 py-3.5 min-h-[52px] text-sm sm:text-base">
               <Layers className="w-5 h-5 shrink-0" />
               {t("hero.ctaDemos")}
             </Link>

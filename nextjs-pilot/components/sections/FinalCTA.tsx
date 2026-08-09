@@ -22,15 +22,12 @@ const FinalCTA = () => {
           <p className="text-sm sm:text-base text-muted-foreground mb-8 max-w-lg mx-auto">{t("finalCta.subtitle")}</p>
 
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch sm:items-center">
-            <BookingButton
-              ariaLabel={t("finalCta.bookCta")}
-              className="inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 min-h-[52px] text-sm sm:text-base font-bold text-primary-foreground bg-gradient-to-r from-primary to-accent shadow-[0_0_30px_-5px_hsl(var(--primary)/0.6)] hover:shadow-[0_0_45px_-5px_hsl(var(--primary)/0.8)] hover:scale-[1.02] transition-all duration-300 cursor-pointer"
-            >
+            <BookingButton ariaLabel={t("finalCta.bookCta")} className="btn-primary px-6 py-3.5 min-h-[52px] text-sm sm:text-base">
               <Calendar className="w-5 h-5" />
               {t("finalCta.bookCta")}
             </BookingButton>
 
-            <WhatsAppButton className="inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 min-h-[52px] text-sm sm:text-base font-semibold text-foreground border border-primary/40 bg-glass-bg/40 backdrop-blur-md hover:border-primary hover:bg-primary/10 transition-all duration-300">
+            <WhatsAppButton className="btn-secondary px-6 py-3.5 min-h-[52px] text-sm sm:text-base">
               <MessageCircle className="w-5 h-5" />
               {t("finalCta.whatsappCta")}
             </WhatsAppButton>

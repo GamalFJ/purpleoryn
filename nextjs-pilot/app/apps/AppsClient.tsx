@@ -114,20 +114,12 @@ const AppsClient = () => {
                       </div>
 
                       {meta.cta.external ? (
-                        <a
-                          href={meta.cta.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 min-h-[48px] text-sm font-bold text-primary-foreground bg-gradient-to-r from-primary to-accent hover:scale-[1.02] shadow-[0_0_30px_-5px_hsl(var(--primary)/0.5)] transition-all duration-300"
-                        >
+                        <a href={meta.cta.href} target="_blank" rel="noopener noreferrer" className="btn-primary px-5 py-3 min-h-[48px] text-sm">
                           {p.ctaLabel}
                           <ExternalLink className="w-4 h-4" />
                         </a>
                       ) : (
-                        <Link
-                          href={meta.cta.href}
-                          className="inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 min-h-[48px] text-sm font-bold text-primary-foreground bg-gradient-to-r from-primary to-accent hover:scale-[1.02] shadow-[0_0_30px_-5px_hsl(var(--primary)/0.5)] transition-all duration-300"
-                        >
+                        <Link href={meta.cta.href} className="btn-primary px-5 py-3 min-h-[48px] text-sm">
                           {p.ctaLabel}
                           <ArrowRight className="w-4 h-4" />
                         </Link>

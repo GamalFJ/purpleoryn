@@ -25,7 +25,7 @@ const Problem = () => {
             return (
               <div
                 key={text}
-                className="glass-card p-5 sm:p-6 text-center hover:-translate-y-1 hover:border-destructive/40 transition-all duration-300"
+                className="glass-card p-5 sm:p-6 text-center hover:border-destructive/40"
               >
                 <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-destructive/10 border border-destructive/30 flex items-center justify-center">
                   <Icon className="w-5 h-5 text-destructive" />

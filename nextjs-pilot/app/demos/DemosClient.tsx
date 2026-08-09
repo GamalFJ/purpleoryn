@@ -60,7 +60,7 @@ const DemosClient = () => {
                 <button
                   key={n.key}
                   onClick={() => setActiveNiche(activeNiche === n.key ? null : n.key)}
-                  className={`glass-card p-5 sm:p-6 flex flex-col items-center text-center gap-3 transition-all duration-300 cursor-pointer hover:-translate-y-1 ${
+                  className={`glass-card p-5 sm:p-6 flex flex-col items-center text-center gap-3 cursor-pointer ${
                     activeNiche === n.key
                       ? "border-primary/70 bg-primary/10 shadow-[0_0_20px_-4px_hsl(var(--primary)/0.35)]"
                       : "hover:border-primary/40"
@@ -80,7 +80,7 @@ const DemosClient = () => {
                 href="https://demos.purpleoryn.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-foreground border border-primary/40 bg-glass-bg/40 backdrop-blur-md hover:border-primary hover:bg-primary/10 transition-all duration-300"
+                className="btn-secondary px-5 py-2.5 text-sm"
               >
                 <ExternalLink className="w-4 h-4" />
                 {t("demos.viewLibrary")}

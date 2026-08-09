@@ -69,7 +69,7 @@ const Header = () => {
             <LanguageToggle />
             <BookingButton
               ariaLabel={t("header.agendarLlamada")}
-              className="hidden sm:inline-flex items-center justify-center gap-1.5 rounded-full px-4 lg:px-5 py-2 lg:py-2.5 text-xs lg:text-sm font-bold text-primary-foreground bg-gradient-to-r from-primary to-accent hover:scale-[1.03] transition-all duration-300 cursor-pointer min-h-[40px]"
+              className="btn-primary hidden sm:inline-flex px-4 lg:px-5 py-2 lg:py-2.5 text-xs lg:text-sm min-h-[40px]"
             >
               <Calendar className="w-4 h-4" />
               <span>{t("header.agendar")}</span>
@@ -112,7 +112,7 @@ const Header = () => {
 
               <BookingButton
                 ariaLabel={t("header.agendarLlamada")}
-                className="mt-2 w-full inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 min-h-[48px] text-sm font-bold text-primary-foreground bg-gradient-to-r from-primary to-accent cursor-pointer"
+                className="btn-primary mt-2 w-full px-5 py-3 min-h-[48px] text-sm"
               >
                 <Calendar className="w-4 h-4" />
                 {t("header.agendarLlamada")}

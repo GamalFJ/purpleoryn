@@ -35,7 +35,7 @@ const HowItWorks = () => {
             return (
               <div
                 key={s.n}
-                className="glass-card p-6 sm:p-7 text-center relative hover:-translate-y-1 hover:border-primary/50 transition-all duration-300"
+                className="glass-card p-6 sm:p-7 text-center relative hover:border-primary/50"
               >
                 <div className="relative w-14 h-14 mx-auto mb-4">
                   <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/30 to-accent/20 blur-xl" />

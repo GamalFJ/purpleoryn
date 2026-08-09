@@ -35,7 +35,7 @@ const RetainersPreview = () => {
             return (
               <div
                 key={p.name}
-                className={`glass-card p-6 sm:p-7 flex flex-col relative transition-all duration-300 hover:-translate-y-1 ${
+                className={`glass-card p-6 sm:p-7 flex flex-col relative ${
                   highlight ? "border-primary/60 shadow-[0_0_40px_-10px_hsl(var(--primary)/0.5)]" : "hover:border-primary/40"
                 }`}
               >
@@ -64,10 +64,7 @@ const RetainersPreview = () => {
         </div>
 
         <div className="text-center mt-8 sm:mt-10">
-          <Link
-            href="/planes"
-            className="group inline-flex items-center gap-2 rounded-full px-6 py-3 min-h-[48px] text-sm font-semibold text-foreground border border-primary/40 bg-glass-bg/40 backdrop-blur-md hover:border-primary hover:bg-primary/10 transition-all duration-300"
-          >
+          <Link href="/planes" className="group btn-secondary px-6 py-3 min-h-[48px] text-sm">
             {t("retainersPreview.viewAll")}
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>

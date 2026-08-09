@@ -64,7 +64,7 @@ const ServiciosClient = () => {
                       return (
                         <div
                           key={s.title}
-                          className="glass-card p-5 sm:p-6 flex flex-col hover:-translate-y-1 hover:border-primary/40 transition-all duration-300"
+                          className="glass-card p-5 sm:p-6 flex flex-col hover:border-primary/40"
                         >
                           <div className="flex items-start justify-between gap-3 mb-4">
                             <div className="w-11 h-11 shrink-0 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 border border-primary/30 flex items-center justify-center">
@@ -94,10 +94,7 @@ const ServiciosClient = () => {
                 <h2 className="font-bold text-foreground text-lg mb-1.5">{t("servicios.ongoing.title")}</h2>
                 <p className="text-sm text-muted-foreground max-w-xl leading-relaxed">{t("servicios.ongoing.desc")}</p>
               </div>
-              <Link
-                href="/planes"
-                className="shrink-0 inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 min-h-[48px] text-sm font-bold text-foreground border border-primary/40 bg-glass-bg/40 backdrop-blur-md hover:border-primary hover:bg-primary/10 transition-all duration-300 whitespace-nowrap"
-              >
+              <Link href="/planes" className="btn-secondary shrink-0 px-5 py-3 min-h-[48px] text-sm font-bold whitespace-nowrap">
                 {t("servicios.ongoing.cta")}
                 <ArrowRight className="w-4 h-4" />
               </Link>
@@ -113,14 +110,11 @@ const ServiciosClient = () => {
               <p className="text-sm text-muted-foreground mb-7 max-w-md mx-auto">{t("servicios.quoteCta.subtitle")}</p>
 
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch sm:items-center">
-                <a
-                  href="/calculator.html"
-                  className="inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 min-h-[52px] text-sm sm:text-base font-bold text-primary-foreground bg-gradient-to-r from-primary to-accent shadow-[0_0_30px_-5px_hsl(var(--primary)/0.6)] hover:shadow-[0_0_45px_-5px_hsl(var(--primary)/0.8)] hover:scale-[1.02] transition-all duration-300"
-                >
+                <a href="/calculator.html" className="btn-primary px-6 py-3.5 min-h-[52px] text-sm sm:text-base">
                   {t("servicios.quoteCta.cotizacionCta")}
                   <ArrowRight className="w-4 h-4" />
                 </a>
-                <WhatsAppButton className="inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 min-h-[52px] text-sm sm:text-base font-semibold text-foreground border border-primary/40 bg-glass-bg/40 backdrop-blur-md hover:border-primary hover:bg-primary/10 transition-all duration-300">
+                <WhatsAppButton className="btn-secondary px-6 py-3.5 min-h-[52px] text-sm sm:text-base">
                   <MessageCircle className="w-5 h-5" />
                   {t("servicios.quoteCta.whatsappCta")}
                 </WhatsAppButton>
