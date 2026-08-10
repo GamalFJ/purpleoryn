@@ -1,9 +1,11 @@
 import { Star, Quote } from "lucide-react";
+import { NumberTicker } from "@/components/ui/number-ticker";
+import { Marquee } from "@/components/ui/marquee";
 
 const stats = [
-  { value: "+40%", label: "Leads calificados" },
-  { value: "20h", label: "Ahorradas / semana" },
-  { value: "24/7", label: "Operación automática" },
+  { value: 40, prefix: "+", suffix: "%", label: "Leads calificados" },
+  { value: 20, prefix: "", suffix: "h", label: "Ahorradas / semana" },
+  { value: 24, prefix: "", suffix: "/7", label: "Operación automática" },
 ];
 
 const testimonials = [
@@ -44,9 +46,14 @@ const SocialProof = () => {
         {/* Stats */}
         <div className="grid grid-cols-3 gap-3 sm:gap-5 mb-10 max-w-3xl mx-auto">
           {stats.map((s) => (
-            <div key={s.label} className="glass-card p-4 sm:p-6 text-center">
-              <div className="text-2xl sm:text-3xl md:text-4xl font-extrabold gradient-text">
-                {s.value}
+            <div key={s.label} className="glass-card p-3 sm:p-6 text-center overflow-hidden">
+              <div className="text-xl sm:text-3xl md:text-4xl font-extrabold gradient-text whitespace-nowrap">
+                {s.prefix}
+                <NumberTicker
+                  value={s.value}
+                  className="text-xl sm:text-3xl md:text-4xl font-extrabold bg-gradient-to-br from-foreground via-primary to-accent bg-clip-text text-transparent"
+                />
+                {s.suffix}
               </div>
               <div className="text-[11px] sm:text-xs text-muted-foreground mt-1 leading-tight">
                 {s.label}
@@ -56,11 +63,11 @@ const SocialProof = () => {
         </div>
 
         {/* Testimonials */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
+        <Marquee pauseOnHover className="[--duration:30s]">
           {testimonials.map((t) => (
             <div
               key={t.name}
-              className="glass-card p-5 sm:p-6 hover:-translate-y-1 hover:border-primary/40 transition-all duration-300"
+              className="glass-card p-5 sm:p-6 w-[320px] sm:w-[360px] shrink-0 hover:-translate-y-1 hover:border-primary/40 transition-all duration-300"
             >
               <Quote className="w-6 h-6 text-primary/60 mb-3" />
               <p className="text-sm text-foreground/90 leading-relaxed mb-4">
@@ -82,7 +89,7 @@ const SocialProof = () => {
               </div>
             </div>
           ))}
-        </div>
+        </Marquee>
       </div>
     </section>
   );

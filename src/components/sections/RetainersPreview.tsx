@@ -1,5 +1,6 @@
 import { Check, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import { BorderBeam } from "@/components/ui/border-beam";
 
 const plans = [
   {
@@ -70,9 +71,17 @@ const RetainersPreview = () => {
               }`}
             >
               {p.highlight && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-primary to-accent text-primary-foreground text-[10px] font-bold tracking-widest uppercase px-3 py-1 rounded-full">
-                  Más Popular
-                </div>
+                <>
+                  <BorderBeam
+                    size={100}
+                    duration={6}
+                    colorFrom="hsl(270 100% 65%)"
+                    colorTo="hsl(280 100% 70%)"
+                  />
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-primary to-accent text-primary-foreground text-[10px] font-bold tracking-widest uppercase px-3 py-1 rounded-full">
+                    Más Popular
+                  </div>
+                </>
               )}
               <h3 className="font-bold text-foreground text-lg mb-1">
                 {p.name}

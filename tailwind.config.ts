@@ -91,6 +91,19 @@ export default {
           "0%, 100%": { boxShadow: "0 0 32px -6px rgba(124, 58, 237, 0.35), 0 0 0 1px rgba(124, 58, 237, 0.2)" },
           "50%": { boxShadow: "0 0 56px -6px rgba(124, 58, 237, 0.65), 0 0 0 1px rgba(124, 58, 237, 0.45)" },
         },
+        meteor: {
+          "0%": { transform: "rotate(var(--angle)) translateX(0)", opacity: "1" },
+          "70%": { opacity: "1" },
+          "100%": { transform: "rotate(var(--angle)) translateX(-500px)", opacity: "0" },
+        },
+        marquee: {
+          from: { transform: "translateX(0)" },
+          to: { transform: "translateX(calc(-100% - var(--gap)))" },
+        },
+        "marquee-vertical": {
+          from: { transform: "translateY(0)" },
+          to: { transform: "translateY(calc(-100% - var(--gap)))" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -98,6 +111,9 @@ export default {
         "float": "float 8s ease-in-out infinite",
         "glow-pulse": "glow-pulse 10s ease-in-out infinite",
         "card-glow": "card-glow 3s ease-in-out infinite",
+        meteor: "meteor 5s linear infinite",
+        marquee: "marquee var(--duration) infinite linear",
+        "marquee-vertical": "marquee-vertical var(--duration) linear infinite",
       },
     },
   },
