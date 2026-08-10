@@ -15,7 +15,7 @@ const Header = () => {
   const close = () => setOpen(false);
   const { t } = useLanguage();
 
-  const navLinks = [
+  const navLinks: { href: string; label: string; badge?: string }[] = [
     { href: "/", label: t("header.nav.inicio") },
     { href: "/servicios", label: t("header.nav.servicios") },
     { href: "/portafolio", label: t("header.nav.portafolio") },
