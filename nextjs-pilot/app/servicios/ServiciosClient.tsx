@@ -10,8 +10,8 @@ import { useLanguage } from "@/contexts/LanguageContext";
 
 const categoryMeta = [
   { icons: [Zap, Layers, Globe] },
-  { icons: [Repeat, ShoppingCart, Calendar, Search] },
-  { icons: [MessageCircle, Bot] },
+  { icons: [Repeat, ShoppingCart, Calendar] },
+  { icons: [Search, MessageCircle, Bot] },
 ];
 
 interface Service {

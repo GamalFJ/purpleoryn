@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { Layers, MessageCircle } from "lucide-react";
 import WhatsAppButton from "@/components/WhatsAppButton";
@@ -21,25 +22,24 @@ const Hero = () => {
         style={{ background: "hsl(280 100% 70%)" }}
       />
 
-      <div className="container mx-auto max-w-3xl px-6 sm:px-10 lg:px-16">
-        <div className="flex flex-col items-center text-center justify-center min-h-[70vh] sm:min-h-[75vh] pt-28 sm:pt-32 pb-16 sm:pb-20">
-          <h1 className="font-extrabold leading-[1.05] tracking-tight mb-5 animate-fade-in" style={{ animationDelay: "0ms", opacity: 0 }}>
-            <span className="block text-foreground">{t("hero.line1")}</span>
-            <span className="block text-foreground">{t("hero.line2")}</span>
-            <span className="block mt-2">
-              <span className="gradient-text">{t("hero.highlight1")}</span>{" "}
-              <span className="text-primary neon-text">{t("hero.highlight2")}</span>
-            </span>
+      <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col items-center pt-24 sm:pt-28 pb-16 sm:pb-20">
+          {/* Real, translatable heading kept for SEO/accessibility — the banner image below carries the visible message but is static Spanish pixels, so screen readers and non-Spanish crawlers still get the real content. */}
+          <h1 className="sr-only">
+            {t("hero.line1")} {t("hero.line2")} {t("hero.highlight1")} {t("hero.highlight2")}
           </h1>
-
-          <p
-            className="text-sm sm:text-base text-muted-foreground mb-8 max-w-md leading-relaxed animate-fade-in"
-            style={{ animationDelay: "120ms", opacity: 0 }}
-          >
-            {t("hero.subtitle")} <span className="text-primary font-semibold">{t("hero.subtitleHighlight")}</span>
+          <p className="sr-only">
+            {t("hero.subtitle")} {t("hero.subtitleHighlight")}
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center animate-fade-in" style={{ animationDelay: "240ms", opacity: 0 }}>
+          <div className="w-full rounded-2xl overflow-hidden animate-fade-in" style={{ animationDelay: "0ms", opacity: 0 }}>
+            <Image src="/hero-banner.png" alt={t("hero.bannerAlt")} width={1672} height={941} priority className="w-full h-auto" />
+          </div>
+
+          <div
+            className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center mt-8 sm:mt-10 animate-fade-in"
+            style={{ animationDelay: "180ms", opacity: 0 }}
+          >
             <WhatsAppButton className="btn-primary px-6 py-3.5 min-h-[52px] text-sm sm:text-base">
               <MessageCircle className="w-5 h-5 shrink-0" />
               {t("hero.ctaWhatsapp")}

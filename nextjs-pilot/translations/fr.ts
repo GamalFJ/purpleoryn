@@ -14,6 +14,7 @@ export const fr = {
     subtitleHighlight: "Mise en ligne en jours, pas en mois.",
     ctaWhatsapp: "Discutons sur WhatsApp",
     ctaDemos: "Voir les Démos",
+    bannerAlt: "Purple Cove Labs — systèmes de sites web, automatisation et intelligence artificielle pour les entreprises dominicaines",
   },
   problem: {
     titlePart1: "Si votre entreprise fonctionne",
@@ -221,11 +222,11 @@ export const fr = {
         title: "Prospect Intelligence Dashboard",
         subtitle: "Pour votre équipe commerciale",
         description:
-          "Le même système que nous utilisons en interne pour identifier, enrichir et prioriser les prospects à forte valeur — désormais disponible comme produit sur mesure pour l'équipe commerciale de votre entreprise.",
+          "Le même système que nous utilisons en interne : un agent IA qui recherche, qualifie et livre des prospects à forte valeur avec des scripts de prospection prêts à l'emploi — le tout appuyé par son propre CRM. Désormais disponible comme produit sur mesure pour l'équipe commerciale de votre entreprise.",
         features: [
-          { title: "Recherche intelligente de prospects", desc: "Identifie les prospects à forte valeur grâce aux données en temps réel." },
-          { title: "Enrichissement des contacts", desc: "Complète automatiquement contact, entreprise et poste." },
-          { title: "Scoring et priorisation", desc: "Classe automatiquement les meilleurs prospects." },
+          { title: "Recherche et qualification par IA", desc: "L'IA recherche et qualifie automatiquement les prospects à forte valeur." },
+          { title: "Infos complètes + script d'approche", desc: "Chaque prospect arrive avec ses coordonnées complètes et un script de prospection prêt à l'emploi." },
+          { title: "Base de données et CRM propres", desc: "Votre équipe gère le suivi de chaque prospect dans un CRM inclus, sans tableurs." },
         ],
         ctaLabel: "Demander un Devis",
       },
@@ -254,13 +255,13 @@ export const fr = {
           { title: "Automatisation", price: "À partir de RD$10,000", badge: "", desc: "Nous connectons vos outils pour éliminer le travail manuel — de 2 flux simples à des processus interconnectés multi-étapes." },
           { title: "Application de Commande", price: "RD$25,000", badge: "", desc: "Système de commande sur mesure avec backend complet : clients, panier, paiement et zones de livraison. Adaptable aux restaurants ou au commerce de détail." },
           { title: "Booking App", price: "À partir de RD$3,500", badge: "", desc: "Prise de rendez-vous intégrée avec transfert automatique vers WhatsApp, sans que vous ayez à coordonner quoi que ce soit manuellement." },
-          { title: "Prospect Intelligence Dashboard", price: "RD$18,000", badge: "", desc: "Identifie, enrichit et priorise automatiquement les prospects à forte valeur — le même système que nous utilisons dans notre propre activité, désormais disponible pour votre équipe commerciale." },
         ],
       },
       {
         title: "Intelligence Artificielle",
         desc: "L'IA appliquée à un vrai processus de votre entreprise, pas une démo générique.",
         services: [
+          { title: "Prospect Intelligence Dashboard", price: "RD$18,000", badge: "", desc: "Un agent IA qui recherche, qualifie et vous livre des prospects à forte valeur totalement prêts à contacter — avec toutes leurs coordonnées et un script de prospection personnalisé pour chacun. Le tout appuyé par sa propre base de données et un CRM où votre équipe gère le suivi de chaque prospect, sans tableurs." },
           { title: "Assistant WhatsApp IA", price: "RD$26,000", badge: "En Pilote", desc: "Conversations automatisées avec vos clients sur WhatsApp : qualification des leads et synchronisation avec votre activité." },
           { title: "Agent IA Personnalisé", price: "À partir de RD$27,000", badge: "", desc: "Un agent sur mesure conçu autour d'un processus spécifique de votre entreprise — en widget de chat ou connecté à vos systèmes internes." },
         ],

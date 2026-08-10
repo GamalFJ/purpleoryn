@@ -14,6 +14,7 @@ export const en = {
     subtitleHighlight: "Live in days, not months.",
     ctaWhatsapp: "Chat on WhatsApp",
     ctaDemos: "See Demos",
+    bannerAlt: "Purple Cove Labs — website, automation, and AI systems for Dominican businesses",
   },
   problem: {
     titlePart1: "If your business runs on",
@@ -221,11 +222,11 @@ export const en = {
         title: "Prospect Intelligence Dashboard",
         subtitle: "For your sales team",
         description:
-          "The same system we use internally to identify, enrich, and prioritize high-value prospects — now available as a custom product for your own sales team.",
+          "The same system we use internally: an AI agent that searches, qualifies, and delivers high-value prospects with ready-to-use outreach scripts — all backed by its own CRM. Now available as a custom product for your own sales team.",
         features: [
-          { title: "Smart prospect search", desc: "Identifies high-value prospects using real-time data." },
-          { title: "Contact enrichment", desc: "Automatically fills in contact, company, and role." },
-          { title: "Scoring and prioritization", desc: "Automatically ranks the best prospects." },
+          { title: "AI search and qualification", desc: "AI automatically searches for and qualifies high-value prospects." },
+          { title: "Full info + outreach script", desc: "Every lead arrives with complete details and a ready-to-use outreach script." },
+          { title: "Its own database and CRM", desc: "Your team manages follow-up on every lead in an included CRM — no spreadsheets." },
         ],
         ctaLabel: "Request a Quote",
       },
@@ -254,13 +255,13 @@ export const en = {
           { title: "Automation", price: "Starting at RD$10,000", badge: "", desc: "We connect your tools to remove manual work — from 2 simple flows up to interconnected multi-step processes." },
           { title: "Ordering App", price: "RD$25,000", badge: "", desc: "A custom ordering system with a full backend: customers, cart, checkout, and delivery zones. Adaptable to restaurants or general retail." },
           { title: "Booking App", price: "Starting at RD$3,500", badge: "", desc: "Integrated appointment scheduling with automatic WhatsApp handoff, so you never have to coordinate it manually." },
-          { title: "Prospect Intelligence Dashboard", price: "RD$18,000", badge: "", desc: "Automatically identifies, enriches, and prioritizes high-value prospects — the same system we use in our own operation, now available for your sales team." },
         ],
       },
       {
         title: "Artificial Intelligence",
         desc: "AI applied to a real process in your business, not a generic demo.",
         services: [
+          { title: "Prospect Intelligence Dashboard", price: "RD$18,000", badge: "", desc: "An AI agent that searches, qualifies, and delivers high-value prospects fully ready to contact — complete with contact details and a personalized cold-outreach script for each one. All backed by its own database and CRM where your team manages follow-up on every lead, no spreadsheets required." },
           { title: "AI WhatsApp Assistant", price: "RD$26,000", badge: "In Pilot", desc: "Automated conversations with your customers on WhatsApp: lead qualification and sync with your operation." },
           { title: "Custom AI Agent", price: "Starting at RD$27,000", badge: "", desc: "A bespoke agent built around a specific process in your business — as a chat widget, or connected to your internal systems." },
         ],
