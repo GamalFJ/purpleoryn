@@ -1,10 +1,22 @@
 import { Layers, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import { AnimatedGridPattern } from "@/components/ui/animated-grid-pattern";
+import { BorderBeam } from "@/components/ui/border-beam";
+import { cn } from "@/lib/utils";
 
 const Hero = () => {
   return (
     <section className="relative overflow-hidden bg-background">
+      {/* Subtle animated grid texture behind everything */}
+      <AnimatedGridPattern
+        numSquares={24}
+        maxOpacity={0.12}
+        duration={5}
+        className={cn(
+          "text-primary [mask-image:radial-gradient(60%_60%_at_50%_40%,white,transparent)]"
+        )}
+      />
       {/* Ambient purple glow behind the founder photo */}
       <div
         aria-hidden="true"
@@ -41,9 +53,15 @@ const Hero = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-start sm:items-center">
-              <WhatsAppButton className="inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 min-h-[52px] text-sm sm:text-base font-bold text-primary-foreground bg-gradient-to-r from-primary to-accent shadow-[0_0_30px_-5px_hsl(var(--primary)/0.6)] hover:shadow-[0_0_45px_-5px_hsl(var(--primary)/0.8)] hover:scale-[1.02] transition-all duration-300">
+              <WhatsAppButton className="relative inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 min-h-[52px] text-sm sm:text-base font-bold text-primary-foreground bg-gradient-to-r from-primary to-accent shadow-[0_0_30px_-5px_hsl(var(--primary)/0.6)] hover:shadow-[0_0_45px_-5px_hsl(var(--primary)/0.8)] hover:scale-[1.02] transition-all duration-300">
                 <MessageCircle className="w-5 h-5 shrink-0" />
                 Conversemos por WhatsApp
+                <BorderBeam
+                  size={60}
+                  duration={5}
+                  colorFrom="hsl(45 100% 65%)"
+                  colorTo="hsl(280 100% 75%)"
+                />
               </WhatsAppButton>
 
               <Link

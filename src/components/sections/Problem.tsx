@@ -1,4 +1,5 @@
 import { AlertTriangle, UserX, Repeat, BarChart2 } from "lucide-react";
+import { Meteors } from "@/components/ui/meteors";
 
 const problems = [
   {
@@ -21,8 +22,9 @@ const problems = [
 
 const Problem = () => {
   return (
-    <section className="py-14 sm:py-20 px-4 sm:px-6 relative">
-      <div className="container mx-auto max-w-5xl">
+    <section className="py-14 sm:py-20 px-4 sm:px-6 relative overflow-hidden">
+      <Meteors number={12} className="opacity-60" />
+      <div className="container mx-auto max-w-5xl relative">
         <div className="text-center mb-10 sm:mb-12">
           <div className="inline-flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-destructive bg-destructive/10 border border-destructive/30 rounded-full px-4 py-1.5 mb-4">
             El Problema

@@ -1,6 +1,7 @@
 import { Calendar, MessageCircle } from "lucide-react";
 import BookingButton from "@/components/BookingButton";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import { BorderBeam } from "@/components/ui/border-beam";
 
 const FinalCTA = () => {
   return (
@@ -9,6 +10,13 @@ const FinalCTA = () => {
 
       <div className="container mx-auto max-w-3xl relative">
         <div className="glass-card p-6 sm:p-10 lg:p-14 text-center relative overflow-hidden">
+          <BorderBeam
+            size={140}
+            duration={7}
+            reverse
+            colorFrom="hsl(270 100% 65%)"
+            colorTo="hsl(280 100% 70%)"
+          />
           <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary via-accent to-primary" />
 
           <h2 className="font-extrabold mb-4">

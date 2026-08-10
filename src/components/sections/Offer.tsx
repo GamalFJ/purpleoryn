@@ -1,5 +1,6 @@
 import { Check } from "lucide-react";
 import BookingButton from "@/components/BookingButton";
+import { BorderBeam } from "@/components/ui/border-beam";
 
 const bullets = [
   "Automatizaciones que conectan tus herramientas y eliminan trabajo manual",
@@ -15,6 +16,12 @@ const Offer = () => {
     <section className="py-14 sm:py-20 px-4 sm:px-6">
       <div className="container mx-auto max-w-4xl">
         <div className="glass-card p-6 sm:p-10 lg:p-14 relative overflow-hidden">
+          <BorderBeam
+            size={140}
+            duration={8}
+            colorFrom="hsl(270 100% 65%)"
+            colorTo="hsl(280 100% 70%)"
+          />
           <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary via-accent to-primary" />
 
           <div className="text-center mb-8">
