@@ -8,7 +8,6 @@ import BookingButton from "@/components/BookingButton";
 const navLinks = [
   { href: "/", label: "Inicio" },
   { href: "/portafolio", label: "Portafolio" },
-  { href: "/demos", label: "Demos", badge: "Nuevo" },
   { href: "/planes", label: "Planes" },
   { href: "/calculator.html", label: "Cotización" },
 ];

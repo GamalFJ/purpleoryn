@@ -1,5 +1,4 @@
-import { Layers, MessageCircle } from "lucide-react";
-import { Link } from "react-router-dom";
+import { MessageCircle } from "lucide-react";
 import WhatsAppButton from "@/components/WhatsAppButton";
 
 const Hero = () => {
@@ -45,14 +44,6 @@ const Hero = () => {
                 <MessageCircle className="w-5 h-5 shrink-0" />
                 Conversemos por WhatsApp
               </WhatsAppButton>
-
-              <Link
-                to="/demos"
-                className="inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 min-h-[52px] text-sm sm:text-base font-semibold text-foreground border border-primary/40 bg-glass-bg/40 backdrop-blur-md hover:border-primary hover:bg-primary/10 transition-all duration-300"
-              >
-                <Layers className="w-5 h-5 shrink-0" />
-                Ver Demos
-              </Link>
             </div>
           </div>
 
