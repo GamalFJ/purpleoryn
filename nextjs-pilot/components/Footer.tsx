@@ -25,7 +25,6 @@ const Footer = () => {
               <li><Link href="/" className="hover:text-primary">{t("header.nav.inicio")}</Link></li>
               <li><Link href="/servicios" className="hover:text-primary">{t("header.nav.servicios")}</Link></li>
               <li><Link href="/portafolio" className="hover:text-primary">{t("header.nav.portafolio")}</Link></li>
-              <li><Link href="/demos" className="hover:text-primary">{t("header.nav.demos")}</Link></li>
               <li><Link href="/planes" className="hover:text-primary">{t("header.nav.planes")}</Link></li>
               <li><a href="/calculator.html" className="hover:text-primary">{t("header.nav.cotizacion")}</a></li>
             </ul>
