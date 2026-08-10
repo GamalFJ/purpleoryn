@@ -217,17 +217,17 @@ export const es = {
         ctaLabel: "Ver Ejemplos por Nicho",
       },
       {
-        badge: "Uso interno · Purple Cove Labs",
+        badge: "RD$18,000",
         title: "Prospect Intelligence Dashboard",
-        subtitle: "Herramienta interna",
+        subtitle: "Para tu equipo de ventas",
         description:
-          "El sistema que usamos internamente para identificar, enriquecer y priorizar prospectos de alto valor para nuestra propia operación — no es un producto a la venta, sino un ejemplo del tipo de herramienta de datos que podemos construir a medida para tu negocio.",
+          "El mismo sistema que usamos internamente para identificar, enriquecer y priorizar prospectos de alto valor — ahora disponible como producto a medida para el equipo de ventas de tu negocio.",
         features: [
           { title: "Búsqueda inteligente de prospectos", desc: "Identifica prospectos de alto valor usando datos en tiempo real." },
           { title: "Enriquecimiento de contactos", desc: "Completa automáticamente contacto, empresa y cargo." },
           { title: "Scoring y priorización", desc: "Clasifica los mejores prospectos automáticamente." },
         ],
-        ctaLabel: "Conversemos sobre algo similar",
+        ctaLabel: "Solicitar Cotización",
       },
     ],
   },
@@ -254,6 +254,7 @@ export const es = {
           { title: "Automatización", price: "Desde RD$10,000", badge: "", desc: "Conectamos tus herramientas para eliminar trabajo manual — desde 2 flujos simples hasta procesos multi-paso interconectados." },
           { title: "Constructor de Pedido", price: "RD$25,000", badge: "", desc: "Sistema de pedidos a medida con backend completo: clientes, carrito, checkout y zonas de entrega. Adaptable a restaurantes o retail." },
           { title: "Booking App", price: "Desde RD$3,500", badge: "", desc: "Agenda de citas integrada con entrega automática por WhatsApp, sin que tengas que coordinar nada manualmente." },
+          { title: "Prospect Intelligence Dashboard", price: "RD$18,000", badge: "", desc: "Identifica, enriquece y prioriza prospectos de alto valor automáticamente — el mismo sistema que usamos en nuestra propia operación, ahora disponible para tu equipo de ventas." },
         ],
       },
       {

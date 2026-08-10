@@ -25,10 +25,10 @@ const productMeta = [
   },
   {
     key: "prospect-dashboard",
-    badgeClass: "bg-primary/15 text-primary border-primary/30",
+    badgeClass: "bg-price-yellow/15 text-price-yellow border-price-yellow/30",
     image: "/apps/prospect-dashboard-logo.png",
     icons: [Search, Users, TrendingUp],
-    cta: { href: "https://wa.me/18096034113", external: true },
+    cta: { href: "https://wa.me/18096034113?text=Hola%2C%20me%20interesa%20el%20Prospect%20Intelligence%20Dashboard", external: true },
   },
 ];
 

@@ -1462,6 +1462,40 @@
                 <span class="price-value">25,000</span>
               </div>
             </div>
+
+            <!-- Prospect Intelligence Dashboard -->
+            <div class="card" data-id="one-time-prospect" data-type="onetime" data-price="18000" onclick="toggleOneTime('one-time-prospect')">
+              <div class="card-top">
+                <div></div>
+                <div class="checkmark-indicator">
+                  <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                </div>
+              </div>
+              <!-- Bespoke SVG illustration -->
+              <div class="card-illustration">
+                <svg class="service-icon" viewBox="0 0 24 24">
+                  <defs>
+                    <linearGradient id="grad-prospect" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" style="stop-color:#7F77DD;stop-opacity:1" />
+                      <stop offset="100%" style="stop-color:#3d0080;stop-opacity:1" />
+                    </linearGradient>
+                  </defs>
+                  <circle cx="10" cy="10" r="6.5" stroke="url(#grad-prospect)" stroke-width="1.5" fill="none" />
+                  <line x1="14.8" y1="14.8" x2="20" y2="20" stroke="url(#grad-prospect)" stroke-width="1.8" stroke-linecap="round" />
+                  <circle cx="7.5" cy="8.5" r="1" fill="url(#grad-prospect)" />
+                  <circle cx="12" cy="7" r="1" fill="url(#grad-prospect)" opacity="0.7" />
+                  <circle cx="10" cy="12.5" r="1" fill="url(#grad-prospect)" opacity="0.7" />
+                </svg>
+              </div>
+              <div class="card-middle">
+                <h3 class="card-title">Prospect Intelligence Dashboard</h3>
+                <p class="card-desc">Identifica, enriquece y prioriza prospectos de alto valor automáticamente — el mismo sistema que usamos en nuestra propia operación, ahora disponible para tu equipo de ventas.</p>
+              </div>
+              <div class="card-bottom">
+                <span class="price-currency">RD$</span>
+                <span class="price-value">18,000</span>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -1890,6 +1924,7 @@
       'one-time-fullsite': { name: 'Full Website', price: 18000, type: 'onetime', desc: 'Fase 1 — Sitio multi-página (5–7 páginas) con homepage incluida. Desde RD$18,000.' },
       'one-time-booking': { name: 'Booking App', price: 5000, type: 'onetime', desc: 'Fase 1 — Calendario de citas integrado + entrega automática por WhatsApp, sin base de datos.' },
       'one-time-ordering': { name: 'Constructor de Pedido', price: 25000, type: 'onetime', desc: 'Fase 1 — Backend completo con Supabase: clientes, pedidos, zonas de entrega, carrito y checkout, más PWA. Adaptable a restaurantes o retail general.' },
+      'one-time-prospect': { name: 'Prospect Intelligence Dashboard', price: 18000, type: 'onetime', desc: 'Fase 1 — Identifica, enriquece y prioriza prospectos de alto valor automáticamente para tu equipo de ventas.' },
 
       // Automation tiers
       'auto-basic': { name: 'Automatización', price: 10000, type: 'automation', desc: 'Fase 2 — Configuración basada en n8n de hasta 2 flujos automatizados.' },

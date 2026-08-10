@@ -217,17 +217,17 @@ export const fr = {
         ctaLabel: "Voir des Exemples par Secteur",
       },
       {
-        badge: "Usage interne · Purple Cove Labs",
+        badge: "RD$18,000",
         title: "Prospect Intelligence Dashboard",
-        subtitle: "Outil interne",
+        subtitle: "Pour votre équipe commerciale",
         description:
-          "Le système que nous utilisons en interne pour identifier, enrichir et prioriser les prospects à forte valeur pour notre propre activité — pas un produit à vendre, mais un exemple du type d'outil de données que nous pouvons construire sur mesure pour votre entreprise.",
+          "Le même système que nous utilisons en interne pour identifier, enrichir et prioriser les prospects à forte valeur — désormais disponible comme produit sur mesure pour l'équipe commerciale de votre entreprise.",
         features: [
           { title: "Recherche intelligente de prospects", desc: "Identifie les prospects à forte valeur grâce aux données en temps réel." },
           { title: "Enrichissement des contacts", desc: "Complète automatiquement contact, entreprise et poste." },
           { title: "Scoring et priorisation", desc: "Classe automatiquement les meilleurs prospects." },
         ],
-        ctaLabel: "Discutons d'un Projet Similaire",
+        ctaLabel: "Demander un Devis",
       },
     ],
   },
@@ -254,6 +254,7 @@ export const fr = {
           { title: "Automatisation", price: "À partir de RD$10,000", badge: "", desc: "Nous connectons vos outils pour éliminer le travail manuel — de 2 flux simples à des processus interconnectés multi-étapes." },
           { title: "Application de Commande", price: "RD$25,000", badge: "", desc: "Système de commande sur mesure avec backend complet : clients, panier, paiement et zones de livraison. Adaptable aux restaurants ou au commerce de détail." },
           { title: "Booking App", price: "À partir de RD$3,500", badge: "", desc: "Prise de rendez-vous intégrée avec transfert automatique vers WhatsApp, sans que vous ayez à coordonner quoi que ce soit manuellement." },
+          { title: "Prospect Intelligence Dashboard", price: "RD$18,000", badge: "", desc: "Identifie, enrichit et priorise automatiquement les prospects à forte valeur — le même système que nous utilisons dans notre propre activité, désormais disponible pour votre équipe commerciale." },
         ],
       },
       {

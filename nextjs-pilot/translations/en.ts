@@ -217,17 +217,17 @@ export const en = {
         ctaLabel: "See Examples by Industry",
       },
       {
-        badge: "Internal tool · Purple Cove Labs",
+        badge: "RD$18,000",
         title: "Prospect Intelligence Dashboard",
-        subtitle: "Internal tool",
+        subtitle: "For your sales team",
         description:
-          "The system we use internally to identify, enrich, and prioritize high-value prospects for our own operation — not a product for sale, but an example of the kind of data tool we can build for your business.",
+          "The same system we use internally to identify, enrich, and prioritize high-value prospects — now available as a custom product for your own sales team.",
         features: [
           { title: "Smart prospect search", desc: "Identifies high-value prospects using real-time data." },
           { title: "Contact enrichment", desc: "Automatically fills in contact, company, and role." },
           { title: "Scoring and prioritization", desc: "Automatically ranks the best prospects." },
         ],
-        ctaLabel: "Let's Talk About Something Similar",
+        ctaLabel: "Request a Quote",
       },
     ],
   },
@@ -254,6 +254,7 @@ export const en = {
           { title: "Automation", price: "Starting at RD$10,000", badge: "", desc: "We connect your tools to remove manual work — from 2 simple flows up to interconnected multi-step processes." },
           { title: "Ordering App", price: "RD$25,000", badge: "", desc: "A custom ordering system with a full backend: customers, cart, checkout, and delivery zones. Adaptable to restaurants or general retail." },
           { title: "Booking App", price: "Starting at RD$3,500", badge: "", desc: "Integrated appointment scheduling with automatic WhatsApp handoff, so you never have to coordinate it manually." },
+          { title: "Prospect Intelligence Dashboard", price: "RD$18,000", badge: "", desc: "Automatically identifies, enriches, and prioritizes high-value prospects — the same system we use in our own operation, now available for your sales team." },
         ],
       },
       {

@@ -5,12 +5,12 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FinalCTA from "@/components/sections/FinalCTA";
 import WhatsAppButton from "@/components/WhatsAppButton";
-import { Zap, Layers, Globe, Repeat, ShoppingCart, Calendar, MessageCircle, Bot, ArrowRight } from "lucide-react";
+import { Zap, Layers, Globe, Repeat, ShoppingCart, Calendar, Search, MessageCircle, Bot, ArrowRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const categoryMeta = [
   { icons: [Zap, Layers, Globe] },
-  { icons: [Repeat, ShoppingCart, Calendar] },
+  { icons: [Repeat, ShoppingCart, Calendar, Search] },
   { icons: [MessageCircle, Bot] },
 ];
 
