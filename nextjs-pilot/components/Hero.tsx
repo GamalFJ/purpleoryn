@@ -1,8 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
-import { Layers, MessageCircle } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -44,11 +43,6 @@ const Hero = () => {
               <MessageCircle className="w-5 h-5 shrink-0" />
               {t("hero.ctaWhatsapp")}
             </WhatsAppButton>
-
-            <Link href="/demos" className="btn-secondary px-6 py-3.5 min-h-[52px] text-sm sm:text-base">
-              <Layers className="w-5 h-5 shrink-0" />
-              {t("hero.ctaDemos")}
-            </Link>
           </div>
         </div>
       </div>
