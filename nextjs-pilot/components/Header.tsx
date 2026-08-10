@@ -19,7 +19,6 @@ const Header = () => {
     { href: "/", label: t("header.nav.inicio") },
     { href: "/servicios", label: t("header.nav.servicios") },
     { href: "/portafolio", label: t("header.nav.portafolio") },
-    { href: "/demos", label: t("header.nav.demos"), badge: t("header.badgeNuevo") },
     { href: "/planes", label: t("header.nav.planes") },
     { href: "/calculator.html", label: t("header.nav.cotizacion") },
   ];
