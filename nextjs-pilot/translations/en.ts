@@ -218,7 +218,7 @@ export const en = {
         ctaLabel: "See Examples by Industry",
       },
       {
-        badge: "RD$18,000",
+        badge: "RD$25,000",
         title: "Prospect Intelligence Dashboard",
         subtitle: "For your sales team",
         description:
@@ -244,26 +244,25 @@ export const en = {
         desc: "Professional digital presence, sized exactly to what your business needs.",
         services: [
           { title: "Capture Page", price: "RD$7,500", badge: "", desc: "A single screen focused on converting visitors into WhatsApp leads. Ideal if you don't need a full site — just professional presence and fast lead capture." },
-          { title: "Landing Page", price: "RD$12,500", badge: "", desc: "A fuller one-pager: hero, services, pricing, portfolio, and testimonials, all custom-built into a single page." },
-          { title: "Full Website", price: "Starting at RD$18,000", badge: "", desc: "A multi-page site (5-7 pages) with homepage included — the foundation for businesses that need several independent sections." },
+          { title: "Landing Page", price: "RD$18,000", badge: "", desc: "A fuller one-pager: hero, services, pricing, portfolio, and testimonials, all custom-built into a single page." },
+          { title: "Full Website", price: "Starting at RD$45,000", badge: "", desc: "A multi-page site (5-7 pages) with homepage included — the foundation for businesses that need several independent sections." },
         ],
       },
       {
         title: "Apps & Automation",
         desc: "Remove manual work and centralize your operation.",
         services: [
-          { title: "Automation", price: "Starting at RD$10,000", badge: "", desc: "We connect your tools to remove manual work — from 2 simple flows up to interconnected multi-step processes." },
-          { title: "Ordering App", price: "RD$25,000", badge: "", desc: "A custom ordering system with a full backend: customers, cart, checkout, and delivery zones. Adaptable to restaurants or general retail." },
-          { title: "Booking App", price: "Starting at RD$3,500", badge: "", desc: "Integrated appointment scheduling with automatic WhatsApp handoff, so you never have to coordinate it manually." },
+          { title: "Automation", price: "Starting at RD$15,000", badge: "", desc: "We connect your tools to remove manual work — from 2 simple flows up to interconnected multi-step processes." },
+          { title: "Pedido Directo", price: "RD$25,000", badge: "", desc: "A custom ordering system with a full backend: customers, cart, checkout, and delivery zones. Adaptable to restaurants or general retail." },
+          { title: "Booking App", price: "Starting at RD$4,000", badge: "", desc: "Integrated appointment scheduling with automatic WhatsApp handoff, so you never have to coordinate it manually." },
         ],
       },
       {
         title: "Artificial Intelligence",
         desc: "AI applied to a real process in your business, not a generic demo.",
         services: [
-          { title: "Prospect Intelligence Dashboard", price: "RD$18,000", badge: "", desc: "An AI agent that searches, qualifies, and delivers high-value prospects fully ready to contact — complete with contact details and a personalized cold-outreach script for each one. All backed by its own database and CRM where your team manages follow-up on every lead, no spreadsheets required." },
-          { title: "AI WhatsApp Assistant", price: "RD$26,000", badge: "In Pilot", desc: "Automated conversations with your customers on WhatsApp: lead qualification and sync with your operation." },
-          { title: "Custom AI Agent", price: "Starting at RD$27,000", badge: "", desc: "A bespoke agent built around a specific process in your business — as a chat widget, or connected to your internal systems." },
+          { title: "Prospect Intelligence Dashboard", price: "RD$25,000", badge: "", desc: "An AI agent that searches, qualifies, and delivers high-value prospects fully ready to contact — complete with contact details and a personalized cold-outreach script for each one. All backed by its own database and CRM where your team manages follow-up on every lead, no spreadsheets required." },
+          { title: "Custom AI Agent", price: "Starting at RD$35,000", badge: "", desc: "A bespoke agent built around a specific process in your business — as a chat widget, or connected to your internal systems." },
         ],
       },
     ],
