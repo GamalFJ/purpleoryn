@@ -2,10 +2,16 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "purpleoryn-nextjs",
+      "name": "purpleoryn",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev", "--prefix", "nextjs-pilot"],
+      "runtimeArgs": ["run", "dev"],
       "port": 3000
+    },
+    {
+      "name": "purpleoryn-prod",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["next", "start", "-p", "3001"],
+      "port": 3001
     }
   ]
 }

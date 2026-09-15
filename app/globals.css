@@ -1,0 +1,117 @@
+@import "tailwindcss";
+
+/*
+  Purple Cove Labs design tokens.
+  Light-first "papel lavanda" page with plum ink and one violet accent; the
+  deep plum block is reserved for the closing CTA. Dark mode swaps the same
+  semantic tokens under prefers-color-scheme.
+
+  Radius rule: interactive controls (buttons, pills) are fully rounded,
+  content panels use --radius-panel (20px), inputs use --radius-field (12px).
+*/
+:root {
+  --paper: #f6f4fa;
+  --surface: #fdfcfe;
+  --ink: #1c1030;
+  --muted: #5e5670;
+  --line: #e3deec;
+  --accent: #6d2fd8;
+  --accent-hover: #5b22c2;
+  --accent-ink: #fbf9fe;
+  --accent-soft: #ede5fb;
+  --plum: #180f28;
+  --plum-ink: #f1ecf8;
+  --plum-muted: #b9aecb;
+  --plum-accent: #b98aff;
+  --danger: #b42343;
+  --success: #1f7a4d;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #140a1f;
+    --surface: #1d1330;
+    --ink: #f1ecf8;
+    --muted: #b3a8c6;
+    --line: #33284a;
+    --accent: #b98aff;
+    --accent-hover: #c9a3ff;
+    --accent-ink: #180f28;
+    --accent-soft: #2a1b45;
+    --plum: #0d0616;
+    --plum-ink: #f1ecf8;
+    --plum-muted: #b9aecb;
+    --plum-accent: #c9a3ff;
+    --danger: #ff8fa6;
+    --success: #6fd6a2;
+  }
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+  --color-plum: var(--plum);
+  --color-plum-ink: var(--plum-ink);
+  --color-plum-muted: var(--plum-muted);
+  --color-plum-accent: var(--plum-accent);
+  --color-danger: var(--danger);
+  --color-success: var(--success);
+
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-bricolage), var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+
+  --radius-panel: 1.25rem;
+  --radius-field: 0.75rem;
+}
+
+@layer base {
+  html {
+    color-scheme: light dark;
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+    letter-spacing: -0.02em;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}
+
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+}
