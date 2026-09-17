@@ -64,7 +64,7 @@ export function RoiCalculator({ tiers }: { tiers: Tier[] }) {
 
   return (
     <section id="calculadora" aria-labelledby="calculadora-titulo" className="mx-auto max-w-6xl px-4 pt-24 sm:px-6 md:pt-32">
-      <div className="rounded-[28px] border border-warm-line bg-warm-soft p-5 sm:p-8 md:p-10">
+      <div className="rounded-[28px] border border-warm-line bg-linear-to-br from-warm-soft via-warm-soft to-rose-soft shadow-[0_28px_60px_-40px_rgb(180_83_9/0.6)] p-5 sm:p-8 md:p-10">
         <div className="max-w-2xl">
           <RoiBadge className="mb-4" />
           <h2 id="calculadora-titulo" className="text-3xl font-semibold sm:text-4xl">
@@ -85,7 +85,7 @@ export function RoiCalculator({ tiers }: { tiers: Tier[] }) {
                     key={t.slug}
                     className={cn(
                       "flex h-12 cursor-pointer items-center justify-center rounded-full border text-[15px] font-medium transition-colors has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-accent",
-                      slug === t.slug ? "border-accent bg-accent text-accent-ink" : "border-line text-muted hover:border-accent hover:text-ink",
+                      slug === t.slug ? "border-transparent bg-linear-to-r from-accent to-fuchsia text-accent-ink shadow-[0_8px_18px_-10px_rgb(109_47_216/0.7)]" : "border-line text-muted hover:border-accent hover:text-ink",
                     )}
                   >
                     <input

@@ -27,13 +27,15 @@ export function RotatingWord({ words }: { words: string[] }) {
           // Sequential, not a crossfade: the old word leaves upward first,
           // then the new one rises in.
           className={cn(
-            "[grid-area:1/1] text-accent transition-[opacity,transform] ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none",
+            "[grid-area:1/1] font-semibold transition-[opacity,transform] ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none",
             i === index && "translate-y-0 opacity-100 delay-200 duration-500",
             i === prev && "-translate-y-2 opacity-0 duration-200",
             i !== index && i !== prev && "translate-y-2 opacity-0 duration-0",
           )}
         >
-          {word}
+          {/* Gradient on an inner, non-animated span: Chrome can drop
+              background-clip:text on elements that transition transform. */}
+          <span className="text-gradient-accent inline-block pb-[0.1em]">{word}</span>
         </span>
       ))}
     </span>

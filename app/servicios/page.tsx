@@ -28,7 +28,7 @@ export default async function ServiciosPage() {
       <main id="contenido">
         <PlanSelectionProvider>
           <div className="mx-auto max-w-6xl px-4 pt-10 sm:px-6 md:pt-16">
-            <h1 className="text-[2.35rem] font-semibold leading-[1.06] sm:text-5xl">Planes y precios</h1>
+            <h1 className="text-gradient-brand pb-[0.1em] text-[2.35rem] font-semibold leading-[1.06] sm:text-5xl">Planes y precios</h1>
             <p className="mt-4 max-w-[58ch] text-lg leading-relaxed text-body">
               Cada plan tiene un pago único y una mensualidad, y cada uno incluye todo lo del anterior. Precios en pesos dominicanos.
             </p>

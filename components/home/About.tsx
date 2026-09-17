@@ -1,4 +1,6 @@
 import Image from "next/image";
+import { InstagramLogo, MapPinLine, UserCircle, WhatsappLogo } from "@phosphor-icons/react/dist/ssr";
+import { IconTile } from "@/components/ui/IconTile";
 import { TrackedLink } from "@/components/analytics/TrackedLink";
 import { cn } from "@/lib/cn";
 import type { SiteSettings } from "@/lib/content";
@@ -32,26 +34,41 @@ export function About({ settings }: { settings: SiteSettings }) {
           <p className="mt-5 max-w-[60ch] text-lg leading-relaxed text-body">{settings.aboutBio}</p>
 
           <dl className="mt-8 grid gap-5 sm:grid-cols-2">
-            <div>
-              <dt className="text-sm text-muted">Fundador</dt>
-              <dd className="mt-1 font-medium">{SITE.founder}</dd>
+            <div className="group flex gap-3">
+              <IconTile icon={UserCircle} tone="violet" size="sm" />
+              <div>
+                <dt className="text-sm text-muted">Fundador</dt>
+                <dd className="mt-0.5 font-medium text-ink">{SITE.founder}</dd>
+              </div>
             </div>
-            <div>
-              <dt className="text-sm text-muted">WhatsApp directo</dt>
-              <dd className="mt-1 font-medium">
-                <TrackedLink
-                  href={whatsappUrl(WHATSAPP_GENERAL)}
-                  event="whatsapp_click"
-                  location="about"
-                  className="tabular hover:text-accent"
-                >
-                  {SITE.phoneDisplay}
-                </TrackedLink>
-              </dd>
+            <div className="group flex gap-3">
+              <IconTile icon={WhatsappLogo} tone="teal" size="sm" />
+              <div>
+                <dt className="text-sm text-muted">WhatsApp directo</dt>
+                <dd className="mt-0.5 font-medium text-ink">
+                  <TrackedLink href={whatsappUrl(WHATSAPP_GENERAL)} event="whatsapp_click" location="about" className="tabular hover:text-accent">
+                    {SITE.phoneDisplay}
+                  </TrackedLink>
+                </dd>
+              </div>
             </div>
-            <div className="sm:col-span-2">
-              <dt className="text-sm text-muted">Área de servicio</dt>
-              <dd className="mt-1 font-medium">{SITE.serviceAreas.join(", ")}</dd>
+            <div className="group flex gap-3">
+              <IconTile icon={MapPinLine} tone="rose" size="sm" />
+              <div>
+                <dt className="text-sm text-muted">Área de servicio</dt>
+                <dd className="mt-0.5 font-medium text-ink">{SITE.serviceAreas.join(", ")}</dd>
+              </div>
+            </div>
+            <div className="group flex gap-3">
+              <IconTile icon={InstagramLogo} tone="amber" size="sm" />
+              <div>
+                <dt className="text-sm text-muted">Instagram</dt>
+                <dd className="mt-0.5 font-medium text-ink">
+                  <a href={SITE.instagram} target="_blank" rel="noopener noreferrer" className="hover:text-accent">
+                    {SITE.instagramHandle}
+                  </a>
+                </dd>
+              </div>
             </div>
           </dl>
         </div>

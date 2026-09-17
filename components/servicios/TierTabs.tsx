@@ -3,10 +3,13 @@
 import { useState } from "react";
 import { Price } from "@/components/tiers/Price";
 import { TierCta } from "@/components/tiers/TierCta";
+import { ROW_THEME, TIER_THEME } from "@/components/tiers/theme";
+import { IconTile } from "@/components/ui/IconTile";
 import { RecommendedBadge } from "@/components/tiers/RecommendedBadge";
 import { cn } from "@/lib/cn";
 import { formatRD } from "@/lib/format";
 import { TIER_ROWS, type Tier } from "@/lib/tiers";
+import { TONE } from "@/lib/tone";
 
 export function TierTabs({ tiers }: { tiers: Tier[] }) {
   const [active, setActive] = useState(tiers[0]?.slug);
@@ -25,7 +28,7 @@ export function TierTabs({ tiers }: { tiers: Tier[] }) {
             onClick={() => setActive(t.slug)}
             className={cn(
               "h-11 cursor-pointer rounded-full text-[15px] font-medium transition-colors",
-              active === t.slug ? "bg-accent text-accent-ink" : "text-muted hover:text-ink",
+              active === t.slug ? "bg-linear-to-r from-accent to-fuchsia text-accent-ink" : "text-muted hover:text-ink",
             )}
           >
             {t.name}
@@ -40,9 +43,13 @@ export function TierTabs({ tiers }: { tiers: Tier[] }) {
           id={`panel-${t.slug}`}
           aria-labelledby={`tab-${t.slug}`}
           hidden={active !== t.slug}
-          className="mt-4 rounded-[var(--radius-panel)] border border-line bg-surface p-6"
+          className={cn("relative mt-4 overflow-hidden rounded-[var(--radius-panel)] bg-surface p-6", t.recommended ? "border-glow" : cn("border", TONE[TIER_THEME[t.slug].tone].border))}
         >
-          {t.recommended && <RecommendedBadge className="mb-3" />}
+          <span aria-hidden="true" className={cn("absolute inset-x-0 top-0 h-1.5 bg-linear-to-r", TONE[TIER_THEME[t.slug].tone].bar)} />
+          <div className="mb-4 flex items-center justify-between gap-2">
+            <IconTile icon={TIER_THEME[t.slug].icon} tone={TIER_THEME[t.slug].tone} />
+            {t.recommended && <RecommendedBadge />}
+          </div>
           <p className="font-display text-[2rem] font-semibold leading-none text-warm-ink">
             <Price amount={t.oneTime} />
           </p>
@@ -52,7 +59,10 @@ export function TierTabs({ tiers }: { tiers: Tier[] }) {
           <dl className="mt-6 space-y-5">
             {TIER_ROWS.map((row) => (
               <div key={row.label}>
-                <dt className="text-[15px] font-semibold">{row.label}</dt>
+                <dt className="flex items-center gap-2.5 text-[15px] font-semibold text-ink">
+                  {ROW_THEME[row.label] && <IconTile icon={ROW_THEME[row.label].icon} tone={ROW_THEME[row.label].tone} size="sm" />}
+                  {row.label}
+                </dt>
                 <dd className="mt-1 text-[15px] leading-relaxed text-body">{row.value(t)}</dd>
               </div>
             ))}

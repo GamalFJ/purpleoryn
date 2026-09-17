@@ -31,6 +31,7 @@ export function businessSchema() {
     areaServed: SITE.serviceAreas.map((name) => ({ "@type": "City", name })),
     founder: { "@type": "Person", name: SITE.founder },
     currenciesAccepted: "DOP",
+    sameAs: [SITE.instagram],
   };
 }
 

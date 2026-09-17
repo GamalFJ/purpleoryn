@@ -2,11 +2,13 @@
 
 import { startTransition, useActionState, useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
+import { PaperPlaneTilt } from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
 import { submitLead } from "@/app/servicios/actions";
 import { readAttribution, type Attribution } from "@/components/analytics/Attribution";
 import { TrackedLink } from "@/components/analytics/TrackedLink";
 import { buttonClass } from "@/components/ui/button";
+import { IconTile } from "@/components/ui/IconTile";
 import { LEAD_FLAG, track } from "@/lib/analytics";
 import { cn } from "@/lib/cn";
 import { formatRD } from "@/lib/format";
@@ -81,6 +83,7 @@ export function LeadForm({ tiers }: { tiers: Tier[] }) {
     <section id="elegir-plan" aria-labelledby="formulario-titulo" className="mx-auto max-w-6xl px-4 pt-24 sm:px-6 md:pt-32">
       <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
         <div>
+          <IconTile icon={PaperPlaneTilt} tone="violet" size="lg" className="mb-5" />
           <h2 id="formulario-titulo" className="text-3xl font-semibold sm:text-4xl">
             {CTA.plan}
           </h2>
@@ -110,7 +113,7 @@ export function LeadForm({ tiers }: { tiers: Tier[] }) {
             startTransition(() => formAction(fd));
           }}
           noValidate
-          className="relative rounded-[var(--radius-panel)] border border-line bg-surface p-6 sm:p-8"
+          className="relative overflow-hidden rounded-[var(--radius-panel)] border border-accent/25 bg-surface p-6 shadow-[0_28px_60px_-40px_rgb(109_47_216/0.55)] sm:p-8"
         >
           <fieldset aria-describedby={errors.plan ? "plan-error" : undefined}>
             <legend className="text-[15px] font-semibold">Plan</legend>

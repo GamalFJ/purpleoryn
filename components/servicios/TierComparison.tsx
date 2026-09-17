@@ -1,5 +1,9 @@
 import { Price } from "@/components/tiers/Price";
 import { TierCta } from "@/components/tiers/TierCta";
+import { ROW_THEME, TIER_THEME } from "@/components/tiers/theme";
+import { IconTile } from "@/components/ui/IconTile";
+import { cn } from "@/lib/cn";
+import { TONE } from "@/lib/tone";
 import { RecommendedBadge } from "@/components/tiers/RecommendedBadge";
 import { formatRD } from "@/lib/format";
 import { TIER_ROWS, type Tier } from "@/lib/tiers";
@@ -26,9 +30,11 @@ export function TierComparison({ tiers }: { tiers: Tier[] }) {
             <tr className="align-top">
               <td className="p-6" />
               {tiers.map((t) => (
-                <th key={t.slug} scope="col" className="border-l border-line p-6 font-normal">
+                <th key={t.slug} scope="col" className={cn("relative border-l border-line p-6 font-normal", t.recommended && "bg-accent-soft/40")}>
+                  <span aria-hidden="true" className={cn("absolute inset-x-0 top-0 h-1.5 bg-linear-to-r", TONE[TIER_THEME[t.slug].tone].bar)} />
                   <span className="flex flex-wrap items-center gap-2">
-                    <span className="font-display text-2xl font-semibold text-ink">{t.name}</span>
+                    <IconTile icon={TIER_THEME[t.slug].icon} tone={TIER_THEME[t.slug].tone} size="sm" />
+                    <span className={cn("font-display text-2xl font-semibold", TONE[TIER_THEME[t.slug].tone].text)}>{t.name}</span>
                     {t.recommended && <RecommendedBadge />}
                   </span>
                   <span className="mt-4 block font-display text-[1.9rem] font-semibold leading-none text-warm-ink">
@@ -45,11 +51,14 @@ export function TierComparison({ tiers }: { tiers: Tier[] }) {
           <tbody>
             {TIER_ROWS.map((row) => (
               <tr key={row.label} className="border-t border-line align-top">
-                <th scope="row" className="p-6 text-[15px] font-semibold">
-                  {row.label}
+                <th scope="row" className="p-6 text-[15px] font-semibold text-ink">
+                  <span className="flex items-center gap-3">
+                    {ROW_THEME[row.label] && <IconTile icon={ROW_THEME[row.label].icon} tone={ROW_THEME[row.label].tone} size="sm" />}
+                    {row.label}
+                  </span>
                 </th>
                 {tiers.map((t) => (
-                  <td key={t.slug} className="border-l border-line p-6 text-[15px] leading-relaxed text-body">
+                  <td key={t.slug} className={cn("border-l border-line p-6 text-[15px] leading-relaxed text-body", t.recommended && "bg-accent-soft/40")}>
                     {row.value(t)}
                   </td>
                 ))}

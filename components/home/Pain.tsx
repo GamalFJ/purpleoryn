@@ -1,4 +1,5 @@
 import { ChartBar, ClockCountdown, MapPinArea, Storefront } from "@phosphor-icons/react/dist/ssr";
+import { IconTile } from "@/components/ui/IconTile";
 
 const PAINS = [
   {
@@ -32,8 +33,8 @@ export function Pain() {
       </h2>
       <ul className="mt-10 grid gap-x-12 sm:grid-cols-2">
         {PAINS.map(({ icon: Icon, title, text }) => (
-          <li key={title} className="flex gap-4 border-t border-line py-6">
-            <Icon size={28} weight="duotone" className="mt-0.5 shrink-0 text-ink" aria-hidden="true" />
+          <li key={title} className="group flex gap-4 border-t border-rose/25 py-6">
+            <IconTile icon={Icon} tone="rose" />
             <div>
               <h3 className="text-lg font-semibold">{title}</h3>
               <p className="mt-1.5 max-w-[46ch] text-[15px] leading-relaxed text-body">{text}</p>

@@ -38,7 +38,7 @@ export function RoiTeaser({ tiers }: { tiers: Tier[] }) {
   if (asv) params.set("venta", String(asv));
 
   return (
-    <div className="mt-12 rounded-[28px] border border-warm-line bg-warm-soft p-6 sm:p-8 md:p-10">
+    <div className="mt-12 rounded-[28px] border border-warm-line bg-linear-to-br from-warm-soft via-warm-soft to-rose-soft shadow-[0_28px_60px_-40px_rgb(180_83_9/0.6)] p-6 sm:p-8 md:p-10">
       <div className="grid gap-8 md:grid-cols-[1fr_1fr] md:gap-12">
         <div>
           <RoiBadge />
@@ -52,7 +52,7 @@ export function RoiTeaser({ tiers }: { tiers: Tier[] }) {
                   key={t.slug}
                   className={cn(
                     "flex h-11 cursor-pointer items-center justify-center rounded-full border text-sm font-medium transition-colors has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-accent sm:text-[15px]",
-                    slug === t.slug ? "border-accent bg-accent text-accent-ink" : "border-line bg-surface text-muted hover:border-accent hover:text-ink",
+                    slug === t.slug ? "border-transparent bg-linear-to-r from-accent to-fuchsia text-accent-ink shadow-[0_8px_18px_-10px_rgb(109_47_216/0.7)]" : "border-line bg-surface text-muted hover:border-accent hover:text-ink",
                   )}
                 >
                   <input type="radio" name="teaser-plan" value={t.slug} checked={slug === t.slug} onChange={() => setSlug(t.slug)} className="sr-only" />
