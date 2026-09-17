@@ -1,12 +1,15 @@
 import { About } from "@/components/home/About";
 import { Faq } from "@/components/home/Faq";
 import { Hero } from "@/components/home/Hero";
+import { Pain } from "@/components/home/Pain";
 import { PortfolioPreview } from "@/components/home/PortfolioPreview";
+import { Solution } from "@/components/home/Solution";
+import { Stats } from "@/components/home/Stats";
 import { TierStairs } from "@/components/home/TierStairs";
 import { ClosingCta } from "@/components/layout/ClosingCta";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
-import { getPortfolio, getSiteSettings, getTiers } from "@/lib/content";
+import { getAddons, getPortfolio, getSiteSettings, getTiers } from "@/lib/content";
 import { pageMetadata } from "@/lib/seo";
 
 // Admin edits call revalidatePath; this is the safety net.
@@ -21,14 +24,18 @@ export const metadata = pageMetadata({
 });
 
 export default async function HomePage() {
-  const [settings, tiers, portfolio] = await Promise.all([getSiteSettings(), getTiers(), getPortfolio(2)]);
+  const [settings, tiers, addons, portfolio] = await Promise.all([getSiteSettings(), getTiers(), getAddons(), getPortfolio(2)]);
 
   return (
     <>
       <Header />
       <main id="contenido">
         <Hero settings={settings} />
-        <TierStairs tiers={tiers} />
+        {/* Presentación → Dolor → Solución → planes → prueba → CTA */}
+        <Pain />
+        <Solution />
+        <TierStairs tiers={tiers} addons={addons} />
+        <Stats />
         <PortfolioPreview items={portfolio} />
         <About settings={settings} />
         <Faq />

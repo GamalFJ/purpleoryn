@@ -1,17 +1,27 @@
+import { addonUsageText, type Addon } from "@/lib/addons";
 import { FAQ_ITEMS } from "@/lib/faq";
 import { formatRD } from "@/lib/format";
 import { SITE } from "@/lib/site";
 import { TIER_ROWS, type Tier } from "@/lib/tiers";
 
-// Built per request from the live tier data, so a price edited in the admin
-// panel is what the agent quotes.
-export function buildSystemPrompt(tiers: Tier[]): string {
+// Built per request from the live tier and add-on data, so a price edited in
+// the admin panel is what the agent quotes.
+export function buildSystemPrompt(tiers: Tier[], addons: Addon[]): string {
   const tierBlock = tiers
     .map((t) => {
-      const rows = TIER_ROWS.map((r) => `  - ${r.label}: ${t[r.key]}`).join("\n");
+      const rows = TIER_ROWS.map((r) => `  - ${r.label}: ${r.value(t)}`).join("\n");
       return `### ${t.name} (slug: ${t.slug})\n  - Pago único: ${formatRD(t.oneTime)}\n  - Mensualidad: ${formatRD(t.monthly)}\n  - Para quién: ${t.tagline}\n${rows}`;
     })
     .join("\n\n");
+
+  const addonBlock = addons.length
+    ? addons
+        .map(
+          (a) =>
+            `### ${a.name}\n  - Qué es: ${a.description || "sin descripción publicada"}\n  - Pago único: ${formatRD(a.oneTime)}\n  - Mensualidad: ${formatRD(a.monthly)}\n  - Uso incluido: ${addonUsageText(a)}`,
+        )
+        .join("\n\n")
+    : "(none)";
 
   const faqBlock = FAQ_ITEMS.map((f) => `- P: ${f.q}\n  R: ${f.a}`).join("\n");
 
@@ -32,6 +42,7 @@ HARD RULES
 - Quote prices exactly as written below, with two decimals (for example RD$15,499.99). Never round.
 - Never do ROI math yourself; always use calculate_roi and repeat its numbers.
 - Only recommend one of the three plans below. Don't promise custom work outside them.
+- Add-ons are sold separately on top of a plan; they are not a plan and can't be chosen in the plan form. Mention one only if it fits what the visitor asks, and point them to WhatsApp or the call for it.
 - If the business is outside ${SITE.serviceAreas.join(", ")}, say that is our current service area and offer a call to check.
 - Don't ask for or repeat phone numbers, emails or payment details in chat. The plan form and the call collect contact details.
 - In offer_call summaries, include only business type, goal and timing. No contact details.
@@ -39,6 +50,9 @@ HARD RULES
 
 PLANS (each plan includes everything in the previous one)
 ${tierBlock}
+
+ADD-ONS (sold separately, on top of a plan)
+${addonBlock}
 
 ROI METHOD (Oryn ROI Method)
 Year 1 investment = one-time price + (monthly × 12). Break-even sales = Year 1 investment ÷ average sale value. 3x target sales per year = (Year 1 investment × 3) ÷ average sale value; per month = that ÷ 12. Results round up because there are no partial sales.

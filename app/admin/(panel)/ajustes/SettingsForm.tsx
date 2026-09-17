@@ -35,7 +35,7 @@ export function SettingsForm({ settings, defaults }: { settings: Row; defaults: 
             folder="ajustes"
             defaultUrl={settings.hero_image_url || null}
             fallbackUrl={defaults.heroImageUrl}
-            aspect="aspect-[4/5]"
+            ratio="portrait"
           />
         </div>
       </section>
@@ -57,7 +57,7 @@ export function SettingsForm({ settings, defaults }: { settings: Row; defaults: 
             folder="ajustes"
             defaultUrl={settings.about_image_url || null}
             fallbackUrl={defaults.aboutImageUrl}
-            aspect="aspect-[4/5]"
+            ratio="portrait"
           />
         </div>
       </section>

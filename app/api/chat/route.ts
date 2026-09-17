@@ -5,7 +5,7 @@ import { chatWithFallback, isAgentConfigured } from "@/lib/ai";
 import type { AgentMessage } from "@/lib/ai/types";
 import { buildSystemPrompt } from "@/lib/agent/prompt";
 import { AGENT_TOOLS, runTool, type AgentAction } from "@/lib/agent/tools";
-import { getTiers } from "@/lib/content";
+import { getAddons, getTiers } from "@/lib/content";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { publicClient } from "@/lib/supabase/server";
 import { SITE } from "@/lib/site";
@@ -72,8 +72,8 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const tiers = await getTiers();
-  const system = buildSystemPrompt(tiers);
+  const [tiers, addons] = await Promise.all([getTiers(), getAddons()]);
+  const system = buildSystemPrompt(tiers, addons);
   const conversation: AgentMessage[] = messages.slice(-HISTORY_WINDOW).map((m) => ({ role: m.role, content: m.content }));
   const actions: AgentAction[] = [];
   let reply = "";

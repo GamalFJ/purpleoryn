@@ -9,7 +9,7 @@ export const metadata = pageMetadata({
   path: "/privacidad",
 });
 
-const UPDATED = "14 de septiembre de 2026";
+const UPDATED = "16 de septiembre de 2026";
 
 export default function PrivacidadPage() {
   return (
@@ -19,7 +19,7 @@ export default function PrivacidadPage() {
         <h1 className="text-[2.35rem] font-semibold leading-[1.06] sm:text-5xl">Política de privacidad</h1>
         <p className="mt-3 text-sm text-muted">Última actualización: {UPDATED}</p>
 
-        <div className="mt-10 space-y-10 text-[16px] leading-relaxed text-muted [&_h2]:text-2xl [&_h2]:font-semibold [&_h2]:text-ink [&_ul]:mt-3 [&_ul]:list-disc [&_ul]:space-y-1.5 [&_ul]:pl-5">
+        <div className="mt-10 space-y-10 text-[16px] leading-relaxed text-body [&_h2]:text-2xl [&_h2]:font-semibold [&_h2]:text-ink [&_ul]:mt-3 [&_ul]:list-disc [&_ul]:space-y-1.5 [&_ul]:pl-5">
           <section>
             <h2>Quiénes somos</h2>
             <p className="mt-3">
@@ -59,6 +59,7 @@ export default function PrivacidadPage() {
               <li>Supabase, donde se guardan las solicitudes del formulario.</li>
               <li>Google Analytics y Google Tag Manager, para medir el uso del sitio.</li>
               <li>Vercel, que aloja el sitio y mide su rendimiento.</li>
+              <li>Telegram, donde recibimos el aviso de cada solicitud nueva.</li>
               <li>Cal.com, si agendas una llamada.</li>
               <li>WhatsApp, si decides escribirnos por ahí.</li>
             </ul>

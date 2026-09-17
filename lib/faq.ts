@@ -1,7 +1,7 @@
 // Every answer is derived from the tier table, the ROI method, the GBP service
 // area or the client payment policy (brand/docs/pcl-politica-cliente.pdf).
-// Nothing about delivery times, plan changes or conversation-cap overages is
-// stated because none of that is defined yet.
+// Nothing about delivery times or plan changes is stated because neither is
+// defined yet.
 export const FAQ_ITEMS: { id: string; q: string; a: string }[] = [
   {
     id: "incluye",

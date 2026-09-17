@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { buttonClass } from "@/components/ui/button";
 import { requireAdmin } from "@/lib/admin";
+import { cn } from "@/lib/cn";
+import { IMAGE_RATIOS } from "@/lib/image";
 
 export const dynamic = "force-dynamic";
 
@@ -35,8 +37,8 @@ export default async function AdminPortafolioPage() {
           {items.map((item) => (
             <li key={item.id}>
               <Link href={`/admin/portafolio/${item.id}`} className="flex items-center gap-4 p-4 hover:bg-accent-soft/50 sm:p-5">
-                <div className="relative h-14 w-20 shrink-0 overflow-hidden rounded-lg bg-paper">
-                  {item.cover_image_url && <Image src={item.cover_image_url} alt="" fill sizes="80px" className="object-cover" />}
+                <div className={cn("relative w-24 shrink-0 overflow-hidden rounded-lg bg-paper", IMAGE_RATIOS.landscape.className)}>
+                  {item.cover_image_url && <Image src={item.cover_image_url} alt="" fill sizes="96px" className="object-cover object-center" />}
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-medium">{item.title}</p>

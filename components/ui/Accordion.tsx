@@ -140,7 +140,7 @@ function AccordionRow({
         style={{ overflow: "hidden", height: ready ? undefined : open ? "auto" : 0 }}
       >
         <div ref={ref} id={panelId} role="region" aria-labelledby={headerId} aria-hidden={open ? undefined : true}>
-          <div className="max-w-[65ch] pb-6 text-[15px] leading-relaxed text-muted">{item.content}</div>
+          <div className="max-w-[65ch] pb-6 text-[15px] leading-relaxed text-body">{item.content}</div>
         </div>
       </motion.div>
     </div>

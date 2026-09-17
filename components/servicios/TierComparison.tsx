@@ -1,8 +1,8 @@
 import { Price } from "@/components/tiers/Price";
-import { buttonClass } from "@/components/ui/button";
+import { TierCta } from "@/components/tiers/TierCta";
+import { RecommendedBadge } from "@/components/tiers/RecommendedBadge";
 import { formatRD } from "@/lib/format";
 import { TIER_ROWS, type Tier } from "@/lib/tiers";
-import { SelectPlanButton } from "./PlanSelection";
 import { TierTabs } from "./TierTabs";
 
 export function TierComparison({ tiers }: { tiers: Tier[] }) {
@@ -27,29 +27,30 @@ export function TierComparison({ tiers }: { tiers: Tier[] }) {
               <td className="p-6" />
               {tiers.map((t) => (
                 <th key={t.slug} scope="col" className="border-l border-line p-6 font-normal">
-                  <span className="block font-display text-2xl font-semibold">{t.name}</span>
-                  <span className="mt-4 block font-display text-[1.9rem] font-semibold leading-none">
+                  <span className="flex flex-wrap items-center gap-2">
+                    <span className="font-display text-2xl font-semibold text-ink">{t.name}</span>
+                    {t.recommended && <RecommendedBadge />}
+                  </span>
+                  <span className="mt-4 block font-display text-[1.9rem] font-semibold leading-none text-warm-ink">
                     <Price amount={t.oneTime} />
                   </span>
                   <span className="mt-2 block text-sm text-muted">
                     pago único, más <span className="tabular text-ink">{formatRD(t.monthly)}</span> al mes
                   </span>
-                  <SelectPlanButton slug={t.slug} source="comparison_table" className={buttonClass("primary", "sm", "mt-5 w-full")}>
-                    Elegir {t.name}
-                  </SelectPlanButton>
+                  <TierCta tier={t} location="comparison_table" mode="select" size="sm" className="mt-5 w-full" />
                 </th>
               ))}
             </tr>
           </thead>
           <tbody>
             {TIER_ROWS.map((row) => (
-              <tr key={row.key} className="border-t border-line align-top">
+              <tr key={row.label} className="border-t border-line align-top">
                 <th scope="row" className="p-6 text-[15px] font-semibold">
                   {row.label}
                 </th>
                 {tiers.map((t) => (
-                  <td key={t.slug} className="border-l border-line p-6 text-[15px] leading-relaxed text-muted">
-                    {t[row.key]}
+                  <td key={t.slug} className="border-l border-line p-6 text-[15px] leading-relaxed text-body">
+                    {row.value(t)}
                   </td>
                 ))}
               </tr>

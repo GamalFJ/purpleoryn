@@ -1,11 +1,13 @@
 "use server";
 
 import { headers } from "next/headers";
+import { after } from "next/server";
 import { leadSchema, type LeadActionState, type LeadFieldErrors } from "@/lib/leads";
 import { computeRoi } from "@/lib/roi";
 import { getTiers } from "@/lib/content";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { publicClient } from "@/lib/supabase/server";
+import { notifyNewLead } from "@/lib/telegram";
 
 const MIN_FILL_MS = 2500;
 
@@ -87,6 +89,21 @@ export async function submitLead(_prev: LeadActionState, formData: FormData): Pr
       message: "No pudimos guardar tu solicitud. Vuelve a intentarlo o escríbenos por WhatsApp.",
     };
   }
+
+  // Sent after the response so the visitor never waits on Telegram.
+  after(() =>
+    notifyNewLead({
+      planName: tier?.name ?? null,
+      name: lead.name,
+      business: lead.business,
+      whatsapp: lead.whatsapp,
+      email: lead.email || null,
+      message: lead.message || null,
+      averageSaleValue: lead.averageSaleValue,
+      utmSource: lead.utmSource || null,
+      landingPage: lead.landingPage || null,
+    }),
+  );
 
   return { status: "success", plan: lead.plan };
 }

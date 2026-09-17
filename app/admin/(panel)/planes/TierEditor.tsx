@@ -14,7 +14,9 @@ export interface TierRow {
   gbp: string;
   analytics: string;
   ai_agent: string;
-  conversation_cap: string;
+  conversations_included: number;
+  conversation_overage: number | string;
+  recommended: boolean;
   support: string;
   tagline: string;
   highlights: string[];
@@ -40,6 +42,11 @@ export function TierEditor({ tier }: { tier: TierRow }) {
         <TextField name="monthly_price" label="Mensualidad (RD$)" defaultValue={monthly.toFixed(2)} inputMode="decimal" required />
       </div>
 
+      <label className="mt-5 flex w-fit cursor-pointer items-center gap-3 text-[15px] font-medium">
+        <input type="checkbox" name="recommended" defaultChecked={tier.recommended} className="h-5 w-5 accent-[var(--accent)]" />
+        Plan recomendado (insignia “Recomendado”; solo uno a la vez)
+      </label>
+
       <h3 className="mt-8 text-lg font-semibold">Resumen en la portada</h3>
       <div className="mt-4 grid gap-5">
         <TextField name="tagline" label="Para quién es" defaultValue={tier.tagline} />
@@ -61,7 +68,22 @@ export function TierEditor({ tier }: { tier: TierRow }) {
         <TextField name="analytics" label="Analítica" defaultValue={tier.analytics} multiline />
         <TextField name="ai_agent" label="Agente de IA" defaultValue={tier.ai_agent} multiline />
         <div className="grid gap-5">
-          <TextField name="conversation_cap" label="Conversaciones del agente" defaultValue={tier.conversation_cap} />
+          <div className="grid gap-5 sm:grid-cols-2">
+            <TextField
+              name="conversations_included"
+              label="Conversaciones incluidas al mes"
+              defaultValue={tier.conversations_included}
+              inputMode="numeric"
+              required
+            />
+            <TextField
+              name="conversation_overage"
+              label="Conversación adicional (RD$)"
+              defaultValue={Number(tier.conversation_overage).toFixed(2)}
+              inputMode="decimal"
+              required
+            />
+          </div>
           <TextField name="support" label="Soporte" defaultValue={tier.support} />
         </div>
       </div>

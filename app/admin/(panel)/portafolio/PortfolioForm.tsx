@@ -53,7 +53,7 @@ export function PortfolioForm({ item, justCreated }: { item: PortfolioRow | null
         </section>
 
         <section className="grid gap-8 rounded-[var(--radius-panel)] border border-line bg-surface p-6 sm:p-8">
-          <ImageUploader name="cover_image_url" label="Imagen de portada" folder={folder} defaultUrl={item?.cover_image_url ?? null} />
+          <ImageUploader name="cover_image_url" label="Imagen de portada" folder={folder} defaultUrl={item?.cover_image_url ?? null} ratio="landscape" />
           <GalleryUploader name="image_urls" folder={folder} defaultUrls={item?.image_urls ?? []} />
         </section>
 

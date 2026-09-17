@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { requireAdmin } from "@/lib/admin";
 import { cn } from "@/lib/cn";
+import { getTiers } from "@/lib/content";
 import { LEAD_STATUSES, LEAD_STATUS_LABEL, type LeadStatus } from "@/lib/leads";
-import { DEFAULT_TIERS, isTierSlug } from "@/lib/tiers";
 import { StatusBadge, formatDate } from "./shared";
 
 export const dynamic = "force-dynamic";
@@ -21,11 +21,12 @@ export default async function ProspectosPage({ searchParams }: { searchParams: S
     .limit(200);
   if (filter) query = query.eq("status", filter);
 
-  const [{ data: leads }, { data: all }] = await Promise.all([query, supabase.from("leads").select("status")]);
+  // Live plan names (DEFAULT_TIERS only if the tiers table is unreachable).
+  const [{ data: leads }, { data: all }, tiers] = await Promise.all([query, supabase.from("leads").select("status"), getTiers()]);
   const counts = new Map<string, number>();
   for (const row of all ?? []) counts.set(row.status, (counts.get(row.status) ?? 0) + 1);
 
-  const planName = (slug: string | null) => DEFAULT_TIERS.find((t) => isTierSlug(slug) && t.slug === slug)?.name ?? "Sin plan";
+  const planName = (slug: string | null) => tiers.find((t) => t.slug === slug)?.name ?? "Sin plan";
   const tabs: { key: LeadStatus | null; label: string; count: number }[] = [
     { key: null, label: "Todos", count: all?.length ?? 0 },
     ...LEAD_STATUSES.map((s) => ({ key: s, label: LEAD_STATUS_LABEL[s], count: counts.get(s) ?? 0 })),

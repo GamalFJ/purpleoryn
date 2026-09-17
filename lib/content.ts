@@ -1,5 +1,6 @@
 import { publicClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
+import { DEFAULT_ADDONS, type Addon } from "@/lib/addons";
 import { DEFAULT_TIERS, isTierSlug, type Tier } from "@/lib/tiers";
 
 export interface SiteSettings {
@@ -45,21 +46,47 @@ export async function getTiers(): Promise<Tier[]> {
   if (error || !data?.length) return DEFAULT_TIERS;
   return (data as Row[])
     .filter((r) => isTierSlug(r.slug))
-    .map((r) => ({
-      slug: r.slug as Tier["slug"],
-      name: str(r.name),
-      oneTime: num(r.one_time_price),
-      monthly: num(r.monthly_price),
-      website: str(r.website),
-      seo: str(r.seo),
-      gbp: str(r.gbp),
-      analytics: str(r.analytics),
-      aiAgent: str(r.ai_agent),
-      conversationCap: str(r.conversation_cap),
-      support: str(r.support),
-      tagline: str(r.tagline),
-      highlights: Array.isArray(r.highlights) ? (r.highlights as string[]) : [],
-    }));
+    .map((r) => mapTier(r));
+}
+
+// Columns added by 20260916000000_pricing_addons.sql fall back to the defaults
+// until that migration is applied, so a deploy can't show "0 al mes".
+function mapTier(r: Row): Tier {
+  const fallback = DEFAULT_TIERS.find((d) => d.slug === r.slug) ?? DEFAULT_TIERS[0];
+  const has = (col: string) => col in r && r[col] !== null;
+  return {
+    slug: r.slug as Tier["slug"],
+    name: str(r.name),
+    oneTime: num(r.one_time_price),
+    monthly: num(r.monthly_price),
+    website: str(r.website),
+    seo: str(r.seo),
+    gbp: str(r.gbp),
+    analytics: str(r.analytics),
+    aiAgent: str(r.ai_agent),
+    conversationsIncluded: has("conversations_included") ? num(r.conversations_included) : fallback.conversationsIncluded,
+    conversationOverage: has("conversation_overage") ? num(r.conversation_overage) : fallback.conversationOverage,
+    support: str(r.support),
+    tagline: str(r.tagline),
+    highlights: Array.isArray(r.highlights) ? (r.highlights as string[]) : [],
+    recommended: has("recommended") ? r.recommended === true : fallback.recommended,
+  };
+}
+
+export async function getAddons(): Promise<Addon[]> {
+  if (!isSupabaseConfigured()) return DEFAULT_ADDONS;
+  const { data, error } = await publicClient().from("addons").select("*").eq("published", true).order("sort_order");
+  if (error || !data) return DEFAULT_ADDONS;
+  return (data as Row[]).map((r) => ({
+    slug: str(r.slug),
+    name: str(r.name),
+    description: str(r.description),
+    oneTime: num(r.one_time_price),
+    monthly: num(r.monthly_price),
+    includedUnits: num(r.included_units),
+    unitLabel: str(r.unit_label),
+    overageRate: num(r.overage_rate),
+  }));
 }
 
 export async function getSiteSettings(): Promise<SiteSettings> {

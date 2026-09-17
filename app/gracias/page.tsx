@@ -38,7 +38,7 @@ export default async function GraciasPage({ searchParams }: { searchParams: Sear
         {fromCall ? (
           <>
             <h1 className="mt-5 text-4xl font-semibold leading-tight sm:text-5xl">Tu llamada está agendada</h1>
-            <p className="mt-4 text-lg leading-relaxed text-muted">
+            <p className="mt-4 text-lg leading-relaxed text-body">
               Te llegará la confirmación por correo con el enlace de la reunión. Si necesitas cambiar la hora, usa el enlace de ese correo.
             </p>
             <Link href="/servicios" className={buttonClass("secondary", "lg", "mt-8")}>
@@ -48,7 +48,7 @@ export default async function GraciasPage({ searchParams }: { searchParams: Sear
         ) : (
           <>
             <h1 className="mt-5 text-4xl font-semibold leading-tight sm:text-5xl">Recibimos tu solicitud</h1>
-            <p className="mt-4 text-lg leading-relaxed text-muted">
+            <p className="mt-4 text-lg leading-relaxed text-body">
               {plan ? `Guardamos tus datos para el plan ${plan.name}. ` : "Guardamos tus datos. "}
               Te escribiremos por WhatsApp. Si quieres adelantar, elige una de estas opciones.
             </p>
