@@ -1,21 +1,17 @@
-import Image from "next/image";
-import { Microphone, PhoneCall } from "@phosphor-icons/react/dist/ssr";
+import { Microphone } from "@phosphor-icons/react/dist/ssr";
 import { TrackedLink } from "@/components/analytics/TrackedLink";
 import { Price } from "@/components/tiers/Price";
+import { BrandLogo } from "@/components/ui/BrandLogo";
 import { buttonClass } from "@/components/ui/button";
 import { IconTile } from "@/components/ui/IconTile";
 import { ADDONS_ANCHOR, addonUsageText, type Addon } from "@/lib/addons";
 import { formatRD } from "@/lib/format";
 import { whatsappUrl } from "@/lib/links";
+import { LOGOS, type LogoKey } from "@/lib/logos";
 
-// Technology behind each add-on, keyed by slug. ElevenLabs logo from
-// gilbarbara/logos; Retell has no logo in svgl, logos or developer-icons, so
-// it shows a neutral icon with its name.
-const PROVIDERS: Record<string, { name: string; logo: string | null }[]> = {
-  "agente-de-voz": [
-    { name: "Retell AI", logo: null },
-    { name: "ElevenLabs", logo: "/media/logos/elevenlabs.svg" },
-  ],
+// Technology behind each add-on, keyed by slug (see lib/logos.ts).
+const PROVIDERS: Record<string, LogoKey[]> = {
+  "agente-de-voz": ["retell", "vapi", "elevenlabs"],
 };
 
 // Add-ons live in their own section, never as a fourth plan card.
@@ -46,19 +42,13 @@ export function AddonSection({ addons }: { addons: Addon[] }) {
                   <div className="mt-5">
                     <p className="text-sm text-body">Con tecnología de</p>
                     <ul className="mt-2 flex flex-wrap gap-2">
-                      {PROVIDERS[a.slug].map((p) => (
+                      {PROVIDERS[a.slug].map((key) => (
                         <li
-                          key={p.name}
-                          className="flex items-center gap-2 rounded-full border border-line bg-surface py-1 pl-1 pr-3.5 text-sm font-medium text-ink"
+                          key={key}
+                          className="flex items-center gap-2 rounded-full border border-line bg-surface py-1.5 pl-2.5 pr-3.5 text-sm font-medium text-ink"
                         >
-                          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white ring-1 ring-black/5">
-                            {p.logo ? (
-                              <Image src={p.logo} alt="" width={16} height={16} className="h-4 w-4 object-contain" />
-                            ) : (
-                              <PhoneCall size={16} weight="duotone" className="text-teal-ink" aria-hidden="true" />
-                            )}
-                          </span>
-                          {p.name}
+                          <BrandLogo logo={key} size={18} />
+                          {LOGOS[key].name}
                         </li>
                       ))}
                     </ul>
