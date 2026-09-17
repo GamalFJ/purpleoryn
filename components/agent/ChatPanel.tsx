@@ -9,7 +9,7 @@ import { TrackedLink } from "@/components/analytics/TrackedLink";
 import { buttonClass } from "@/components/ui/button";
 import type { AgentAction } from "@/lib/agent/tools";
 import { track } from "@/lib/analytics";
-import { formatRD } from "@/lib/format";
+import { formatRD, salesLabel } from "@/lib/format";
 import { calUrl } from "@/lib/links";
 import { CTA } from "@/lib/site";
 
@@ -37,15 +37,16 @@ function loadState(): { sessionId: string; messages: ChatMessage[] } {
 function ActionBlock({ action }: { action: AgentAction }) {
   if (action.type === "roi") {
     return (
-      <dl className="grid grid-cols-2 gap-3 rounded-[var(--radius-field)] border border-line bg-paper p-3 text-sm">
+      <dl className="grid grid-cols-2 gap-3 rounded-[var(--radius-field)] border border-warm-line bg-warm-soft p-3 text-sm">
         <div className="col-span-2">
-          <dt className="text-muted">
+          <dt className="font-semibold text-ink">Método Oryn ROI</dt>
+          <dd className="text-muted">
             {action.planName}, venta promedio de {formatRD(action.averageSaleValue)}
-          </dt>
+          </dd>
         </div>
         <div>
           <dt className="text-muted">Inversión primer año</dt>
-          <dd className="tabular font-semibold">{formatRD(action.yearOneInvestment)}</dd>
+          <dd className="tabular font-semibold text-warm-ink">{formatRD(action.yearOneInvestment)}</dd>
         </div>
         <div>
           <dt className="text-muted">Ventas para recuperarla</dt>
@@ -53,11 +54,11 @@ function ActionBlock({ action }: { action: AgentAction }) {
         </div>
         <div>
           <dt className="text-muted">Meta 3x al año</dt>
-          <dd className="tabular font-semibold">{action.targetSalesPerYear} ventas</dd>
+          <dd className="tabular font-semibold">{salesLabel(action.targetSalesPerYear)}</dd>
         </div>
         <div>
           <dt className="text-muted">Meta 3x al mes</dt>
-          <dd className="tabular font-semibold">{action.targetSalesPerMonth} ventas</dd>
+          <dd className="tabular font-semibold">{salesLabel(action.targetSalesPerMonth)}</dd>
         </div>
       </dl>
     );

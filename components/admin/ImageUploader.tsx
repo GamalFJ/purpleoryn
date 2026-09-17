@@ -3,12 +3,20 @@
 import { useRef, useState } from "react";
 import Image from "next/image";
 import { ImageSquare, Trash, UploadSimple } from "@phosphor-icons/react";
+import { useImageCropper } from "@/components/admin/ImageCropper";
+import { cn } from "@/lib/cn";
+import { IMAGE_RATIOS, ImagePrepError, prepareImage, type CropRect, type ImageRatio } from "@/lib/image";
 import { createClient } from "@/lib/supabase/client";
-import { ImagePrepError, prepareImage } from "@/lib/image";
 import { MEDIA_BUCKET, storagePathFromUrl } from "@/lib/storage";
 
-async function uploadPrepared(file: File, folder: string): Promise<string> {
-  const { blob, extension, contentType } = await prepareImage(file);
+async function uploadPrepared(bitmap: ImageBitmap, crop: CropRect, folder: string): Promise<string> {
+  let prepared: Awaited<ReturnType<typeof prepareImage>>;
+  try {
+    prepared = await prepareImage(bitmap, crop);
+  } finally {
+    bitmap.close();
+  }
+  const { blob, extension, contentType } = prepared;
   const path = `${folder}/${crypto.randomUUID()}.${extension}`;
   const supabase = createClient();
   const { error } = await supabase.storage
@@ -37,16 +45,17 @@ export function ImageUploader({
   folder,
   defaultUrl,
   fallbackUrl,
-  aspect = "aspect-[4/3]",
+  ratio,
 }: {
   name: string;
   label: string;
   folder: string;
   defaultUrl: string | null;
   fallbackUrl?: string;
-  aspect?: string;
+  ratio: ImageRatio;
 }) {
   const saved = useRef(new Set(defaultUrl ? [defaultUrl] : []));
+  const { requestCrop, cropper } = useImageCropper();
   const [url, setUrl] = useState(defaultUrl ?? "");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -54,9 +63,11 @@ export function ImageUploader({
 
   async function onFile(file: File) {
     setError(null);
-    setBusy(true);
     try {
-      const next = await uploadPrepared(file, folder);
+      const cropped = await requestCrop(file, ratio);
+      if (!cropped) return;
+      setBusy(true);
+      const next = await uploadPrepared(cropped.bitmap, cropped.crop, folder);
       if (url) await discardIfUnsaved(url, saved.current);
       setUrl(next);
     } catch (err) {
@@ -69,10 +80,18 @@ export function ImageUploader({
   return (
     <div className="flex flex-col gap-2">
       <span className="text-[15px] font-semibold">{label}</span>
+      <span className="text-sm text-muted">Proporción {IMAGE_RATIOS[ratio].label}. Al subirla eliges el encuadre.</span>
       <input type="hidden" name={name} value={url} />
-      <div className={`relative w-full max-w-xs overflow-hidden rounded-[var(--radius-field)] border border-line bg-paper ${aspect}`}>
+      {cropper}
+      <div
+        className={cn(
+          "relative w-full overflow-hidden rounded-[var(--radius-field)] border border-line bg-paper",
+          IMAGE_RATIOS[ratio].className,
+          ratio === "portrait" ? "max-w-[15rem]" : "max-w-sm",
+        )}
+      >
         {preview ? (
-          <Image src={preview} alt="" fill sizes="320px" className="object-cover" />
+          <Image src={preview} alt="" fill sizes="384px" className="object-cover object-center" />
         ) : (
           <div className="flex h-full items-center justify-center text-muted">
             <ImageSquare size={32} />
@@ -116,8 +135,12 @@ export function ImageUploader({
   );
 }
 
+// Gallery images share the portfolio cover's ratio.
+const GALLERY_RATIO: ImageRatio = "landscape";
+
 export function GalleryUploader({ name, folder, defaultUrls }: { name: string; folder: string; defaultUrls: string[] }) {
   const saved = useRef(new Set(defaultUrls));
+  const { requestCrop, cropper } = useImageCropper();
   const [urls, setUrls] = useState(defaultUrls);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -125,9 +148,12 @@ export function GalleryUploader({ name, folder, defaultUrls }: { name: string; f
   async function onFiles(files: File[]) {
     setError(null);
     setBusy(true);
+    // One crop dialog per file, in order; cancelling skips that file.
     for (const file of files) {
       try {
-        const next = await uploadPrepared(file, folder);
+        const cropped = await requestCrop(file, GALLERY_RATIO);
+        if (!cropped) continue;
+        const next = await uploadPrepared(cropped.bitmap, cropped.crop, folder);
         setUrls((prev) => [...prev, next]);
       } catch (err) {
         setError(`${file.name}: ${errorText(err)}`);
@@ -139,14 +165,16 @@ export function GalleryUploader({ name, folder, defaultUrls }: { name: string; f
   return (
     <div className="flex flex-col gap-2">
       <span className="text-[15px] font-semibold">Galería</span>
+      <span className="text-sm text-muted">Proporción {IMAGE_RATIOS[GALLERY_RATIO].label}. Al subir cada imagen eliges el encuadre.</span>
+      {cropper}
       {urls.map((u) => (
         <input key={u} type="hidden" name={name} value={u} />
       ))}
       {urls.length > 0 && (
         <ul className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           {urls.map((u) => (
-            <li key={u} className="relative aspect-[4/3] overflow-hidden rounded-[var(--radius-field)] border border-line">
-              <Image src={u} alt="" fill sizes="200px" className="object-cover" />
+            <li key={u} className={cn("relative overflow-hidden rounded-[var(--radius-field)] border border-line", IMAGE_RATIOS[GALLERY_RATIO].className)}>
+              <Image src={u} alt="" fill sizes="200px" className="object-cover object-center" />
               <button
                 type="button"
                 aria-label="Quitar imagen"

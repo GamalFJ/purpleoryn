@@ -2,23 +2,37 @@
 
 /*
   Purple Cove Labs design tokens.
-  Light-first "papel lavanda" page with plum ink and one violet accent; the
-  deep plum block is reserved for the closing CTA. Dark mode swaps the same
-  semantic tokens under prefers-color-scheme.
+  Neutral page and text greys so hierarchy comes from contrast, not hue:
+  - ink:   headings (plum, brand-tied)
+  - body:  running text (neutral charcoal)
+  - muted: labels, help and meta text (neutral mid-grey)
+  Two accents, each with one meaning:
+  - accent (violet): brand and actions (buttons, links, selection)
+  - warm (amber):    value and recommendation only (prices, the
+                     "Recomendado" badge, the Método Oryn ROI module).
+                     warm-ink is the text-safe shade (AA on paper/surface).
+  The deep plum block is reserved for the closing CTA. Dark mode swaps the
+  same semantic tokens under prefers-color-scheme. All text pairs are AA.
 
   Radius rule: interactive controls (buttons, pills) are fully rounded,
   content panels use --radius-panel (20px), inputs use --radius-field (12px).
 */
 :root {
-  --paper: #f6f4fa;
-  --surface: #fdfcfe;
+  --paper: #f7f7f8;
+  --surface: #ffffff;
   --ink: #1c1030;
-  --muted: #5e5670;
-  --line: #e3deec;
+  --body: #3a3742;
+  --muted: #6b7280;
+  --line: #e4e4e7;
   --accent: #6d2fd8;
   --accent-hover: #5b22c2;
   --accent-ink: #fbf9fe;
   --accent-soft: #ede5fb;
+  --warm: #f59e0b;
+  --warm-ink: #b45309;
+  --warm-soft: #fef7e8;
+  --warm-line: #f3c46f;
+  --on-warm: #2b1a02;
   --plum: #180f28;
   --plum-ink: #f1ecf8;
   --plum-muted: #b9aecb;
@@ -29,16 +43,22 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --paper: #140a1f;
-    --surface: #1d1330;
+    --paper: #111114;
+    --surface: #1a1a1f;
     --ink: #f1ecf8;
-    --muted: #b3a8c6;
-    --line: #33284a;
+    --body: #d4d4d8;
+    --muted: #9ca3af;
+    --line: #2c2c33;
     --accent: #b98aff;
     --accent-hover: #c9a3ff;
     --accent-ink: #180f28;
     --accent-soft: #2a1b45;
-    --plum: #0d0616;
+    --warm: #fbbf24;
+    --warm-ink: #fbbf24;
+    --warm-soft: #211a0d;
+    --warm-line: #6b4c14;
+    --on-warm: #1f1403;
+    --plum: #1b1130;
     --plum-ink: #f1ecf8;
     --plum-muted: #b9aecb;
     --plum-accent: #c9a3ff;
@@ -51,12 +71,18 @@
   --color-paper: var(--paper);
   --color-surface: var(--surface);
   --color-ink: var(--ink);
+  --color-body: var(--body);
   --color-muted: var(--muted);
   --color-line: var(--line);
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
   --color-accent-ink: var(--accent-ink);
   --color-accent-soft: var(--accent-soft);
+  --color-warm: var(--warm);
+  --color-warm-ink: var(--warm-ink);
+  --color-warm-soft: var(--warm-soft);
+  --color-warm-line: var(--warm-line);
+  --color-on-warm: var(--on-warm);
   --color-plum: var(--plum);
   --color-plum-ink: var(--plum-ink);
   --color-plum-muted: var(--plum-muted);
@@ -81,7 +107,7 @@
 
   body {
     background: var(--paper);
-    color: var(--ink);
+    color: var(--body);
     font-family: var(--font-sans);
     font-feature-settings: "ss01", "cv11";
     -webkit-font-smoothing: antialiased;
@@ -92,6 +118,7 @@
   h2,
   h3 {
     font-family: var(--font-display);
+    color: var(--ink);
     text-wrap: balance;
     letter-spacing: -0.02em;
   }

@@ -1,5 +1,6 @@
 import { SITE } from "@/lib/site";
 import { formatRD } from "@/lib/format";
+import type { Addon } from "@/lib/addons";
 import type { Tier } from "@/lib/tiers";
 
 export function JsonLd({ data }: { data: Record<string, unknown> }) {
@@ -45,31 +46,40 @@ export function websiteSchema() {
   };
 }
 
-export function offerCatalogSchema(tiers: Tier[]) {
+function offer(name: string, description: string, oneTime: number, monthly: number) {
+  return {
+    "@type": "Offer",
+    name,
+    description,
+    price: oneTime.toFixed(2),
+    priceCurrency: "DOP",
+    seller: { "@id": `${SITE.url}/#business` },
+    priceSpecification: [
+      { "@type": "UnitPriceSpecification", price: oneTime.toFixed(2), priceCurrency: "DOP", name: "Pago único" },
+      {
+        "@type": "UnitPriceSpecification",
+        price: monthly.toFixed(2),
+        priceCurrency: "DOP",
+        name: "Mensualidad",
+        billingDuration: "P1M",
+        unitCode: "MON",
+      },
+    ],
+  };
+}
+
+export function offerCatalogSchema(tiers: Tier[], addons: Addon[]) {
   return {
     "@context": "https://schema.org",
     "@type": "OfferCatalog",
-    name: "Planes de Purple Cove Labs",
+    name: "Planes y complementos de Purple Cove Labs",
     url: `${SITE.url}/servicios`,
-    itemListElement: tiers.map((t) => ({
-      "@type": "Offer",
-      name: `Plan ${t.name}`,
-      description: `${t.tagline} Pago único de ${formatRD(t.oneTime)} más ${formatRD(t.monthly)} al mes.`,
-      price: t.oneTime.toFixed(2),
-      priceCurrency: "DOP",
-      seller: { "@id": `${SITE.url}/#business` },
-      priceSpecification: [
-        { "@type": "UnitPriceSpecification", price: t.oneTime.toFixed(2), priceCurrency: "DOP", name: "Pago único" },
-        {
-          "@type": "UnitPriceSpecification",
-          price: t.monthly.toFixed(2),
-          priceCurrency: "DOP",
-          name: "Mensualidad",
-          billingDuration: "P1M",
-          unitCode: "MON",
-        },
-      ],
-    })),
+    itemListElement: [
+      ...tiers.map((t) => offer(`Plan ${t.name}`, `${t.tagline} Pago único de ${formatRD(t.oneTime)} más ${formatRD(t.monthly)} al mes.`, t.oneTime, t.monthly)),
+      ...addons.map((a) =>
+        offer(a.name, `${a.description} Pago único de ${formatRD(a.oneTime)} más ${formatRD(a.monthly)} al mes.`.trim(), a.oneTime, a.monthly),
+      ),
+    ],
   };
 }
 

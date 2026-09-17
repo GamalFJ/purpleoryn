@@ -10,6 +10,11 @@ export function formatRD(amount: number): string {
 
 const count = new Intl.NumberFormat("en-US", { maximumFractionDigits: 1 });
 
+// "1 venta", "14 ventas".
+export function salesLabel(n: number): string {
+  return `${formatCount(n)} ${n === 1 ? "venta" : "ventas"}`;
+}
+
 export function formatCount(n: number): string {
   return count.format(n);
 }

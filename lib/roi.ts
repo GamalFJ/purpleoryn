@@ -16,6 +16,14 @@ export interface RoiResult {
   targetSalesPerMonth: number;
 }
 
+// Reads a typed amount ("15,000", "RD$2500.50"); null unless it is > 0.
+export function parseAmount(raw: string): number | null {
+  const cleaned = raw.replace(/[^\d.]/g, "");
+  if (!cleaned) return null;
+  const n = Number(cleaned);
+  return Number.isFinite(n) && n > 0 ? n : null;
+}
+
 export function computeRoi({ oneTime, monthly, averageSaleValue }: RoiInput): RoiResult | null {
   if (!(averageSaleValue > 0)) return null;
   const yearOneInvestment = oneTime + monthly * 12;

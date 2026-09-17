@@ -84,7 +84,7 @@ export function LeadForm({ tiers }: { tiers: Tier[] }) {
           <h2 id="formulario-titulo" className="text-3xl font-semibold sm:text-4xl">
             {CTA.plan}
           </h2>
-          <p className="mt-4 max-w-[46ch] text-lg leading-relaxed text-muted">
+          <p className="mt-4 max-w-[46ch] text-lg leading-relaxed text-body">
             Envía tus datos y te contactamos por WhatsApp para confirmar los detalles antes de empezar.
           </p>
           <p className="mt-6 text-[15px] text-muted">

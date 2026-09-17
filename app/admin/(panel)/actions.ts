@@ -22,6 +22,11 @@ async function removeStorageObjects(supabase: Awaited<ReturnType<typeof requireA
   if (paths.length) await supabase.storage.from(MEDIA_BUCKET).remove(paths);
 }
 
+function parseWhole(raw: FormDataEntryValue | null) {
+  const digits = String(raw ?? "").replace(/[^\d]/g, "");
+  return digits ? Number(digits) : NaN;
+}
+
 function parsePrice(raw: FormDataEntryValue | null) {
   const n = Number(String(raw ?? "").replace(/[^\d.]/g, ""));
   return Number.isFinite(n) ? Math.round(n * 100) / 100 : NaN;
@@ -37,10 +42,12 @@ const tierSchema = z.object({
   gbp: text(600),
   analytics: text(600),
   ai_agent: text(600),
-  conversation_cap: text(120),
+  conversations_included: z.number({ message: "Conversaciones incluidas inválidas." }).int().min(0).max(1_000_000),
+  conversation_overage: z.number().min(0, "Precio de conversación adicional inválido."),
   support: text(300),
   tagline: text(200),
   highlights: z.array(text(120)).max(8, "Máximo 8 puntos destacados."),
+  recommended: z.boolean(),
 });
 
 export async function updateTier(slug: string, _prev: AdminActionState, formData: FormData): Promise<AdminActionState> {
@@ -56,21 +63,61 @@ export async function updateTier(slug: string, _prev: AdminActionState, formData
     gbp: formData.get("gbp"),
     analytics: formData.get("analytics"),
     ai_agent: formData.get("ai_agent"),
-    conversation_cap: formData.get("conversation_cap"),
+    conversations_included: parseWhole(formData.get("conversations_included")),
+    conversation_overage: parsePrice(formData.get("conversation_overage")),
     support: formData.get("support"),
     tagline: formData.get("tagline"),
     highlights: String(formData.get("highlights") ?? "")
       .split("\n")
       .map((l) => l.trim())
       .filter(Boolean),
+    recommended: formData.get("recommended") === "on",
   });
   if (!parsed.success) return { status: "error", message: parsed.error.issues[0]?.message ?? "Revisa los campos." };
 
+  // Only one plan can be recommended (unique index): clear the others first.
+  if (parsed.data.recommended) {
+    const { error } = await supabase.from("tiers").update({ recommended: false }).neq("slug", slug).eq("recommended", true);
+    if (error) return { status: "error", message: "No se pudo guardar. Vuelve a intentarlo." };
+  }
   const { error } = await supabase.from("tiers").update(parsed.data).eq("slug", slug);
   if (error) return { status: "error", message: "No se pudo guardar. Vuelve a intentarlo." };
 
   refreshPublicSite();
   return { status: "saved", message: `Plan ${parsed.data.name} guardado.` };
+}
+
+// ─── add-ons ────────────────────────────────────────────────────────────────
+const addonSchema = z.object({
+  name: text(60).min(2, "El nombre es obligatorio."),
+  description: text(300),
+  one_time_price: z.number().min(0, "Precio inválido."),
+  monthly_price: z.number().min(0, "Precio inválido."),
+  included_units: z.number({ message: "Cantidad incluida inválida." }).int().min(0).max(1_000_000),
+  unit_label: text(30).min(1, "Escribe la unidad, por ejemplo minutos."),
+  overage_rate: z.number().min(0, "Precio por unidad adicional inválido."),
+  published: z.boolean(),
+});
+
+export async function updateAddon(slug: string, _prev: AdminActionState, formData: FormData): Promise<AdminActionState> {
+  const { supabase } = await requireAdmin();
+  const parsed = addonSchema.safeParse({
+    name: formData.get("name"),
+    description: formData.get("description"),
+    one_time_price: parsePrice(formData.get("one_time_price")),
+    monthly_price: parsePrice(formData.get("monthly_price")),
+    included_units: parseWhole(formData.get("included_units")),
+    unit_label: formData.get("unit_label"),
+    overage_rate: parsePrice(formData.get("overage_rate")),
+    published: formData.get("published") === "on",
+  });
+  if (!parsed.success) return { status: "error", message: parsed.error.issues[0]?.message ?? "Revisa los campos." };
+
+  const { error } = await supabase.from("addons").update(parsed.data).eq("slug", slug);
+  if (error) return { status: "error", message: "No se pudo guardar. Vuelve a intentarlo." };
+
+  refreshPublicSite();
+  return { status: "saved", message: `${parsed.data.name} guardado.` };
 }
 
 // ─── site settings ──────────────────────────────────────────────────────────

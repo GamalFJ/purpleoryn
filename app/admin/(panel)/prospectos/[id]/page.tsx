@@ -3,9 +3,9 @@ import { notFound } from "next/navigation";
 import { WhatsappLogo } from "@phosphor-icons/react/dist/ssr";
 import { buttonClass } from "@/components/ui/button";
 import { requireAdmin } from "@/lib/admin";
+import { getTiers } from "@/lib/content";
 import { formatCount, formatRD } from "@/lib/format";
 import { LEAD_STATUSES, LEAD_STATUS_LABEL, type LeadStatus } from "@/lib/leads";
-import { DEFAULT_TIERS } from "@/lib/tiers";
 import { updateLeadStatus } from "../../actions";
 import { StatusBadge, formatDate } from "../shared";
 import { DeleteLeadButton } from "./DeleteLeadButton";
@@ -36,11 +36,17 @@ export default async function ProspectoPage({ params }: { params: Params }) {
   const { id } = await params;
   if (!/^[0-9a-f-]{36}$/i.test(id)) notFound();
   const { supabase } = await requireAdmin();
-  const { data: lead } = await supabase.from("leads").select("*").eq("id", id).maybeSingle();
+  // Live plan data (DEFAULT_TIERS only if the tiers table is unreachable).
+  const [{ data: lead }, tiers] = await Promise.all([supabase.from("leads").select("*").eq("id", id).maybeSingle(), getTiers()]);
   if (!lead) notFound();
 
-  const plan = DEFAULT_TIERS.find((t) => t.slug === lead.plan);
+  const plan = tiers.find((t) => t.slug === lead.plan);
   const roi = (lead.roi_snapshot ?? null) as RoiSnapshot | null;
+  // The ROI snapshot was computed with the prices at submission time.
+  const snapshotPrices =
+    plan && roi?.oneTime !== undefined && roi.monthly !== undefined && (roi.oneTime !== plan.oneTime || roi.monthly !== plan.monthly)
+      ? { oneTime: roi.oneTime, monthly: roi.monthly }
+      : null;
   const firstName = String(lead.name).split(" ")[0];
   const waText = `Hola ${firstName}, te escribe Gamal de Purple Cove Labs. Recibimos tu solicitud${plan ? ` del plan ${plan.name}` : ""} para ${lead.business}.`;
   const waHref = `https://wa.me/${String(lead.whatsapp).replace("+", "")}?text=${encodeURIComponent(waText)}`;
@@ -105,6 +111,11 @@ export default async function ProspectoPage({ params }: { params: Params }) {
       {lead.average_sale_value && (
         <section className="mt-6 rounded-[var(--radius-panel)] border border-line bg-surface px-6 py-3 sm:px-8">
           <h2 className="pt-3 text-lg font-semibold">Cálculo de retorno que hizo</h2>
+          {snapshotPrices && (
+            <p className="pt-1 text-sm text-muted">
+              Calculado con los precios de ese momento: {formatRD(snapshotPrices.oneTime)} + {formatRD(snapshotPrices.monthly)}/mes.
+            </p>
+          )}
           <dl className="divide-y divide-line">
             <Row label="Venta promedio">{formatRD(Number(lead.average_sale_value))}</Row>
             {roi?.yearOneInvestment !== undefined && <Row label="Inversión primer año">{formatRD(roi.yearOneInvestment)}</Row>}

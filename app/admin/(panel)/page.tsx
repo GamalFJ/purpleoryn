@@ -5,15 +5,17 @@ export const dynamic = "force-dynamic";
 
 export default async function AdminHome() {
   const { supabase } = await requireAdmin();
-  const [{ count: newLeads }, { count: published }, { count: drafts }] = await Promise.all([
+  const [{ count: newLeads }, { count: published }, { count: drafts }, { count: chats }] = await Promise.all([
     supabase.from("leads").select("id", { count: "exact", head: true }).eq("status", "nuevo"),
     supabase.from("portfolio_items").select("id", { count: "exact", head: true }).eq("published", true),
     supabase.from("portfolio_items").select("id", { count: "exact", head: true }).eq("published", false),
+    supabase.from("chat_sessions").select("id", { count: "exact", head: true }),
   ]);
 
   const cards = [
     { href: "/admin/prospectos?estado=nuevo", title: "Prospectos", desc: `${newLeads ?? 0} nuevos sin contactar.` },
-    { href: "/admin/planes", title: "Planes y precios", desc: "Edita precios, textos de la tabla comparativa y el resumen de cada plan." },
+    { href: "/admin/conversaciones", title: "Conversaciones", desc: `${chats ?? 0} chats con Oryn guardados.` },
+    { href: "/admin/planes", title: "Planes y precios", desc: "Edita precios, conversaciones incluidas, el plan recomendado y los complementos." },
     {
       href: "/admin/portafolio",
       title: "Portafolio",
