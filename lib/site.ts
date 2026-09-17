@@ -11,6 +11,8 @@ export const SITE = {
   founder: "Gamal Jastram",
   serviceAreas: ["Santo Domingo", "Santo Domingo Este", "Santo Domingo Oeste"],
   locale: "es_DO",
+  instagram: "https://www.instagram.com/purplecovelabs.ai/",
+  instagramHandle: "@purplecovelabs.ai",
 } as const;
 
 export const CAL_URL = "https://cal.com/purple-cove-labs/20-min-cafe-virtual";

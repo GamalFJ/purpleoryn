@@ -6,11 +6,13 @@
   - ink:   headings (plum, brand-tied)
   - body:  running text (neutral charcoal)
   - muted: labels, help and meta text (neutral mid-grey)
-  Two accents, each with one meaning:
-  - accent (violet): brand and actions (buttons, links, selection)
-  - warm (amber):    value and recommendation only (prices, the
-                     "Recomendado" badge, the Método Oryn ROI module).
-                     warm-ink is the text-safe shade (AA on paper/surface).
+  Color roles:
+  - accent (violet) + fuchsia: brand and actions (buttons use the gradient)
+  - warm (amber):  value and recommendation (prices, "Recomendado", ROI)
+  - teal, rose:    supporting tones for icons, tints and plan identities
+                   (Presencia teal, Conversión violet, Autoridad rose).
+  *-ink is the text-safe shade of each (AA on paper/surface/its *-soft).
+  Never put white text on teal (fails AA); teal is for icons and tints.
   The deep plum block is reserved for the closing CTA. Dark mode swaps the
   same semantic tokens under prefers-color-scheme. All text pairs are AA.
 
@@ -33,6 +35,13 @@
   --warm-soft: #fef7e8;
   --warm-line: #f3c46f;
   --on-warm: #2b1a02;
+  --fuchsia: #a21caf;
+  --teal: #0d9488;
+  --teal-ink: #0f766e;
+  --teal-soft: #e7f6f4;
+  --rose: #db2777;
+  --rose-ink: #be185d;
+  --rose-soft: #fdedf4;
   --plum: #180f28;
   --plum-ink: #f1ecf8;
   --plum-muted: #b9aecb;
@@ -58,6 +67,13 @@
     --warm-soft: #211a0d;
     --warm-line: #6b4c14;
     --on-warm: #1f1403;
+    --fuchsia: #e879f9;
+    --teal: #2dd4bf;
+    --teal-ink: #5eead4;
+    --teal-soft: #0e2624;
+    --rose: #f472b6;
+    --rose-ink: #f9a8d4;
+    --rose-soft: #2a1320;
     --plum: #1b1130;
     --plum-ink: #f1ecf8;
     --plum-muted: #b9aecb;
@@ -83,6 +99,13 @@
   --color-warm-soft: var(--warm-soft);
   --color-warm-line: var(--warm-line);
   --color-on-warm: var(--on-warm);
+  --color-fuchsia: var(--fuchsia);
+  --color-teal: var(--teal);
+  --color-teal-ink: var(--teal-ink);
+  --color-teal-soft: var(--teal-soft);
+  --color-rose: var(--rose);
+  --color-rose-ink: var(--rose-ink);
+  --color-rose-soft: var(--rose-soft);
   --color-plum: var(--plum);
   --color-plum-ink: var(--plum-ink);
   --color-plum-muted: var(--plum-muted);
@@ -141,4 +164,90 @@
 
 @utility tabular {
   font-variant-numeric: tabular-nums;
+}
+
+/* ─── gradients ───────────────────────────────────────────────────────────── */
+/* Text gradient stays within AA-safe stops (no amber on light backgrounds). */
+@utility text-gradient-brand {
+  background-image: linear-gradient(100deg, var(--ink) 0%, var(--accent) 55%, var(--fuchsia) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility text-gradient-accent {
+  background-image: linear-gradient(100deg, var(--accent), var(--fuchsia) 60%, var(--rose-ink));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Primary buttons: the gradient slides on hover. */
+@utility bg-gradient-action {
+  background-image: linear-gradient(115deg, var(--accent) 0%, var(--fuchsia) 50%, var(--accent) 100%);
+  background-size: 200% 100%;
+  background-position: 0% 50%;
+  /* The element's own transition must include background-position. */
+  &:hover {
+    background-position: 100% 50%;
+  }
+}
+
+/* Animated gradient border (recommended plan). */
+@property --border-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes border-spin {
+  to {
+    --border-angle: 360deg;
+  }
+}
+
+@utility border-glow {
+  border: 2px solid transparent;
+  background:
+    linear-gradient(var(--surface), var(--surface)) padding-box,
+    conic-gradient(from var(--border-angle), var(--warm), var(--fuchsia), var(--accent), var(--teal), var(--warm)) border-box;
+  animation: border-spin 7s linear infinite;
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+/* ─── ambient motion ──────────────────────────────────────────────────────── */
+@keyframes drift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  100% {
+    transform: translate3d(var(--drift-x, 40px), var(--drift-y, -30px), 0) scale(1.12);
+  }
+}
+
+@utility animate-drift {
+  animation: drift 16s ease-in-out infinite alternate;
+  will-change: transform;
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@utility animate-float {
+  animation: float 5s ease-in-out infinite;
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
 }

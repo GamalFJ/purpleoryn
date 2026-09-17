@@ -174,7 +174,7 @@ export function ChatPanel({ open, onClose }: { open: boolean; onClose: () => voi
                 <p
                   className={
                     m.role === "user"
-                      ? "max-w-[85%] whitespace-pre-wrap rounded-2xl rounded-br-md bg-accent px-4 py-2.5 text-[15px] text-accent-ink"
+                      ? "max-w-[85%] whitespace-pre-wrap rounded-2xl rounded-br-md bg-linear-to-br from-accent to-fuchsia px-4 py-2.5 text-[15px] text-accent-ink"
                       : "max-w-[92%] whitespace-pre-wrap rounded-2xl rounded-bl-md bg-paper px-4 py-2.5 text-[15px] leading-relaxed"
                   }
                 >
@@ -235,7 +235,7 @@ export function ChatPanel({ open, onClose }: { open: boolean; onClose: () => voi
                 type="submit"
                 disabled={sending || !input.trim()}
                 aria-label="Enviar"
-                className="flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-full bg-accent text-accent-ink disabled:opacity-50"
+                className="flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-full bg-linear-to-br from-accent to-fuchsia text-accent-ink disabled:opacity-50"
               >
                 <ArrowUp size={20} weight="bold" />
               </button>
