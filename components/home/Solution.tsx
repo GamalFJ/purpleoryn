@@ -1,7 +1,8 @@
-import Image from "next/image";
 import { CalendarCheck, ChatCircleText, Robot } from "@phosphor-icons/react/dist/ssr";
+import { BrandLogo } from "@/components/ui/BrandLogo";
 import { IconTile } from "@/components/ui/IconTile";
 import { cn } from "@/lib/cn";
+import { LOGOS, type LogoKey } from "@/lib/logos";
 import type { Tone } from "@/lib/tone";
 import { WhatsAppMock } from "./WhatsAppMock";
 
@@ -18,16 +19,18 @@ const STEPS: { title: string; text: string; icon: typeof Robot; tone: Tone }[] =
 
 // Official logos from svgl (github.com/pheralb/svgl). "Trabajamos con" covers
 // both what the plans connect to and what the studio builds with (Claude).
-// Logos: svgl (WhatsApp, Maps, Calendar, Analytics, Claude) and
-// gilbarbara/logos (Tag Manager, Search Console).
-const TOOLS = [
-  { name: "WhatsApp", src: "/media/logos/whatsapp.svg" },
-  { name: "Google Maps", src: "/media/logos/google-maps.svg" },
-  { name: "Google Calendar", src: "/media/logos/google-calendar.svg" },
-  { name: "Google Analytics", src: "/media/logos/google-analytics.svg" },
-  { name: "Google Tag Manager", src: "/media/logos/google-tag-manager.svg" },
-  { name: "Google Search Console", src: "/media/logos/google-search-console.svg" },
-  { name: "Claude", src: "/media/logos/claude.svg" },
+// Platforms we work with (see lib/logos.ts for sources).
+const TOOLS: LogoKey[] = [
+  "whatsapp",
+  "googleMaps",
+  "googleCalendar",
+  "googleAnalytics",
+  "googleTagManager",
+  "googleSearchConsole",
+  "claude",
+  "retell",
+  "vapi",
+  "elevenlabs",
 ];
 
 // Solución: one system (site + agent), shown as a three-step flow and the
@@ -82,16 +85,13 @@ export function Solution() {
           </p>
           <p className="mt-8 text-sm font-semibold text-ink">Trabajamos con</p>
           <ul className="mt-3 flex flex-wrap gap-3">
-            {TOOLS.map((tool) => (
+            {TOOLS.map((key) => (
               <li
-                key={tool.name}
-                className="flex items-center gap-2.5 rounded-full border border-line bg-surface py-1.5 pl-1.5 pr-4 text-sm font-medium text-ink shadow-[0_6px_16px_-12px_rgb(28_16_48/0.5)] transition-[transform,border-color] duration-300 hover:-translate-y-0.5 hover:border-accent/40 motion-reduce:transition-none"
+                key={key}
+                className="flex items-center gap-2.5 rounded-full border border-line bg-surface py-2 pl-3 pr-4 text-sm font-medium text-ink shadow-[0_6px_16px_-12px_rgb(28_16_48/0.5)] transition-[transform,border-color] duration-300 hover:-translate-y-0.5 hover:border-accent/40 motion-reduce:transition-none"
               >
-                {/* White tile keeps single-color logos visible in dark mode. */}
-                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white ring-1 ring-black/5">
-                  <Image src={tool.src} alt="" width={20} height={20} className="h-5 w-5 object-contain" />
-                </span>
-                {tool.name}
+                <BrandLogo logo={key} />
+                {LOGOS[key].name}
               </li>
             ))}
           </ul>

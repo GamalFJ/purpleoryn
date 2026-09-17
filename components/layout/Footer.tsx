@@ -2,16 +2,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { EnvelopeSimple, MapPinLine } from "@phosphor-icons/react/dist/ssr";
 import { TrackedLink } from "@/components/analytics/TrackedLink";
+import { BrandLogo } from "@/components/ui/BrandLogo";
 import { IconTile } from "@/components/ui/IconTile";
 import { WHATSAPP_GENERAL, whatsappUrl } from "@/lib/links";
+import type { LogoKey } from "@/lib/logos";
 import { NAV_LINKS, SITE } from "@/lib/site";
 
-// Brand logos (WhatsApp, Instagram) from svgl, on white tiles so they read in
-// both themes.
-function LogoTile({ src }: { src: string }) {
+// Brand logo sized to line up with the IconTile column.
+function LogoMark({ logo }: { logo: LogoKey }) {
   return (
-    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white shadow-[0_6px_14px_-10px_rgb(28_16_48/0.5)] ring-1 ring-black/5 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:-rotate-3 motion-reduce:transition-none">
-      <Image src={src} alt="" width={20} height={20} className="h-5 w-5 object-contain" />
+    <span className="flex h-9 w-9 shrink-0 items-center justify-center transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:-rotate-3 motion-reduce:transition-none">
+      <BrandLogo logo={logo} size={26} />
     </span>
   );
 }
@@ -35,7 +36,7 @@ export function Footer() {
             rel="noopener noreferrer"
             className="group mt-5 inline-flex items-center gap-2.5 rounded-full border border-line bg-surface py-1 pl-1 pr-4 text-sm font-medium text-ink transition-colors hover:border-rose/50 hover:text-rose-ink"
           >
-            <LogoTile src="/media/logos/instagram.svg" />
+            <LogoMark logo="instagram" />
             <span>
               <span className="sr-only">Instagram: </span>
               {SITE.instagramHandle}
@@ -72,7 +73,7 @@ export function Footer() {
                 location="footer"
                 className="group flex items-center gap-3 hover:text-accent"
               >
-                <LogoTile src="/media/logos/whatsapp.svg" />
+                <LogoMark logo="whatsapp" />
                 <span className="tabular">
                   <span className="sr-only">WhatsApp: </span>
                   {SITE.phoneDisplay}
