@@ -26,7 +26,7 @@ export const FAQ_ITEMS: { id: string; q: string; a: string }[] = [
   {
     id: "pago",
     q: "¿Cómo se paga?",
-    a: "El proyecto inicia con el 50% del pago único y el otro 50% se paga contra entrega. La primera mensualidad se paga por adelantado. Puedes pagar con tarjeta de débito o crédito a través de PayPal, sin necesidad de tener cuenta.",
+    a: "El pago único de tu plan se divide 50% al confirmar tu pedido y 50% contra entrega. Los módulos adicionales no siguen esa división: se pagan 100% por adelantado. La mensualidad (la de tu plan más la de cualquier módulo adicional, sumadas en un solo cobro) no se paga por adelantado: se factura a partir del mes siguiente a la salida en vivo de tu sistema. Aceptamos efectivo y transferencia bancaria.",
   },
   {
     id: "zonas",

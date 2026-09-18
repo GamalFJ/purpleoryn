@@ -57,11 +57,11 @@ export function TextField({
   );
 }
 
-export function SaveBar({ state, pending, label = "Guardar cambios", extra }: { state: AdminActionState; pending: boolean; label?: string; extra?: ReactNode }) {
+export function SaveBar({ state, pending, label = "Save changes", extra }: { state: AdminActionState; pending: boolean; label?: string; extra?: ReactNode }) {
   return (
     <div className="flex flex-wrap items-center gap-4 border-t border-line pt-6">
       <button type="submit" disabled={pending} className={buttonClass("primary", "md")}>
-        {pending ? "Guardando..." : label}
+        {pending ? "Saving..." : label}
       </button>
       {extra}
       <p aria-live="polite" className={cn("text-sm", state.status === "error" ? "text-danger" : "text-success")}>

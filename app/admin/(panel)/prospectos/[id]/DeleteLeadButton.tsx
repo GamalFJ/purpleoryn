@@ -7,11 +7,11 @@ export function DeleteLeadButton({ id, name }: { id: string; name: string }) {
     <form
       action={deleteLead.bind(null, id)}
       onSubmit={(e) => {
-        if (!confirm(`¿Eliminar el prospecto "${name}"? No se puede deshacer.`)) e.preventDefault();
+        if (!confirm(`Delete the lead "${name}"? This can't be undone.`)) e.preventDefault();
       }}
     >
       <button type="submit" className="cursor-pointer text-sm font-medium text-danger hover:underline">
-        Eliminar prospecto
+        Delete lead
       </button>
     </form>
   );

@@ -1,21 +1,22 @@
 "use client";
 
-import { useRef, type CSSProperties } from "react";
-import { motion, useScroll, useSpring, useTransform, type MotionValue } from "framer-motion";
+import { type CSSProperties } from "react";
+import { motion, useTransform, type MotionValue } from "framer-motion";
 import { cn } from "@/lib/cn";
 import { ROAD_TEASER, WAYPOINTS, type Road, type Waypoint } from "@/lib/proceso";
 import { RoadCanvas } from "./RoadCanvas";
 import { useStill } from "./useStill";
+import { useUnfoldProgress } from "./useUnfoldProgress";
 
 // The homepage version of the road: the same eight waypoints read left to
 // right, with nothing to expand. The full page is where the detail lives.
 export function RoadTeaserGraphic() {
-  const ref = useRef<HTMLDivElement>(null);
   const still = useStill();
   const road = ROAD_TEASER;
 
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.9", "end 0.5"] });
-  const progress = useSpring(scrollYProgress, { stiffness: 70, damping: 24, restDelta: 0.001 });
+  // Unfolds once, as soon as the teaser scrolls into view, rather than being
+  // tied to how far past it the visitor has scrolled.
+  const { ref, progress } = useUnfoldProgress(still);
   const branchProgress = useTransform(progress, [0.62, 0.9], [0, 1]);
 
   return (

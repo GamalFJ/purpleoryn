@@ -34,25 +34,25 @@ function parsePrice(raw: FormDataEntryValue | null) {
 
 // ─── tiers ──────────────────────────────────────────────────────────────────
 const tierSchema = z.object({
-  name: text(40).min(2, "El nombre es obligatorio."),
-  one_time_price: z.number().min(0, "Precio inválido."),
-  monthly_price: z.number().min(0, "Precio inválido."),
+  name: text(40).min(2, "Name is required."),
+  one_time_price: z.number().min(0, "Invalid price."),
+  monthly_price: z.number().min(0, "Invalid price."),
   website: text(600),
   seo: text(600),
   gbp: text(600),
   analytics: text(600),
   ai_agent: text(600),
-  conversations_included: z.number({ message: "Conversaciones incluidas inválidas." }).int().min(0).max(1_000_000),
-  conversation_overage: z.number().min(0, "Precio de conversación adicional inválido."),
+  conversations_included: z.number({ message: "Invalid included conversations." }).int().min(0).max(1_000_000),
+  conversation_overage: z.number().min(0, "Invalid extra-conversation price."),
   support: text(300),
   tagline: text(200),
-  highlights: z.array(text(120)).max(8, "Máximo 8 puntos destacados."),
+  highlights: z.array(text(120)).max(8, "Maximum 8 highlights."),
   recommended: z.boolean(),
 });
 
 export async function updateTier(slug: string, _prev: AdminActionState, formData: FormData): Promise<AdminActionState> {
   const { supabase } = await requireAdmin();
-  if (!isTierSlug(slug)) return { status: "error", message: "Plan desconocido." };
+  if (!isTierSlug(slug)) return { status: "error", message: "Unknown plan." };
 
   const parsed = tierSchema.safeParse({
     name: formData.get("name"),
@@ -73,29 +73,29 @@ export async function updateTier(slug: string, _prev: AdminActionState, formData
       .filter(Boolean),
     recommended: formData.get("recommended") === "on",
   });
-  if (!parsed.success) return { status: "error", message: parsed.error.issues[0]?.message ?? "Revisa los campos." };
+  if (!parsed.success) return { status: "error", message: parsed.error.issues[0]?.message ?? "Check the fields." };
 
   // Only one plan can be recommended (unique index): clear the others first.
   if (parsed.data.recommended) {
     const { error } = await supabase.from("tiers").update({ recommended: false }).neq("slug", slug).eq("recommended", true);
-    if (error) return { status: "error", message: "No se pudo guardar. Vuelve a intentarlo." };
+    if (error) return { status: "error", message: "Couldn't save. Try again." };
   }
   const { error } = await supabase.from("tiers").update(parsed.data).eq("slug", slug);
-  if (error) return { status: "error", message: "No se pudo guardar. Vuelve a intentarlo." };
+  if (error) return { status: "error", message: "Couldn't save. Try again." };
 
   refreshPublicSite();
-  return { status: "saved", message: `Plan ${parsed.data.name} guardado.` };
+  return { status: "saved", message: `${parsed.data.name} plan saved.` };
 }
 
 // ─── add-ons ────────────────────────────────────────────────────────────────
 const addonSchema = z.object({
-  name: text(60).min(2, "El nombre es obligatorio."),
+  name: text(60).min(2, "Name is required."),
   description: text(300),
-  one_time_price: z.number().min(0, "Precio inválido."),
-  monthly_price: z.number().min(0, "Precio inválido."),
-  included_units: z.number({ message: "Cantidad incluida inválida." }).int().min(0).max(1_000_000),
-  unit_label: text(30).min(1, "Escribe la unidad, por ejemplo minutos."),
-  overage_rate: z.number().min(0, "Precio por unidad adicional inválido."),
+  one_time_price: z.number().min(0, "Invalid price."),
+  monthly_price: z.number().min(0, "Invalid price."),
+  included_units: z.number({ message: "Invalid included quantity." }).int().min(0).max(1_000_000),
+  unit_label: text(30).min(1, "Write the unit, e.g. minutes."),
+  overage_rate: z.number().min(0, "Invalid extra-unit price."),
   published: z.boolean(),
 });
 
@@ -111,13 +111,13 @@ export async function updateAddon(slug: string, _prev: AdminActionState, formDat
     overage_rate: parsePrice(formData.get("overage_rate")),
     published: formData.get("published") === "on",
   });
-  if (!parsed.success) return { status: "error", message: parsed.error.issues[0]?.message ?? "Revisa los campos." };
+  if (!parsed.success) return { status: "error", message: parsed.error.issues[0]?.message ?? "Check the fields." };
 
   const { error } = await supabase.from("addons").update(parsed.data).eq("slug", slug);
-  if (error) return { status: "error", message: "No se pudo guardar. Vuelve a intentarlo." };
+  if (error) return { status: "error", message: "Couldn't save. Try again." };
 
   refreshPublicSite();
-  return { status: "saved", message: `${parsed.data.name} guardado.` };
+  return { status: "saved", message: `${parsed.data.name} saved.` };
 }
 
 // ─── site settings ──────────────────────────────────────────────────────────
@@ -132,11 +132,11 @@ const settingsSchema = z.object({
 export async function updateSettings(_prev: AdminActionState, formData: FormData): Promise<AdminActionState> {
   const { supabase } = await requireAdmin();
   const parsed = settingsSchema.safeParse(Object.fromEntries(formData));
-  if (!parsed.success) return { status: "error", message: parsed.error.issues[0]?.message ?? "Revisa los campos." };
+  if (!parsed.success) return { status: "error", message: parsed.error.issues[0]?.message ?? "Check the fields." };
 
   const { data: before } = await supabase.from("site_settings").select("hero_image_url, about_image_url").eq("id", 1).single();
   const { error } = await supabase.from("site_settings").update(parsed.data).eq("id", 1);
-  if (error) return { status: "error", message: "No se pudo guardar. Vuelve a intentarlo." };
+  if (error) return { status: "error", message: "Couldn't save. Try again." };
 
   // Delete images that were replaced or removed.
   await removeStorageObjects(supabase, [
@@ -145,7 +145,7 @@ export async function updateSettings(_prev: AdminActionState, formData: FormData
   ]);
 
   refreshPublicSite();
-  return { status: "saved", message: "Ajustes guardados." };
+  return { status: "saved", message: "Settings saved." };
 }
 
 // ─── portfolio ──────────────────────────────────────────────────────────────
@@ -160,20 +160,20 @@ const slugify = (s: string) =>
 
 const portfolioSchema = z
   .object({
-    title: text(120).min(2, "El título es obligatorio."),
+    title: text(120).min(2, "Title is required."),
     slug: text(80),
     summary: text(300),
     description: text(4000),
     results: text(400),
     results_source: text(200),
-    link: text(300).refine((v) => v === "" || /^https?:\/\//.test(v), "El enlace debe empezar con https://"),
+    link: text(300).refine((v) => v === "" || /^https?:\/\//.test(v), "The link must start with https://"),
     cover_image_url: text(500),
-    image_urls: z.array(text(500)).max(12, "Máximo 12 imágenes en la galería."),
+    image_urls: z.array(text(500)).max(12, "Maximum 12 gallery images."),
     published: z.boolean(),
     sort_order: z.number().int().min(0).max(999),
   })
   .refine((v) => !v.published || v.results === "" || v.results_source !== "", {
-    message: "Para publicar resultados, indica de dónde salen (fuente).",
+    message: "To publish results, say where they come from (source).",
   });
 
 export async function savePortfolioItem(id: string | null, _prev: AdminActionState, formData: FormData): Promise<AdminActionState> {
@@ -192,7 +192,7 @@ export async function savePortfolioItem(id: string | null, _prev: AdminActionSta
     published: formData.get("published") === "on",
     sort_order: Number(formData.get("sort_order") || 0),
   });
-  if (!parsed.success) return { status: "error", message: parsed.error.issues[0]?.message ?? "Revisa los campos." };
+  if (!parsed.success) return { status: "error", message: parsed.error.issues[0]?.message ?? "Check the fields." };
 
   const v = parsed.data;
   const row = {
@@ -215,7 +215,7 @@ export async function savePortfolioItem(id: string | null, _prev: AdminActionSta
     const { data: before } = await supabase.from("portfolio_items").select("cover_image_url, image_urls").eq("id", id).single();
     const { error } = await supabase.from("portfolio_items").update(row).eq("id", id);
     if (error) {
-      return { status: "error", message: error.code === "23505" ? "Ya existe un caso con ese slug." : "No se pudo guardar." };
+      return { status: "error", message: error.code === "23505" ? "A case study with that slug already exists." : "Couldn't save." };
     }
     const keep = new Set([row.cover_image_url, ...row.image_urls]);
     await removeStorageObjects(
@@ -223,15 +223,15 @@ export async function savePortfolioItem(id: string | null, _prev: AdminActionSta
       [before?.cover_image_url, ...((before?.image_urls as string[] | null) ?? [])].filter((u) => u && !keep.has(u)),
     );
     refreshPublicSite();
-    return { status: "saved", message: v.published ? "Caso guardado y publicado." : "Borrador guardado." };
+    return { status: "saved", message: v.published ? "Case study saved and published." : "Draft saved." };
   }
 
   const { data: created, error } = await supabase.from("portfolio_items").insert(row).select("id").single();
   if (error || !created) {
-    return { status: "error", message: error?.code === "23505" ? "Ya existe un caso con ese slug." : "No se pudo crear el caso." };
+    return { status: "error", message: error?.code === "23505" ? "A case study with that slug already exists." : "Couldn't create the case study." };
   }
   refreshPublicSite();
-  redirect(`/admin/portafolio/${created.id}?creado=1`);
+  redirect(`/admin/portafolio/${created.id}?created=1`);
 }
 
 export async function deletePortfolioItem(id: string) {

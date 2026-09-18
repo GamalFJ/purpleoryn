@@ -25,24 +25,24 @@ export default async function ConversacionPage({ params }: { params: Params }) {
   return (
     <div>
       <Link href="/admin/conversaciones" className="text-sm text-muted hover:text-ink">
-        Volver a conversaciones
+        Back to conversations
       </Link>
-      <h1 className="mt-3 text-3xl font-semibold">Conversación del {formatDate(session.created_at)}</h1>
+      <h1 className="mt-3 text-3xl font-semibold">Conversation from {formatDate(session.created_at)}</h1>
       <div className="mt-3">
         <OutcomeBadges labels={outcomeLabels(session, tiers)} />
       </div>
 
       <dl className="mt-6 grid gap-4 rounded-[var(--radius-panel)] border border-line bg-surface p-6 text-[15px] sm:grid-cols-3">
         <div>
-          <dt className="text-sm text-muted">Mensajes</dt>
+          <dt className="text-sm text-muted">Messages</dt>
           <dd className="tabular mt-1">{session.message_count}</dd>
         </div>
         <div>
-          <dt className="text-sm text-muted">Página de entrada</dt>
-          <dd className="mt-1 break-all">{session.landing_page || "No indicada"}</dd>
+          <dt className="text-sm text-muted">Landing page</dt>
+          <dd className="mt-1 break-all">{session.landing_page || "Not given"}</dd>
         </div>
         <div>
-          <dt className="text-sm text-muted">Última actividad</dt>
+          <dt className="text-sm text-muted">Last activity</dt>
           <dd className="tabular mt-1">{formatDate(session.updated_at)}</dd>
         </div>
       </dl>
@@ -51,7 +51,7 @@ export default async function ConversacionPage({ params }: { params: Params }) {
         {(messages ?? []).map((m) => (
           <li key={m.id} className={cn("flex flex-col gap-1", m.role === "user" ? "items-end" : "items-start")}>
             <span className="px-1 text-xs text-muted">
-              {m.role === "user" ? "Visitante" : "Oryn"} · {formatDate(m.created_at)}
+              {m.role === "user" ? "Visitor" : "Oryn"} · {formatDate(m.created_at)}
             </span>
             <p
               className={cn(

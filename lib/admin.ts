@@ -11,7 +11,7 @@ export async function requireAdmin() {
   if (!user) redirect("/admin/login");
 
   const { data: admin } = await supabase.from("admins").select("user_id").eq("user_id", user.id).maybeSingle();
-  if (!admin) redirect("/admin/login?error=sin-acceso");
+  if (!admin) redirect("/admin/login?error=no-access");
 
   return { supabase, user };
 }

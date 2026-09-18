@@ -19,3 +19,13 @@ export function whatsappUrl(message: string): string {
 }
 
 export const WHATSAPP_GENERAL = "Hola Purple Cove Labs, quiero información sobre sus planes.";
+
+// Visitors type this field in whatever form is natural to them: a bare
+// handle ("@negocio"), a handle with no @, or a full URL to any platform.
+// A full URL is trusted as-is; anything else is treated as an Instagram
+// handle, since that's what the field is for.
+export function socialProfileUrl(input: string): string {
+  const value = input.trim();
+  if (/^https?:\/\//i.test(value)) return value;
+  return `https://instagram.com/${value.replace(/^@/, "")}`;
+}

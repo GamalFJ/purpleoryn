@@ -1,5 +1,7 @@
 import type { AddonSnapshot } from "@/lib/addons";
 import { formatRD } from "@/lib/format";
+import { socialProfileUrl } from "@/lib/links";
+import type { OrderTotals } from "@/lib/orders";
 import { SITE } from "@/lib/site";
 
 // New-lead alert, same channel and env vars as Oryn Drop. Notifications are
@@ -8,8 +10,11 @@ import { SITE } from "@/lib/site";
 export interface LeadAlert {
   planName: string | null;
   addons: AddonSnapshot[];
+  totals: OrderTotals;
   name: string;
   business: string;
+  businessNiche: string;
+  socialHandle: string | null;
   whatsapp: string;
   email: string | null;
   message: string | null;
@@ -30,8 +35,12 @@ export async function notifyNewLead(lead: LeadAlert): Promise<void> {
     lead.addons.length
       ? `Módulos (100% por adelantado): ${lead.addons.map((a) => `${a.name} (${formatRD(a.oneTime)} + ${formatRD(a.monthly)}/mes)`).join(", ")}`
       : null,
+    `Total pedido (pago inicial): ${formatRD(lead.totals.oneTime)}`,
+    `Total mensualidad: ${formatRD(lead.totals.monthly)}`,
     `Nombre: ${lead.name}`,
     `Negocio: ${lead.business}`,
+    `Rubro: ${lead.businessNiche}`,
+    lead.socialHandle ? `Red social: ${lead.socialHandle} (${socialProfileUrl(lead.socialHandle)})` : null,
     `WhatsApp: ${lead.whatsapp} (https://wa.me/${lead.whatsapp.replace("+", "")})`,
     lead.email ? `Correo: ${lead.email}` : null,
     lead.averageSaleValue ? `Venta promedio: ${formatRD(lead.averageSaleValue)}` : null,

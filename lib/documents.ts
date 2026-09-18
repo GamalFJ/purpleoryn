@@ -30,7 +30,7 @@ export const DOCUMENTS: Record<DocumentSlug, SiteDocument> = {
     previews: [
       "/media/docs/oryn-presence-cover.webp",
       "/media/docs/oryn-presence-p03.webp",
-      "/media/docs/oryn-presence-p13.webp",
+      "/media/docs/oryn-presence-p12.webp",
     ],
     ratio: 612 / 792,
   },

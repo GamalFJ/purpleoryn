@@ -119,74 +119,20 @@ export const BRANCH: Waypoint = {
 export const WAYPOINTS: Waypoint[] = [...STEPS, BRANCH];
 
 /**
- * A road drawn in its own coordinate space. The container locks
- * `aspect-ratio: width / height`, so a node at (x, y) maps to
- * `left: x/width%, top: y/height%` exactly, with no measuring on resize.
- * `branch` starts on a point of `path`, so the side road looks like it leaves
- * the main one instead of floating beside it.
+ * A road drawn in its own coordinate space. `branch` is a second path drawn
+ * with the same mask system; pass `""` when a figure has no side road (the
+ * grid page's measured connector has no branch, since the branch card there
+ * is a distinct, unconnected element, not a road you travel).
  */
 export interface Road {
   width: number;
   height: number;
   path: string;
   branch: string;
-  /** Node centres in road coordinates, in WAYPOINTS order. */
+  /** Node centres in road coordinates, in WAYPOINTS order. Unused by the
+   *  measured grid, which positions its cards with normal layout instead. */
   nodes: { x: number; y: number; side: "left" | "right" }[];
 }
-
-// Desktop: a serpentine running the height of the page. Each card opens toward
-// the inside of its bend, so it never leaves the container.
-export const ROAD_DESKTOP: Road = {
-  width: 1000,
-  height: 1700,
-  path: [
-    "M 200 110",
-    "C 200 220, 800 220, 800 330",
-    "C 800 440, 200 440, 200 550",
-    "C 200 660, 800 660, 800 770",
-    "C 800 880, 200 880, 200 990",
-    "C 200 1100, 800 1100, 800 1210",
-    "C 800 1380, 480 1400, 300 1560",
-  ].join(" "),
-  branch: "M 618 1389 C 700 1420, 760 1450, 760 1520",
-  nodes: [
-    { x: 200, y: 110, side: "right" },
-    { x: 800, y: 330, side: "left" },
-    { x: 200, y: 550, side: "right" },
-    { x: 800, y: 770, side: "left" },
-    { x: 200, y: 990, side: "right" },
-    { x: 800, y: 1210, side: "left" },
-    { x: 300, y: 1560, side: "right" },
-    { x: 760, y: 1520, side: "left" },
-  ],
-};
-
-// Mobile: the same road with tighter bends. Cards are centred over the road
-// rather than beside it, so a narrow viewport never clips them.
-export const ROAD_MOBILE: Road = {
-  width: 380,
-  height: 1820,
-  path: [
-    "M 110 170",
-    "C 110 270, 270 250, 270 350",
-    "C 270 470, 110 470, 110 590",
-    "C 110 710, 270 710, 270 830",
-    "C 270 950, 110 950, 110 1070",
-    "C 110 1190, 270 1190, 270 1310",
-    "C 270 1480, 240 1540, 140 1700",
-  ].join(" "),
-  branch: "M 254 1475 C 290 1505, 302 1550, 285 1600",
-  nodes: [
-    { x: 110, y: 170, side: "right" },
-    { x: 270, y: 350, side: "left" },
-    { x: 110, y: 590, side: "right" },
-    { x: 270, y: 830, side: "left" },
-    { x: 110, y: 1070, side: "right" },
-    { x: 270, y: 1310, side: "left" },
-    { x: 140, y: 1700, side: "right" },
-    { x: 285, y: 1600, side: "left" },
-  ],
-};
 
 // Homepage teaser: the same journey read left to right, small enough to sit
 // between two sections without becoming a second copy of the page.

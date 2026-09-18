@@ -3,7 +3,7 @@ import { TrackedLink } from "@/components/analytics/TrackedLink";
 import { DocumentCard } from "@/components/documents/DocumentCard";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
-import { RoadMap } from "@/components/proceso/RoadMap";
+import { RoadGrid } from "@/components/proceso/RoadGrid";
 import { buttonClass } from "@/components/ui/button";
 import { DOCUMENTS } from "@/lib/documents";
 import { calUrl } from "@/lib/links";
@@ -49,7 +49,7 @@ export default function ComoTrabajamosPage() {
         </section>
 
         <div className="mx-auto max-w-6xl px-4 pt-8 sm:px-6">
-          <RoadMap />
+          <RoadGrid />
         </div>
 
         <section aria-labelledby="documentos-titulo" className="mx-auto max-w-6xl px-4 pt-20 sm:px-6">

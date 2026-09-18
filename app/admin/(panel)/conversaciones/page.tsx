@@ -19,13 +19,13 @@ export default async function ConversacionesPage() {
 
   return (
     <div>
-      <h1 className="text-3xl font-semibold">Conversaciones</h1>
-      <p className="mt-2 text-muted">Chats con Oryn, del más reciente al más antiguo. Solo lectura.</p>
+      <h1 className="text-3xl font-semibold">Conversations</h1>
+      <p className="mt-2 text-muted">Chats with Oryn, newest first. Read-only.</p>
 
       {!sessions?.length ? (
         <div className="mt-8 rounded-[var(--radius-panel)] border border-line bg-surface p-8">
-          <h2 className="text-xl font-semibold">Todavía no hay conversaciones</h2>
-          <p className="mt-2 text-[15px] text-muted">Cuando alguien le escriba a Oryn en el sitio, la conversación aparecerá aquí.</p>
+          <h2 className="text-xl font-semibold">No conversations yet</h2>
+          <p className="mt-2 text-[15px] text-muted">When someone chats with Oryn on the site, it shows up here.</p>
         </div>
       ) : (
         <ul className="mt-6 divide-y divide-line rounded-[var(--radius-panel)] border border-line bg-surface">
@@ -38,8 +38,8 @@ export default async function ConversacionesPage() {
                 <div className="min-w-0">
                   <p className="tabular font-medium">{formatDate(s.updated_at)}</p>
                   <p className="truncate text-sm text-muted">
-                    {s.message_count} {s.message_count === 1 ? "mensaje" : "mensajes"}
-                    {s.landing_page ? ` · desde ${s.landing_page}` : ""}
+                    {s.message_count} {s.message_count === 1 ? "message" : "messages"}
+                    {s.landing_page ? ` · from ${s.landing_page}` : ""}
                   </p>
                 </div>
                 <OutcomeBadges labels={outcomeLabels(s, tiers)} />

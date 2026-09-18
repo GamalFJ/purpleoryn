@@ -97,17 +97,17 @@ function CropDialog({ pending, onDone }: { pending: Pending; onDone: (crop: Crop
       className="m-auto w-[min(34rem,calc(100vw-2rem))] rounded-[var(--radius-panel)] border border-line bg-surface p-5 text-body backdrop:bg-plum/60 sm:p-6"
     >
       <h2 id={`${zoomId}-title`} className="text-xl font-semibold">
-        Ajusta el encuadre
+        Adjust the framing
       </h2>
       <p className="mt-1 text-sm text-muted">
-        Arrastra la imagen para elegir qué se ve. Proporción {spec.label}, igual que en el sitio.
+        Drag the image to choose what shows. {spec.label} ratio, same as on the site.
       </p>
 
       <div
         ref={frameRef}
         tabIndex={0}
         role="application"
-        aria-label={`Encuadre de ${name}. Usa las flechas para mover la imagen.`}
+        aria-label={`Framing for ${name}. Use the arrow keys to move the image.`}
         onPointerDown={(e) => {
           e.currentTarget.setPointerCapture(e.pointerId);
           drag.current = { x: e.clientX, y: e.clientY };
@@ -164,10 +164,10 @@ function CropDialog({ pending, onDone }: { pending: Pending; onDone: (crop: Crop
 
       <div className="mt-5 flex flex-wrap justify-end gap-3 border-t border-line pt-5">
         <button type="button" onClick={() => onDone(null)} className={buttonClass("secondary", "md")}>
-          Cancelar
+          Cancel
         </button>
         <button type="button" onClick={confirm} disabled={!scale} className={buttonClass("primary", "md")}>
-          Usar este encuadre
+          Use this framing
         </button>
       </div>
     </dialog>

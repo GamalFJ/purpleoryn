@@ -25,6 +25,11 @@ export const leadSchema = z.object({
     .max(160)
     .refine((v) => v === "" || z.email().safeParse(v).success, "Revisa el correo o déjalo en blanco."),
   business: z.string().trim().min(2, "Escribe el nombre de tu negocio.").max(160),
+  // Free text with on-page suggestions, not a fixed enum: a niche the list
+  // doesn't cover must never be rejected.
+  businessNiche: z.string().trim().min(2, "Escribe el rubro de tu negocio.").max(120),
+  // Optional: a handle, or a link to any platform, not only Instagram.
+  socialHandle: z.string().trim().max(200),
   message: z.string().trim().max(1500),
   averageSaleValue: z
     .string()
@@ -38,10 +43,47 @@ export const leadSchema = z.object({
   referrer: z.string().max(300),
 });
 
+// Suggestions for the "rubro o tipo de negocio" field, offered through a
+// native <datalist> so typing is never blocked: picking one is a shortcut,
+// not a requirement. Matches the niches Purple Cove Labs actually serves.
+export const BUSINESS_NICHE_SUGGESTIONS = [
+  "Restaurante o comida",
+  "Colmado o minimarket",
+  "Tienda o boutique",
+  "Ferretería",
+  "Salón de belleza o spa",
+  "Clínica dental",
+  "Consultorio médico",
+  "Veterinaria",
+  "Bienes raíces",
+  "Construcción",
+  "Taller mecánico o autopartes",
+  "Abogados o servicios legales",
+  "Contabilidad o consultoría",
+  "Educación o academia",
+  "Fotografía o eventos",
+  "Gimnasio o fitness",
+  "Joyería",
+  "Farmacia",
+  "Imprenta o rotulación",
+] as const;
+
 export type LeadInput = z.input<typeof leadSchema>;
 
 export type LeadFieldErrors = Partial<
-  Record<"plan" | "addons" | "confirmed" | "name" | "whatsapp" | "email" | "business" | "message", string>
+  Record<
+    | "plan"
+    | "addons"
+    | "confirmed"
+    | "name"
+    | "whatsapp"
+    | "email"
+    | "business"
+    | "businessNiche"
+    | "socialHandle"
+    | "message",
+    string
+  >
 >;
 
 export type LeadActionState =
@@ -52,10 +94,12 @@ export type LeadActionState =
 export const LEAD_STATUSES = ["nuevo", "contactado", "propuesta", "ganado", "perdido"] as const;
 export type LeadStatus = (typeof LEAD_STATUSES)[number];
 
+// Displayed in the (English) admin panel; the keys themselves stay Spanish
+// because they're the actual `leads.status` database values.
 export const LEAD_STATUS_LABEL: Record<LeadStatus, string> = {
-  nuevo: "Nuevo",
-  contactado: "Contactado",
-  propuesta: "Propuesta enviada",
-  ganado: "Ganado",
-  perdido: "Perdido",
+  nuevo: "New",
+  contactado: "Contacted",
+  propuesta: "Proposal sent",
+  ganado: "Won",
+  perdido: "Lost",
 };
