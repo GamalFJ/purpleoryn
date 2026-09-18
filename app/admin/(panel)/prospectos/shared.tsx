@@ -1,7 +1,9 @@
 import { cn } from "@/lib/cn";
 import { LEAD_STATUS_LABEL, type LeadStatus } from "@/lib/leads";
 
-const dateFormat = new Intl.DateTimeFormat("es-DO", {
+// Admin-only display: English formatting, still in the business's own
+// timezone so times match what actually happened locally.
+const dateFormat = new Intl.DateTimeFormat("en-US", {
   timeZone: "America/Santo_Domingo",
   day: "numeric",
   month: "short",
@@ -16,10 +18,20 @@ export function formatDate(iso: string) {
 
 const BADGE: Record<LeadStatus, string> = {
   nuevo: "bg-accent text-accent-ink",
-  contactado: "bg-accent-soft text-accent",
-  propuesta: "bg-accent-soft text-ink",
+  contactado: "bg-teal-soft text-teal-ink",
+  propuesta: "bg-warm-soft text-warm-ink",
   ganado: "bg-success/15 text-success",
   perdido: "bg-line text-muted",
+};
+
+// A small solid-color dot version of the same palette, used on filter tabs
+// and anywhere a compact status indicator (not a full badge) is enough.
+export const STATUS_DOT: Record<LeadStatus, string> = {
+  nuevo: "bg-accent",
+  contactado: "bg-teal",
+  propuesta: "bg-warm",
+  ganado: "bg-success",
+  perdido: "bg-muted",
 };
 
 export function StatusBadge({ status }: { status: LeadStatus }) {

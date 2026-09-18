@@ -6,6 +6,7 @@ import { leadSchema, type LeadActionState, type LeadFieldErrors } from "@/lib/le
 import { computeRoi } from "@/lib/roi";
 import { addonSnapshot } from "@/lib/addons";
 import { getAddons, getTiers } from "@/lib/content";
+import { orderTotals } from "@/lib/orders";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { publicClient } from "@/lib/supabase/server";
 import { notifyNewLead } from "@/lib/telegram";
@@ -35,6 +36,8 @@ export async function submitLead(_prev: LeadActionState, formData: FormData): Pr
     whatsapp: field("whatsapp"),
     email: field("email"),
     business: field("business"),
+    businessNiche: field("businessNiche"),
+    socialHandle: field("socialHandle"),
     message: field("message"),
     averageSaleValue: field("average_sale_value"),
     utmSource: field("utm_source"),
@@ -92,6 +95,8 @@ export async function submitLead(_prev: LeadActionState, formData: FormData): Pr
       whatsapp: lead.whatsapp,
       email: lead.email || null,
       business: lead.business,
+      business_niche: lead.businessNiche,
+      social_handle: lead.socialHandle || null,
       message: lead.message || null,
       average_sale_value: lead.averageSaleValue,
       roi_snapshot: roi,
@@ -118,8 +123,11 @@ export async function submitLead(_prev: LeadActionState, formData: FormData): Pr
     notifyNewLead({
       planName: tier?.name ?? null,
       addons: addonsSnapshot,
+      totals: orderTotals(tier, addonsSnapshot),
       name: lead.name,
       business: lead.business,
+      businessNiche: lead.businessNiche,
+      socialHandle: lead.socialHandle || null,
       whatsapp: lead.whatsapp,
       email: lead.email || null,
       message: lead.message || null,

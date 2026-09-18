@@ -13,10 +13,10 @@ export default async function AdminPlanesPage() {
 
   return (
     <div>
-      <h1 className="text-3xl font-semibold">Planes y precios</h1>
+      <h1 className="text-3xl font-semibold">Plans &amp; pricing</h1>
       <p className="mt-2 max-w-[60ch] text-muted">
-        Estos datos alimentan la portada, la tabla de servicios, la calculadora, el formulario y el asistente de IA. Los precios se muestran
-        exactos con dos decimales.
+        This data feeds the homepage, the services table, the calculator, the order form and the AI agent. Prices always show exact, with two
+        decimals.
       </p>
       <div className="mt-10 space-y-10">
         {((tiers as TierRow[] | null) ?? []).map((t) => (
@@ -24,8 +24,8 @@ export default async function AdminPlanesPage() {
         ))}
       </div>
 
-      <h2 className="mt-16 text-2xl font-semibold">Complementos</h2>
-      <p className="mt-2 max-w-[60ch] text-muted">Se muestran en su propia sección de /servicios, nunca como un cuarto plan.</p>
+      <h2 className="mt-16 text-2xl font-semibold">Add-ons</h2>
+      <p className="mt-2 max-w-[60ch] text-muted">Shown in their own section on /servicios, never as a fourth plan.</p>
       <div className="mt-8 space-y-10">
         {((addons as AddonRow[] | null) ?? []).map((a) => (
           <AddonEditor key={a.slug} addon={a} />

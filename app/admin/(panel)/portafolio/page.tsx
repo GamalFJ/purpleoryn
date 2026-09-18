@@ -18,18 +18,18 @@ export default async function AdminPortafolioPage() {
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <h1 className="text-3xl font-semibold">Portafolio</h1>
+        <h1 className="text-3xl font-semibold">Portfolio</h1>
         <Link href="/admin/portafolio/nuevo" className={buttonClass("primary", "md")}>
-          Agregar caso
+          Add case study
         </Link>
       </div>
 
       {!items?.length ? (
         <div className="mt-10 rounded-[var(--radius-panel)] border border-line bg-surface p-8">
-          <h2 className="text-xl font-semibold">Todavía no hay casos</h2>
+          <h2 className="text-xl font-semibold">No case studies yet</h2>
           <p className="mt-2 max-w-[56ch] text-[15px] leading-relaxed text-muted">
-            Mientras esté vacío, el sitio muestra “Casos de éxito próximamente”. Agrega un caso, guárdalo como borrador y publícalo cuando tengas
-            el permiso del cliente.
+            While it&rsquo;s empty, the site shows &ldquo;Casos de éxito próximamente&rdquo;. Add a case, save it as a draft and publish it once
+            you have the client&rsquo;s permission.
           </p>
         </div>
       ) : (
@@ -49,7 +49,7 @@ export default async function AdminPortafolioPage() {
                     item.published ? "bg-success/15 text-success" : "bg-line text-muted"
                   }`}
                 >
-                  {item.published ? "Publicado" : "Borrador"}
+                  {item.published ? "Published" : "Draft"}
                 </span>
               </Link>
             </li>

@@ -26,26 +26,26 @@ export function AddonEditor({ addon }: { addon: AddonRow }) {
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h3 className="text-2xl font-semibold">{addon.name}</h3>
         <p className="tabular text-sm text-muted">
-          En el sitio: {formatRD(oneTime)} + {formatRD(monthly)}/mes
+          On the site: {formatRD(oneTime)} + {formatRD(monthly)}/mo
         </p>
       </div>
 
       <div className="mt-6 grid gap-5 sm:grid-cols-3">
-        <TextField name="name" label="Nombre" defaultValue={addon.name} required />
-        <TextField name="one_time_price" label="Pago único (RD$)" defaultValue={oneTime.toFixed(2)} inputMode="decimal" required />
-        <TextField name="monthly_price" label="Mensualidad (RD$)" defaultValue={monthly.toFixed(2)} inputMode="decimal" required />
+        <TextField name="name" label="Name" defaultValue={addon.name} required />
+        <TextField name="one_time_price" label="One-time price (RD$)" defaultValue={oneTime.toFixed(2)} inputMode="decimal" required />
+        <TextField name="monthly_price" label="Monthly price (RD$)" defaultValue={monthly.toFixed(2)} inputMode="decimal" required />
       </div>
 
       <div className="mt-5 grid gap-5">
-        <TextField name="description" label="Descripción (una línea)" defaultValue={addon.description} />
+        <TextField name="description" label="Description (one line)" defaultValue={addon.description} />
       </div>
 
       <div className="mt-5 grid gap-5 sm:grid-cols-3">
-        <TextField name="included_units" label="Incluido al mes" defaultValue={addon.included_units} inputMode="numeric" required />
-        <TextField name="unit_label" label="Unidad (en plural)" defaultValue={addon.unit_label} help="Ej.: minutos" required />
+        <TextField name="included_units" label="Included per month" defaultValue={addon.included_units} inputMode="numeric" required />
+        <TextField name="unit_label" label="Unit (plural)" defaultValue={addon.unit_label} help="E.g.: minutes" required />
         <TextField
           name="overage_rate"
-          label="Unidad adicional (RD$)"
+          label="Extra unit (RD$)"
           defaultValue={Number(addon.overage_rate).toFixed(2)}
           inputMode="decimal"
           required
@@ -54,11 +54,11 @@ export function AddonEditor({ addon }: { addon: AddonRow }) {
 
       <label className="mt-6 flex w-fit cursor-pointer items-center gap-3 text-[15px] font-medium">
         <input type="checkbox" name="published" defaultChecked={addon.published} className="h-5 w-5 accent-[var(--accent)]" />
-        Publicado en el sitio
+        Published on the site
       </label>
 
       <div className="mt-8">
-        <SaveBar state={state} pending={pending} label={`Guardar ${addon.name}`} />
+        <SaveBar state={state} pending={pending} label={`Save ${addon.name}`} />
       </div>
     </form>
   );

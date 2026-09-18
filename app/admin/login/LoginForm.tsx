@@ -25,8 +25,8 @@ export function LoginForm() {
       setStatus("error");
       setMessage(
         error.status === 429
-          ? "Se enviaron demasiados enlaces. Espera unos minutos e inténtalo de nuevo."
-          : "No pudimos enviar el enlace. Revisa el correo e inténtalo de nuevo.",
+          ? "Too many links were sent. Wait a few minutes and try again."
+          : "We couldn't send the link. Check the email address and try again.",
       );
       return;
     }
@@ -35,16 +35,16 @@ export function LoginForm() {
 
   if (status === "sent") {
     return (
-      <p className="mt-8 rounded-[var(--radius-field)] border border-line bg-surface px-4 py-4 text-[15px]">
-        Revisa <strong>{email}</strong> y abre el enlace en este mismo navegador.
+      <p className="mt-8 rounded-[var(--radius-field)] border border-plum-muted/30 bg-plum-ink/5 px-4 py-4 text-[15px] text-plum-ink">
+        Check <strong>{email}</strong> and open the link in this same browser.
       </p>
     );
   }
 
   return (
     <form onSubmit={onSubmit} className="mt-8 flex flex-col gap-2">
-      <label htmlFor="email" className="text-[15px] font-semibold">
-        Correo
+      <label htmlFor="email" className="text-[15px] font-semibold text-plum-ink">
+        Email
       </label>
       <input
         id="email"
@@ -53,11 +53,11 @@ export function LoginForm() {
         autoComplete="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        className="h-12 rounded-[var(--radius-field)] border border-line bg-surface px-4 text-base outline-none focus:border-accent"
+        className="h-12 rounded-[var(--radius-field)] border border-plum-muted/30 bg-plum-ink/5 px-4 text-base text-plum-ink outline-none placeholder:text-plum-muted focus:border-plum-accent"
       />
       {status === "error" && <p className="text-sm text-danger">{message}</p>}
-      <button type="submit" disabled={status === "sending"} className={buttonClass("primary", "lg", "mt-4")}>
-        {status === "sending" ? "Enviando..." : "Enviar enlace de acceso"}
+      <button type="submit" disabled={status === "sending"} className={buttonClass("onPlum", "lg", "mt-4")}>
+        {status === "sending" ? "Sending..." : "Send sign-in link"}
       </button>
     </form>
   );

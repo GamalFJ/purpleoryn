@@ -13,25 +13,25 @@ export function SettingsForm({ settings, defaults }: { settings: Row; defaults: 
   return (
     <form onSubmit={onSubmit} className="mt-8 space-y-10">
       <section className="rounded-[var(--radius-panel)] border border-line bg-surface p-6 sm:p-8">
-        <h2 className="text-2xl font-semibold">Portada</h2>
+        <h2 className="text-2xl font-semibold">Homepage</h2>
         <div className="mt-6 grid gap-5">
           <TextField
             name="hero_headline"
-            label="Título principal (H1)"
+            label="Main headline (H1)"
             defaultValue={settings.hero_headline}
-            help={`Por defecto: ${defaults.heroHeadline}`}
+            help={`Default: ${defaults.heroHeadline}`}
           />
           <TextField
             name="hero_subheadline"
-            label="Subtítulo"
+            label="Subheadline"
             defaultValue={settings.hero_subheadline}
             multiline
             rows={2}
-            help={`Por defecto: ${defaults.heroSubheadline}`}
+            help={`Default: ${defaults.heroSubheadline}`}
           />
           <ImageUploader
             name="hero_image_url"
-            label="Imagen de la portada"
+            label="Hero image"
             folder="ajustes"
             defaultUrl={settings.hero_image_url || null}
             fallbackUrl={defaults.heroImageUrl}
@@ -41,19 +41,19 @@ export function SettingsForm({ settings, defaults }: { settings: Row; defaults: 
       </section>
 
       <section className="rounded-[var(--radius-panel)] border border-line bg-surface p-6 sm:p-8">
-        <h2 className="text-2xl font-semibold">Quién está detrás</h2>
+        <h2 className="text-2xl font-semibold">Who&rsquo;s behind it</h2>
         <div className="mt-6 grid gap-5">
           <TextField
             name="about_bio"
-            label="Biografía"
+            label="Bio"
             defaultValue={settings.about_bio}
             multiline
             rows={5}
-            help={`Por defecto: ${defaults.aboutBio}`}
+            help={`Default: ${defaults.aboutBio}`}
           />
           <ImageUploader
             name="about_image_url"
-            label="Foto"
+            label="Photo"
             folder="ajustes"
             defaultUrl={settings.about_image_url || null}
             fallbackUrl={defaults.aboutImageUrl}

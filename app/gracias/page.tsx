@@ -64,9 +64,8 @@ export default async function GraciasPage({ searchParams }: { searchParams: Sear
               {plan ? `Registramos tu pedido del plan ${plan.name}` : "Registramos tu pedido"}
               {orderedAddons.length > 0 && ` con ${orderedAddons.map((a) => `el módulo ${a.name}`).join(" y ")}`}
               {". "}
-              Tu cupo queda reservado por 7 días calendario. Te escribimos por WhatsApp con la propuesta y el pago
-              inicial: {orderedAddons.length > 0 ? "50% del plan y 100% de los módulos adicionales" : "50% del plan"}. Si quieres
-              adelantar, elige una de estas opciones.
+              Tu cupo queda reservado por 7 días calendario. Te escribimos por WhatsApp para hacer el seguimiento. Si
+              quieres adelantar, elige una de estas opciones.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <TrackedLink

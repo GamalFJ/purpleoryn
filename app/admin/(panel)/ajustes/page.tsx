@@ -10,9 +10,9 @@ export default async function AdminAjustesPage() {
 
   return (
     <div>
-      <h1 className="text-3xl font-semibold">Ajustes del sitio</h1>
+      <h1 className="text-3xl font-semibold">Site settings</h1>
       <p className="mt-2 max-w-[60ch] text-muted">
-        Si dejas un campo vacío, el sitio muestra el texto o la imagen por defecto (indicados debajo de cada campo).
+        If you leave a field blank, the site shows the default text or image (shown below each field).
       </p>
       <SettingsForm settings={data ?? {}} defaults={DEFAULT_SETTINGS} />
     </div>

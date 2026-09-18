@@ -36,15 +36,15 @@ function canvasToBlob(canvas: HTMLCanvasElement, type: string): Promise<Blob | n
 
 export async function decodeImage(file: File): Promise<ImageBitmap> {
   if (isHeic(file)) {
-    throw new ImagePrepError("Las fotos HEIC del iPhone no se pueden subir. Expórtala como JPEG e inténtalo de nuevo.");
+    throw new ImagePrepError("iPhone HEIC photos can't be uploaded. Export it as JPEG and try again.");
   }
   if (!file.type.startsWith("image/")) {
-    throw new ImagePrepError("Ese archivo no es una imagen.");
+    throw new ImagePrepError("That file isn't an image.");
   }
   try {
     return await createImageBitmap(file);
   } catch {
-    throw new ImagePrepError("No se pudo leer la imagen. Si es HEIC, expórtala como JPEG e inténtalo de nuevo.");
+    throw new ImagePrepError("Couldn't read the image. If it's HEIC, export it as JPEG and try again.");
   }
 }
 
@@ -57,7 +57,7 @@ export async function prepareImage(
   canvas.width = Math.round(crop.width * scale);
   canvas.height = Math.round(crop.height * scale);
   const ctx = canvas.getContext("2d");
-  if (!ctx) throw new ImagePrepError("Tu navegador no pudo procesar la imagen.");
+  if (!ctx) throw new ImagePrepError("Your browser couldn't process the image.");
   ctx.imageSmoothingQuality = "high";
   ctx.drawImage(bitmap, crop.x, crop.y, crop.width, crop.height, 0, 0, canvas.width, canvas.height);
 
@@ -66,6 +66,6 @@ export async function prepareImage(
   if (webp && webp.type === "image/webp") return { blob: webp, extension: "webp", contentType: "image/webp" };
 
   const jpeg = await canvasToBlob(canvas, "image/jpeg");
-  if (!jpeg) throw new ImagePrepError("Tu navegador no pudo convertir la imagen.");
+  if (!jpeg) throw new ImagePrepError("Your browser couldn't convert the image.");
   return { blob: jpeg, extension: "jpg", contentType: "image/jpeg" };
 }

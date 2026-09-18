@@ -7,8 +7,8 @@ export default async function NuevoCasoPage() {
   await requireAdmin();
   return (
     <div>
-      <h1 className="text-3xl font-semibold">Nuevo caso</h1>
-      <p className="mt-2 text-muted">Se guarda como borrador hasta que marques “Publicado en el sitio”.</p>
+      <h1 className="text-3xl font-semibold">New case study</h1>
+      <p className="mt-2 text-muted">Saved as a draft until you check &ldquo;Published on the site&rdquo;.</p>
       <PortfolioForm item={null} />
     </div>
   );

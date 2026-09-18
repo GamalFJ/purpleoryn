@@ -22,7 +22,7 @@ async function uploadPrepared(bitmap: ImageBitmap, crop: CropRect, folder: strin
   const { error } = await supabase.storage
     .from(MEDIA_BUCKET)
     .upload(path, blob, { contentType, cacheControl: "31536000", upsert: false });
-  if (error) throw new Error("No se pudo subir la imagen. Vuelve a intentarlo.");
+  if (error) throw new Error("Couldn't upload the image. Try again.");
   return supabase.storage.from(MEDIA_BUCKET).getPublicUrl(path).data.publicUrl;
 }
 
@@ -36,7 +36,7 @@ async function discardIfUnsaved(url: string, savedUrls: Set<string>) {
 }
 
 function errorText(err: unknown) {
-  return err instanceof ImagePrepError || err instanceof Error ? err.message : "No se pudo subir la imagen.";
+  return err instanceof ImagePrepError || err instanceof Error ? err.message : "Couldn't upload the image.";
 }
 
 export function ImageUploader({
@@ -80,7 +80,7 @@ export function ImageUploader({
   return (
     <div className="flex flex-col gap-2">
       <span className="text-[15px] font-semibold">{label}</span>
-      <span className="text-sm text-muted">Proporción {IMAGE_RATIOS[ratio].label}. Al subirla eliges el encuadre.</span>
+      <span className="text-sm text-muted">{IMAGE_RATIOS[ratio].label} ratio. You&rsquo;ll choose the framing when you upload.</span>
       <input type="hidden" name={name} value={url} />
       {cropper}
       <div
@@ -98,13 +98,13 @@ export function ImageUploader({
           </div>
         )}
         {!url && fallbackUrl && (
-          <span className="absolute bottom-2 left-2 rounded-full bg-surface px-2.5 py-1 text-xs text-muted">Imagen por defecto</span>
+          <span className="absolute bottom-2 left-2 rounded-full bg-surface px-2.5 py-1 text-xs text-muted">Default image</span>
         )}
       </div>
       <div className="flex flex-wrap gap-2">
         <label className="inline-flex h-10 cursor-pointer items-center gap-2 rounded-full border border-line bg-surface px-4 text-sm font-medium hover:border-accent">
           <UploadSimple size={16} />
-          {busy ? "Subiendo..." : url ? "Cambiar imagen" : "Subir imagen"}
+          {busy ? "Uploading..." : url ? "Change image" : "Upload image"}
           <input
             type="file"
             accept="image/*"
@@ -126,7 +126,7 @@ export function ImageUploader({
             }}
             className="inline-flex h-10 cursor-pointer items-center gap-2 rounded-full px-4 text-sm text-danger hover:bg-danger/10"
           >
-            <Trash size={16} /> Quitar
+            <Trash size={16} /> Remove
           </button>
         )}
       </div>
@@ -164,8 +164,8 @@ export function GalleryUploader({ name, folder, defaultUrls }: { name: string; f
 
   return (
     <div className="flex flex-col gap-2">
-      <span className="text-[15px] font-semibold">Galería</span>
-      <span className="text-sm text-muted">Proporción {IMAGE_RATIOS[GALLERY_RATIO].label}. Al subir cada imagen eliges el encuadre.</span>
+      <span className="text-[15px] font-semibold">Gallery</span>
+      <span className="text-sm text-muted">{IMAGE_RATIOS[GALLERY_RATIO].label} ratio. You&rsquo;ll choose the framing for each image.</span>
       {cropper}
       {urls.map((u) => (
         <input key={u} type="hidden" name={name} value={u} />
@@ -177,7 +177,7 @@ export function GalleryUploader({ name, folder, defaultUrls }: { name: string; f
               <Image src={u} alt="" fill sizes="200px" className="object-cover object-center" />
               <button
                 type="button"
-                aria-label="Quitar imagen"
+                aria-label="Remove image"
                 onClick={async () => {
                   await discardIfUnsaved(u, saved.current);
                   setUrls((prev) => prev.filter((x) => x !== u));
@@ -192,7 +192,7 @@ export function GalleryUploader({ name, folder, defaultUrls }: { name: string; f
       )}
       <label className="inline-flex h-10 w-fit cursor-pointer items-center gap-2 rounded-full border border-line bg-surface px-4 text-sm font-medium hover:border-accent">
         <UploadSimple size={16} />
-        {busy ? "Subiendo..." : "Agregar imágenes"}
+        {busy ? "Uploading..." : "Add images"}
         <input
           type="file"
           accept="image/*"

@@ -15,7 +15,7 @@ import { LEAD_FLAG, track } from "@/lib/analytics";
 import { openChat } from "@/lib/chat";
 import { cn } from "@/lib/cn";
 import { formatRD } from "@/lib/format";
-import type { LeadActionState, LeadFieldErrors } from "@/lib/leads";
+import { BUSINESS_NICHE_SUGGESTIONS, type LeadActionState, type LeadFieldErrors } from "@/lib/leads";
 import { WHATSAPP_GENERAL, whatsappUrl } from "@/lib/links";
 import { CTA } from "@/lib/site";
 import type { Tier, TierSlug } from "@/lib/tiers";
@@ -219,8 +219,38 @@ export function LeadForm({ tiers, addons }: { tiers: Tier[]; addons: Addon[] }) 
             <Field name="business" label="Nombre del negocio" error={errors.business}>
               {(p) => <input {...p} name="business" autoComplete="organization" required className={cn(fieldClass, "border-line")} />}
             </Field>
+            <Field name="businessNiche" label="Rubro o tipo de negocio" error={errors.businessNiche}>
+              {(p) => (
+                <>
+                  <input
+                    {...p}
+                    name="businessNiche"
+                    list="rubro-sugerencias"
+                    autoComplete="off"
+                    required
+                    className={cn(fieldClass, "border-line")}
+                  />
+                  <datalist id="rubro-sugerencias">
+                    {BUSINESS_NICHE_SUGGESTIONS.map((n) => (
+                      <option key={n} value={n} />
+                    ))}
+                  </datalist>
+                </>
+              )}
+            </Field>
             <Field name="email" label="Correo" optional error={errors.email}>
               {(p) => <input {...p} name="email" type="email" autoComplete="email" className={cn(fieldClass, "border-line")} />}
+            </Field>
+            <Field name="socialHandle" label="Instagram u otra red social" optional error={errors.socialHandle}>
+              {(p) => (
+                <input
+                  {...p}
+                  name="socialHandle"
+                  placeholder="@tu_negocio"
+                  autoComplete="off"
+                  className={cn(fieldClass, "border-line")}
+                />
+              )}
             </Field>
             <div className="sm:col-span-2">
               <Field name="message" label="¿Algo que debamos saber?" optional error={errors.message}>

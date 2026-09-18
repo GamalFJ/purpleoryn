@@ -15,5 +15,5 @@ export async function GET(request: NextRequest) {
     if (!error) return NextResponse.redirect(`${origin}${next}`);
   }
 
-  return NextResponse.redirect(`${origin}/admin/login?error=enlace`);
+  return NextResponse.redirect(`${origin}/admin/login?error=link-expired`);
 }
