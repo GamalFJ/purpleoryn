@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useMemo, useRef, useState } from "react";
+import Image from "next/image";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { RoiBadge } from "@/components/roi/RoiBadge";
 import { buttonClass } from "@/components/ui/button";
@@ -65,14 +66,25 @@ export function RoiCalculator({ tiers }: { tiers: Tier[] }) {
   return (
     <section id="calculadora" aria-labelledby="calculadora-titulo" className="mx-auto max-w-6xl px-4 pt-24 sm:px-6 md:pt-32">
       <div className="rounded-[28px] border border-warm-line bg-linear-to-br from-warm-soft via-warm-soft to-rose-soft shadow-[0_28px_60px_-40px_rgb(180_83_9/0.6)] p-5 sm:p-8 md:p-10">
-        <div className="max-w-2xl">
-          <RoiBadge className="mb-4" />
-          <h2 id="calculadora-titulo" className="text-3xl font-semibold sm:text-4xl">
-            ¿Cuántas ventas necesitas para que se pague solo?
-          </h2>
-          <p className="mt-4 text-lg leading-relaxed text-body">
-            Elige un plan y escribe cuánto vale una venta promedio en tu negocio. El resultado se actualiza al escribir.
-          </p>
+        <div className="flex max-w-3xl flex-col gap-6 sm:flex-row sm:items-start sm:gap-8">
+          {/* Decorative: the badge beside it names the method. Drop-shadow, not
+              box-shadow, because the mark has transparent corners. */}
+          <Image
+            src="/media/oryn-roi.webp"
+            alt=""
+            width={512}
+            height={512}
+            className="h-24 w-24 shrink-0 drop-shadow-[0_18px_30px_rgb(180_83_9/0.4)] sm:h-28 sm:w-28"
+          />
+          <div>
+            <RoiBadge className="mb-4" />
+            <h2 id="calculadora-titulo" className="text-3xl font-semibold sm:text-4xl">
+              ¿Cuántas ventas necesitas para que se pague solo?
+            </h2>
+            <p className="mt-4 text-lg leading-relaxed text-body">
+              Elige un plan y escribe cuánto vale una venta promedio en tu negocio. El resultado se actualiza al escribir.
+            </p>
+          </div>
         </div>
 
         <div className="mt-10 grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">

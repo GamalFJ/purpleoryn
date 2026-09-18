@@ -11,8 +11,11 @@ import { notifyNewLead } from "@/lib/telegram";
 
 const MIN_FILL_MS = 2500;
 
-// Saves the lead to Supabase. This is the record of truth: WhatsApp and Cal.com
-// come after, on the thank-you page, as conveniences.
+// Saves the order to Supabase. This is the record of truth: per the client
+// "Cómo Trabajamos" document, a completed and submitted plan-selection form is
+// a formal order, with the same weight as a WhatsApp or email approval. That is
+// why `confirmed` is required here and not only in the UI. WhatsApp and Cal.com
+// come after, on the confirmation page, as conveniences.
 export async function submitLead(_prev: LeadActionState, formData: FormData): Promise<LeadActionState> {
   const field = (name: string) => String(formData.get(name) ?? "");
 
@@ -25,6 +28,7 @@ export async function submitLead(_prev: LeadActionState, formData: FormData): Pr
 
   const parsed = leadSchema.safeParse({
     plan: field("plan"),
+    confirmed: field("confirmed"),
     name: field("name"),
     whatsapp: field("whatsapp"),
     email: field("email"),
@@ -86,7 +90,7 @@ export async function submitLead(_prev: LeadActionState, formData: FormData): Pr
     console.error("[lead] insert failed:", error.message);
     return {
       status: "error",
-      message: "No pudimos guardar tu solicitud. Vuelve a intentarlo o escríbenos por WhatsApp.",
+      message: "No pudimos guardar tu pedido. Vuelve a intentarlo o escríbenos por WhatsApp.",
     };
   }
 
