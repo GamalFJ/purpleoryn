@@ -29,6 +29,11 @@ export const FAQ_ITEMS: { id: string; q: string; a: string }[] = [
     a: "El proyecto inicia con el 50% del pago único y el otro 50% se paga contra entrega. La primera mensualidad se paga por adelantado. Puedes pagar con tarjeta de débito o crédito a través de PayPal, sin necesidad de tener cuenta.",
   },
   {
+    id: "pedido",
+    q: "¿Qué pasa cuando envío el formulario de un plan?",
+    a: "Enviar el formulario de selección de plan es una orden formal, con el mismo peso que una aprobación por WhatsApp o correo. Reserva tu cupo por 7 días calendario y te escribimos por WhatsApp con la propuesta y el pago inicial (50%). Por eso conviene leer la información del sitio y preguntarle a Oryn AI o revisar estas preguntas antes de enviarlo.",
+  },
+  {
     id: "zonas",
     q: "¿En qué zonas trabajan?",
     a: "Nuestra área de servicio es Santo Domingo, Santo Domingo Este y Santo Domingo Oeste.",
