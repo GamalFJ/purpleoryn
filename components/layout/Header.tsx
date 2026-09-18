@@ -15,7 +15,11 @@ export function Header() {
           <span className="hidden font-display text-[17px] font-semibold tracking-tight sm:inline">{SITE.name}</span>
         </Link>
 
-        <nav aria-label="Principal" className="ml-auto hidden md:block">
+        {/* lg, not md: at 768px this nav (now 4 links) plus the CTA button no
+            longer fit next to the logo without overflowing the viewport.
+            Tablets get the hamburger menu instead; MobileMenu below must
+            switch at the same breakpoint. */}
+        <nav aria-label="Principal" className="ml-auto hidden lg:block">
           <ul className="flex items-center gap-7 text-[15px] text-muted">
             {NAV_LINKS.map((l) => (
               <li key={l.href}>
@@ -32,7 +36,7 @@ export function Header() {
           href={calUrl()}
           event="cal_click"
           location="header"
-          className={buttonClass("primary", "sm", "ml-auto md:ml-6")}
+          className={buttonClass("primary", "sm", "ml-auto lg:ml-6")}
         >
           {CTA.call}
         </TrackedLink>
