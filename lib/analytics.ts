@@ -6,7 +6,8 @@ export type ConversionEvent =
   | "tier_selected"
   | "calculator_completed"
   | "form_submitted"
-  | "generate_lead";
+  | "generate_lead"
+  | "document_download";
 
 // Set by the lead form just before redirecting to /gracias; consumed there.
 export const LEAD_FLAG = "pcl_lead_submitted";

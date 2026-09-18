@@ -1,3 +1,4 @@
+import type { AddonSnapshot } from "@/lib/addons";
 import { formatRD } from "@/lib/format";
 import { SITE } from "@/lib/site";
 
@@ -6,6 +7,7 @@ import { SITE } from "@/lib/site";
 // saved in Supabase, which is the record of truth.
 export interface LeadAlert {
   planName: string | null;
+  addons: AddonSnapshot[];
   name: string;
   business: string;
   whatsapp: string;
@@ -25,6 +27,9 @@ export async function notifyNewLead(lead: LeadAlert): Promise<void> {
     "Nuevo prospecto en purpleoryn.com",
     "",
     `Plan: ${lead.planName ?? "Sin plan"}`,
+    lead.addons.length
+      ? `Módulos (100% por adelantado): ${lead.addons.map((a) => `${a.name} (${formatRD(a.oneTime)} + ${formatRD(a.monthly)}/mes)`).join(", ")}`
+      : null,
     `Nombre: ${lead.name}`,
     `Negocio: ${lead.business}`,
     `WhatsApp: ${lead.whatsapp} (https://wa.me/${lead.whatsapp.replace("+", "")})`,

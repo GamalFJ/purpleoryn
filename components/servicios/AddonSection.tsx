@@ -4,10 +4,11 @@ import { Price } from "@/components/tiers/Price";
 import { BrandLogo } from "@/components/ui/BrandLogo";
 import { buttonClass } from "@/components/ui/button";
 import { IconTile } from "@/components/ui/IconTile";
-import { ADDONS_ANCHOR, addonUsageText, type Addon } from "@/lib/addons";
+import { ADDON_PAYMENT_RULE, ADDONS_ANCHOR, addonUsageText, type Addon } from "@/lib/addons";
 import { formatRD } from "@/lib/format";
 import { whatsappUrl } from "@/lib/links";
 import { LOGOS, type LogoKey } from "@/lib/logos";
+import { AddAddonButton } from "./PlanSelection";
 
 // Technology behind each add-on, keyed by slug (see lib/logos.ts).
 const PROVIDERS: Record<string, LogoKey[]> = {
@@ -23,7 +24,9 @@ export function AddonSection({ addons }: { addons: Addon[] }) {
       <h2 id="complementos-titulo" className="text-3xl font-semibold sm:text-4xl">
         Complementos
       </h2>
-      <p className="mt-4 max-w-[58ch] text-lg leading-relaxed text-body">Se contratan aparte y se suman a tu plan.</p>
+      <p className="mt-4 max-w-[58ch] text-lg leading-relaxed text-body">
+        Se suman a cualquier plan y los puedes agregar en el mismo formulario de tu pedido. {ADDON_PAYMENT_RULE}
+      </p>
 
       <ul className="mt-10 space-y-4">
         {addons.map((a) => (
@@ -63,17 +66,23 @@ export function AddonSection({ addons }: { addons: Addon[] }) {
                   <Price amount={a.oneTime} />
                 </p>
                 <p className="mt-2 text-sm text-body">
-                  pago único, más <span className="tabular font-semibold text-ink">{formatRD(a.monthly)}</span> al mes
+                  pago único al 100% por adelantado, más <span className="tabular font-semibold text-ink">{formatRD(a.monthly)}</span> al
+                  mes
                 </p>
               </div>
-              <TrackedLink
-                href={whatsappUrl(`Hola Purple Cove Labs, quiero información sobre el ${a.name}.`)}
-                event="whatsapp_click"
-                location={`addon_${a.slug}`}
-                className={buttonClass("primary", "md", "w-full sm:w-fit")}
-              >
-                Preguntar por WhatsApp
-              </TrackedLink>
+              <div className="flex flex-col gap-3 sm:flex-row md:flex-col lg:flex-row">
+                <AddAddonButton slug={a.slug} className={buttonClass("primary", "md", "w-full sm:w-fit")}>
+                  Agregar a mi pedido
+                </AddAddonButton>
+                <TrackedLink
+                  href={whatsappUrl(`Hola Purple Cove Labs, quiero información sobre el ${a.name}.`)}
+                  event="whatsapp_click"
+                  location={`addon_${a.slug}`}
+                  className={buttonClass("secondary", "md", "w-full sm:w-fit")}
+                >
+                  Preguntar por WhatsApp
+                </TrackedLink>
+              </div>
             </div>
           </li>
         ))}
