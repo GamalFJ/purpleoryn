@@ -11,17 +11,24 @@ import { CTA } from "@/lib/site";
 import { isTierSlug } from "@/lib/tiers";
 import { LeadConversion } from "./LeadConversion";
 
-export const metadata = pageMetadata({
-  title: "Solicitud recibida",
-  description: "Recibimos tu solicitud.",
-  path: "/gracias",
-  noIndex: true,
-});
-
 type SearchParams = Promise<{ plan?: string; origen?: string }>;
 
-// Two arrivals: after the plan form (?plan=...) and after booking a call, if
-// the Cal.com event redirects here (?origen=llamada). GA4 goals key off this URL.
+// Only the plan-form arrival is an order, so only it gets the order title.
+export async function generateMetadata({ searchParams }: { searchParams: SearchParams }) {
+  const { origen } = await searchParams;
+  const fromCall = origen === "llamada";
+  return pageMetadata({
+    title: fromCall ? "Llamada agendada" : "Pedido confirmado",
+    description: fromCall ? "Tu llamada quedó agendada." : "Tu pedido quedó confirmado.",
+    path: "/gracias",
+    noIndex: true,
+  });
+}
+
+// Two arrivals: after the plan order form (?plan=...) and after booking a call,
+// if the Cal.com event redirects here (?origen=llamada). GA4 goals key off this
+// URL. The order wording belongs only to the first arrival: submitting the plan
+// form is a formal order, booking a call is not.
 export default async function GraciasPage({ searchParams }: { searchParams: SearchParams }) {
   const { plan: planParam, origen } = await searchParams;
   const tiers = await getTiers();
@@ -47,10 +54,11 @@ export default async function GraciasPage({ searchParams }: { searchParams: Sear
           </>
         ) : (
           <>
-            <h1 className="mt-5 text-4xl font-semibold leading-tight sm:text-5xl">Recibimos tu solicitud</h1>
+            <h1 className="mt-5 text-4xl font-semibold leading-tight sm:text-5xl">Tu pedido está confirmado</h1>
             <p className="mt-4 text-lg leading-relaxed text-body">
-              {plan ? `Guardamos tus datos para el plan ${plan.name}. ` : "Guardamos tus datos. "}
-              Te escribiremos por WhatsApp. Si quieres adelantar, elige una de estas opciones.
+              {plan ? `Registramos tu pedido del plan ${plan.name}. ` : "Registramos tu pedido. "}
+              Tu cupo queda reservado por 7 días calendario. Te escribimos por WhatsApp con la propuesta y el pago
+              inicial (50%). Si quieres adelantar, elige una de estas opciones.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <TrackedLink
@@ -65,8 +73,8 @@ export default async function GraciasPage({ searchParams }: { searchParams: Sear
               <TrackedLink
                 href={whatsappUrl(
                   plan
-                    ? `Hola Purple Cove Labs, acabo de enviar la solicitud del plan ${plan.name}.`
-                    : "Hola Purple Cove Labs, acabo de enviar una solicitud en su sitio web.",
+                    ? `Hola Purple Cove Labs, acabo de confirmar mi pedido del plan ${plan.name}.`
+                    : "Hola Purple Cove Labs, acabo de confirmar un pedido en su sitio web.",
                 )}
                 event="whatsapp_click"
                 location="gracias"

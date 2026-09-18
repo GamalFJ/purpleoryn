@@ -17,6 +17,9 @@ async function latest(table: string, filter?: [string, boolean]): Promise<Date |
 }
 
 const LAUNCH = new Date("2026-09-14");
+// /como-trabajamos is driven by the client "Cómo Trabajamos" document, not by
+// the database; bump this when that document changes.
+const PROCESS_COPY = new Date("2026-09-17");
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [tiers, addons, settings, portfolio] = await Promise.all([
@@ -30,6 +33,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     { url: `${SITE.url}/`, lastModified: max(tiers, addons, settings, portfolio), changeFrequency: "weekly", priority: 1 },
     { url: `${SITE.url}/servicios`, lastModified: max(tiers, addons), changeFrequency: "monthly", priority: 0.9 },
+    { url: `${SITE.url}/como-trabajamos`, lastModified: PROCESS_COPY, changeFrequency: "monthly", priority: 0.8 },
     { url: `${SITE.url}/portafolio`, lastModified: max(portfolio), changeFrequency: "weekly", priority: 0.7 },
     { url: `${SITE.url}/privacidad`, lastModified: LAUNCH, changeFrequency: "yearly", priority: 0.2 },
   ];

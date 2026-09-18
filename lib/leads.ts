@@ -10,6 +10,11 @@ const phone = z
 
 export const leadSchema = z.object({
   plan: z.enum(["presencia", "conversion", "autoridad"], { message: "Elige un plan." }),
+  // Sending this form is a formal order, so the confirmation is validated on
+  // the server too: a disabled submit button is a courtesy, not a record.
+  confirmed: z
+    .string()
+    .refine((v) => v === "on", "Marca la confirmación para enviar tu pedido."),
   name: z.string().trim().min(2, "Escribe tu nombre.").max(120),
   whatsapp: phone,
   email: z
@@ -33,7 +38,9 @@ export const leadSchema = z.object({
 
 export type LeadInput = z.input<typeof leadSchema>;
 
-export type LeadFieldErrors = Partial<Record<"plan" | "name" | "whatsapp" | "email" | "business" | "message", string>>;
+export type LeadFieldErrors = Partial<
+  Record<"plan" | "confirmed" | "name" | "whatsapp" | "email" | "business" | "message", string>
+>;
 
 export type LeadActionState =
   | { status: "idle" }

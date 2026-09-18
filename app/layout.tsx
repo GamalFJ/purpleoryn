@@ -50,7 +50,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <GoogleTagManagerScript />
         <noscript>
-          <style>{`[data-reveal]{opacity:1!important;transform:none!important}`}</style>
+          <style>{`[data-reveal]{opacity:1!important;transform:none!important}[data-road-mask]{stroke-dasharray:none!important;stroke-dashoffset:0!important}`}</style>
         </noscript>
       </head>
       <body className="min-h-[100dvh]">

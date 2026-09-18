@@ -9,6 +9,7 @@ import { TierStairs } from "@/components/home/TierStairs";
 import { ClosingCta } from "@/components/layout/ClosingCta";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
+import { ProcesoTeaser } from "@/components/proceso/ProcesoTeaser";
 import { getAddons, getPortfolio, getSiteSettings, getTiers } from "@/lib/content";
 import { pageMetadata } from "@/lib/seo";
 
@@ -31,9 +32,10 @@ export default async function HomePage() {
       <Header />
       <main id="contenido">
         <Hero settings={settings} />
-        {/* Presentación → Dolor → Solución → planes → prueba → CTA */}
+        {/* Presentación → Dolor → Solución → proceso → planes → prueba → CTA */}
         <Pain />
         <Solution />
+        <ProcesoTeaser />
         <TierStairs tiers={tiers} addons={addons} />
         <Stats />
         <PortfolioPreview items={portfolio} />

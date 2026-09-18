@@ -2,7 +2,7 @@
 
 import { startTransition, useActionState, useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
-import { PaperPlaneTilt } from "@phosphor-icons/react";
+import { PaperPlaneTilt, Sparkle } from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
 import { submitLead } from "@/app/servicios/actions";
 import { readAttribution, type Attribution } from "@/components/analytics/Attribution";
@@ -10,6 +10,7 @@ import { TrackedLink } from "@/components/analytics/TrackedLink";
 import { buttonClass } from "@/components/ui/button";
 import { IconTile } from "@/components/ui/IconTile";
 import { LEAD_FLAG, track } from "@/lib/analytics";
+import { openChat } from "@/lib/chat";
 import { cn } from "@/lib/cn";
 import { formatRD } from "@/lib/format";
 import type { LeadActionState, LeadFieldErrors } from "@/lib/leads";
@@ -53,6 +54,7 @@ function Field({
 export function LeadForm({ tiers }: { tiers: Tier[] }) {
   const { selected, select, averageSaleValue } = usePlanSelection();
   const [plan, setPlan] = useState<TierSlug | "">("");
+  const [confirmed, setConfirmed] = useState(false);
   const [state, formAction, pending] = useActionState<LeadActionState, FormData>(submitLead, { status: "idle" });
   const [attribution, setAttribution] = useState<Attribution | null>(null);
   const startedAt = useRef<number>(0);
@@ -77,7 +79,6 @@ export function LeadForm({ tiers }: { tiers: Tier[] }) {
   }, [state, router]);
 
   const errors: LeadFieldErrors = state.status === "error" ? (state.fieldErrors ?? {}) : {};
-  const chosen = tiers.find((t) => t.slug === plan);
 
   return (
     <section id="elegir-plan" aria-labelledby="formulario-titulo" className="mx-auto max-w-6xl px-4 pt-24 sm:px-6 md:pt-32">
@@ -88,7 +89,16 @@ export function LeadForm({ tiers }: { tiers: Tier[] }) {
             {CTA.plan}
           </h2>
           <p className="mt-4 max-w-[46ch] text-lg leading-relaxed text-body">
-            Envía tus datos y te contactamos por WhatsApp para confirmar los detalles antes de empezar.
+            Enviar este formulario es tu aprobación escrita: constituye una orden formal, con el mismo peso que una
+            confirmación por WhatsApp o correo, y reserva tu cupo por 7 días calendario.
+          </p>
+          <p className="mt-4 max-w-[46ch] text-[15px] leading-relaxed text-muted">
+            Lee toda la información del sitio antes de enviarlo. Después te escribimos por WhatsApp con la propuesta y el
+            pago inicial.{" "}
+            <Link href="/como-trabajamos" className="font-medium text-accent underline-offset-4 hover:underline">
+              Ver los siete pasos
+            </Link>
+            .
           </p>
           <p className="mt-6 text-[15px] text-muted">
             ¿Prefieres escribir directo?{" "}
@@ -198,7 +208,49 @@ export function LeadForm({ tiers }: { tiers: Tier[] }) {
             </p>
           )}
 
-          <div className="mt-7 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          {/* The order gate. Questions belong here, before the confirmation,
+              not after: this submission is the confirmation. */}
+          <div className="mt-7 rounded-[var(--radius-panel)] border border-warm-line bg-warm-soft p-5">
+            <p className="text-[15px] leading-relaxed text-body">
+              ¿Tienes preguntas antes de confirmar?{" "}
+              <button
+                type="button"
+                onClick={openChat}
+                className="inline-flex cursor-pointer items-center gap-1 font-semibold text-accent underline underline-offset-4 hover:text-accent-hover"
+              >
+                <Sparkle size={16} weight="duotone" aria-hidden="true" />
+                Pregúntale a Oryn AI
+              </button>{" "}
+              o revisa las{" "}
+              <Link href="/#preguntas" className="font-semibold text-accent underline underline-offset-4 hover:text-accent-hover">
+                preguntas frecuentes
+              </Link>
+              .
+            </p>
+
+            <label className="mt-4 flex cursor-pointer items-start gap-3">
+              <input
+                type="checkbox"
+                name="confirmed"
+                checked={confirmed}
+                onChange={(e) => setConfirmed(e.target.checked)}
+                required
+                aria-invalid={Boolean(errors.confirmed)}
+                aria-describedby={errors.confirmed ? "confirmed-error" : undefined}
+                className="mt-0.5 h-5 w-5 shrink-0 cursor-pointer accent-accent"
+              />
+              <span className="text-[15px] font-semibold leading-relaxed text-ink">
+                He leído la información de este sitio y confirmo mi pedido del plan seleccionado.
+              </span>
+            </label>
+            {errors.confirmed && (
+              <p id="confirmed-error" className="mt-2 text-sm text-danger">
+                {errors.confirmed}
+              </p>
+            )}
+          </div>
+
+          <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-sm text-muted">
               Al enviar aceptas nuestra{" "}
               <Link href="/privacidad" className="underline underline-offset-2 hover:text-ink">
@@ -206,8 +258,8 @@ export function LeadForm({ tiers }: { tiers: Tier[] }) {
               </Link>
               .
             </p>
-            <button type="submit" disabled={pending} className={buttonClass("primary", "lg", "shrink-0")}>
-              {pending ? "Enviando..." : chosen ? `Solicitar plan ${chosen.name}` : "Enviar solicitud"}
+            <button type="submit" disabled={pending || !confirmed} className={buttonClass("primary", "lg", "shrink-0")}>
+              {pending ? "Enviando..." : "Confirmar mi pedido"}
             </button>
           </div>
         </form>

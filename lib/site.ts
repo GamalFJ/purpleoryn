@@ -23,6 +23,7 @@ export const GBP_WEBSITE_URL = `${SITE.url}/?utm_source=google&utm_medium=organi
 
 export const NAV_LINKS = [
   { href: "/servicios", label: "Servicios" },
+  { href: "/como-trabajamos", label: "Cómo trabajamos" },
   { href: "/portafolio", label: "Portafolio" },
   { href: "/#preguntas", label: "Preguntas" },
 ] as const;
