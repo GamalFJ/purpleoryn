@@ -23,7 +23,9 @@ export function MobileMenu({ links }: { links: readonly { href: string; label: s
   }, [open]);
 
   return (
-    <div className="md:hidden">
+    // Matches Header's `lg:block` nav switch: below 1024px this is the only
+    // way to reach the nav links.
+    <div className="lg:hidden">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
