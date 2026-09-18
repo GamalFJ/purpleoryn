@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { TrackedLink } from "@/components/analytics/TrackedLink";
+import { DocumentCard } from "@/components/documents/DocumentCard";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { RoadMap } from "@/components/proceso/RoadMap";
 import { buttonClass } from "@/components/ui/button";
+import { DOCUMENTS } from "@/lib/documents";
 import { calUrl } from "@/lib/links";
 import { pageMetadata } from "@/lib/seo";
 
@@ -50,7 +52,20 @@ export default function ComoTrabajamosPage() {
           <RoadMap />
         </div>
 
-        <section aria-labelledby="empezar-titulo" className="mx-auto max-w-6xl px-4 pb-20 pt-20 sm:px-6">
+        <section aria-labelledby="documentos-titulo" className="mx-auto max-w-6xl px-4 pt-20 sm:px-6">
+          <h2 id="documentos-titulo" className="text-2xl font-semibold leading-tight sm:text-[1.75rem]">
+            Llévatelo por escrito
+          </h2>
+          <p className="mt-3 max-w-[58ch] text-[15px] leading-relaxed text-body">
+            El mismo camino con sus compromisos y políticas, y el documento completo de Oryn Presence.
+          </p>
+          <div className="mt-6 grid gap-3 sm:grid-cols-2">
+            <DocumentCard doc={DOCUMENTS["como-trabajamos"]} location="como_trabajamos_docs" variant="compact" />
+            <DocumentCard doc={DOCUMENTS["oryn-presence"]} location="como_trabajamos_docs" variant="compact" />
+          </div>
+        </section>
+
+        <section aria-labelledby="empezar-titulo" className="mx-auto max-w-6xl px-4 pb-20 pt-16 sm:px-6">
           <h2 id="empezar-titulo" className="text-3xl font-semibold leading-tight sm:text-4xl">
             Ya conoces el camino
           </h2>

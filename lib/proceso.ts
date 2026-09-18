@@ -47,7 +47,7 @@ export const STEPS: Waypoint[] = [
     title: "Propuesta",
     short: "Propuesta",
     detail:
-      "Recibes por escrito el plan elegido (Presencia, Conversión o Autoridad), cualquier módulo adicional que decidas incluir, la inversión total con su calendario de pago (50% inicial, 50% final) y el plan de trabajo. Precio fijo según el plan, sin costos sorpresa.",
+      "Recibes por escrito el plan elegido (Presencia, Conversión o Autoridad), cualquier módulo adicional que decidas incluir, la inversión total con su calendario de pago (50% inicial y 50% final para el plan; 100% por adelantado para cualquier módulo adicional) y el plan de trabajo. Precio fijo según el plan, sin costos sorpresa.",
     icon: FileText,
     tone: "teal",
   },
@@ -67,7 +67,7 @@ export const STEPS: Waypoint[] = [
     title: "Pago Inicial (50%)",
     short: "Pago inicial",
     detail:
-      "Con el 50% inicial confirmado, tu proyecto queda activado y tu cupo asegurado. La mensualidad correspondiente a tu plan es parte de esta misma inversión, no un paso aparte, y comienza a contar desde la salida en vivo de tu sistema.",
+      "Con el 50% inicial confirmado, tu proyecto queda activado y tu cupo asegurado. Si tu pedido incluye módulos adicionales, se pagan completos (100%) en este mismo momento. La mensualidad correspondiente a tu plan es parte de esta misma inversión, no un paso aparte, y comienza a contar desde la salida en vivo de tu sistema.",
     icon: CreditCard,
     tone: "amber",
   },
@@ -111,7 +111,7 @@ export const BRANCH: Waypoint = {
   title: "Módulos opcionales",
   short: "Módulos opcionales",
   detail:
-    "Además de los tres planes ofrecemos módulos adicionales, como el Agente de Voz IA, que se agregan por separado. Cada módulo tiene su propia inversión (pago único y/o mensualidad, según corresponda) y puede agregarse desde el inicio del proyecto o en cualquier momento después de la salida en vivo. Los módulos disponibles al momento de tu propuesta, y su inversión, se indican ahí.",
+    "Además de los tres planes ofrecemos módulos adicionales, como el Agente de Voz IA, que se agregan por separado, incluso en el mismo formulario de tu pedido. Cada módulo tiene su propia inversión (pago único y/o mensualidad, según corresponda) y, a diferencia de los planes, se paga al 100% por adelantado. Puede agregarse desde el inicio del proyecto o en cualquier momento después de la salida en vivo. Los módulos disponibles al momento de tu propuesta, y su inversión, se indican ahí.",
   icon: Microphone,
   tone: "amber",
 };

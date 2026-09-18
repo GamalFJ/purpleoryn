@@ -18,6 +18,25 @@ export interface Addon {
 // Section anchor on /servicios.
 export const ADDONS_ANCHOR = "complementos";
 
+// The one payment rule that differs from the plans. Stated with these exact
+// words wherever an add-on can be bought (order form, add-on section), and
+// mirrored in the "Cómo trabajamos" document.
+export const ADDON_PAYMENT_RULE =
+  "Los módulos adicionales se pagan al 100% por adelantado, a diferencia de los planes, que se pagan 50% al inicio y 50% contra entrega.";
+
+// What an order records about each add-on: the name and prices agreed to at
+// submission time, so a later price change never rewrites a past order.
+export interface AddonSnapshot {
+  slug: string;
+  name: string;
+  oneTime: number;
+  monthly: number;
+}
+
+export function addonSnapshot(a: Addon): AddonSnapshot {
+  return { slug: a.slug, name: a.name, oneTime: a.oneTime, monthly: a.monthly };
+}
+
 export const DEFAULT_ADDONS: Addon[] = [
   {
     slug: "agente-de-voz",

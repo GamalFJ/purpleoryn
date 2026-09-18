@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { WhatsappLogo } from "@phosphor-icons/react/dist/ssr";
 import { buttonClass } from "@/components/ui/button";
 import { requireAdmin } from "@/lib/admin";
+import type { AddonSnapshot } from "@/lib/addons";
 import { getTiers } from "@/lib/content";
 import { formatCount, formatRD } from "@/lib/format";
 import { LEAD_STATUSES, LEAD_STATUS_LABEL, type LeadStatus } from "@/lib/leads";
@@ -41,6 +42,8 @@ export default async function ProspectoPage({ params }: { params: Params }) {
   if (!lead) notFound();
 
   const plan = tiers.find((t) => t.slug === lead.plan);
+  // Older leads predate the column; treat anything that is not an array as none.
+  const addons: AddonSnapshot[] = Array.isArray(lead.addons) ? (lead.addons as AddonSnapshot[]) : [];
   const roi = (lead.roi_snapshot ?? null) as RoiSnapshot | null;
   // The ROI snapshot was computed with the prices at submission time.
   const snapshotPrices =
@@ -99,6 +102,20 @@ export default async function ProspectoPage({ params }: { params: Params }) {
       <section className="mt-8 rounded-[var(--radius-panel)] border border-line bg-surface px-6 py-3 sm:px-8">
         <dl className="divide-y divide-line">
           <Row label="Plan">{plan ? `${plan.name} (${formatRD(plan.oneTime)} + ${formatRD(plan.monthly)}/mes)` : "Sin plan"}</Row>
+          <Row label="Módulos">
+            {addons.length ? (
+              <ul className="space-y-1">
+                {addons.map((a) => (
+                  <li key={a.slug}>
+                    {a.name} ({formatRD(a.oneTime)} + {formatRD(a.monthly)}/mes){" "}
+                    <span className="text-sm text-muted">100% por adelantado</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              "Ninguno"
+            )}
+          </Row>
           <Row label="WhatsApp">
             <span className="tabular">{lead.whatsapp}</span>
           </Row>

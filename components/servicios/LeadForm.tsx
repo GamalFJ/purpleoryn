@@ -2,13 +2,15 @@
 
 import { startTransition, useActionState, useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
-import { PaperPlaneTilt, Sparkle } from "@phosphor-icons/react";
+import { Info, PaperPlaneTilt, Sparkle } from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
 import { submitLead } from "@/app/servicios/actions";
 import { readAttribution, type Attribution } from "@/components/analytics/Attribution";
 import { TrackedLink } from "@/components/analytics/TrackedLink";
+import { DownloadLink } from "@/components/documents/DownloadLink";
 import { buttonClass } from "@/components/ui/button";
 import { IconTile } from "@/components/ui/IconTile";
+import { ADDON_PAYMENT_RULE, type Addon } from "@/lib/addons";
 import { LEAD_FLAG, track } from "@/lib/analytics";
 import { openChat } from "@/lib/chat";
 import { cn } from "@/lib/cn";
@@ -51,8 +53,8 @@ function Field({
   );
 }
 
-export function LeadForm({ tiers }: { tiers: Tier[] }) {
-  const { selected, select, averageSaleValue } = usePlanSelection();
+export function LeadForm({ tiers, addons }: { tiers: Tier[]; addons: Addon[] }) {
+  const { selected, select, averageSaleValue, addons: chosenAddons, setAddon } = usePlanSelection();
   const [plan, setPlan] = useState<TierSlug | "">("");
   const [confirmed, setConfirmed] = useState(false);
   const [state, formAction, pending] = useActionState<LeadActionState, FormData>(submitLead, { status: "idle" });
@@ -71,11 +73,13 @@ export function LeadForm({ tiers }: { tiers: Tier[] }) {
 
   useEffect(() => {
     if (state.status !== "success") return;
-    track("form_submitted", { plan: state.plan, form: "servicios_plan" });
+    track("form_submitted", { plan: state.plan, form: "servicios_plan", addons: state.addons.join(",") || undefined });
     try {
       sessionStorage.setItem(LEAD_FLAG, state.plan);
     } catch {}
-    router.push(`/gracias?plan=${encodeURIComponent(state.plan)}`);
+    const params = new URLSearchParams({ plan: state.plan });
+    if (state.addons.length) params.set("modulos", state.addons.join(","));
+    router.push(`/gracias?${params.toString()}`);
   }, [state, router]);
 
   const errors: LeadFieldErrors = state.status === "error" ? (state.fieldErrors ?? {}) : {};
@@ -159,6 +163,50 @@ export function LeadForm({ tiers }: { tiers: Tier[] }) {
             )}
           </fieldset>
 
+          {addons.length > 0 && (
+            <fieldset className="mt-6" aria-describedby="modulos-regla">
+              <legend className="text-[15px] font-semibold">
+                Módulos adicionales <span className="font-normal text-muted">(opcional, con cualquier plan)</span>
+              </legend>
+              <div className="mt-3 grid gap-2">
+                {addons.map((a) => {
+                  const on = chosenAddons.includes(a.slug);
+                  return (
+                    <label
+                      key={a.slug}
+                      className={cn(
+                        "flex cursor-pointer items-start gap-3 rounded-[var(--radius-field)] border p-4 transition-colors has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-accent",
+                        on ? "border-teal bg-teal-soft" : "border-line hover:border-teal",
+                      )}
+                    >
+                      <input
+                        type="checkbox"
+                        name="addons"
+                        value={a.slug}
+                        checked={on}
+                        onChange={(e) => setAddon(a.slug, e.target.checked)}
+                        className="mt-0.5 h-5 w-5 shrink-0 cursor-pointer accent-accent"
+                      />
+                      <span>
+                        <span className="block font-medium text-ink">{a.name}</span>
+                        <span className="tabular mt-1 block text-sm text-muted">
+                          {formatRD(a.oneTime)} pago único, más {formatRD(a.monthly)} al mes
+                        </span>
+                      </span>
+                    </label>
+                  );
+                })}
+              </div>
+              {/* The one payment rule that differs from the plan, next to the
+                  thing it applies to, before anyone confirms. */}
+              <p id="modulos-regla" className="mt-3 flex items-start gap-2 text-sm leading-relaxed text-body">
+                <Info size={18} weight="duotone" aria-hidden="true" className="mt-0.5 shrink-0 text-teal-ink" />
+                <span>{ADDON_PAYMENT_RULE}</span>
+              </p>
+              {errors.addons && <p className="mt-2 text-sm text-danger">{errors.addons}</p>}
+            </fieldset>
+          )}
+
           <div className="mt-6 grid gap-5 sm:grid-cols-2">
             <Field name="name" label="Nombre y apellido" error={errors.name}>
               {(p) => <input {...p} name="name" autoComplete="name" required className={cn(fieldClass, "border-line")} />}
@@ -225,6 +273,14 @@ export function LeadForm({ tiers }: { tiers: Tier[] }) {
               <Link href="/#preguntas" className="font-semibold text-accent underline underline-offset-4 hover:text-accent-hover">
                 preguntas frecuentes
               </Link>
+              . El proceso y las políticas completas están en{" "}
+              <DownloadLink
+                slug="como-trabajamos"
+                location="servicios_form"
+                className="font-semibold text-accent underline underline-offset-4 hover:text-accent-hover"
+              >
+                Cómo trabajamos (PDF)
+              </DownloadLink>
               .
             </p>
 
@@ -240,7 +296,8 @@ export function LeadForm({ tiers }: { tiers: Tier[] }) {
                 className="mt-0.5 h-5 w-5 shrink-0 cursor-pointer accent-accent"
               />
               <span className="text-[15px] font-semibold leading-relaxed text-ink">
-                He leído la información de este sitio y confirmo mi pedido del plan seleccionado.
+                He leído la información de este sitio y confirmo mi pedido del plan seleccionado
+                {chosenAddons.length > 0 && " y de los módulos adicionales marcados"}.
               </span>
             </label>
             {errors.confirmed && (

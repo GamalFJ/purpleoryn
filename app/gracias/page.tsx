@@ -4,14 +4,14 @@ import { TrackedLink } from "@/components/analytics/TrackedLink";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { buttonClass } from "@/components/ui/button";
-import { getTiers } from "@/lib/content";
+import { getAddons, getTiers } from "@/lib/content";
 import { calUrl, whatsappUrl } from "@/lib/links";
 import { pageMetadata } from "@/lib/seo";
 import { CTA } from "@/lib/site";
 import { isTierSlug } from "@/lib/tiers";
 import { LeadConversion } from "./LeadConversion";
 
-type SearchParams = Promise<{ plan?: string; origen?: string }>;
+type SearchParams = Promise<{ plan?: string; origen?: string; modulos?: string }>;
 
 // Only the plan-form arrival is an order, so only it gets the order title.
 export async function generateMetadata({ searchParams }: { searchParams: SearchParams }) {
@@ -30,8 +30,13 @@ export async function generateMetadata({ searchParams }: { searchParams: SearchP
 // URL. The order wording belongs only to the first arrival: submitting the plan
 // form is a formal order, booking a call is not.
 export default async function GraciasPage({ searchParams }: { searchParams: SearchParams }) {
-  const { plan: planParam, origen } = await searchParams;
-  const tiers = await getTiers();
+  const { plan: planParam, origen, modulos } = await searchParams;
+  const [tiers, addons] = await Promise.all([getTiers(), getAddons()]);
+  // Display only: the order itself was saved with its own add-on snapshot.
+  const orderedAddons = (modulos ?? "")
+    .split(",")
+    .map((slug) => addons.find((a) => a.slug === slug))
+    .filter((a) => a !== undefined);
   const plan = isTierSlug(planParam) ? tiers.find((t) => t.slug === planParam) : undefined;
   const fromCall = origen === "llamada";
 
@@ -56,9 +61,12 @@ export default async function GraciasPage({ searchParams }: { searchParams: Sear
           <>
             <h1 className="mt-5 text-4xl font-semibold leading-tight sm:text-5xl">Tu pedido está confirmado</h1>
             <p className="mt-4 text-lg leading-relaxed text-body">
-              {plan ? `Registramos tu pedido del plan ${plan.name}. ` : "Registramos tu pedido. "}
+              {plan ? `Registramos tu pedido del plan ${plan.name}` : "Registramos tu pedido"}
+              {orderedAddons.length > 0 && ` con ${orderedAddons.map((a) => `el módulo ${a.name}`).join(" y ")}`}
+              {". "}
               Tu cupo queda reservado por 7 días calendario. Te escribimos por WhatsApp con la propuesta y el pago
-              inicial (50%). Si quieres adelantar, elige una de estas opciones.
+              inicial: {orderedAddons.length > 0 ? "50% del plan y 100% de los módulos adicionales" : "50% del plan"}. Si quieres
+              adelantar, elige una de estas opciones.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <TrackedLink

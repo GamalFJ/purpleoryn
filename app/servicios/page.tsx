@@ -1,3 +1,4 @@
+import { DownloadLink } from "@/components/documents/DownloadLink";
 import { ClosingCta } from "@/components/layout/ClosingCta";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
@@ -8,6 +9,7 @@ import { PlanSelectionProvider } from "@/components/servicios/PlanSelection";
 import { RoiCalculator } from "@/components/servicios/RoiCalculator";
 import { TierComparison } from "@/components/servicios/TierComparison";
 import { getAddons, getTiers } from "@/lib/content";
+import { DOCUMENTS, documentMeta } from "@/lib/documents";
 import { pageMetadata } from "@/lib/seo";
 
 export const revalidate = 300;
@@ -32,11 +34,22 @@ export default async function ServiciosPage() {
             <p className="mt-4 max-w-[58ch] text-lg leading-relaxed text-body">
               Cada plan tiene un pago único y una mensualidad, y cada uno incluye todo lo del anterior. Precios en pesos dominicanos.
             </p>
+            <p className="mt-3 text-[15px] text-muted">
+              ¿Quieres todo el detalle antes de elegir?{" "}
+              <DownloadLink
+                slug="oryn-presence"
+                location="servicios_intro"
+                className="font-medium text-accent underline-offset-4 hover:underline"
+              >
+                Descarga Oryn Presence
+              </DownloadLink>{" "}
+              ({documentMeta(DOCUMENTS["oryn-presence"])}).
+            </p>
           </div>
           <TierComparison tiers={tiers} />
           <AddonSection addons={addons} />
           <RoiCalculator tiers={tiers} />
-          <LeadForm tiers={tiers} />
+          <LeadForm tiers={tiers} addons={addons} />
         </PlanSelectionProvider>
         <ClosingCta location="servicios_closing" />
       </main>

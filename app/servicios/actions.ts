@@ -4,7 +4,8 @@ import { headers } from "next/headers";
 import { after } from "next/server";
 import { leadSchema, type LeadActionState, type LeadFieldErrors } from "@/lib/leads";
 import { computeRoi } from "@/lib/roi";
-import { getTiers } from "@/lib/content";
+import { addonSnapshot } from "@/lib/addons";
+import { getAddons, getTiers } from "@/lib/content";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { publicClient } from "@/lib/supabase/server";
 import { notifyNewLead } from "@/lib/telegram";
@@ -20,7 +21,7 @@ export async function submitLead(_prev: LeadActionState, formData: FormData): Pr
   const field = (name: string) => String(formData.get(name) ?? "");
 
   // Spam guards: hidden honeypot field + a minimum time on the form.
-  if (field("company_website")) return { status: "success", plan: field("plan") };
+  if (field("company_website")) return { status: "success", plan: field("plan"), addons: [] };
   const startedAt = Number(field("started_at"));
   if (!startedAt || Date.now() - startedAt < MIN_FILL_MS) {
     return { status: "error", message: "No pudimos enviar el formulario. Espera un momento y vuelve a intentarlo." };
@@ -29,6 +30,7 @@ export async function submitLead(_prev: LeadActionState, formData: FormData): Pr
   const parsed = leadSchema.safeParse({
     plan: field("plan"),
     confirmed: field("confirmed"),
+    addons: formData.getAll("addons").map(String),
     name: field("name"),
     whatsapp: field("whatsapp"),
     email: field("email"),
@@ -51,6 +53,24 @@ export async function submitLead(_prev: LeadActionState, formData: FormData): Pr
     return { status: "error", message: "Revisa los campos marcados.", fieldErrors };
   }
 
+  const lead = parsed.data;
+  const [tiers, addons] = await Promise.all([getTiers(), getAddons()]);
+  const tier = tiers.find((t) => t.slug === lead.plan);
+
+  // Prices come from the live table, never from the browser. An unknown slug
+  // means the add-on was unpublished after the page loaded (or the form was
+  // tampered with); a binding order must not silently drop part of itself.
+  const chosenSlugs = [...new Set(lead.addons)];
+  const chosenAddons = chosenSlugs.map((slug) => addons.find((a) => a.slug === slug));
+  if (chosenAddons.some((a) => !a)) {
+    return {
+      status: "error",
+      message: "Uno de los módulos que elegiste ya no está disponible. Recarga la página y revisa tu pedido.",
+      fieldErrors: { addons: "Este módulo ya no está disponible." },
+    };
+  }
+  const addonsSnapshot = chosenAddons.filter((a) => a !== undefined).map(addonSnapshot);
+
   if (!isSupabaseConfigured()) {
     console.error("[lead] Supabase is not configured; lead was not saved.");
     return {
@@ -59,8 +79,6 @@ export async function submitLead(_prev: LeadActionState, formData: FormData): Pr
     };
   }
 
-  const lead = parsed.data;
-  const tier = (await getTiers()).find((t) => t.slug === lead.plan);
   const roi =
     tier && lead.averageSaleValue
       ? { oneTime: tier.oneTime, monthly: tier.monthly, ...computeRoi({ oneTime: tier.oneTime, monthly: tier.monthly, averageSaleValue: lead.averageSaleValue }) }
@@ -77,6 +95,7 @@ export async function submitLead(_prev: LeadActionState, formData: FormData): Pr
       message: lead.message || null,
       average_sale_value: lead.averageSaleValue,
       roi_snapshot: roi,
+      addons: addonsSnapshot,
       source: "servicios_form",
       utm_source: lead.utmSource || null,
       utm_medium: lead.utmMedium || null,
@@ -98,6 +117,7 @@ export async function submitLead(_prev: LeadActionState, formData: FormData): Pr
   after(() =>
     notifyNewLead({
       planName: tier?.name ?? null,
+      addons: addonsSnapshot,
       name: lead.name,
       business: lead.business,
       whatsapp: lead.whatsapp,
@@ -109,5 +129,5 @@ export async function submitLead(_prev: LeadActionState, formData: FormData): Pr
     }),
   );
 
-  return { status: "success", plan: lead.plan };
+  return { status: "success", plan: lead.plan, addons: addonsSnapshot.map((a) => a.slug) };
 }

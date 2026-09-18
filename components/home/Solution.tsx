@@ -1,8 +1,10 @@
 import Image from "next/image";
 import { CalendarCheck, ChatCircleText, Robot } from "@phosphor-icons/react/dist/ssr";
+import { DocumentCard } from "@/components/documents/DocumentCard";
 import { BrandLogo } from "@/components/ui/BrandLogo";
 import { IconTile } from "@/components/ui/IconTile";
 import { cn } from "@/lib/cn";
+import { DOCUMENTS } from "@/lib/documents";
 import { LOGOS, type LogoKey } from "@/lib/logos";
 import type { Tone } from "@/lib/tone";
 import { WhatsAppMock } from "./WhatsAppMock";
@@ -39,25 +41,30 @@ const TOOLS: LogoKey[] = [
 export function Solution() {
   return (
     <section aria-labelledby="solucion-titulo" className="mx-auto max-w-6xl px-4 pt-24 sm:px-6 md:pt-32">
-      <div className="flex max-w-3xl flex-col gap-6 sm:flex-row sm:items-start sm:gap-8">
-        {/* The mark is decorative: the heading beside it already names the
-            product. Transparent corners, so the glow is a drop-shadow filter
-            and not a box-shadow, which would draw a rectangle behind it. */}
-        <Image
-          src="/media/oryn-presence.webp"
-          alt=""
-          width={512}
-          height={512}
-          className="h-24 w-24 shrink-0 drop-shadow-[0_18px_30px_rgb(109_47_216/0.45)] sm:h-28 sm:w-28"
-        />
-        <div>
-          <h2 id="solucion-titulo" className="text-3xl font-semibold leading-tight sm:text-4xl">
-            Oryn Presence: un solo sistema que no deja enfriar a ningún cliente
-          </h2>
-          <p className="mt-4 text-lg leading-relaxed text-body">
-            Un sitio que aparece cuando te buscan y un Agente de IA que atiende a cada cliente en el momento.
-          </p>
+      {/* Where Oryn Presence is introduced, the full deck sits right beside
+          it, so a prospect who wants the whole picture can take it with them. */}
+      <div className="grid gap-10 lg:grid-cols-[1fr_minmax(0,28rem)] lg:items-center lg:gap-12">
+        <div className="flex max-w-3xl flex-col gap-6 sm:flex-row sm:items-start sm:gap-8">
+          {/* The mark is decorative: the heading beside it already names the
+              product. Transparent corners, so the glow is a drop-shadow filter
+              and not a box-shadow, which would draw a rectangle behind it. */}
+          <Image
+            src="/media/oryn-presence.webp"
+            alt=""
+            width={512}
+            height={512}
+            className="h-24 w-24 shrink-0 drop-shadow-[0_18px_30px_rgb(109_47_216/0.45)] sm:h-28 sm:w-28"
+          />
+          <div>
+            <h2 id="solucion-titulo" className="text-3xl font-semibold leading-tight sm:text-4xl">
+              Oryn Presence: un solo sistema que no deja enfriar a ningún cliente
+            </h2>
+            <p className="mt-4 text-lg leading-relaxed text-body">
+              Un sitio que aparece cuando te buscan y un Agente de IA que atiende a cada cliente en el momento.
+            </p>
+          </div>
         </div>
+        <DocumentCard doc={DOCUMENTS["oryn-presence"]} location="home_solucion" />
       </div>
 
       <ol className="mt-12 grid gap-0 md:grid-cols-3 md:gap-6">

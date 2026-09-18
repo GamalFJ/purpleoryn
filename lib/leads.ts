@@ -15,6 +15,8 @@ export const leadSchema = z.object({
   confirmed: z
     .string()
     .refine((v) => v === "on", "Marca la confirmación para enviar tu pedido."),
+  // Add-on slugs; checked against the live `addons` table in the action.
+  addons: z.array(z.string().trim().min(1).max(60)).max(10),
   name: z.string().trim().min(2, "Escribe tu nombre.").max(120),
   whatsapp: phone,
   email: z
@@ -39,12 +41,12 @@ export const leadSchema = z.object({
 export type LeadInput = z.input<typeof leadSchema>;
 
 export type LeadFieldErrors = Partial<
-  Record<"plan" | "confirmed" | "name" | "whatsapp" | "email" | "business" | "message", string>
+  Record<"plan" | "addons" | "confirmed" | "name" | "whatsapp" | "email" | "business" | "message", string>
 >;
 
 export type LeadActionState =
   | { status: "idle" }
-  | { status: "success"; plan: string }
+  | { status: "success"; plan: string; addons: string[] }
   | { status: "error"; message: string; fieldErrors?: LeadFieldErrors };
 
 export const LEAD_STATUSES = ["nuevo", "contactado", "propuesta", "ganado", "perdido"] as const;
