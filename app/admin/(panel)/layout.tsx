@@ -1,7 +1,18 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ChatCircleText, GearSix, ImageSquare, SquaresFour, Tag, UsersThree } from "@phosphor-icons/react/dist/ssr";
+import {
+  ChatCircleText,
+  CurrencyCircleDollar,
+  GearSix,
+  ImageSquare,
+  MapPinLine,
+  Receipt,
+  SquaresFour,
+  Tag,
+  Translate,
+  UsersThree,
+} from "@phosphor-icons/react/dist/ssr";
 import type { Icon } from "@phosphor-icons/react";
 import { requireAdmin } from "@/lib/admin";
 import { cn } from "@/lib/cn";
@@ -22,6 +33,12 @@ const NAV: { href: string; label: string; icon: Icon; tone: Tone }[] = [
   { href: "/admin/planes", label: "Plans & pricing", icon: Tag, tone: "amber" },
   { href: "/admin/portafolio", label: "Portfolio", icon: ImageSquare, tone: "rose" },
   { href: "/admin/ajustes", label: "Site settings", icon: GearSix, tone: "violet" },
+  // Multi-market (us/ca/ht + do), distinct from the DR-only sections above —
+  // labeled "Market ..." so they don't read as duplicates of Leads / Plans.
+  { href: "/admin/market-pricing", label: "Market Pricing", icon: CurrencyCircleDollar, tone: "amber" },
+  { href: "/admin/market-content", label: "Market Content", icon: Translate, tone: "violet" },
+  { href: "/admin/market-leads", label: "Market Leads", icon: MapPinLine, tone: "teal" },
+  { href: "/admin/market-orders", label: "Market Orders", icon: Receipt, tone: "rose" },
 ];
 
 // One literal class per tone: Tailwind needs the full strings in source to

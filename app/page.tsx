@@ -11,6 +11,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { ProcesoTeaser } from "@/components/proceso/ProcesoTeaser";
 import { getAddons, getPortfolio, getSiteSettings, getTiers } from "@/lib/content";
+import { getCurrentMarket } from "@/lib/market";
 import { pageMetadata } from "@/lib/seo";
 
 // Admin edits call revalidatePath; this is the safety net.
@@ -25,13 +26,29 @@ export const metadata = pageMetadata({
 });
 
 export default async function HomePage() {
-  const [settings, tiers, addons, portfolio] = await Promise.all([getSiteSettings(), getTiers(), getAddons(), getPortfolio(2)]);
+  const [settings, tiers, addons, portfolio, currentMarket] = await Promise.all([
+    getSiteSettings(),
+    getTiers(),
+    getAddons(),
+    getPortfolio(2),
+    getCurrentMarket(),
+  ]);
+
+  // Hero headline/subheadline are market-scoped (market_content); everything
+  // else on SiteSettings (images, about bio) stays global for now. Falls
+  // back to the existing site_settings-driven copy if a market has no
+  // market_content rows yet.
+  const heroSettings = {
+    ...settings,
+    heroHeadline: currentMarket.content.hero_headline || settings.heroHeadline,
+    heroSubheadline: currentMarket.content.hero_subheadline || settings.heroSubheadline,
+  };
 
   return (
     <>
       <Header />
       <main id="contenido">
-        <Hero settings={settings} />
+        <Hero settings={heroSettings} />
         {/* Presentación → Dolor → Solución → proceso → planes → prueba → CTA */}
         <Pain />
         <Solution />
@@ -39,7 +56,7 @@ export default async function HomePage() {
         <TierStairs tiers={tiers} addons={addons} />
         <Stats />
         <PortfolioPreview items={portfolio} />
-        <About settings={settings} />
+        <About settings={settings} marketId={currentMarket.market?.id ?? "do"} />
         <Faq />
         <ClosingCta location="home_closing" />
       </main>

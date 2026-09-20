@@ -6,6 +6,9 @@ import { z } from "zod";
 import { requireAdmin } from "@/lib/admin";
 import { DOCS_BUCKET, MEDIA_BUCKET, docsPathFromUrl, storagePathFromUrl } from "@/lib/storage";
 import { LEAD_STATUSES } from "@/lib/leads";
+import { MARKET_CONTENT_SECTIONS } from "@/lib/marketContent";
+import { MARKET_LEAD_STATUSES } from "@/lib/marketLeads";
+import { serviceClient } from "@/lib/supabase/service";
 import { isTierSlug } from "@/lib/tiers";
 
 export type AdminActionState = { status: "idle" } | { status: "saved"; message: string } | { status: "error"; message: string };
@@ -35,6 +38,22 @@ function parseWhole(raw: FormDataEntryValue | null) {
 function parsePrice(raw: FormDataEntryValue | null) {
   const n = Number(String(raw ?? "").replace(/[^\d.]/g, ""));
   return Number.isFinite(n) ? Math.round(n * 100) / 100 : NaN;
+}
+
+// market pricing_tiers columns are nullable (unset until a market's real
+// cost is confirmed), unlike tiers' NOT NULL prices above.
+function parseNullablePrice(raw: FormDataEntryValue | null) {
+  const s = String(raw ?? "").trim();
+  if (!s) return null;
+  const n = Number(s.replace(/[^\d.]/g, ""));
+  return Number.isFinite(n) ? Math.round(n * 100) / 100 : NaN;
+}
+
+function parseNullableWhole(raw: FormDataEntryValue | null) {
+  const s = String(raw ?? "").trim();
+  if (!s) return null;
+  const digits = s.replace(/[^\d]/g, "");
+  return digits ? Number(digits) : NaN;
 }
 
 // ─── tiers ──────────────────────────────────────────────────────────────────
@@ -280,4 +299,85 @@ export async function deleteLead(id: string) {
   await supabase.from("leads").delete().eq("id", id);
   revalidatePath("/admin/prospectos", "layout");
   redirect("/admin/prospectos");
+}
+
+// ─── multi-market: pricing / content / leads / orders ──────────────────────
+// markets, pricing_tiers, market_content, market_leads and orders have RLS
+// enabled with NO policies (service-role only by design, see the Phase 1
+// migration) -- requireAdmin()'s session client can't read or write them at
+// all. requireAdmin() is still called first in every action below: it's the
+// only thing standing between these tables and an unauthenticated caller,
+// since the service-role client itself bypasses RLS entirely.
+
+const nullableNonNegative = (message: string) =>
+  z.union([z.null(), z.number()]).refine((v) => v === null || (Number.isFinite(v) && v >= 0), message);
+const nullableNonNegativeInt = (message: string) =>
+  z.union([z.null(), z.number()]).refine((v) => v === null || (Number.isInteger(v) && v >= 0), message);
+
+const marketPricingTierSchema = z.object({
+  tier_name: text(60).min(1, "Name is required."),
+  one_time_price: nullableNonNegative("Invalid one-time price."),
+  monthly_price: nullableNonNegative("Invalid monthly price."),
+  conversation_cap: nullableNonNegativeInt("Invalid conversation cap."),
+  overage_rate: nullableNonNegative("Invalid overage rate."),
+  recommended: z.boolean(),
+});
+
+export async function updateMarketPricingTier(id: string, _prev: AdminActionState, formData: FormData): Promise<AdminActionState> {
+  await requireAdmin();
+  const parsed = marketPricingTierSchema.safeParse({
+    tier_name: formData.get("tier_name"),
+    one_time_price: parseNullablePrice(formData.get("one_time_price")),
+    monthly_price: parseNullablePrice(formData.get("monthly_price")),
+    conversation_cap: parseNullableWhole(formData.get("conversation_cap")),
+    overage_rate: parseNullablePrice(formData.get("overage_rate")),
+    recommended: formData.get("recommended") === "on",
+  });
+  if (!parsed.success) return { status: "error", message: parsed.error.issues[0]?.message ?? "Check the fields." };
+
+  const supabase = serviceClient();
+  // No unique partial index here (unlike tiers.recommended): enforce
+  // "at most one recommended tier per market" in code instead.
+  if (parsed.data.recommended) {
+    const { data: row } = await supabase.from("pricing_tiers").select("market_id").eq("id", id).single();
+    if (row) await supabase.from("pricing_tiers").update({ recommended: false }).eq("market_id", row.market_id).neq("id", id);
+  }
+  const { error } = await supabase.from("pricing_tiers").update(parsed.data).eq("id", id);
+  if (error) return { status: "error", message: "Couldn't save. Try again." };
+
+  revalidatePath("/", "layout");
+  revalidatePath("/admin/market-pricing", "layout");
+  return { status: "saved", message: `${parsed.data.tier_name} saved.` };
+}
+
+export async function upsertMarketContent(marketId: string, _prev: AdminActionState, formData: FormData): Promise<AdminActionState> {
+  await requireAdmin();
+  const rows = MARKET_CONTENT_SECTIONS.map(({ key }) => ({
+    market_id: marketId,
+    section_key: key,
+    content: String(formData.get(key) ?? "").trim().slice(0, 5000),
+  }));
+
+  const { error } = await serviceClient().from("market_content").upsert(rows, { onConflict: "market_id,section_key" });
+  if (error) return { status: "error", message: "Couldn't save. Try again." };
+
+  revalidatePath("/", "layout");
+  revalidatePath("/admin/market-content", "layout");
+  return { status: "saved", message: "Content saved." };
+}
+
+export async function updateMarketLeadStatus(id: string, formData: FormData) {
+  await requireAdmin();
+  const status = String(formData.get("status"));
+  if (!(MARKET_LEAD_STATUSES as readonly string[]).includes(status)) return;
+  await serviceClient().from("market_leads").update({ status }).eq("id", id);
+  revalidatePath("/admin/market-leads", "layout");
+}
+
+export async function updateMarketOrderPaymentStatus(id: string, formData: FormData) {
+  await requireAdmin();
+  const status = String(formData.get("payment_status") ?? "").trim().slice(0, 60);
+  if (!status) return;
+  await serviceClient().from("orders").update({ payment_status: status }).eq("id", id);
+  revalidatePath("/admin/market-orders", "layout");
 }

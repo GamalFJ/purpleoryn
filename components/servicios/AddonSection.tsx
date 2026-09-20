@@ -6,7 +6,7 @@ import { buttonClass } from "@/components/ui/button";
 import { IconTile } from "@/components/ui/IconTile";
 import { ADDON_PAYMENT_RULE, ADDONS_ANCHOR, addonUsageText, type Addon } from "@/lib/addons";
 import { formatRD } from "@/lib/format";
-import { whatsappUrl } from "@/lib/links";
+import { whatsappRedirectUrl } from "@/lib/links";
 import { LOGOS, type LogoKey } from "@/lib/logos";
 import { AddAddonButton } from "./PlanSelection";
 
@@ -16,7 +16,7 @@ const PROVIDERS: Record<string, LogoKey[]> = {
 };
 
 // Add-ons live in their own section, never as a fourth plan card.
-export function AddonSection({ addons }: { addons: Addon[] }) {
+export function AddonSection({ addons, marketId }: { addons: Addon[]; marketId: string }) {
   if (!addons.length) return null;
 
   return (
@@ -75,7 +75,7 @@ export function AddonSection({ addons }: { addons: Addon[] }) {
                   Agregar a mi pedido
                 </AddAddonButton>
                 <TrackedLink
-                  href={whatsappUrl(`Hola Purple Cove Labs, quiero información sobre el ${a.name}.`)}
+                  href={whatsappRedirectUrl(marketId, `Hola Purple Cove Labs, quiero información sobre el ${a.name}.`)}
                   event="whatsapp_click"
                   location={`addon_${a.slug}`}
                   className={buttonClass("secondary", "md", "w-full sm:w-fit")}

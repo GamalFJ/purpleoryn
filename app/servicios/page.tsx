@@ -10,6 +10,7 @@ import { RoiCalculator } from "@/components/servicios/RoiCalculator";
 import { TierComparison } from "@/components/servicios/TierComparison";
 import { getAddons, getTiers } from "@/lib/content";
 import { DOCUMENTS, documentMeta } from "@/lib/documents";
+import { getCurrentMarket } from "@/lib/market";
 import { pageMetadata } from "@/lib/seo";
 
 export const revalidate = 300;
@@ -22,7 +23,8 @@ export const metadata = pageMetadata({
 });
 
 export default async function ServiciosPage() {
-  const [tiers, addons] = await Promise.all([getTiers(), getAddons()]);
+  const [tiers, addons, currentMarket] = await Promise.all([getTiers(), getAddons(), getCurrentMarket()]);
+  const marketId = currentMarket.market?.id ?? "do";
 
   return (
     <>
@@ -47,9 +49,9 @@ export default async function ServiciosPage() {
             </p>
           </div>
           <TierComparison tiers={tiers} />
-          <AddonSection addons={addons} />
+          <AddonSection addons={addons} marketId={marketId} />
           <RoiCalculator tiers={tiers} />
-          <LeadForm tiers={tiers} addons={addons} />
+          <LeadForm tiers={tiers} addons={addons} marketId={marketId} />
         </PlanSelectionProvider>
         <ClosingCta location="servicios_closing" />
       </main>

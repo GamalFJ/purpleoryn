@@ -16,7 +16,7 @@ import { openChat } from "@/lib/chat";
 import { cn } from "@/lib/cn";
 import { formatRD } from "@/lib/format";
 import { BUSINESS_NICHE_SUGGESTIONS, type LeadActionState, type LeadFieldErrors } from "@/lib/leads";
-import { WHATSAPP_GENERAL, whatsappUrl } from "@/lib/links";
+import { whatsappRedirectUrl } from "@/lib/links";
 import { CTA } from "@/lib/site";
 import type { Tier, TierSlug } from "@/lib/tiers";
 import { usePlanSelection } from "./PlanSelection";
@@ -53,7 +53,7 @@ function Field({
   );
 }
 
-export function LeadForm({ tiers, addons }: { tiers: Tier[]; addons: Addon[] }) {
+export function LeadForm({ tiers, addons, marketId }: { tiers: Tier[]; addons: Addon[]; marketId: string }) {
   const { selected, select, averageSaleValue, addons: chosenAddons, setAddon } = usePlanSelection();
   const [plan, setPlan] = useState<TierSlug | "">("");
   const [confirmed, setConfirmed] = useState(false);
@@ -107,7 +107,7 @@ export function LeadForm({ tiers, addons }: { tiers: Tier[]; addons: Addon[] }) 
           <p className="mt-6 text-[15px] text-muted">
             ¿Prefieres escribir directo?{" "}
             <TrackedLink
-              href={whatsappUrl(WHATSAPP_GENERAL)}
+              href={whatsappRedirectUrl(marketId)}
               event="whatsapp_click"
               location="servicios_form"
               className="font-medium text-accent underline-offset-4 hover:underline"

@@ -4,8 +4,9 @@ import { EnvelopeSimple, MapPinLine } from "@phosphor-icons/react/dist/ssr";
 import { TrackedLink } from "@/components/analytics/TrackedLink";
 import { BrandLogo } from "@/components/ui/BrandLogo";
 import { IconTile } from "@/components/ui/IconTile";
-import { WHATSAPP_GENERAL, whatsappUrl } from "@/lib/links";
+import { whatsappRedirectUrl } from "@/lib/links";
 import type { LogoKey } from "@/lib/logos";
+import { getCurrentMarket } from "@/lib/market";
 import { NAV_LINKS, SITE } from "@/lib/site";
 
 // Brand logo sized to line up with the IconTile column.
@@ -17,7 +18,10 @@ function LogoMark({ logo }: { logo: LogoKey }) {
   );
 }
 
-export function Footer() {
+export async function Footer() {
+  const { market } = await getCurrentMarket();
+  const marketId = market?.id ?? "do";
+
   return (
     <footer className="relative border-t border-line bg-paper">
       <span aria-hidden="true" className="absolute inset-x-0 -top-px h-0.5 bg-linear-to-r from-teal via-accent to-fuchsia" />
@@ -68,7 +72,7 @@ export function Footer() {
           <ul className="mt-3 space-y-3 text-sm text-body">
             <li>
               <TrackedLink
-                href={whatsappUrl(WHATSAPP_GENERAL)}
+                href={whatsappRedirectUrl(marketId)}
                 event="whatsapp_click"
                 location="footer"
                 className="group flex items-center gap-3 hover:text-accent"
