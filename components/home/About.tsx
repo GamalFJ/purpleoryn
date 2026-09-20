@@ -5,10 +5,10 @@ import { TrackedLink } from "@/components/analytics/TrackedLink";
 import { cn } from "@/lib/cn";
 import type { SiteSettings } from "@/lib/content";
 import { IMAGE_RATIOS } from "@/lib/image";
-import { WHATSAPP_GENERAL, whatsappUrl } from "@/lib/links";
+import { whatsappRedirectUrl } from "@/lib/links";
 import { SITE } from "@/lib/site";
 
-export function About({ settings }: { settings: SiteSettings }) {
+export function About({ settings, marketId }: { settings: SiteSettings; marketId: string }) {
   return (
     <section aria-labelledby="nosotros-titulo" className="mx-auto max-w-6xl px-4 pt-24 sm:px-6 md:pt-32">
       <div className="grid items-center gap-10 md:grid-cols-[0.85fr_1.15fr] md:gap-16">
@@ -46,7 +46,7 @@ export function About({ settings }: { settings: SiteSettings }) {
               <div>
                 <dt className="text-sm text-muted">WhatsApp directo</dt>
                 <dd className="mt-0.5 font-medium text-ink">
-                  <TrackedLink href={whatsappUrl(WHATSAPP_GENERAL)} event="whatsapp_click" location="about" className="tabular hover:text-accent">
+                  <TrackedLink href={whatsappRedirectUrl(marketId)} event="whatsapp_click" location="about" className="tabular hover:text-accent">
                     {SITE.phoneDisplay}
                   </TrackedLink>
                 </dd>

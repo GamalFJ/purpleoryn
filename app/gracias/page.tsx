@@ -5,7 +5,8 @@ import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { buttonClass } from "@/components/ui/button";
 import { getAddons, getTiers } from "@/lib/content";
-import { calUrl, whatsappUrl } from "@/lib/links";
+import { calUrl, whatsappRedirectUrl } from "@/lib/links";
+import { getCurrentMarket } from "@/lib/market";
 import { pageMetadata } from "@/lib/seo";
 import { CTA } from "@/lib/site";
 import { isTierSlug } from "@/lib/tiers";
@@ -31,7 +32,8 @@ export async function generateMetadata({ searchParams }: { searchParams: SearchP
 // form is a formal order, booking a call is not.
 export default async function GraciasPage({ searchParams }: { searchParams: SearchParams }) {
   const { plan: planParam, origen, modulos } = await searchParams;
-  const [tiers, addons] = await Promise.all([getTiers(), getAddons()]);
+  const [tiers, addons, currentMarket] = await Promise.all([getTiers(), getAddons(), getCurrentMarket()]);
+  const marketId = currentMarket.market?.id ?? "do";
   // Display only: the order itself was saved with its own add-on snapshot.
   const orderedAddons = (modulos ?? "")
     .split(",")
@@ -78,7 +80,8 @@ export default async function GraciasPage({ searchParams }: { searchParams: Sear
                 {CTA.call}
               </TrackedLink>
               <TrackedLink
-                href={whatsappUrl(
+                href={whatsappRedirectUrl(
+                  marketId,
                   plan
                     ? `Hola Purple Cove Labs, acabo de confirmar mi pedido del plan ${plan.name}.`
                     : "Hola Purple Cove Labs, acabo de confirmar un pedido en su sitio web.",
