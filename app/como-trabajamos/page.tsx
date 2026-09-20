@@ -12,7 +12,7 @@ import { pageMetadata } from "@/lib/seo";
 export const metadata = pageMetadata({
   title: "Cómo trabajamos",
   description:
-    "El proceso de un proyecto en Purple Cove Labs, paso por paso: presentación, propuesta, aprobación escrita, pago inicial, formulario de configuración, construcción y salida en vivo.",
+    "El proceso de un proyecto en Purple Cove Labs, paso por paso: presentación, elección del plan, confirmación, primer pago, inicio y construcción, revisión y entrega.",
   path: "/como-trabajamos",
 });
 
@@ -70,7 +70,7 @@ export default function ComoTrabajamosPage() {
             Ya conoces el camino
           </h2>
           <p className="mt-4 max-w-[52ch] text-lg leading-relaxed text-body">
-            Elige tu plan y envía el formulario. Ese envío es el paso 03: tu aprobación escrita y tu cupo reservado por 7
+            Elige tu plan y envía el formulario. Ese envío es el paso 02: tu pedido en firme y tu cupo reservado por 7
             días.
           </p>
           <Link href="/servicios#elegir-plan" className={buttonClass("primary", "lg", "mt-8")}>

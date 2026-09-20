@@ -93,12 +93,12 @@ export function LeadForm({ tiers, addons }: { tiers: Tier[]; addons: Addon[] }) 
             {CTA.plan}
           </h2>
           <p className="mt-4 max-w-[46ch] text-lg leading-relaxed text-body">
-            Enviar este formulario es tu aprobación escrita: constituye una orden formal, con el mismo peso que una
-            confirmación por WhatsApp o correo, y reserva tu cupo por 7 días calendario.
+            Enviar este formulario es tu pedido: constituye una orden formal, con el mismo peso que una confirmación
+            por WhatsApp o correo, y reserva tu cupo por 7 días calendario.
           </p>
           <p className="mt-4 max-w-[46ch] text-[15px] leading-relaxed text-muted">
-            Lee toda la información del sitio antes de enviarlo. Después te escribimos por WhatsApp con la propuesta y el
-            pago inicial.{" "}
+            Lee toda la información del sitio antes de enviarlo. Después confirmamos tu pedido y te enviamos el
+            formulario de configuración de tu plan.{" "}
             <Link href="/como-trabajamos" className="font-medium text-accent underline-offset-4 hover:underline">
               Ver los siete pasos
             </Link>

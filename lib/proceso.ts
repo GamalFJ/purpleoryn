@@ -1,7 +1,7 @@
 import {
   CheckCircle,
-  ClipboardText,
   CreditCard,
+  Eye,
   FileText,
   Hammer,
   Microphone,
@@ -12,10 +12,11 @@ import {
 import type { Tone } from "@/lib/tone";
 
 // The seven steps, the optional-modules branch and the road geometry they sit
-// on. Source of truth for the copy is the client document "Cómo Trabajamos".
-// Step 03's order language is kept word for word, because the document and the
-// site have to say the same thing about what the /servicios form means. The
-// document is written in usted; here it is tú, like the rest of the site.
+// on. Source of truth for the copy is the client document "Cómo Trabajamos"
+// (brand/docs/como-trabajamos): titles and step copy are kept word for word
+// with that document, because it and the site have to describe the same
+// process. The document is written in usted; here it is tú, like the rest of
+// the site.
 
 export interface Waypoint {
   id: string;
@@ -34,70 +35,65 @@ export const STEPS: Waypoint[] = [
   {
     id: "presentacion",
     number: "01",
-    title: "Presentación del Sistema",
+    title: "Presentación",
     short: "Presentación",
     detail:
-      "Según lo que mejor se ajuste a tu negocio, te mostramos purpleoryn.com funcionando en tiempo real, te preparamos una demostración rápida y específica, o te compartimos el documento Oryn Presence (Presencia), descargable desde el sitio, para que veas el sistema completo antes de invertir.",
+      "Te mostramos el sistema en vivo, te enviamos el documento de Oryn Presence, o coordinamos un diagnóstico gratis.",
     icon: MonitorPlay,
     tone: "teal",
   },
   {
-    id: "propuesta",
+    id: "eleccion-del-plan",
     number: "02",
-    title: "Propuesta",
-    short: "Propuesta",
-    detail:
-      "Recibes por escrito el plan elegido (Presencia, Conversión o Autoridad), cualquier módulo adicional que decidas incluir, la inversión total con su calendario de pago (50% inicial y 50% final para el plan; 100% por adelantado para cualquier módulo adicional) y el plan de trabajo. Precio fijo según el plan, sin costos sorpresa.",
+    title: "Elección del Plan",
+    short: "Tu plan",
+    detail: "Eliges tu plan (y módulo adicional, si deseas) y envías el formulario en purpleoryn.com.",
     icon: FileText,
     tone: "teal",
   },
   {
-    id: "aprobacion-escrita",
+    id: "confirmacion",
     number: "03",
-    title: "Aprobación Escrita",
-    short: "Aprobación",
-    detail:
-      "Confirmas por WhatsApp, correo, o llenando y enviando el formulario de selección de plan en purpleoryn.com. Un formulario completado y enviado constituye una orden formal, con el mismo peso que una confirmación por WhatsApp o correo, por eso es importante leer toda la información del sitio y consultar a Oryn AI o las preguntas frecuentes antes de enviarlo. Cualquiera de las dos vías reserva tu cupo por 7 días calendario.",
+    title: "Confirmación",
+    short: "Confirmación",
+    detail: "Confirmamos tu pedido y te enviamos el formulario de configuración de tu plan.",
     icon: CheckCircle,
     tone: "amber",
   },
   {
-    id: "pago-inicial",
+    id: "primer-pago",
     number: "04",
-    title: "Pago Inicial (50%)",
-    short: "Pago inicial",
+    title: "Primer Pago",
+    short: "Primer pago",
     detail:
-      "Con el 50% inicial confirmado, tu proyecto queda activado y tu cupo asegurado. Si tu pedido incluye módulos adicionales, se pagan completos (100%) en este mismo momento. La mensualidad correspondiente a tu plan es parte de esta misma inversión, no un paso aparte, y comienza a contar desde la salida en vivo de tu sistema.",
+      "Pagas el 50% del plan (el módulo adicional se paga 100% aquí) y nos devuelves el formulario completo.",
     icon: CreditCard,
     tone: "amber",
   },
   {
-    id: "formulario-configuracion",
+    id: "inicio-y-construccion",
     number: "05",
-    title: "Formulario de Configuración",
-    short: "Configuración",
-    detail:
-      "Nos envías logo, textos, fotos y datos del negocio en un solo formulario, completo. El formulario corresponde al plan elegido. El tiempo de entrega comienza a contar únicamente cuando el pago inicial está confirmado y este formulario llega completo.",
-    icon: ClipboardText,
-    tone: "violet",
-  },
-  {
-    id: "construccion",
-    number: "06",
-    title: "Construcción y Revisión",
+    title: "Inicio y Construcción",
     short: "Construcción",
-    detail:
-      "Construimos tu sistema. Al terminar recibes una ronda completa de revisión antes de la entrega, que cubre textos, colores, espaciado y detalles visuales.",
+    detail: "Arrancamos oficialmente y construimos tu sistema.",
     icon: Hammer,
     tone: "violet",
   },
   {
-    id: "salida-en-vivo",
+    id: "revision",
+    number: "06",
+    title: "Revisión",
+    short: "Revisión",
+    detail: "Una ronda de ajustes estéticos, luego tu aprobación.",
+    icon: Eye,
+    tone: "violet",
+  },
+  {
+    id: "entrega",
     number: "07",
-    title: "Aprobación, Entrega y Salida en Vivo",
-    short: "Salida en vivo",
-    detail:
-      "Apruebas la versión final, se realiza el pago final (50%) y tu sistema sale en vivo. Desde ese día empieza a contar la mensualidad de tu plan.",
+    title: "Entrega",
+    short: "Entrega",
+    detail: "Pagas el final (50% del plan) y tu sistema sale en vivo.",
     icon: RocketLaunch,
     tone: "rose",
   },
@@ -111,7 +107,7 @@ export const BRANCH: Waypoint = {
   title: "Módulos opcionales",
   short: "Módulos opcionales",
   detail:
-    "Además de los tres planes ofrecemos módulos adicionales, como el Agente de Voz IA, que se agregan por separado, incluso en el mismo formulario de tu pedido. Cada módulo tiene su propia inversión (pago único y/o mensualidad, según corresponda) y, a diferencia de los planes, se paga al 100% por adelantado. Puede agregarse desde el inicio del proyecto o en cualquier momento después de la salida en vivo. Los módulos disponibles al momento de tu propuesta, y su inversión, se indican ahí.",
+    "Se agregan a cualquier plan, cuando quieras. Se pagan 100% por adelantado, sin el 50/50 del plan base. Misma regla para cualquier módulo futuro.",
   icon: Microphone,
   tone: "amber",
 };
