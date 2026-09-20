@@ -158,7 +158,7 @@ function StepCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.4 }}
       transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: index * 0.06 }}
-      className="group relative z-10 flex flex-col items-center text-center"
+      className={cn("group relative flex flex-col items-center text-center", open ? "z-30" : "z-10")}
     >
       <button
         type="button"

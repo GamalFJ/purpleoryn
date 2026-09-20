@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { requireAdmin } from "@/lib/admin";
-import { MEDIA_BUCKET, storagePathFromUrl } from "@/lib/storage";
+import { DOCS_BUCKET, MEDIA_BUCKET, docsPathFromUrl, storagePathFromUrl } from "@/lib/storage";
 import { LEAD_STATUSES } from "@/lib/leads";
 import { isTierSlug } from "@/lib/tiers";
 
@@ -20,6 +20,11 @@ function refreshPublicSite() {
 async function removeStorageObjects(supabase: Awaited<ReturnType<typeof requireAdmin>>["supabase"], urls: (string | null | undefined)[]) {
   const paths = urls.map(storagePathFromUrl).filter((p): p is string => Boolean(p));
   if (paths.length) await supabase.storage.from(MEDIA_BUCKET).remove(paths);
+}
+
+async function removeDocObjects(supabase: Awaited<ReturnType<typeof requireAdmin>>["supabase"], urls: (string | null | undefined)[]) {
+  const paths = urls.map(docsPathFromUrl).filter((p): p is string => Boolean(p));
+  if (paths.length) await supabase.storage.from(DOCS_BUCKET).remove(paths);
 }
 
 function parseWhole(raw: FormDataEntryValue | null) {
@@ -127,6 +132,8 @@ const settingsSchema = z.object({
   hero_image_url: text(500),
   about_image_url: text(500),
   about_bio: text(1200),
+  oryn_presence_doc_url: text(500),
+  como_trabajamos_doc_url: text(500),
 });
 
 export async function updateSettings(_prev: AdminActionState, formData: FormData): Promise<AdminActionState> {
@@ -134,14 +141,22 @@ export async function updateSettings(_prev: AdminActionState, formData: FormData
   const parsed = settingsSchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) return { status: "error", message: parsed.error.issues[0]?.message ?? "Check the fields." };
 
-  const { data: before } = await supabase.from("site_settings").select("hero_image_url, about_image_url").eq("id", 1).single();
+  const { data: before } = await supabase
+    .from("site_settings")
+    .select("hero_image_url, about_image_url, oryn_presence_doc_url, como_trabajamos_doc_url")
+    .eq("id", 1)
+    .single();
   const { error } = await supabase.from("site_settings").update(parsed.data).eq("id", 1);
   if (error) return { status: "error", message: "Couldn't save. Try again." };
 
-  // Delete images that were replaced or removed.
+  // Delete images and PDFs that were replaced or removed.
   await removeStorageObjects(supabase, [
     before?.hero_image_url !== parsed.data.hero_image_url ? before?.hero_image_url : null,
     before?.about_image_url !== parsed.data.about_image_url ? before?.about_image_url : null,
+  ]);
+  await removeDocObjects(supabase, [
+    before?.oryn_presence_doc_url !== parsed.data.oryn_presence_doc_url ? before?.oryn_presence_doc_url : null,
+    before?.como_trabajamos_doc_url !== parsed.data.como_trabajamos_doc_url ? before?.como_trabajamos_doc_url : null,
   ]);
 
   refreshPublicSite();
