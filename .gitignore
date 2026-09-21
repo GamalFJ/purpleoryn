@@ -18,6 +18,11 @@ next-env.d.ts
 # supabase CLI local state
 supabase/.temp
 
+# locally installed Claude Code skills (npx skills add) -- tooling, not app code
+.agents/
+.claude/skills/
+skills-lock.json
+
 # logs
 *.log
 

@@ -12,7 +12,9 @@ const compat = new FlatCompat({
 const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
-    ignores: ["node_modules/**", ".next/**", "out/**", "build/**", "next-env.d.ts", "brand/**"],
+    // .agents/skills and supabase/functions are vendor/third-party or a
+    // separate runtime (Deno) -- not this project's own code.
+    ignores: ["node_modules/**", ".next/**", "out/**", "build/**", "next-env.d.ts", "brand/**", ".agents/skills/**", "supabase/functions/**"],
   },
 ];
 

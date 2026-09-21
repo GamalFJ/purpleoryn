@@ -4,7 +4,7 @@ import { EnvelopeSimple, MapPinLine } from "@phosphor-icons/react/dist/ssr";
 import { TrackedLink } from "@/components/analytics/TrackedLink";
 import { BrandLogo } from "@/components/ui/BrandLogo";
 import { IconTile } from "@/components/ui/IconTile";
-import { whatsappRedirectUrl } from "@/lib/links";
+import { WHATSAPP_GENERAL, whatsappUrl } from "@/lib/links";
 import type { LogoKey } from "@/lib/logos";
 import { getCurrentMarket } from "@/lib/market";
 import { NAV_LINKS, SITE } from "@/lib/site";
@@ -72,8 +72,9 @@ export async function Footer() {
           <ul className="mt-3 space-y-3 text-sm text-body">
             <li>
               <TrackedLink
-                href={whatsappRedirectUrl(marketId)}
+                href={whatsappUrl(WHATSAPP_GENERAL)}
                 event="whatsapp_click"
+                market={marketId}
                 location="footer"
                 className="group flex items-center gap-3 hover:text-accent"
               >

@@ -6,7 +6,7 @@ import { buttonClass } from "@/components/ui/button";
 import { IconTile } from "@/components/ui/IconTile";
 import { ADDON_PAYMENT_RULE, ADDONS_ANCHOR, addonUsageText, type Addon } from "@/lib/addons";
 import { formatRD } from "@/lib/format";
-import { whatsappRedirectUrl } from "@/lib/links";
+import { whatsappUrl } from "@/lib/links";
 import { LOGOS, type LogoKey } from "@/lib/logos";
 import { AddAddonButton } from "./PlanSelection";
 
@@ -75,8 +75,9 @@ export function AddonSection({ addons, marketId }: { addons: Addon[]; marketId: 
                   Agregar a mi pedido
                 </AddAddonButton>
                 <TrackedLink
-                  href={whatsappRedirectUrl(marketId, `Hola Purple Cove Labs, quiero información sobre el ${a.name}.`)}
+                  href={whatsappUrl(`Hola Purple Cove Labs, quiero información sobre el ${a.name}.`)}
                   event="whatsapp_click"
+                  market={marketId}
                   location={`addon_${a.slug}`}
                   className={buttonClass("secondary", "md", "w-full sm:w-fit")}
                 >

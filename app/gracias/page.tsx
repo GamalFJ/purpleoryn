@@ -5,7 +5,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { buttonClass } from "@/components/ui/button";
 import { getAddons, getTiers } from "@/lib/content";
-import { calUrl, whatsappRedirectUrl } from "@/lib/links";
+import { calUrl, whatsappUrl } from "@/lib/links";
 import { getCurrentMarket } from "@/lib/market";
 import { pageMetadata } from "@/lib/seo";
 import { CTA } from "@/lib/site";
@@ -80,13 +80,13 @@ export default async function GraciasPage({ searchParams }: { searchParams: Sear
                 {CTA.call}
               </TrackedLink>
               <TrackedLink
-                href={whatsappRedirectUrl(
-                  marketId,
+                href={whatsappUrl(
                   plan
                     ? `Hola Purple Cove Labs, acabo de confirmar mi pedido del plan ${plan.name}.`
                     : "Hola Purple Cove Labs, acabo de confirmar un pedido en su sitio web.",
                 )}
                 event="whatsapp_click"
+                market={marketId}
                 location="gracias"
                 plan={plan?.slug}
                 className={buttonClass("secondary", "lg")}

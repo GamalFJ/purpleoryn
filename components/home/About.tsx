@@ -5,7 +5,7 @@ import { TrackedLink } from "@/components/analytics/TrackedLink";
 import { cn } from "@/lib/cn";
 import type { SiteSettings } from "@/lib/content";
 import { IMAGE_RATIOS } from "@/lib/image";
-import { whatsappRedirectUrl } from "@/lib/links";
+import { WHATSAPP_GENERAL, whatsappUrl } from "@/lib/links";
 import { SITE } from "@/lib/site";
 
 export function About({ settings, marketId }: { settings: SiteSettings; marketId: string }) {
@@ -46,7 +46,7 @@ export function About({ settings, marketId }: { settings: SiteSettings; marketId
               <div>
                 <dt className="text-sm text-muted">WhatsApp directo</dt>
                 <dd className="mt-0.5 font-medium text-ink">
-                  <TrackedLink href={whatsappRedirectUrl(marketId)} event="whatsapp_click" location="about" className="tabular hover:text-accent">
+                  <TrackedLink href={whatsappUrl(WHATSAPP_GENERAL)} event="whatsapp_click" market={marketId} location="about" className="tabular hover:text-accent">
                     {SITE.phoneDisplay}
                   </TrackedLink>
                 </dd>

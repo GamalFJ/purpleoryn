@@ -20,18 +20,6 @@ export function whatsappUrl(message: string): string {
 
 export const WHATSAPP_GENERAL = "Hola Purple Cove Labs, quiero información sobre sus planes.";
 
-// Tags which market a WhatsApp click came from before handing off to
-// wa.me (app/api/go/whatsapp/route.ts). Every visitor-facing WhatsApp link
-// should go through this, not whatsappUrl() directly, so the rare
-// click-WhatsApp-without-filling-the-form case is still attributed to a
-// market. `message` is optional -- omit it to use the route's own default
-// (WHATSAPP_GENERAL) and avoid repeating the same literal everywhere.
-export function whatsappRedirectUrl(marketId: string, message?: string): string {
-  const params = new URLSearchParams({ market: marketId });
-  if (message) params.set("text", message);
-  return `/api/go/whatsapp?${params.toString()}`;
-}
-
 // Visitors type this field in whatever form is natural to them: a bare
 // handle ("@negocio"), a handle with no @, or a full URL to any platform.
 // A full URL is trusted as-is; anything else is treated as an Instagram
