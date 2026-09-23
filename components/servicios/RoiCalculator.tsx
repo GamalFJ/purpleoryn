@@ -2,7 +2,8 @@
 
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import Image from "next/image";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import { Target } from "@phosphor-icons/react";
 import { RoiBadge } from "@/components/roi/RoiBadge";
 import { buttonClass } from "@/components/ui/button";
 import { track } from "@/lib/analytics";
@@ -16,7 +17,6 @@ export function RoiCalculator({ tiers }: { tiers: Tier[] }) {
   const { selected, select, setAverageSaleValue } = usePlanSelection();
   const [slug, setSlug] = useState<TierSlug>(() => recommendedTier(tiers).slug);
   const [asvRaw, setAsvRaw] = useState("");
-  const reduce = useReducedMotion();
   const asvId = useId();
   const tracked = useRef(new Set<string>());
 
@@ -56,12 +56,47 @@ export function RoiCalculator({ tiers }: { tiers: Tier[] }) {
 
   const outputs = result
     ? [
-        { label: "Inversión del primer año", value: formatRD(result.yearOneInvestment), exact: null, money: true },
-        { label: "Ventas para recuperar la inversión", value: salesLabel(Math.ceil(result.breakEvenSales)), exact: result.breakEvenSales },
-        { label: "Meta 3x: ventas al año", value: salesLabel(Math.ceil(result.targetSalesPerYear)), exact: result.targetSalesPerYear },
-        { label: "Meta 3x: ventas al mes", value: salesLabel(Math.ceil(result.targetSalesPerMonth)), exact: result.targetSalesPerMonth },
+        {
+          label: "Inversión del primer año",
+          value: formatRD(result.yearOneInvestment),
+          exact: null,
+          note: "Todo lo que pagas por el servicio en tu primer año.",
+          tone: "warm" as const,
+        },
+        {
+          label: "Ventas para recuperar la inversión",
+          value: salesLabel(Math.ceil(result.breakEvenSales)),
+          exact: result.breakEvenSales,
+          note: "A partir de aquí, el sistema ya se pagó solo.",
+          tone: "neutral" as const,
+        },
+        {
+          label: "Meta 3x: ventas al año",
+          value: salesLabel(Math.ceil(result.targetSalesPerYear)),
+          exact: result.targetSalesPerYear,
+          note: "Para triplicar lo invertido en el año.",
+          tone: "accent" as const,
+        },
+        {
+          label: "Meta 3x: ventas al mes",
+          value: salesLabel(Math.ceil(result.targetSalesPerMonth)),
+          exact: result.targetSalesPerMonth,
+          note: "El ritmo mensual para llegar a esa meta.",
+          tone: "accent" as const,
+        },
       ]
     : [];
+
+  const toneClass: Record<"warm" | "neutral" | "accent", string> = {
+    warm: "text-warm-ink",
+    neutral: "text-ink",
+    accent: "bg-linear-to-r from-accent to-fuchsia bg-clip-text text-transparent",
+  };
+
+  // Break-even is always exactly ⅓ of the way to the 3x target (target = 3 ×
+  // break-even, by definition), so this fraction never needs recomputing per
+  // plan — it just reads that fact off the result instead of hardcoding 33%.
+  const breakEvenPct = result ? (result.breakEvenSales / result.targetSalesPerYear) * 100 : 0;
 
   return (
     <section id="calculadora" aria-labelledby="calculadora-titulo" className="mx-auto max-w-6xl px-4 pt-24 sm:px-6 md:pt-32">
@@ -152,28 +187,65 @@ export function RoiCalculator({ tiers }: { tiers: Tier[] }) {
               {result ? (
                 <motion.div
                   key="result"
-                  initial={reduce ? false : { opacity: 0, y: 8 }}
+                  initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={reduce ? { opacity: 0 } : { opacity: 0, y: -8 }}
+                  exit={{ opacity: 0, y: -8 }}
                   transition={{ duration: 0.2 }}
                 >
                   <dl className="grid gap-x-6 gap-y-7 sm:grid-cols-2">
                     {outputs.map((o) => (
                       <div key={o.label}>
                         <dt className="text-sm text-muted">{o.label}</dt>
-                        <dd
-                          className={cn(
-                            "tabular mt-1.5 font-display text-[1.75rem] font-semibold leading-none",
-                            "money" in o ? "text-warm-ink" : "text-ink",
-                          )}
-                        >
+                        <dd className={cn("tabular mt-1.5 font-display text-[1.75rem] font-semibold leading-none", toneClass[o.tone])}>
                           {o.value}
                         </dd>
-                        {o.exact !== null && <dd className="tabular mt-1.5 text-sm text-muted">Exacto: {formatCount(o.exact)}</dd>}
+                        <dd className="mt-1.5 text-sm leading-snug text-muted">{o.note}</dd>
+                        {o.exact !== null && <dd className="tabular mt-1 text-xs text-muted">Exacto: {formatCount(o.exact)}</dd>}
                       </div>
                     ))}
                   </dl>
-                  <div className="mt-8 flex flex-col gap-3 border-t border-line pt-6 sm:flex-row sm:items-center">
+
+                  <div className="mt-8">
+                    <div className="flex items-center justify-between text-xs font-medium text-muted">
+                      <span>0 ventas</span>
+                      <span>Meta 3x: {salesLabel(Math.ceil(result.targetSalesPerYear))}</span>
+                    </div>
+                    <div className="relative mt-2 h-3 w-full overflow-hidden rounded-full bg-line">
+                      <motion.div
+                        className="absolute inset-y-0 left-0 bg-warm"
+                        style={{ width: `${breakEvenPct}%`, originX: 0 }}
+                        initial={{ scaleX: 0 }}
+                        animate={{ scaleX: 1 }}
+                        transition={{ duration: 0.6, ease: "easeOut" }}
+                      />
+                      <motion.div
+                        className="absolute inset-y-0 bg-linear-to-r from-accent to-fuchsia"
+                        style={{ left: `${breakEvenPct}%`, width: `${100 - breakEvenPct}%`, originX: 0 }}
+                        initial={{ scaleX: 0 }}
+                        animate={{ scaleX: 1 }}
+                        transition={{ duration: 0.6, delay: 0.15, ease: "easeOut" }}
+                      />
+                      <div className="absolute inset-y-0 w-0.5 bg-surface" style={{ left: `${breakEvenPct}%` }} aria-hidden="true" />
+                    </div>
+                    <p className="mt-2 text-xs text-muted">Punto de equilibrio: {salesLabel(Math.ceil(result.breakEvenSales))}</p>
+                  </div>
+
+                  <div className="mt-6 flex gap-3 rounded-[var(--radius-panel)] border border-warm-line/60 bg-accent-soft/60 p-5">
+                    <Target size={20} weight="bold" className="mt-0.5 shrink-0 text-accent" aria-hidden="true" />
+                    <div>
+                      <p className="text-[15px] font-semibold text-ink">¿Qué es la Meta 3x?</p>
+                      <p className="mt-1.5 text-sm leading-relaxed text-body">
+                        No nos conformamos con que el sistema se pague solo. Nuestra meta es que, en tu primer año, te devuelva 3 veces lo que
+                        invertiste — no romper parejo, generar ganancia real.
+                      </p>
+                      <p className="mt-2 text-sm leading-relaxed text-muted">
+                        Esta es tu meta de referencia, no una garantía de ventas — depende de tu mercado, tu oferta y el seguimiento que le des a
+                        cada cliente que te llega.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 flex flex-col gap-3 border-t border-line pt-6 sm:flex-row sm:items-center">
                     <button
                       type="button"
                       onClick={() => select(tier.slug, "roi_calculator", { scroll: true })}
@@ -187,7 +259,7 @@ export function RoiCalculator({ tiers }: { tiers: Tier[] }) {
               ) : (
                 <motion.div
                   key="empty"
-                  initial={reduce ? false : { opacity: 0 }}
+                  initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   className="flex h-full min-h-56 flex-col justify-center"
@@ -204,6 +276,10 @@ export function RoiCalculator({ tiers }: { tiers: Tier[] }) {
 
         <details className="group mt-6 max-w-3xl text-[15px] text-body">
           <summary className="cursor-pointer font-medium text-ink marker:text-accent">Cómo se calcula</summary>
+          <p className="mt-3 leading-relaxed">
+            En corto: escribes cuánto vale una venta típica tuya, y calculamos cuántas ventas de ese tamaño se necesitan para pagar el sistema — y
+            cuántas para triplicar la inversión.
+          </p>
           <ul className="mt-3 space-y-1.5 leading-relaxed">
             <li>Inversión del primer año = pago único + (mensualidad × 12)</li>
             <li>Ventas para recuperar la inversión = inversión del primer año ÷ valor promedio de una venta</li>
