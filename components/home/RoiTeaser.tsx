@@ -96,9 +96,10 @@ export function RoiTeaser({ tiers }: { tiers: Tier[] }) {
                 <p className="tabular mt-1.5 font-display text-5xl font-semibold leading-none text-ink">{Math.ceil(result.breakEvenSales)}</p>
                 <p className="mt-3 text-[15px] leading-relaxed text-body">
                   Plan {tier.name}: inversión del primer año de{" "}
-                  <span className="tabular font-semibold text-warm-ink">{formatRD(result.yearOneInvestment)}</span>. Para triplicarla necesitas{" "}
-                  <span className="tabular font-semibold text-ink">{salesLabel(Math.ceil(result.targetSalesPerMonth))}</span> al mes.
+                  <span className="tabular font-semibold text-warm-ink">{formatRD(result.yearOneInvestment)}</span>. Nuestra meta es triplicarla:
+                  necesitas <span className="tabular font-semibold text-ink">{salesLabel(Math.ceil(result.targetSalesPerMonth))}</span> al mes.
                 </p>
+                <p className="mt-1.5 text-xs text-muted">Meta de referencia, no una garantía.</p>
               </motion.div>
             ) : (
               <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex-1">
