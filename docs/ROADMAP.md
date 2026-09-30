@@ -17,9 +17,9 @@ follows the original handoff plan.
 
 ## Current
 
-- **Blockers before Step 5** (see TASKS.md T1–T3): apply and verify the two chat-state migrations in
-  the purpleoryn Supabase project, confirm `SUPABASE_SERVICE_ROLE_KEY` and `AI_PROVIDER` in the
-  deployed environment, and manually exercise the chat state flow end to end.
+- **Blockers before Step 5** (see TASKS.md T2–T3): confirm `SUPABASE_SERVICE_ROLE_KEY` and `AI_PROVIDER`
+  in the deployed environment, deploy this branch, and manually exercise the chat state flow end to end.
+  (Database migrations are applied and verified as of 2026-09-30.)
 
 ## Next
 

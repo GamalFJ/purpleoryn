@@ -43,7 +43,8 @@ Code — keep the two files consistent.
 
 - Only change what the task asks for; report other problems instead of fixing them.
 - Migrations: add a new file with a later timestamp; never edit an applied one. **Do not say a migration
-  is applied unless you verified it in the purpleoryn Supabase project** (confirm the project name).
+  is applied unless you verified it in the purpleoryn Supabase project** (named "Purple Cove Labs Website";
+  the org's other projects are different products).
 - Validate before handing off: `npm run typecheck`, `npm run lint`, `npm run build`. There is no test
   runner.
 - **Update `docs/CURRENT-STATE.md`** whenever implementation materially changes; update the other docs and

@@ -5,11 +5,10 @@ Immediate development sequence. Keep this list short and current; move finished 
 
 ## Before Step 5 (owner / environment — blockers)
 
-- [ ] **T1 — Apply migrations** `20260930000000_chat_state.sql` then `20260930010000_chat_state_hardening.sql`
-  to the **purpleoryn** Supabase project (not `signatura-creativa`). Apply before or together with the
-  deploy of this code. Then verify: `chat_sessions` has the new columns; `chat_apply_state` and
-  `chat_apply_trusted_state` exist; `anon` and `authenticated` have **no** EXECUTE on any
-  `chat_apply_*`, `chat_state_can_transition` or the removed `chat_update_state`.
+- [x] **T1 — Migrations applied and verified (2026-09-30)** in the "Purple Cove Labs Website" project
+  (`vmrsgltwsznyfnihfefu`). Chat-state columns were already present; the hardening migration was applied;
+  grants verified (see CURRENT-STATE.md). Open follow-up: reconcile the migration history (chat_state and
+  document_uploads applied but unrecorded).
 - [ ] **T2 — Confirm deployed env:** `SUPABASE_SERVICE_ROLE_KEY` set (state writes need it);
   `AI_PROVIDER` / `OPENROUTER_API_KEY` set as intended (unset `AI_PROVIDER` = OpenAI first).
 - [ ] **T3 — Manual check of the state flow** on a preview deployment (checklist below).

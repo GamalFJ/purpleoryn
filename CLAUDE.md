@@ -47,7 +47,7 @@ then fix the doc.
 - Scope: fix what was asked. **Do not modify unrelated functionality**; mention other issues instead.
 - Migrations: add new files under `supabase/migrations/` with a later timestamp; never edit an applied
   migration. **Never claim a migration is applied unless you verified it in the purpleoryn project**
-  (the Supabase connector may point at a different project — check the project name).
+  (the Supabase connector may point at a different project — this site's project is named "Purple Cove Labs Website"; the org's other projects are different products).
 - After changes, **run validation**: `npm run typecheck`, `npm run lint`, and `npm run build` when the
   change can affect the build. There is no test runner; don't add one without approval.
 - **Update `docs/CURRENT-STATE.md`** when implementation materially changes (and ARCHITECTURE / TASKS /

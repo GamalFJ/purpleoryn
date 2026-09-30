@@ -40,12 +40,25 @@ or lead tools.
 - Route reads the stored intent via the service role, resolves intent (with affirmation inheritance),
   and applies state through `chat_apply_state`. Refused/failed updates are reported as
   `stateUpdate: "rejected" | "failed"`; the previous state is kept.
-- **Migration status: NOT verified as applied.** The connector available to the last session could only
-  see a different Supabase project (`signatura-creativa`), so the purpleoryn database was not inspected.
-  Until both migrations are applied there, every state update reports `stateUpdate: "failed"` (chat
-  itself keeps answering).
+- **Migration status (verified 2026-09-30 against the live database).** The Supabase project is named
+  **"Purple Cove Labs Website"** (ref `vmrsgltwsznyfnihfefu`, org "Purple Cove Labs"); the other projects in
+  that org are different products.
+  - `20260930000000_chat_state.sql` was **already applied** out-of-band (columns, constraints, indexes all
+    present) but is **not recorded** in the migration history. Same for the repo's
+    `20260920000000_document_uploads.sql` (columns and `site-docs` bucket exist, not in history).
+  - `20260930010000_chat_state_hardening.sql` was **applied** on 2026-09-30 (history name
+    `chat_state_hardening`, version `20260930135319`). Verified afterwards: `chat_update_state` is gone;
+    `chat_apply_state` and `chat_apply_trusted_state` are executable by `service_role` only;
+    `chat_state_can_transition` and the internal function are not executable by `anon`/`authenticated`;
+    the transition function returns the expected results; a smoke call with an unknown session id
+    returns `session_not_found`/`invalid_state` and touches no rows.
+  - History drift: applied versions use dashboard/tool timestamps, not the repo filenames, and the history
+    has `pin_set_updated_at_search_path` with no repo file. `supabase db push` would try to re-run
+    unrecorded migrations; use the MCP/SQL editor or reconcile the history first.
+  - Not yet exercised end to end: no live chat request has run against the new functions (all 11 existing
+    sessions are still `state = 'new'`).
 - Requires `SUPABASE_SERVICE_ROLE_KEY` in the server environment; without it state updates report
-  `"failed"`.
+  `"failed"`. **Whether it is set in the deployed environment is unverified.**
 - `chat_sessions.qualification` exists but nothing writes it. `booking_confirmed` and `completed` are
   never set by any code. Nothing calls `chat_apply_trusted_state`.
 - State is telemetry only: not used by the prompt, tools, `ChatPanel` or the admin panel.
@@ -74,7 +87,8 @@ classifies as `unknown` → state `unknown_request`.
 
 ## Known gaps / risks
 
-1. Chat-state migrations unverified in the purpleoryn Supabase project (see above).
+1. Migration history in Supabase is out of sync with the repo (see above); the deployed code that calls
+   `chat_apply_state` may not be live yet.
 2. `chat_log_message` and legacy `chat_record_outcome` remain callable with the anon key (unchanged).
    `chat_record_outcome` can set `recommended_plan` / `handoff` for any known session UUID. Untouched
    by the stabilization on purpose.
