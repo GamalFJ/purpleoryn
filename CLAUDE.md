@@ -53,6 +53,6 @@ then fix the doc.
 - **Update `docs/CURRENT-STATE.md`** when implementation materially changes (and ARCHITECTURE / TASKS /
   ROADMAP / DECISIONS as they are affected). Record new architectural decisions in `docs/DECISIONS.md`.
 - Don't create extra README or summary markdown files.
-- Don't commit, push or deploy unless the owner asks; when asked, use the branch the owner names.
+- **Git: `main` is the only branch.** When the owner asks you to commit, commit directly on `main` and push; no feature branches, no PRs (Vercel deploys from `main`). Only commit, push or deploy when asked. Older unmerged work is preserved as `archive/*` tags.
 - Match the surrounding code's style, naming and comment density; UI changes reuse existing components
   and design tokens.

@@ -8,6 +8,7 @@ changes.
 
 - Next.js 15 / React 19 / TypeScript / Tailwind 4 / Supabase site, `purpleoryn`.
 - Validation available: `npm run typecheck`, `npm run lint`, `npm run build`. **No test runner exists.**
+- Git: `main` is the only branch (owner decision, 2026-09-30); commits go straight to `main`, no PRs. Unmerged legacy commits are kept as tags `archive/presencia-digital-express` and `archive/faq-pedido-formal`. Production deploys from `main` on Vercel (project `purpleoryn`).
 - Migrations in `supabase/migrations/` (latest two are chat state; see below).
 
 ## Chat (`POST /api/chat`) — working
@@ -24,7 +25,7 @@ changes.
 - `openrouter` (default model `openai/gpt-4o-mini`, overridable by `AI_MODEL`/`OPENROUTER_MODEL`) and
   `openai` (`OPENAI_MODEL`). `AI_PROVIDER` picks the primary; the other is fallback. Unset = OpenAI first.
 - Not implemented: `anthropic`, `gemini` (names exist in types/env example only).
-- **Unverified:** which provider/keys are set in the deployed environment.
+- **Deployed environment (checked 2026-09-30, names only; values are masked):** Production has `AI_PROVIDER`, `OPENROUTER_API_KEY` and `SUPABASE_SERVICE_ROLE_KEY`; `OPENAI_API_KEY` was removed, so OpenRouter is the only provider in production (no fallback). Whether `AI_PROVIDER` is exactly `openrouter` is unverified. Preview has none of the AI or service-role keys, so Preview chat returns the 503 fallback.
 
 ## Tools — working
 
@@ -55,10 +56,10 @@ or lead tools.
   - History drift: applied versions use dashboard/tool timestamps, not the repo filenames, and the history
     has `pin_set_updated_at_search_path` with no repo file. `supabase db push` would try to re-run
     unrecorded migrations; use the MCP/SQL editor or reconcile the history first.
-  - Not yet exercised end to end: no live chat request has run against the new functions (all 11 existing
+  - Not yet exercised end to end: production deployed this code from `main` on 2026-09-30, but no chat has run against the new functions yet (all existing
     sessions are still `state = 'new'`).
 - Requires `SUPABASE_SERVICE_ROLE_KEY` in the server environment; without it state updates report
-  `"failed"`. **Whether it is set in the deployed environment is unverified.**
+  `"failed"`. It is set in Production (not in Preview).
 - `chat_sessions.qualification` exists but nothing writes it. `booking_confirmed` and `completed` are
   never set by any code. Nothing calls `chat_apply_trusted_state`.
 - State is telemetry only: not used by the prompt, tools, `ChatPanel` or the admin panel.

@@ -49,6 +49,7 @@ Code — keep the two files consistent.
   runner.
 - **Update `docs/CURRENT-STATE.md`** whenever implementation materially changes; update the other docs and
   add a `docs/DECISIONS.md` entry when a decision changes.
-- No extra README or summary files. Don't commit, push or deploy unless the owner asks; use the branch the
-  owner names.
+- No extra README or summary files. **Git: `main` is the only branch.** When the owner asks you to commit, commit
+  directly on `main` and push; no feature branches, no PRs (Vercel deploys from `main`). Only commit, push or
+  deploy when asked. Older unmerged work is preserved as `archive/*` tags.
 - Leave the repo in a state the next agent can pick up from the docs alone.

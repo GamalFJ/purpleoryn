@@ -70,3 +70,11 @@ requires an explicit new decision and design.
 ## D12 — Language and business-information rules
 **Decision:** Client-facing AI output is Dominican Spanish; admin/developer content is English. The
 assistant never invents business information; prices are quoted exactly, with decimals, as `RD$`.
+
+## D13 — `main` is the only branch; no PRs
+**Decision (2026-09-30):** All work is committed directly on `main` and pushed; Vercel deploys from `main`.
+No feature branches, no PRs. All previous branches were deleted; the only unmerged legacy commits were kept
+as tags (`archive/presencia-digital-express`, `archive/faq-pedido-formal`). **Why:** same reasoning as the
+Signatura Creativa repo — PRs were never reviewed before merging, so they only added friction and made it
+hard to tell which branch was current. **Consequence:** no per-PR preview build as a dry run; commit only
+when the owner asks, and run typecheck/lint/build first.

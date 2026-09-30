@@ -9,9 +9,8 @@ Immediate development sequence. Keep this list short and current; move finished 
   (`vmrsgltwsznyfnihfefu`). Chat-state columns were already present; the hardening migration was applied;
   grants verified (see CURRENT-STATE.md). Open follow-up: reconcile the migration history (chat_state and
   document_uploads applied but unrecorded).
-- [ ] **T2 — Confirm deployed env:** `SUPABASE_SERVICE_ROLE_KEY` set (state writes need it);
-  `AI_PROVIDER` / `OPENROUTER_API_KEY` set as intended (unset `AI_PROVIDER` = OpenAI first).
-- [ ] **T3 — Manual check of the state flow** on a preview deployment (checklist below).
+- [x] **T2 — Deployed env checked (2026-09-30):** Production has `SUPABASE_SERVICE_ROLE_KEY`, `AI_PROVIDER`, `OPENROUTER_API_KEY` (OpenAI key removed); Preview has none of them (add them only if Preview testing is wanted).
+- [ ] **T3 — Manual check of the state flow** on production (main is deployed; checklist below).
 
 ### T3 manual checklist
 
