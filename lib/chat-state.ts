@@ -59,25 +59,18 @@ export function classifyIntent(content: string): ConversationIntent {
   return "unknown";
 }
 
-// Short replies that carry no topic of their own ("Sí", "Claro", "Me interesa").
-const AFFIRMATION_RE =
-  /^(?:s[ií]+|claro(?: que s[ií])?|dale|ok(?:ay|ey)?|vale|perfecto|eso|eso mismo|exacto|correcto|adelante|listo|vamos|de acuerdo|est[aá] bien|por favor|as[ií] mismo|me interesa|s[ií],?\s+(?:claro|dale|por favor|quiero|me interesa|eso))[\s!.,?¡]*$/u;
-
-export function isAffirmation(content: string): boolean {
-  return AFFIRMATION_RE.test(content.trim().toLocaleLowerCase("es-DO"));
-}
-
-// Intents a bare affirmation can meaningfully continue. general_inquiry and
-// unknown carry nothing to continue.
+// Intents an ongoing conversation keeps until the visitor clearly changes topic.
+// general_inquiry and unknown carry nothing to continue.
 const CONTINUABLE_INTENTS: readonly ConversationIntent[] = ["services", "pricing", "sales", "booking", "human_handoff"];
 
-// Classify the message, but let a bare affirmation continue the intent already
+// Classify the message; if it names no topic of its own ("Sí", "Claro", "Una
+// agencia de bienes raíces", "300,000 pesos") it continues the intent already
 // stored for the conversation. `inherited` tells the caller the intent did not
 // come from this message's own words, so the message must not be stored as a
 // summary of that intent.
 export function resolveIntent(content: string, previousIntent: ConversationIntent | null): { intent: ConversationIntent; inherited: boolean } {
   const direct = classifyIntent(content);
-  if (direct === "unknown" && previousIntent && CONTINUABLE_INTENTS.includes(previousIntent) && isAffirmation(content)) {
+  if (direct === "unknown" && previousIntent && CONTINUABLE_INTENTS.includes(previousIntent)) {
     return { intent: previousIntent, inherited: true };
   }
   return { intent: direct, inherited: false };
@@ -99,6 +92,24 @@ export function stateForIntent(intent: ConversationIntent): ConversationState {
     case "unknown":
       return "unknown_request";
   }
+}
+
+// States a conversation can already be in that an inherited (topic-less) turn
+// must not pull backwards, e.g. "gracias" after plan_recommendation.
+const HOLDABLE_STATES: readonly ConversationState[] = [
+  "service_inquiry",
+  "sales_qualification",
+  "plan_recommendation",
+  "booking_intent",
+  "booking_offered",
+  "human_handoff_requested",
+];
+
+// Starting point for this turn's state: the message's own intent, unless it was
+// inherited and the stored state is one worth holding.
+export function baseStateFor(intent: ConversationIntent, inherited: boolean, storedState: ConversationState | null): ConversationState {
+  if (inherited && storedState && HOLDABLE_STATES.includes(storedState)) return storedState;
+  return stateForIntent(intent);
 }
 
 // Desired state after this turn. Whether the move is allowed is decided by the

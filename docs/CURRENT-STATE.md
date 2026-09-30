@@ -30,7 +30,10 @@ changes.
 ## Tools — working
 
 `calculate_roi`, `recommend_plan`, `offer_call` (`lib/agent/tools.ts`). No handoff, booking, availability
-or lead tools.
+or lead tools. `offer_call` only shows a Cal.com button and tells the model nothing was booked; the prompt
+forbids saying a call was scheduled. The prompt also asks one question at a time on the booking path, and
+chooses a plan from the plan facts (if the visitor needs appointment booking or order taking, only a plan whose
+"Agente de IA" row says so may be recommended; the highlighted "Recomendado" plan is only a default).
 
 ## Conversation state — implemented, untested against a live database
 
@@ -66,9 +69,12 @@ or lead tools.
 
 ## Intent handling
 
-Deterministic regex over the last message (`lib/chat-state.ts`), plus continuation of the stored intent
-for bare affirmations. Known limitation: a mid-flow answer with no keyword (e.g. "tengo una ferretería")
-classifies as `unknown` → state `unknown_request`.
+Deterministic regex over the last message (`lib/chat-state.ts`). A message that names no topic of its own
+("Sí", "Una agencia de bienes raíces", "300,000 pesos") **continues the intent already stored** for the session
+(services / pricing / sales / booking / human_handoff); a message that does name a topic switches intent. On
+such inherited turns the stored state is held (e.g. `plan_recommendation`) instead of falling back to the
+intent's default state. Known limitation: it is still keyword regex; a genuinely off-topic message during an
+active flow keeps that flow's intent, and the first message of a conversation with no keyword is `unknown`.
 
 ## UI
 

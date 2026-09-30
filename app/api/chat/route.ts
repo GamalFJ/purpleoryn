@@ -9,9 +9,9 @@ import { getAddons, getTiers } from "@/lib/content";
 import {
   isConversationIntent,
   isConversationState,
+  baseStateFor,
   resolveIntent,
   resolveResponseState,
-  stateForIntent,
   type ConversationIntent,
   type ConversationState,
   type StateUpdateStatus,
@@ -48,14 +48,18 @@ function ipHash(request: NextRequest) {
 // write; it is read and written here with the service role only. Server-side
 // only, and the visitor-driven path can never reach privileged values
 // (booking_confirmed, completed, booking_status 'confirmed', handoff 'completed').
-async function readStoredIntent(sessionId: string): Promise<ConversationIntent | null> {
-  if (!isServiceRoleConfigured()) return null;
-  const { data, error } = await serviceClient().from("chat_sessions").select("intent").eq("id", sessionId).maybeSingle();
+async function readStoredState(sessionId: string): Promise<{ intent: ConversationIntent | null; state: ConversationState | null }> {
+  const none = { intent: null, state: null };
+  if (!isServiceRoleConfigured()) return none;
+  const { data, error } = await serviceClient().from("chat_sessions").select("intent, state").eq("id", sessionId).maybeSingle();
   if (error) {
     console.error("[agent] state read failed:", error.message);
-    return null;
+    return none;
   }
-  return isConversationIntent(data?.intent) ? data.intent : null;
+  return {
+    intent: isConversationIntent(data?.intent) ? data.intent : null,
+    state: isConversationState(data?.state) ? data.state : null,
+  };
 }
 
 interface StateUpdate {
@@ -147,9 +151,11 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // A bare "Sí" / "Claro" continues the intent already stored for this session.
-  const { intent, inherited } = resolveIntent(last.content, await readStoredIntent(sessionId));
-  const intentState = stateForIntent(intent);
+  // A message that names no topic ("Sí", "Una agencia de bienes raíces") continues the
+  // intent and state already stored for this session.
+  const stored = await readStoredState(sessionId);
+  const { intent, inherited } = resolveIntent(last.content, stored.intent);
+  const intentState = baseStateFor(intent, inherited, stored.state);
 
   const [tiers, addons] = await Promise.all([getTiers(), getAddons()]);
   const system = buildSystemPrompt(tiers, addons);

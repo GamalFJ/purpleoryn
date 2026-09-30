@@ -78,3 +78,14 @@ as tags (`archive/presencia-digital-express`, `archive/faq-pedido-formal`). **Wh
 Signatura Creativa repo — PRs were never reviewed before merging, so they only added friction and made it
 hard to tell which branch was current. **Consequence:** no per-PR preview build as a dry run; commit only
 when the owner asks, and run typecheck/lint/build first.
+
+## D14 — Chat behavior fixes after the first live tests (supersedes the "affirmation only" part of D8)
+**Decision (2026-09-30):** Live tests showed (1) the assistant claimed it had scheduled a call when it only shows a
+Cal.com button, (2) it asked several questions in one message on the booking path, (3) it recommended the
+highlighted plan for a business that needs appointment booking instead of the only plan whose agent books
+appointments, and (4) keyword-free qualification answers reset the stored intent to `unknown`. Fixes: prompt rules
+(cannot book anything; one question at a time; plan chosen from the plan facts, "Recomendado" is only a default),
+`offer_call` result states nothing was booked, and any message that names no topic continues the stored intent and
+holds a stored state. **Consequence:** still deterministic (no AI classifier). Booking remains link-only; the
+"Elegir <plan>" button for Autoridad opens the order form while the site's own Autoridad CTA opens the call
+booking — an open product question, not changed here.

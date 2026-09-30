@@ -10,7 +10,14 @@ Immediate development sequence. Keep this list short and current; move finished 
   grants verified (see CURRENT-STATE.md). Open follow-up: reconcile the migration history (chat_state and
   document_uploads applied but unrecorded).
 - [x] **T2 — Deployed env checked (2026-09-30):** Production has `SUPABASE_SERVICE_ROLE_KEY`, `AI_PROVIDER`, `OPENROUTER_API_KEY` (OpenAI key removed); Preview has none of them (add them only if Preview testing is wanted).
-- [ ] **T3 — Manual check of the state flow** on production (main is deployed; checklist below).
+- [~] **T3 — Manual check of the state flow** on production. Partly done 2026-09-30: real test chats stored
+  `booking_intent` → `booking_offered` (+ `handoff = cal_com`) and ended a plan chat in `plan_recommendation` with
+  `recommended_plan` set, no errors. Still to do: checks 3 and 4 below, and the retest after the chat-behavior fixes.
+- [ ] **T3b — Retest the chat-behavior fixes** once deployed (Spanish, fresh tab each): (a) sales chat with a
+  business that depends on appointments (e.g. a real estate agency) → recommends Autoridad and names what in its
+  agent row fits; (b) booking chat → asks ONE question at a time, never says it scheduled the call, says the button
+  lets them pick the time; (c) after answering qualification questions the session keeps `intent = sales`
+  (not `unknown`) and "Sí" after the recommendation keeps `plan_recommendation`.
 
 ### T3 manual checklist
 

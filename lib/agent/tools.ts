@@ -40,7 +40,7 @@ export const AGENT_TOOLS: ToolDefinition[] = [
   },
   {
     name: "offer_call",
-    description: "Offer the free 20-minute call via Cal.com after brief pre-qualification. Shows a booking button.",
+    description: "Offer the free 20-minute call via Cal.com after brief pre-qualification. Shows a button that opens Cal.com so the visitor picks their own time; it does not book anything.",
     parameters: {
       type: "object",
       properties: {
@@ -97,7 +97,11 @@ export function runTool(call: ToolCall, tiers: Tier[]): ToolResult {
       const tier = tierFor(args.plan) ?? null;
       const summary = String(args.summary ?? "").slice(0, 200);
       return {
-        content: JSON.stringify({ ok: true, shown_to_visitor: "Botón para agendar la llamada gratis de 20 minutos" }),
+        content: JSON.stringify({
+          ok: true,
+          shown_to_visitor: "Botón que abre Cal.com para que el visitante elija día y hora de la llamada gratis de 20 minutos",
+          note: "Nada quedó agendado. El visitante todavía tiene que elegir el horario en Cal.com.",
+        }),
         action: { type: "offer_call", plan: tier?.slug ?? null, planName: tier?.name ?? null, summary },
       };
     }

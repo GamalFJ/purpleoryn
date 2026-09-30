@@ -30,7 +30,7 @@ app/api/chat/route.ts (Node runtime)
   1. zod-validate body (last message must be from the user)
   2. chat_log_message (anon RPC) → logs the user message, returns counters
      → rate limits: 60 messages/session, 30 user messages/IP/hour (IP hashed with CHAT_IP_SALT)
-  3. readStoredIntent (service role) → resolveIntent(last message, stored intent)
+  3. readStoredState (service role) → resolveIntent(last message, stored intent) → baseStateFor(...)
   4. getTiers()/getAddons() → buildSystemPrompt() (lib/agent/prompt.ts)
   5. tool loop, max 3 rounds: chatWithFallback() → runTool() (lib/agent/tools.ts)
   6. chat_log_message (assistant reply); chat_record_outcome (anon RPC, legacy outcome fields)
@@ -79,8 +79,9 @@ Stored on the existing `chat_sessions` row (no second store): `state`, `intent`,
 `completed_at`, alongside the legacy `recommended_plan` and `handoff`.
 
 - **Intent** — `lib/chat-state.ts`. `classifyIntent()` is deterministic regex over one message.
-  `resolveIntent()` lets a bare affirmation ("Sí", "Claro", "Eso", "Me interesa") continue the
-  intent stored for the session (services / pricing / sales / booking / human_handoff only).
+  `resolveIntent()` lets a message that names no topic ("Sí", "Una agencia de bienes raíces")
+  continue the intent stored for the session (services / pricing / sales / booking / human_handoff only);
+  `baseStateFor()` holds the stored state on such turns.
 - **State** — 12 states; the desired state comes from the intent, overridden by `offer_call`
   (→ `booking_offered`) or `recommend_plan` (→ `plan_recommendation`), or `external_failure` on
   provider failure.
