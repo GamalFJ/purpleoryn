@@ -6,6 +6,13 @@ import type { AgentMessage } from "@/lib/ai/types";
 import { buildSystemPrompt } from "@/lib/agent/prompt";
 import { AGENT_TOOLS, runTool, type AgentAction } from "@/lib/agent/tools";
 import { getAddons, getTiers } from "@/lib/content";
+import {
+  classifyIntent,
+  resolveResponseState,
+  stateForIntent,
+  type ConversationIntent,
+  type ConversationState,
+} from "@/lib/chat-state";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { publicClient } from "@/lib/supabase/server";
 import { SITE } from "@/lib/site";
@@ -33,6 +40,37 @@ function ipHash(request: NextRequest) {
   return createHash("sha256").update(`${process.env.CHAT_IP_SALT ?? "pcl"}:${ip}`).digest("hex");
 }
 
+type PublicSupabase = ReturnType<typeof publicClient>;
+
+async function persistState(
+  supabase: PublicSupabase,
+  sessionId: string,
+  state: ConversationState,
+  intent: ConversationIntent,
+  options: {
+    recommendedPlan?: string | null;
+    bookingStatus?: "offered" | "confirmed" | "failed" | null;
+    handoffStatus?: "requested" | "completed" | "failed" | null;
+    handoffSummary?: string | null;
+    outcome?: string | null;
+    lastErrorCode?: string | null;
+  } = {},
+) {
+  const { error } = await supabase.rpc("chat_update_state", {
+    p_session_id: sessionId,
+    p_state: state,
+    p_intent: intent,
+    p_qualification: null,
+    p_recommended_plan: options.recommendedPlan ?? null,
+    p_booking_status: options.bookingStatus ?? null,
+    p_handoff_status: options.handoffStatus ?? null,
+    p_handoff_summary: options.handoffSummary ?? null,
+    p_outcome: options.outcome ?? null,
+    p_last_error_code: options.lastErrorCode ?? null,
+  });
+  if (error) console.error("[agent] state update failed:", error.message);
+}
+
 export async function POST(request: NextRequest) {
   if (!isAgentConfigured() || !isSupabaseConfigured()) {
     return NextResponse.json({ reply: FALLBACK, actions: [], unavailable: true }, { status: 503 });
@@ -46,6 +84,8 @@ export async function POST(request: NextRequest) {
   const { sessionId, landingPage, messages } = parsed.data;
   const supabase = publicClient();
   const hash = ipHash(request);
+  const intent = classifyIntent(last.content);
+  const intentState = stateForIntent(intent);
 
   // Log the visitor's message first; the counters it returns drive rate limits.
   const { data: counters, error: logError } = await supabase.rpc("chat_log_message", {
@@ -93,6 +133,11 @@ export async function POST(request: NextRequest) {
       }
     }
   } catch {
+    const failureState = resolveResponseState(intentState, [], true);
+    await persistState(supabase, sessionId, failureState, intent, {
+      outcome: "external_failure",
+      lastErrorCode: "provider_failure",
+    });
     return NextResponse.json({ reply: FALLBACK, actions: [] }, { status: 502 });
   }
 
@@ -115,7 +160,16 @@ export async function POST(request: NextRequest) {
     });
   }
 
+  const finalState = resolveResponseState(intentState, actions);
+  await persistState(supabase, sessionId, finalState, intent, {
+    recommendedPlan: recommended?.plan ?? null,
+    bookingStatus: call ? "offered" : null,
+    handoffStatus: intent === "human_handoff" ? "requested" : null,
+    handoffSummary: intent === "human_handoff" ? last.content : null,
+    outcome: finalState,
+  });
+
   // Keep one action of each kind (the latest) so the widget doesn't stack duplicates.
   const latestByType = new Map(actions.map((a) => [a.type, a]));
-  return NextResponse.json({ reply, actions: [...latestByType.values()] });
+  return NextResponse.json({ reply, actions: [...latestByType.values()], state: finalState, intent });
 }

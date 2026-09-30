@@ -1,12 +1,36 @@
 import { createOpenAIProvider } from "./openai";
+import { createOpenRouterProvider } from "./openrouter";
 import type { ChatProvider, ChatRequest, ChatResponse } from "./types";
 
-// Provider order. Target: Claude primary, OpenAI and Gemini as fallbacks.
-// Only OpenAI is implemented today; adding Claude = write lib/ai/anthropic.ts
-// and push it to the front of this list when ANTHROPIC_API_KEY is set.
 function configuredProviders(): ChatProvider[] {
   const providers: ChatProvider[] = [];
-  if (process.env.OPENAI_API_KEY) providers.push(createOpenAIProvider(process.env.OPENAI_API_KEY));
+  const selected = process.env.AI_PROVIDER?.trim().toLowerCase();
+  const openRouterKey = process.env.OPENROUTER_API_KEY;
+  const openAiKey = process.env.OPENAI_API_KEY;
+
+  const addOpenRouter = () => {
+    if (openRouterKey) providers.push(createOpenRouterProvider(openRouterKey));
+  };
+  const addOpenAI = () => {
+    if (openAiKey) providers.push(createOpenAIProvider(openAiKey));
+  };
+
+  // Explicit selection determines the primary provider. Other configured
+  // providers remain eligible as fallbacks without coupling the API route to a
+  // specific vendor.
+  if (selected === "openrouter") {
+    addOpenRouter();
+    addOpenAI();
+  } else if (selected === "openai") {
+    addOpenAI();
+    addOpenRouter();
+  } else {
+    // Backward-compatible default: OpenAI remains first when AI_PROVIDER is
+    // unset, while OpenRouter is available when it is the only configured key.
+    addOpenAI();
+    addOpenRouter();
+  }
+
   return providers;
 }
 
@@ -23,7 +47,7 @@ export async function chatWithFallback(request: ChatRequest): Promise<ChatRespon
       return { ...(await provider.chat(request)), provider: provider.name };
     } catch (err) {
       lastError = err;
-      console.error(`[agent] ${provider.name} failed:`, err instanceof Error ? err.message : err);
+      console.error(`[agent] ${provider.name} failed:`, err instanceof Error ? err.message : "unknown provider error");
     }
   }
   throw lastError;

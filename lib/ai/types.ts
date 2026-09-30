@@ -31,15 +31,19 @@ export interface ChatResponse {
 }
 
 export interface ChatProvider {
-  name: "openai" | "anthropic" | "gemini";
+  name: "openai" | "openrouter" | "anthropic" | "gemini";
   chat(request: ChatRequest): Promise<ChatResponse>;
 }
+
+export type ProviderErrorCode = "configuration" | "timeout" | "rate_limit" | "unauthorized" | "upstream" | "malformed_response";
 
 export class ProviderError extends Error {
   constructor(
     message: string,
     readonly status?: number,
+    readonly code: ProviderErrorCode = "upstream",
   ) {
     super(message);
+    this.name = "ProviderError";
   }
 }
