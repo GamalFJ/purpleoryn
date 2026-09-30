@@ -1,6 +1,6 @@
 import { formatRD } from "@/lib/format";
 import { computeRoi } from "@/lib/roi";
-import { isTierSlug, type Tier, type TierSlug } from "@/lib/tiers";
+import { TIER_CTA, isTierSlug, type Tier, type TierSlug } from "@/lib/tiers";
 import type { ToolCall, ToolDefinition } from "@/lib/ai/types";
 
 // UI actions the chat widget renders under the assistant's reply.
@@ -27,7 +27,7 @@ export const AGENT_TOOLS: ToolDefinition[] = [
   },
   {
     name: "recommend_plan",
-    description: "Recommend one plan once you are confident it fits. Shows the visitor a button to the plan form with that plan preselected.",
+    description: "Recommend one plan once you are confident it fits. Shows the visitor a button: the plan order form with that plan preselected, or, for a plan that is sold by call, the free-call booking instead. Nothing is ordered or booked by this tool.",
     parameters: {
       type: "object",
       properties: {
@@ -88,8 +88,13 @@ export function runTool(call: ToolCall, tiers: Tier[]): ToolResult {
     case "recommend_plan": {
       const tier = tierFor(args.plan);
       if (!tier) return { content: JSON.stringify({ error: "Plan inválido." }) };
+      const cta = TIER_CTA[tier.slug];
+      const shown =
+        cta.action === "call"
+          ? `Botón "${cta.label}" que abre la agenda de la llamada gratis en Cal.com (este plan se conversa por llamada, no por formulario). Nada quedó agendado.`
+          : `Botón "Elegir ${tier.name}" que abre el formulario`;
       return {
-        content: JSON.stringify({ ok: true, shown_to_visitor: `Botón "Elegir ${tier.name}" que abre el formulario` }),
+        content: JSON.stringify({ ok: true, shown_to_visitor: shown }),
         action: { type: "recommend_plan", plan: tier.slug, planName: tier.name },
       };
     }

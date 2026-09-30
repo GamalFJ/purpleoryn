@@ -12,6 +12,7 @@ import { track } from "@/lib/analytics";
 import { formatRD, salesLabel } from "@/lib/format";
 import { calUrl } from "@/lib/links";
 import { CTA } from "@/lib/site";
+import { TIER_CTA } from "@/lib/tiers";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -64,6 +65,22 @@ function ActionBlock({ action }: { action: AgentAction }) {
     );
   }
   if (action.type === "recommend_plan") {
+    const cta = TIER_CTA[action.plan];
+    // A plan sold by call (Autoridad) sends to the call booking, same as the plan's own button on the site.
+    if (cta.action === "call") {
+      return (
+        <TrackedLink
+          href={calUrl({ slug: action.plan, name: action.planName })}
+          event="cal_click"
+          location="chat_agent"
+          plan={action.plan}
+          className={buttonClass("primary", "sm", "w-full")}
+        >
+          <CalendarBlank size={16} weight="bold" />
+          {cta.label}
+        </TrackedLink>
+      );
+    }
     return (
       <Link
         href={`/servicios?plan=${action.plan}#elegir-plan`}

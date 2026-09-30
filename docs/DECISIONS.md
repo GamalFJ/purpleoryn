@@ -89,3 +89,11 @@ appointments, and (4) keyword-free qualification answers reset the stored intent
 holds a stored state. **Consequence:** still deterministic (no AI classifier). Booking remains link-only; the
 "Elegir <plan>" button for Autoridad opens the order form while the site's own Autoridad CTA opens the call
 booking — an open product question, not changed here.
+
+## D15 — A plan sold by call sends the chat visitor to the call booking
+**Decision (2026-09-30, owner approved):** `recommend_plan` follows the plan's own call to action on the site
+(`TIER_CTA` in `lib/tiers.ts`). For a plan whose action is "call" (today Autoridad) the chat button is "Hablar de
+Autoridad" and opens the Cal.com booking (plan and notes prefilled, `cal_click` tracked); for the other plans it stays
+"Elegir <plan>" and opens the order form. The prompt and the tool result say so, and that nothing is booked or ordered.
+**Consequence:** the rule lives in one place (`TIER_CTA`); changing a plan's action there changes site, chat button and prompt.
+The stored state for such a recommendation is still `plan_recommendation` (not `booking_offered`); revisit in the orchestration step.

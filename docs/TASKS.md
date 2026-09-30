@@ -10,14 +10,19 @@ Immediate development sequence. Keep this list short and current; move finished 
   grants verified (see CURRENT-STATE.md). Open follow-up: reconcile the migration history (chat_state and
   document_uploads applied but unrecorded).
 - [x] **T2 — Deployed env checked (2026-09-30):** Production has `SUPABASE_SERVICE_ROLE_KEY`, `AI_PROVIDER`, `OPENROUTER_API_KEY` (OpenAI key removed); Preview has none of them (add them only if Preview testing is wanted).
-- [~] **T3 — Manual check of the state flow** on production. Partly done 2026-09-30: real test chats stored
-  `booking_intent` → `booking_offered` (+ `handoff = cal_com`) and ended a plan chat in `plan_recommendation` with
-  `recommended_plan` set, no errors. Still to do: checks 3 and 4 below, and the retest after the chat-behavior fixes.
-- [ ] **T3b — Retest the chat-behavior fixes** once deployed (Spanish, fresh tab each): (a) sales chat with a
-  business that depends on appointments (e.g. a real estate agency) → recommends Autoridad and names what in its
-  agent row fits; (b) booking chat → asks ONE question at a time, never says it scheduled the call, says the button
-  lets them pick the time; (c) after answering qualification questions the session keeps `intent = sales`
-  (not `unknown`) and "Sí" after the recommendation keeps `plan_recommendation`.
+- [x] **T3 — State flow verified live (2026-09-30).** Real chats stored the expected states with no errors; `anon`/`authenticated`
+  have no execute rights on the state functions (checked in the database). Not exercised: checks 5 and 6 below (Preview-only failure tests).
+- [x] **T3b — Chat-behavior fixes retested live (2026-09-30, deploy 01cc6ae).** Real-estate sales chat: one question at a time, asked about
+  appointments/orders, recommended Autoridad, ROI correct (RD$70,999.87), `intent = sales` held across 7 turns, ended
+  `plan_recommendation` with `recommended_plan = autoridad`. Booking chat: one question at a time, never claimed to schedule, said the
+  button lets the visitor pick the time, ended `booking_offered` + `handoff = cal_com`. One flaw: see T3c.
+- [ ] **T3c — Intent flips on a stray keyword.** In the booking chat, "comprar uno de sus servicios" contained "servicios", so the stored
+  intent switched booking → services (final row: `intent = services`, `state = booking_offered`). State was still right. Address in Step 5
+  (e.g. only switch away from an active flow on a strong topic).
+
+- [ ] **T3d — Retest the Autoridad button** once deployed: a sales chat that ends in an Autoridad recommendation shows "Hablar de
+  Autoridad" (opens cal.com with the plan prefilled, not the order form); a Conversión or Presencia recommendation still shows
+  "Elegir <plan>" and opens the form.
 
 ### T3 manual checklist
 

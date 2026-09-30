@@ -30,7 +30,8 @@ changes.
 ## Tools — working
 
 `calculate_roi`, `recommend_plan`, `offer_call` (`lib/agent/tools.ts`). No handoff, booking, availability
-or lead tools. `offer_call` only shows a Cal.com button and tells the model nothing was booked; the prompt
+or lead tools. `recommend_plan` shows "Elegir <plan>" (order form) for most plans, but for a plan sold by call
+(Autoridad, per `TIER_CTA`) it shows "Hablar de Autoridad" opening the Cal.com booking, like the site's own button. `offer_call` only shows a Cal.com button and tells the model nothing was booked; the prompt
 forbids saying a call was scheduled. The prompt also asks one question at a time on the booking path, and
 chooses a plan from the plan facts (if the visitor needs appointment booking or order taking, only a plan whose
 "Agente de IA" row says so may be recommended; the highlighted "Recomendado" plan is only a default).
@@ -74,7 +75,7 @@ Deterministic regex over the last message (`lib/chat-state.ts`). A message that 
 (services / pricing / sales / booking / human_handoff); a message that does name a topic switches intent. On
 such inherited turns the stored state is held (e.g. `plan_recommendation`) instead of falling back to the
 intent's default state. Known limitation: it is still keyword regex; a genuinely off-topic message during an
-active flow keeps that flow's intent, and the first message of a conversation with no keyword is `unknown`.
+active flow keeps that flow's intent, and the first message of a conversation with no keyword is `unknown`. A weak keyword in an answer can also switch an active flow (seen live: "comprar uno de sus servicios" during a booking flow switched the stored intent to `services`; the state stayed correct). Verified live 2026-09-30 after the chat-behavior fixes: sales and booking chats behaved as intended (see docs/TASKS.md T3b).
 
 ## UI
 
