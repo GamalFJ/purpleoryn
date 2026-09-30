@@ -68,8 +68,10 @@ const CONTINUABLE_INTENTS: readonly ConversationIntent[] = ["services", "pricing
 // during a booking is still a booking).
 const ACTIVE_FLOW_INTENTS: readonly ConversationIntent[] = ["sales", "booking", "human_handoff"];
 
-// Explicit asks that are strong enough to leave an active flow.
-const PLAN_FIT_RE = /(qu[eé] plan|cu[aá]l plan|me conviene|recomiend|recomendar)/u;
+// An explicit price question is strong enough to leave booking/handoff. A plan-fit
+// phrase is not: inside a booking it is usually the visitor's goal for the call
+// ("una asesoría para saber qué plan me conviene"), and the sales capability
+// cannot show the call button.
 const PRICE_QUESTION_RE = /(precio|precios|cu[aá]nto (?:cuesta|cuestan|cobran|vale|sale|es)|costo|costos|mensualidad)/u;
 
 // Classify the message, then apply the active-flow rule:
@@ -77,8 +79,8 @@ const PRICE_QUESTION_RE = /(precio|precios|cu[aá]nto (?:cuesta|cuestan|cobran|v
 //   intent (Step 4 behavior: "Sí", "Claro", "Me interesa", "Una agencia...").
 // - Inside an active flow (sales / booking / human_handoff) the flow is kept
 //   unless the visitor makes a strong change: asks to book, asks for a person,
-//   asks which plan fits (from booking/handoff), or asks a price question (from
-//   booking/handoff; the sales capability already answers price questions).
+//   or asks an explicit price question (from booking/handoff; the sales
+//   capability already answers price questions).
 // `inherited` tells the caller the intent did not come from this message's own
 // words, so the message must not be stored as a summary of that intent.
 export function resolveIntent(content: string, previousIntent: ConversationIntent | null): { intent: ConversationIntent; inherited: boolean } {
@@ -89,7 +91,6 @@ export function resolveIntent(content: string, previousIntent: ConversationInten
     const strong =
       direct === "booking" ||
       direct === "human_handoff" ||
-      (direct === "sales" && PLAN_FIT_RE.test(text)) ||
       (direct === "pricing" && previousIntent !== "sales" && PRICE_QUESTION_RE.test(text));
     if (strong) return { intent: direct, inherited: false };
     return { intent: previousIntent, inherited: true };

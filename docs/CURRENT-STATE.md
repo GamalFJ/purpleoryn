@@ -43,7 +43,9 @@ state/intent and the last message, adds a short addendum to the system prompt, a
 table). Qualification memory (`record_qualification` → `chat_sessions.qualification`, no migration), the stronger active-flow intent
 rule (fixes T3c), a safe fallback to the old behavior, and the read-only admin fields are implemented. Checked so far: typecheck,
 lint, production build, and an offline harness over the pure modules (intent switching, capability, tool gating, addendum text,
-qualification sanitizing, fallback). **Not yet checked:** live chats against the deployed model and the admin page; see docs/TASKS.md T9.
+qualification sanitizing, fallback). Live so far (2026-09-30, deploy b9faffd): qualification memory, plan recommendation, state holding and
+intent inheritance worked; two defects were found and fixed in D17 (switch out of booking, invented links). **Not yet checked:** the
+fixes live, the admin page, and most of docs/TASKS.md T9.
 Not implemented and out of scope: handoff notification, Cal.com webhook, automatic booking, `booking_confirmed`, lead creation.
 
 ## Conversation state — implemented, verified live (Step 4)
@@ -82,7 +84,8 @@ Not implemented and out of scope: handoff notification, Cal.com webhook, automat
 
 Deterministic regex over the last message (`lib/chat-state.ts`, classifier unchanged). Outside an active flow, a message that names no
 topic continues the stored intent. Inside an active flow (sales / booking / human_handoff) weak keywords do not switch it; asking to
-book, asking for a person, asking which plan fits (from booking/handoff) or an explicit price question (from booking/handoff) do.
+book, asking for a person, or an explicit price question (from booking/handoff) do. A plan-fit phrase inside booking/handoff does not
+(D17: it is usually the goal of the call, and the sales capability cannot show the call button).
 On inherited turns the stored state is held. Known limitations: still keyword regex; the first message of a conversation with no keyword
 is `unknown`; a genuinely off-topic message inside an active flow keeps that flow. The Step 4 live tests are in docs/TASKS.md
 (T3b, T3c). The Step 5 rule is verified offline only.

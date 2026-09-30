@@ -23,6 +23,16 @@ Immediate development sequence. Keep this list short and current; move finished 
   Autoridad" (opens cal.com with the plan prefilled, not the order form); a Conversión or Presencia recommendation still shows
   "Elegir <plan>" and opens the form.
 
+- [~] **T9 partial results (live, 2026-09-30, deploy b9faffd; owner tested two chats).** Passed: items 4, 5, 6, 11 (one question at a time,
+  qualification stored with whitelisted fields only, `recommended_plan = autoridad` / `plan_recommendation`, "Si por favor"/"claro" keep the intent
+  and hold the state, no state errors); items 9-10 passed on the text (the Autoridad reply says the button lets the visitor pick day and hour,
+  never claims a booking) but the button label and link were not checked. Found and fixed in D17: the booking chat was switched to sales by a
+  plan-fit phrase and never got the call button; the model wrote fake markdown cal.com links. Still untested: 1-3, 7, 8, 12-20.
+- [ ] **T9b — Retest the D17 fixes live** (fresh tab each): (a) "Quiero agendar una llamada" → answer the goal with "una asesoría para saber qué
+  plan me conviene" → the chat stays in booking and shows the real Cal.com button; `chat_sessions.intent` stays `booking`; (b) after an Autoridad
+  recommendation, answer "claro" → no raw `[text](url)` in the reply, it points to the existing "Hablar de Autoridad" button; (c) no reply ever
+  contains a markdown link.
+
 ### T3 manual checklist
 
 1. First message "Quiero agendar una llamada" → reply + call button; response `stateUpdate: "ok"`,

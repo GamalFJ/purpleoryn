@@ -129,7 +129,8 @@ Stored on the existing `chat_sessions` row (no second store): `state`, `intent`,
 
 One conversational system, four capabilities. `lib/agent/orchestrator.ts` is pure (no model, database or network):
 `planTurn({ storedState, storedIntent, message, qualification })` returns the intent, the state to ask the database for,
-the active capability, a short prompt addendum and the allowed tools. `/api/chat` appends the addendum to the existing
+the active capability, a short prompt addendum and the allowed tools. Every addendum tells the model that buttons appear only when a
+tool shows them and that it must never write links or markdown itself. `/api/chat` appends the addendum to the existing
 system prompt. If `planTurn` throws, `fallbackPlan()` restores the pre-orchestration behavior (classify the message alone,
 no addendum, the original three tools). The database still decides whether a state change is allowed.
 
@@ -142,8 +143,8 @@ no addendum, the original three tools). The database still decides whether a sta
 
 **Intent switching (`resolveIntent` in `lib/chat-state.ts`).** The classifier is unchanged. Outside an active flow a message
 that names no topic continues the stored intent (Step 4 behavior). Inside an active flow (sales, booking, human_handoff) weak
-keywords ("servicios", "empezar", "cuánto" in an answer) do not switch it. Strong changes do: asking to book, asking for a
-person, asking which plan fits (from booking/handoff), or an explicit price question (from booking/handoff).
+keywords ("servicios", "empezar", "cuánto" or "qué plan me conviene" inside an answer) do not switch it. Strong changes do: asking
+to book, asking for a person, or an explicit price question (from booking/handoff). See D17.
 
 **Qualification memory (`lib/agent/qualification.ts`).** Stored in the existing `chat_sessions.qualification` (no migration) via
 `chat_apply_state`. Keys: `business_type`, `has_website`, `has_google_profile`, `customer_channel`, `appointments_or_orders`,

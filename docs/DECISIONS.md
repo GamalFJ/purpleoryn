@@ -111,3 +111,14 @@ length caps and contact-detail filtering; its purpose is continuity, not lead cr
 **Consequences:** one extra model round when the visitor gives a new fact (`record_qualification`); a rejected state change drops that turn's
 qualification; receptionist mode cannot show a call button (the visitor must ask to book, which switches capability). Out of scope and
 still true: no handoff notification, no Cal.com webhook, no `booking_confirmed`, no lead creation from chat.
+
+## D17 — Fixes to D16 after the first live Step 5 tests (supersedes the "which-plan" part of D16's intent switching)
+**Decision (2026-09-30):** (1) Asking which plan fits no longer leaves booking or handoff. In a live booking chat the visitor's call goal
+was "una asesoría para saber cuál plan más me conviene"; the old rule switched to sales, which has no call button, so the visitor asking
+for a call never got one. Strong changes out of an active flow are now only: asking to book, asking for a person, and an explicit price
+question (from booking/handoff). (2) Every capability addendum, and the base prompt, now forbid writing links, URLs or markdown and forbid
+saying a button is shown unless a tool showed it this turn; after a recommendation or an offered call the model points to the button that is
+already shown. The live chats had produced fake `[...](https://cal.com)` links and "el siguiente botón" with no button. (3) The base prompt
+defers question order to the "next question" in the ACTIVE CAPABILITY section (it had asked about a website before appointments/orders).
+**Consequence:** a visitor who is booking cannot get a plan recommendation without finishing or leaving the booking (by asking for a
+person or a price); accepted, because booking is the higher-stakes flow. Verified offline (harness) and pending a live retest (TASKS.md T9b).

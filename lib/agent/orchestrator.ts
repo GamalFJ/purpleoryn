@@ -81,7 +81,8 @@ function knownBlock(known: Qualification): string {
     : "The visitor has not told you anything about their business yet.";
 }
 
-const HEADER = "ACTIVE CAPABILITY FOR THIS TURN (same assistant, same conversation; only the focus below changes). Only use the tools you are offered.";
+const HEADER =
+  "ACTIVE CAPABILITY FOR THIS TURN (same assistant, same conversation; only the focus below changes). Only use the tools you are offered. Buttons appear only when a tool you call shows them: never write a link, URL or markdown, and never say a button is shown unless a tool result in this turn says so.";
 const SAVE_FACTS = "When the visitor gives you one of these facts, save it with record_qualification (only the fields they gave, never contact details) in the same turn, then reply.";
 
 function receptionistAddendum(known: Qualification): string {
@@ -99,7 +100,7 @@ function salesAddendum(known: Qualification, state: ConversationState): string {
   const enough = SALES_ENOUGH.every((key) => isKnown(known, key));
   const next = nextMissing(known, SALES_QUALIFICATION_ORDER);
   const step = state === "plan_recommendation"
-    ? "A plan was already recommended and its button is shown. Don't repeat the pitch or recommend again unless the visitor's needs changed; answer follow-up questions and remind them the button is below."
+    ? "A plan was already recommended and its button is already shown above. Don't repeat the pitch or recommend again unless the visitor's needs changed; answer follow-up questions. If the visitor says yes or ok again, tell them to use that button; don't write a link for it."
     : enough
       ? "You have enough to recommend: call calculate_roi for the plan you have in mind, then recommend_plan."
       : `Ask ONLY the next useful question, in your own words: ${QUESTION_HINT[next ?? "business_type"]}. Don't recommend a plan yet unless the visitor asks you to.`;
@@ -116,7 +117,7 @@ function salesAddendum(known: Qualification, state: ConversationState): string {
 function bookingAddendum(known: Qualification, state: ConversationState): string {
   const next = nextMissing(known, BOOKING_QUALIFICATION_ORDER);
   const step = state === "booking_offered"
-    ? "The button was already shown. Don't ask more questions unless the visitor asks something; answer briefly and remind them the button lets them pick the day and time."
+    ? "The button was already shown above. Don't ask more questions unless the visitor asks something; answer briefly and tell them that button lets them pick the day and time. Don't write a link for it."
     : next
       ? `Before offering the call, ask ONLY this, in your own words: ${QUESTION_HINT[next]}.`
       : "You have what you need: call offer_call now (plan discussed if any; summary with business type, goal and timing; no contact details).";
