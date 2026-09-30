@@ -25,42 +25,62 @@ export type BookingStatus = (typeof BOOKING_STATUSES)[number];
 export const HANDOFF_STATUSES = ["requested", "completed", "failed"] as const;
 export type HandoffStatus = (typeof HANDOFF_STATUSES)[number];
 
-const STATE_TRANSITIONS: Record<ConversationState, readonly ConversationState[]> = {
-  new: ["inquiry", "service_inquiry", "sales_qualification", "booking_intent", "human_handoff_requested", "unknown_request", "external_failure"],
-  inquiry: ["inquiry", "service_inquiry", "sales_qualification", "booking_intent", "human_handoff_requested", "unknown_request", "completed", "external_failure"],
-  service_inquiry: ["inquiry", "service_inquiry", "sales_qualification", "booking_intent", "human_handoff_requested", "unknown_request", "completed", "external_failure"],
-  sales_qualification: ["inquiry", "service_inquiry", "sales_qualification", "plan_recommendation", "booking_intent", "human_handoff_requested", "unknown_request", "completed", "external_failure"],
-  plan_recommendation: ["inquiry", "service_inquiry", "sales_qualification", "plan_recommendation", "booking_intent", "booking_offered", "human_handoff_requested", "completed", "external_failure"],
-  booking_intent: ["inquiry", "service_inquiry", "sales_qualification", "booking_intent", "booking_offered", "human_handoff_requested", "unknown_request", "completed", "external_failure"],
-  booking_offered: ["inquiry", "service_inquiry", "sales_qualification", "booking_intent", "booking_offered", "human_handoff_requested", "unknown_request", "completed", "external_failure"],
-  booking_confirmed: ["completed", "inquiry", "service_inquiry", "sales_qualification", "booking_intent", "human_handoff_requested", "unknown_request"],
-  human_handoff_requested: ["inquiry", "service_inquiry", "sales_qualification", "booking_intent", "human_handoff_requested", "completed", "external_failure", "unknown_request"],
-  completed: ["inquiry", "service_inquiry", "sales_qualification", "booking_intent", "human_handoff_requested", "unknown_request", "completed"],
-  unknown_request: ["inquiry", "service_inquiry", "sales_qualification", "booking_intent", "human_handoff_requested", "unknown_request", "external_failure"],
-  external_failure: ["inquiry", "service_inquiry", "sales_qualification", "booking_intent", "human_handoff_requested", "unknown_request", "external_failure"],
-};
+// Which transitions are allowed is decided in the database
+// (chat_state_can_transition, applied by chat_apply_state) from the state that
+// is actually stored. There is deliberately no copy of that table here.
 
-export function isConversationState(value: string): value is ConversationState {
-  return (CONVERSATION_STATES as readonly string[]).includes(value);
+export function isConversationState(value: unknown): value is ConversationState {
+  return typeof value === "string" && (CONVERSATION_STATES as readonly string[]).includes(value);
 }
 
-export function isConversationIntent(value: string): value is ConversationIntent {
-  return (CONVERSATION_INTENTS as readonly string[]).includes(value);
+export function isConversationIntent(value: unknown): value is ConversationIntent {
+  return typeof value === "string" && (CONVERSATION_INTENTS as readonly string[]).includes(value);
 }
 
-export function canTransition(from: ConversationState, to: ConversationState): boolean {
-  return STATE_TRANSITIONS[from].includes(to);
-}
+// Order matters: the first match wins.
+const HANDOFF_RE =
+  /(hablar con|habla con|hablarle|hablarles|contactar|comunicar(?:me|nos)? con|persona real|agente humano|humano|asesor(?:es|a)?(?![\p{L}])|representante|alguien (?:del equipo|real))|(?:escrib|habl|contact|comunic)\p{L}*[^.?!]{0,40}whatsapp/u;
+const BOOKING_RE = /(agendar|agenda|reservar|reserva|cita|llamada|reunión|reunion|cal\.com|calendario)/u;
+const PRICING_RE = /(precio|precios|cu[aá]nto|costo|costos|cuesta|cuestan|mensualidad|pago)/u;
+const SALES_RE = /(qu[eé] plan|cu[aá]l plan|conviene|recomiend|recomendar|contratar|ventas|objetivo|problema|negocio|empezar|comenzar)/u;
+const PLAN_RE = /(plan|planes)/u;
+const SERVICES_RE = /(servicio|servicios|p[aá]gina|sitio web|seo|google business|perfil de negocio|agente de ia|oryn|qu[eé] hacen)/u;
+const GREETING_RE = /^(hola|buenas|buenos d[ií]as|buenas tardes|buenas noches|qui[eé]n eres|qu[eé] es oryn)[!.?\s]*$/u;
 
 export function classifyIntent(content: string): ConversationIntent {
   const text = content.toLocaleLowerCase("es-DO");
-  if (/(hablar|comunicar|contactar|persona|humano|asesor|representante|whatsapp)/u.test(text)) return "human_handoff";
-  if (/(agendar|agenda|reservar|reserva|cita|llamada|reunión|reunion|cal\.com|calendario)/u.test(text)) return "booking";
-  if (/(precio|precios|cu[aá]nto|costo|costos|mensualidad|pago|plan)/u.test(text)) return "pricing";
-  if (/(recomienda|recomiendas|conviene|contratar|ventas|objetivo|problema|negocio|empezar|comenzar)/u.test(text)) return "sales";
-  if (/(servicio|servicios|p[aá]gina|sitio web|seo|google business|perfil de negocio|agente de ia|oryn|qu[eé] hacen)/u.test(text)) return "services";
-  if (/^(hola|buenas|buenos d[ií]as|buenas tardes|buenas noches|qui[eé]n eres|qu[eé] es oryn)[!.?\s]*$/u.test(text)) return "general_inquiry";
+  if (HANDOFF_RE.test(text)) return "human_handoff";
+  if (BOOKING_RE.test(text)) return "booking";
+  if (PRICING_RE.test(text)) return "pricing";
+  if (SALES_RE.test(text)) return "sales";
+  if (PLAN_RE.test(text)) return "pricing";
+  if (SERVICES_RE.test(text)) return "services";
+  if (GREETING_RE.test(text)) return "general_inquiry";
   return "unknown";
+}
+
+// Short replies that carry no topic of their own ("Sí", "Claro", "Me interesa").
+const AFFIRMATION_RE =
+  /^(?:s[ií]+|claro(?: que s[ií])?|dale|ok(?:ay|ey)?|vale|perfecto|eso|eso mismo|exacto|correcto|adelante|listo|vamos|de acuerdo|est[aá] bien|por favor|as[ií] mismo|me interesa|s[ií],?\s+(?:claro|dale|por favor|quiero|me interesa|eso))[\s!.,?¡]*$/u;
+
+export function isAffirmation(content: string): boolean {
+  return AFFIRMATION_RE.test(content.trim().toLocaleLowerCase("es-DO"));
+}
+
+// Intents a bare affirmation can meaningfully continue. general_inquiry and
+// unknown carry nothing to continue.
+const CONTINUABLE_INTENTS: readonly ConversationIntent[] = ["services", "pricing", "sales", "booking", "human_handoff"];
+
+// Classify the message, but let a bare affirmation continue the intent already
+// stored for the conversation. `inherited` tells the caller the intent did not
+// come from this message's own words, so the message must not be stored as a
+// summary of that intent.
+export function resolveIntent(content: string, previousIntent: ConversationIntent | null): { intent: ConversationIntent; inherited: boolean } {
+  const direct = classifyIntent(content);
+  if (direct === "unknown" && previousIntent && CONTINUABLE_INTENTS.includes(previousIntent) && isAffirmation(content)) {
+    return { intent: previousIntent, inherited: true };
+  }
+  return { intent: direct, inherited: false };
 }
 
 export function stateForIntent(intent: ConversationIntent): ConversationState {
@@ -81,9 +101,14 @@ export function stateForIntent(intent: ConversationIntent): ConversationState {
   }
 }
 
+// Desired state after this turn. Whether the move is allowed is decided by the
+// database from the state actually stored, not here.
 export function resolveResponseState(baseState: ConversationState, actions: readonly { type: string }[], providerFailed = false): ConversationState {
-  if (providerFailed) return canTransition(baseState, "external_failure") ? "external_failure" : baseState;
-  if (actions.some((action) => action.type === "offer_call")) return canTransition(baseState, "booking_offered") ? "booking_offered" : baseState;
-  if (actions.some((action) => action.type === "recommend_plan")) return canTransition(baseState, "plan_recommendation") ? "plan_recommendation" : baseState;
+  if (providerFailed) return "external_failure";
+  if (actions.some((action) => action.type === "offer_call")) return "booking_offered";
+  if (actions.some((action) => action.type === "recommend_plan")) return "plan_recommendation";
   return baseState;
 }
+
+// Outcome of asking the database to apply a state change.
+export type StateUpdateStatus = "ok" | "rejected" | "failed";

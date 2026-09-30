@@ -7,14 +7,18 @@ import { buildSystemPrompt } from "@/lib/agent/prompt";
 import { AGENT_TOOLS, runTool, type AgentAction } from "@/lib/agent/tools";
 import { getAddons, getTiers } from "@/lib/content";
 import {
-  classifyIntent,
+  isConversationIntent,
+  isConversationState,
+  resolveIntent,
   resolveResponseState,
   stateForIntent,
   type ConversationIntent,
   type ConversationState,
+  type StateUpdateStatus,
 } from "@/lib/chat-state";
-import { isSupabaseConfigured } from "@/lib/supabase/env";
+import { isServiceRoleConfigured, isSupabaseConfigured } from "@/lib/supabase/env";
 import { publicClient } from "@/lib/supabase/server";
+import { serviceClient } from "@/lib/supabase/service";
 import { SITE } from "@/lib/site";
 
 export const runtime = "nodejs";
@@ -40,23 +44,46 @@ function ipHash(request: NextRequest) {
   return createHash("sha256").update(`${process.env.CHAT_IP_SALT ?? "pcl"}:${ip}`).digest("hex");
 }
 
-type PublicSupabase = ReturnType<typeof publicClient>;
+// Conversation state lives in columns that anon/authenticated cannot read or
+// write; it is read and written here with the service role only. Server-side
+// only, and the visitor-driven path can never reach privileged values
+// (booking_confirmed, completed, booking_status 'confirmed', handoff 'completed').
+async function readStoredIntent(sessionId: string): Promise<ConversationIntent | null> {
+  if (!isServiceRoleConfigured()) return null;
+  const { data, error } = await serviceClient().from("chat_sessions").select("intent").eq("id", sessionId).maybeSingle();
+  if (error) {
+    console.error("[agent] state read failed:", error.message);
+    return null;
+  }
+  return isConversationIntent(data?.intent) ? data.intent : null;
+}
 
+interface StateUpdate {
+  status: StateUpdateStatus;
+  // The state actually stored afterwards; null when it could not be determined.
+  state: ConversationState | null;
+}
+
+// The database decides whether the transition is allowed from the state it has
+// stored. A refusal keeps the previous state and is reported, not swallowed.
 async function persistState(
-  supabase: PublicSupabase,
   sessionId: string,
   state: ConversationState,
   intent: ConversationIntent,
   options: {
     recommendedPlan?: string | null;
-    bookingStatus?: "offered" | "confirmed" | "failed" | null;
-    handoffStatus?: "requested" | "completed" | "failed" | null;
+    bookingStatus?: "offered" | "failed" | null;
+    handoffStatus?: "requested" | "failed" | null;
     handoffSummary?: string | null;
     outcome?: string | null;
     lastErrorCode?: string | null;
   } = {},
-) {
-  const { error } = await supabase.rpc("chat_update_state", {
+): Promise<StateUpdate> {
+  if (!isServiceRoleConfigured()) {
+    console.error("[agent] state update skipped: SUPABASE_SERVICE_ROLE_KEY is not configured");
+    return { status: "failed", state: null };
+  }
+  const { data, error } = await serviceClient().rpc("chat_apply_state", {
     p_session_id: sessionId,
     p_state: state,
     p_intent: intent,
@@ -68,7 +95,17 @@ async function persistState(
     p_outcome: options.outcome ?? null,
     p_last_error_code: options.lastErrorCode ?? null,
   });
-  if (error) console.error("[agent] state update failed:", error.message);
+  const result = data as { ok?: boolean; code?: string; state?: string } | null;
+  if (error || !result) {
+    console.error("[agent] state update failed:", error?.message ?? "empty response");
+    return { status: "failed", state: null };
+  }
+  const stored = isConversationState(result.state) ? result.state : null;
+  if (!result.ok) {
+    console.error(`[agent] state update rejected (${result.code ?? "unknown"}): kept ${stored ?? "previous state"}`);
+    return { status: "rejected", state: stored };
+  }
+  return { status: "ok", state: stored };
 }
 
 export async function POST(request: NextRequest) {
@@ -84,8 +121,6 @@ export async function POST(request: NextRequest) {
   const { sessionId, landingPage, messages } = parsed.data;
   const supabase = publicClient();
   const hash = ipHash(request);
-  const intent = classifyIntent(last.content);
-  const intentState = stateForIntent(intent);
 
   // Log the visitor's message first; the counters it returns drive rate limits.
   const { data: counters, error: logError } = await supabase.rpc("chat_log_message", {
@@ -112,6 +147,10 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  // A bare "Sí" / "Claro" continues the intent already stored for this session.
+  const { intent, inherited } = resolveIntent(last.content, await readStoredIntent(sessionId));
+  const intentState = stateForIntent(intent);
+
   const [tiers, addons] = await Promise.all([getTiers(), getAddons()]);
   const system = buildSystemPrompt(tiers, addons);
   const conversation: AgentMessage[] = messages.slice(-HISTORY_WINDOW).map((m) => ({ role: m.role, content: m.content }));
@@ -134,11 +173,11 @@ export async function POST(request: NextRequest) {
     }
   } catch {
     const failureState = resolveResponseState(intentState, [], true);
-    await persistState(supabase, sessionId, failureState, intent, {
+    const failure = await persistState(sessionId, failureState, intent, {
       outcome: "external_failure",
       lastErrorCode: "provider_failure",
     });
-    return NextResponse.json({ reply: FALLBACK, actions: [] }, { status: 502 });
+    return NextResponse.json({ reply: FALLBACK, actions: [], state: failure.state, stateUpdate: failure.status }, { status: 502 });
   }
 
   if (!reply) reply = actions.length ? "Aquí tienes:" : FALLBACK;
@@ -161,15 +200,17 @@ export async function POST(request: NextRequest) {
   }
 
   const finalState = resolveResponseState(intentState, actions);
-  await persistState(supabase, sessionId, finalState, intent, {
+  const update = await persistState(sessionId, finalState, intent, {
     recommendedPlan: recommended?.plan ?? null,
     bookingStatus: call ? "offered" : null,
     handoffStatus: intent === "human_handoff" ? "requested" : null,
-    handoffSummary: intent === "human_handoff" ? last.content : null,
+    // An inherited intent ("Sí") is not the visitor's own description of what they need.
+    handoffSummary: intent === "human_handoff" && !inherited ? last.content : null,
     outcome: finalState,
   });
 
   // Keep one action of each kind (the latest) so the widget doesn't stack duplicates.
+  // `state` is what the database actually stored; `stateUpdate` says whether it moved.
   const latestByType = new Map(actions.map((a) => [a.type, a]));
-  return NextResponse.json({ reply, actions: [...latestByType.values()], state: finalState, intent });
+  return NextResponse.json({ reply, actions: [...latestByType.values()], state: update.state, intent, stateUpdate: update.status });
 }
