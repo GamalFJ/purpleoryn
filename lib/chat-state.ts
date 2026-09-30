@@ -63,13 +63,37 @@ export function classifyIntent(content: string): ConversationIntent {
 // general_inquiry and unknown carry nothing to continue.
 const CONTINUABLE_INTENTS: readonly ConversationIntent[] = ["services", "pricing", "sales", "booking", "human_handoff"];
 
-// Classify the message; if it names no topic of its own ("Sí", "Claro", "Una
-// agencia de bienes raíces", "300,000 pesos") it continues the intent already
-// stored for the conversation. `inherited` tells the caller the intent did not
-// come from this message's own words, so the message must not be stored as a
-// summary of that intent.
+// Intents that are a guided flow with its own capability. Inside one of these a
+// stray keyword must not kick the visitor out ("comprar uno de sus servicios"
+// during a booking is still a booking).
+const ACTIVE_FLOW_INTENTS: readonly ConversationIntent[] = ["sales", "booking", "human_handoff"];
+
+// Explicit asks that are strong enough to leave an active flow.
+const PLAN_FIT_RE = /(qu[eé] plan|cu[aá]l plan|me conviene|recomiend|recomendar)/u;
+const PRICE_QUESTION_RE = /(precio|precios|cu[aá]nto (?:cuesta|cuestan|cobran|vale|sale|es)|costo|costos|mensualidad)/u;
+
+// Classify the message, then apply the active-flow rule:
+// - Outside an active flow: a message that names no topic continues the stored
+//   intent (Step 4 behavior: "Sí", "Claro", "Me interesa", "Una agencia...").
+// - Inside an active flow (sales / booking / human_handoff) the flow is kept
+//   unless the visitor makes a strong change: asks to book, asks for a person,
+//   asks which plan fits (from booking/handoff), or asks a price question (from
+//   booking/handoff; the sales capability already answers price questions).
+// `inherited` tells the caller the intent did not come from this message's own
+// words, so the message must not be stored as a summary of that intent.
 export function resolveIntent(content: string, previousIntent: ConversationIntent | null): { intent: ConversationIntent; inherited: boolean } {
   const direct = classifyIntent(content);
+  if (previousIntent && ACTIVE_FLOW_INTENTS.includes(previousIntent)) {
+    if (direct === previousIntent) return { intent: direct, inherited: false };
+    const text = content.toLocaleLowerCase("es-DO");
+    const strong =
+      direct === "booking" ||
+      direct === "human_handoff" ||
+      (direct === "sales" && PLAN_FIT_RE.test(text)) ||
+      (direct === "pricing" && previousIntent !== "sales" && PRICE_QUESTION_RE.test(text));
+    if (strong) return { intent: direct, inherited: false };
+    return { intent: previousIntent, inherited: true };
+  }
   if (direct === "unknown" && previousIntent && CONTINUABLE_INTENTS.includes(previousIntent)) {
     return { intent: previousIntent, inherited: true };
   }
@@ -116,6 +140,9 @@ export function baseStateFor(intent: ConversationIntent, inherited: boolean, sto
 // database from the state actually stored, not here.
 export function resolveResponseState(baseState: ConversationState, actions: readonly { type: string }[], providerFailed = false): ConversationState {
   if (providerFailed) return "external_failure";
+  // A visitor who asked for a person stays in the handoff state even though the
+  // call button is offered as the way to reach one (booking_status still records it).
+  if (baseState === "human_handoff_requested") return baseState;
   if (actions.some((action) => action.type === "offer_call")) return "booking_offered";
   if (actions.some((action) => action.type === "recommend_plan")) return "plan_recommendation";
   return baseState;

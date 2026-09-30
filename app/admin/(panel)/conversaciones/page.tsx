@@ -2,7 +2,7 @@ import Link from "next/link";
 import { requireAdmin } from "@/lib/admin";
 import { getTiers } from "@/lib/content";
 import { formatDate } from "../prospectos/shared";
-import { OutcomeBadges, outcomeLabels } from "./shared";
+import { OutcomeBadges, intentLabel, outcomeLabels, stateLabel } from "./shared";
 
 export const dynamic = "force-dynamic";
 
@@ -11,7 +11,7 @@ export default async function ConversacionesPage() {
   const [{ data: sessions }, tiers] = await Promise.all([
     supabase
       .from("chat_sessions")
-      .select("id, created_at, updated_at, message_count, recommended_plan, handoff, landing_page")
+      .select("id, created_at, updated_at, message_count, recommended_plan, handoff, landing_page, state, intent")
       .order("updated_at", { ascending: false })
       .limit(200),
     getTiers(),
@@ -40,6 +40,9 @@ export default async function ConversacionesPage() {
                   <p className="truncate text-sm text-muted">
                     {s.message_count} {s.message_count === 1 ? "message" : "messages"}
                     {s.landing_page ? ` · from ${s.landing_page}` : ""}
+                  </p>
+                  <p className="truncate text-sm text-muted">
+                    {stateLabel(s.state)} · {intentLabel(s.intent)}
                   </p>
                 </div>
                 <OutcomeBadges labels={outcomeLabels(s, tiers)} />

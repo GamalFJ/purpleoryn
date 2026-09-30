@@ -15,26 +15,24 @@ follows the original handoff plan.
   state RPCs with a separate trusted path, rejections reported instead of swallowed, affirmation
   intent inheritance, shared project docs (`/docs`, `CLAUDE.md`, `MANUS.md`).
 
+- **Step 4c — Autoridad recommendation opens the call booking** (D15; live retest pending, TASKS.md T3d and T9) and chat-behavior fixes (D14, verified live).
+- **Step 5 — Unified Oryn orchestration: implemented in code** (D16): orchestrator, four capabilities, tool gating, qualification
+  memory, stronger intent switching, read-only admin fields, safe fallback. **Live verification pending** (TASKS.md T9).
+
 ## Current
 
-- **Blockers before Step 5** (see TASKS.md T2–T3): confirm `SUPABASE_SERVICE_ROLE_KEY` and `AI_PROVIDER`
-  in the deployed environment, deploy this branch, and manually exercise the chat state flow end to end.
-  (Database migrations are applied and verified as of 2026-09-30.)
+- **Verify Step 5 live** (TASKS.md T9) after it is deployed and the deployment is confirmed.
 
 ## Next
 
-- **Step 5 — Unified Oryn AI orchestration.** One layer inside `/api/chat` that uses the stored
-  state and last message to choose the active capability, a state-specific prompt addendum and the
-  allowed tools. Reuses the current route, tables and tools.
-- Surface state where it is useful without redesigning anything: admin conversation list shows
-  `state` / `intent` / handoff status (small, read-only).
+- Nothing is scheduled until Step 5 is verified. Candidates, each needing the owner's go-ahead and a decision entry: the human-handoff
+  notification, the Cal.com webhook/API, and reconciling the Supabase migration history.
 
 ## Future (not started, each needs a decision entry first)
 
 - Human handoff that actually notifies a person (tool + alert), e.g. Telegram or WhatsApp.
 - Cal.com API/webhook integration so a booking can be verified and `booking_confirmed` reached via
   `chat_apply_trusted_state`.
-- Structured qualification stored in `chat_sessions.qualification` (column exists, unused).
 - Optional link between a chat session and a formal lead/order (currently separate, decision D11).
 - Additional providers (`anthropic`, `gemini` are named in types but not implemented).
 - Kapso — only if explicitly adopted (decision D10).

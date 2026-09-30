@@ -2,6 +2,8 @@ import { formatRD } from "@/lib/format";
 import { computeRoi } from "@/lib/roi";
 import { TIER_CTA, isTierSlug, type Tier, type TierSlug } from "@/lib/tiers";
 import type { ToolCall, ToolDefinition } from "@/lib/ai/types";
+import type { AgentToolName } from "@/lib/agent/orchestrator";
+import { APPOINTMENTS_OR_ORDERS, sanitizeQualification, type Qualification } from "@/lib/agent/qualification";
 
 // UI actions the chat widget renders under the assistant's reply.
 export type AgentAction =
@@ -51,11 +53,37 @@ export const AGENT_TOOLS: ToolDefinition[] = [
       additionalProperties: false,
     },
   },
+  {
+    name: "record_qualification",
+    description:
+      "Save facts the visitor has told you about their business so you don't ask again. Include only the fields the visitor actually gave you; never contact details (phone, email, links, handles). Nothing is shown to the visitor.",
+    parameters: {
+      type: "object",
+      properties: {
+        business_type: { type: "string", description: "Type of business, at most 80 characters." },
+        has_website: { type: "boolean", description: "Whether they already have a website." },
+        has_google_profile: { type: "boolean", description: "Whether they already have a Google Business Profile." },
+        customer_channel: { type: "string", description: "How customers find them today, at most 80 characters." },
+        appointments_or_orders: { type: "string", enum: [...APPOINTMENTS_OR_ORDERS], description: "Whether their customers book appointments, place orders, both or neither." },
+        average_sale: { type: "number", description: "Average value of one sale in RD$, greater than 0." },
+        goal: { type: "string", description: "Their main goal, at most 120 characters." },
+        timing: { type: "string", description: "How soon they want to start, at most 60 characters." },
+      },
+      additionalProperties: false,
+    },
+  },
 ];
+
+// The tools the orchestrator allows for this turn's capability.
+export function toolsFor(allowed: readonly AgentToolName[]): ToolDefinition[] {
+  return AGENT_TOOLS.filter((tool) => (allowed as readonly string[]).includes(tool.name));
+}
 
 export interface ToolResult {
   content: string;
   action?: AgentAction;
+  // Whitelisted facts to merge into chat_sessions.qualification.
+  qualification?: Qualification;
 }
 
 export function runTool(call: ToolCall, tiers: Tier[]): ToolResult {
@@ -109,6 +137,12 @@ export function runTool(call: ToolCall, tiers: Tier[]): ToolResult {
         }),
         action: { type: "offer_call", plan: tier?.slug ?? null, planName: tier?.name ?? null, summary },
       };
+    }
+    case "record_qualification": {
+      const qualification = sanitizeQualification(args);
+      const saved = Object.keys(qualification);
+      if (!saved.length) return { content: JSON.stringify({ ok: false, error: "No había nada válido para guardar." }) };
+      return { content: JSON.stringify({ ok: true, saved }), qualification };
     }
     default:
       return { content: JSON.stringify({ error: `Unknown tool ${call.name}` }) };

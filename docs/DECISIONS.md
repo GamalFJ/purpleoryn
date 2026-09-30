@@ -97,3 +97,17 @@ Autoridad" and opens the Cal.com booking (plan and notes prefilled, `cal_click` 
 "Elegir <plan>" and opens the order form. The prompt and the tool result say so, and that nothing is booked or ordered.
 **Consequence:** the rule lives in one place (`TIER_CTA`); changing a plan's action there changes site, chat button and prompt.
 The stored state for such a recommendation is still `plan_recommendation` (not `booking_offered`); revisit in the orchestration step.
+
+## D16 — Unified orchestration: one pure orchestrator, capabilities, tool gating, qualification memory
+**Decision (2026-09-30, owner approved):** `lib/agent/orchestrator.ts` decides, per turn, the capability (receptionist, sales, booking,
+human handoff), a short prompt addendum and the allowed tools from the stored state/intent/qualification and the last message. It stays
+inside `/api/chat`, `chat_sessions` and the current tools; it is not a second chatbot, API or store. The database remains the state
+authority (no TypeScript copy of the transition table). Tool gating: receptionist `calculate_roi` + `record_qualification`; sales adds
+`recommend_plan`; booking `offer_call` + `record_qualification`; handoff `offer_call` only (no notification or confirmation tool exists).
+Intent switching: inside an active flow only strong changes switch (book, person, which-plan, explicit price question from booking/handoff).
+Qualification memory uses the existing `chat_sessions.qualification` column through `chat_apply_state` (no migration), with a whitelist,
+length caps and contact-detail filtering; its purpose is continuity, not lead creation. The handoff capability keeps
+`human_handoff_requested` when it offers the call button. If planning throws, `/api/chat` falls back to the pre-orchestration behavior.
+**Consequences:** one extra model round when the visitor gives a new fact (`record_qualification`); a rejected state change drops that turn's
+qualification; receptionist mode cannot show a call button (the visitor must ask to book, which switches capability). Out of scope and
+still true: no handoff notification, no Cal.com webhook, no `booking_confirmed`, no lead creation from chat.

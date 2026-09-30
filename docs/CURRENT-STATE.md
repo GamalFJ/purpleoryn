@@ -29,14 +29,24 @@ changes.
 
 ## Tools — working
 
-`calculate_roi`, `recommend_plan`, `offer_call` (`lib/agent/tools.ts`). No handoff, booking, availability
+`calculate_roi`, `recommend_plan`, `offer_call`, `record_qualification` (`lib/agent/tools.ts`; which are offered per turn depends on the capability). No handoff, booking, availability
 or lead tools. `recommend_plan` shows "Elegir <plan>" (order form) for most plans, but for a plan sold by call
 (Autoridad, per `TIER_CTA`) it shows "Hablar de Autoridad" opening the Cal.com booking, like the site's own button. `offer_call` only shows a Cal.com button and tells the model nothing was booked; the prompt
 forbids saying a call was scheduled. The prompt also asks one question at a time on the booking path, and
 chooses a plan from the plan facts (if the visitor needs appointment booking or order taking, only a plan whose
 "Agente de IA" row says so may be recommended; the highlighted "Recomendado" plan is only a default).
 
-## Conversation state — implemented, untested against a live database
+## Orchestration (Step 5) — implemented in code, NOT yet verified live
+
+`lib/agent/orchestrator.ts` picks one of four capabilities (receptionist, sales, booking, handoff) per turn from the stored
+state/intent and the last message, adds a short addendum to the system prompt, and gates the tools (see ARCHITECTURE.md for the
+table). Qualification memory (`record_qualification` → `chat_sessions.qualification`, no migration), the stronger active-flow intent
+rule (fixes T3c), a safe fallback to the old behavior, and the read-only admin fields are implemented. Checked so far: typecheck,
+lint, production build, and an offline harness over the pure modules (intent switching, capability, tool gating, addendum text,
+qualification sanitizing, fallback). **Not yet checked:** live chats against the deployed model and the admin page; see docs/TASKS.md T9.
+Not implemented and out of scope: handoff notification, Cal.com webhook, automatic booking, `booking_confirmed`, lead creation.
+
+## Conversation state — implemented, verified live (Step 4)
 
 - Columns on `chat_sessions` (migration `20260930000000_chat_state.sql`).
 - Hardening migration `20260930010000_chat_state_hardening.sql`: drops the anon-callable
@@ -70,18 +80,18 @@ chooses a plan from the plan facts (if the visitor needs appointment booking or 
 
 ## Intent handling
 
-Deterministic regex over the last message (`lib/chat-state.ts`). A message that names no topic of its own
-("Sí", "Una agencia de bienes raíces", "300,000 pesos") **continues the intent already stored** for the session
-(services / pricing / sales / booking / human_handoff); a message that does name a topic switches intent. On
-such inherited turns the stored state is held (e.g. `plan_recommendation`) instead of falling back to the
-intent's default state. Known limitation: it is still keyword regex; a genuinely off-topic message during an
-active flow keeps that flow's intent, and the first message of a conversation with no keyword is `unknown`. A weak keyword in an answer can also switch an active flow (seen live: "comprar uno de sus servicios" during a booking flow switched the stored intent to `services`; the state stayed correct). Verified live 2026-09-30 after the chat-behavior fixes: sales and booking chats behaved as intended (see docs/TASKS.md T3b).
+Deterministic regex over the last message (`lib/chat-state.ts`, classifier unchanged). Outside an active flow, a message that names no
+topic continues the stored intent. Inside an active flow (sales / booking / human_handoff) weak keywords do not switch it; asking to
+book, asking for a person, asking which plan fits (from booking/handoff) or an explicit price question (from booking/handoff) do.
+On inherited turns the stored state is held. Known limitations: still keyword regex; the first message of a conversation with no keyword
+is `unknown`; a genuinely off-topic message inside an active flow keeps that flow. The Step 4 live tests are in docs/TASKS.md
+(T3b, T3c). The Step 5 rule is verified offline only.
 
 ## UI
 
 - `ChatLauncher` (floating button, lazy-loads) and `ChatPanel` (sessionStorage history, starter chips,
   renders `roi` / `recommend_plan` / `offer_call` actions). It ignores `state`, `intent`, `stateUpdate`.
-- Admin `conversaciones` shows `recommended_plan` and `handoff` only.
+- Admin `conversaciones` (read-only) now also shows `state`, `intent`, `booking_status`, `handoff_status`, the last error code and the saved qualification (Step 5; not yet seen live).
 
 ## Integrations
 

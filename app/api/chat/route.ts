@@ -4,13 +4,13 @@ import { z } from "zod";
 import { chatWithFallback, isAgentConfigured } from "@/lib/ai";
 import type { AgentMessage } from "@/lib/ai/types";
 import { buildSystemPrompt } from "@/lib/agent/prompt";
-import { AGENT_TOOLS, runTool, type AgentAction } from "@/lib/agent/tools";
+import { fallbackPlan, planTurn, type TurnPlan } from "@/lib/agent/orchestrator";
+import { mergeQualification, sanitizeQualification, type Qualification } from "@/lib/agent/qualification";
+import { runTool, toolsFor, type AgentAction } from "@/lib/agent/tools";
 import { getAddons, getTiers } from "@/lib/content";
 import {
   isConversationIntent,
   isConversationState,
-  baseStateFor,
-  resolveIntent,
   resolveResponseState,
   type ConversationIntent,
   type ConversationState,
@@ -48,10 +48,16 @@ function ipHash(request: NextRequest) {
 // write; it is read and written here with the service role only. Server-side
 // only, and the visitor-driven path can never reach privileged values
 // (booking_confirmed, completed, booking_status 'confirmed', handoff 'completed').
-async function readStoredState(sessionId: string): Promise<{ intent: ConversationIntent | null; state: ConversationState | null }> {
-  const none = { intent: null, state: null };
+interface StoredSession {
+  intent: ConversationIntent | null;
+  state: ConversationState | null;
+  qualification: Qualification;
+}
+
+async function readStoredState(sessionId: string): Promise<StoredSession> {
+  const none: StoredSession = { intent: null, state: null, qualification: {} };
   if (!isServiceRoleConfigured()) return none;
-  const { data, error } = await serviceClient().from("chat_sessions").select("intent, state").eq("id", sessionId).maybeSingle();
+  const { data, error } = await serviceClient().from("chat_sessions").select("intent, state, qualification").eq("id", sessionId).maybeSingle();
   if (error) {
     console.error("[agent] state read failed:", error.message);
     return none;
@@ -59,6 +65,7 @@ async function readStoredState(sessionId: string): Promise<{ intent: Conversatio
   return {
     intent: isConversationIntent(data?.intent) ? data.intent : null,
     state: isConversationState(data?.state) ? data.state : null,
+    qualification: sanitizeQualification(data?.qualification),
   };
 }
 
@@ -75,6 +82,7 @@ async function persistState(
   state: ConversationState,
   intent: ConversationIntent,
   options: {
+    qualification?: Qualification | null;
     recommendedPlan?: string | null;
     bookingStatus?: "offered" | "failed" | null;
     handoffStatus?: "requested" | "failed" | null;
@@ -91,7 +99,7 @@ async function persistState(
     p_session_id: sessionId,
     p_state: state,
     p_intent: intent,
-    p_qualification: null,
+    p_qualification: options.qualification ?? null,
     p_recommended_plan: options.recommendedPlan ?? null,
     p_booking_status: options.bookingStatus ?? null,
     p_handoff_status: options.handoffStatus ?? null,
@@ -151,29 +159,43 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // A message that names no topic ("Sí", "Una agencia de bienes raíces") continues the
-  // intent and state already stored for this session.
+  // The orchestrator turns what is stored (state, intent, qualification) plus the last
+  // message into this turn's capability, prompt addendum and allowed tools. If it ever
+  // fails, fall back to the pre-orchestration behavior instead of breaking the chat.
   const stored = await readStoredState(sessionId);
-  const { intent, inherited } = resolveIntent(last.content, stored.intent);
-  const intentState = baseStateFor(intent, inherited, stored.state);
+  let plan: TurnPlan;
+  try {
+    plan = planTurn({ storedState: stored.state, storedIntent: stored.intent, message: last.content, qualification: stored.qualification });
+  } catch (error) {
+    console.error("[agent] orchestration failed, using fallback:", error instanceof Error ? error.message : "unknown error");
+    plan = fallbackPlan(last.content);
+  }
+  const { intent, inherited, baseState: intentState, capability } = plan;
+  const allowedTools = new Set<string>(plan.allowedTools);
 
   const [tiers, addons] = await Promise.all([getTiers(), getAddons()]);
-  const system = buildSystemPrompt(tiers, addons);
+  const basePrompt = buildSystemPrompt(tiers, addons);
+  const system = plan.addendum ? `${basePrompt}
+
+${plan.addendum}` : basePrompt;
+  let qualificationPatch: Qualification = {};
   const conversation: AgentMessage[] = messages.slice(-HISTORY_WINDOW).map((m) => ({ role: m.role, content: m.content }));
   const actions: AgentAction[] = [];
   let reply = "";
 
   try {
     for (let round = 0; round <= MAX_TOOL_ROUNDS; round++) {
-      const result = await chatWithFallback({ system, messages: conversation, tools: round < MAX_TOOL_ROUNDS ? AGENT_TOOLS : [] });
+      const result = await chatWithFallback({ system, messages: conversation, tools: round < MAX_TOOL_ROUNDS ? toolsFor(plan.allowedTools) : [] });
       if (!result.toolCalls.length) {
         reply = result.text.trim();
         break;
       }
       conversation.push({ role: "assistant", content: result.text, toolCalls: result.toolCalls });
       for (const call of result.toolCalls) {
-        const out = runTool(call, tiers);
-        if (out.action) actions.push(out.action);
+        // Only tools the active capability was offered may run.
+        const out = allowedTools.has(call.name) ? runTool(call, tiers) : { content: JSON.stringify({ error: "Herramienta no disponible ahora." }) };
+        if ("action" in out && out.action) actions.push(out.action);
+        if ("qualification" in out && out.qualification) qualificationPatch = mergeQualification(qualificationPatch, out.qualification);
         conversation.push({ role: "tool", toolCallId: call.id, name: call.name, content: out.content });
       }
     }
@@ -183,7 +205,7 @@ export async function POST(request: NextRequest) {
       outcome: "external_failure",
       lastErrorCode: "provider_failure",
     });
-    return NextResponse.json({ reply: FALLBACK, actions: [], state: failure.state, stateUpdate: failure.status }, { status: 502 });
+    return NextResponse.json({ reply: FALLBACK, actions: [], state: failure.state, stateUpdate: failure.status, capability }, { status: 502 });
   }
 
   if (!reply) reply = actions.length ? "Aquí tienes:" : FALLBACK;
@@ -207,6 +229,8 @@ export async function POST(request: NextRequest) {
 
   const finalState = resolveResponseState(intentState, actions);
   const update = await persistState(sessionId, finalState, intent, {
+    // Merge into what was stored; only written when the visitor gave something new.
+    qualification: Object.keys(qualificationPatch).length ? mergeQualification(stored.qualification, qualificationPatch) : null,
     recommendedPlan: recommended?.plan ?? null,
     bookingStatus: call ? "offered" : null,
     handoffStatus: intent === "human_handoff" ? "requested" : null,
@@ -218,5 +242,5 @@ export async function POST(request: NextRequest) {
   // Keep one action of each kind (the latest) so the widget doesn't stack duplicates.
   // `state` is what the database actually stored; `stateUpdate` says whether it moved.
   const latestByType = new Map(actions.map((a) => [a.type, a]));
-  return NextResponse.json({ reply, actions: [...latestByType.values()], state: update.state, intent, stateUpdate: update.status });
+  return NextResponse.json({ reply, actions: [...latestByType.values()], state: update.state, intent, stateUpdate: update.status, capability });
 }

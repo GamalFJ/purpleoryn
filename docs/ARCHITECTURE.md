@@ -30,17 +30,21 @@ app/api/chat/route.ts (Node runtime)
   1. zod-validate body (last message must be from the user)
   2. chat_log_message (anon RPC) → logs the user message, returns counters
      → rate limits: 60 messages/session, 30 user messages/IP/hour (IP hashed with CHAT_IP_SALT)
-  3. readStoredState (service role) → resolveIntent(last message, stored intent) → baseStateFor(...)
-  4. getTiers()/getAddons() → buildSystemPrompt() (lib/agent/prompt.ts)
-  5. tool loop, max 3 rounds: chatWithFallback() → runTool() (lib/agent/tools.ts)
+  3. readStoredState (service role: intent, state, qualification) → planTurn() (lib/agent/orchestrator.ts)
+     → { intent, baseState, capability, addendum, allowedTools }; if planTurn throws → fallbackPlan()
+  4. getTiers()/getAddons() → buildSystemPrompt() (lib/agent/prompt.ts) + the capability addendum
+  5. tool loop, max 3 rounds: chatWithFallback() with only the allowed tools → runTool() (lib/agent/tools.ts);
+     a tool the capability was not offered is refused
   6. chat_log_message (assistant reply); chat_record_outcome (anon RPC, legacy outcome fields)
-  7. persistState → chat_apply_state (service-role RPC) → { state, intent, stateUpdate }
-  8. response { reply, actions, state, intent, stateUpdate }
+  7. persistState → chat_apply_state (service-role RPC; also writes merged qualification when the visitor gave
+     something new) → { state, intent, stateUpdate }
+  8. response { reply, actions, state, intent, stateUpdate, capability }
 ```
 
 `actions` are UI instructions rendered under the reply by `ChatPanel`: ROI table,
 "Elegir <plan>" link to `/servicios?plan=…`, and the Cal.com booking button.
-`ChatPanel` currently ignores `state`, `intent` and `stateUpdate`.
+`ChatPanel` ignores `state`, `intent`, `stateUpdate` and `capability`. For a plan sold by call (Autoridad, per `TIER_CTA`) the
+recommendation button is "Hablar de Autoridad" and opens the Cal.com booking (D15).
 
 ## AI provider abstraction [implemented]
 
@@ -69,8 +73,10 @@ optionally a UI `AgentAction`:
 | `calculate_roi` | Oryn ROI Method for a plan and average sale value (`lib/roi.ts`) | `roi` table |
 | `recommend_plan` | Recommend `presencia` / `conversion` / `autoridad` | link to `/servicios?plan=` |
 | `offer_call` | Offer the free 20-minute call after brief pre-qualification | Cal.com button |
+| `record_qualification` | Save what the visitor said about their business (whitelisted, length-capped, no contact details) into `chat_sessions.qualification` | none |
 
-There is no handoff tool, booking tool, availability lookup or lead-capture tool.
+There is no handoff tool, booking tool, availability lookup or lead-capture tool. Which tools are offered per turn is
+decided by the orchestrator (next section).
 
 ## Conversation state [implemented]
 
@@ -115,14 +121,40 @@ Stored on the existing `chat_sessions` row (no second store): `state`, `intent`,
 
 ## Admin [implemented]
 
-`app/admin/(panel)/`: `conversaciones` (session list + transcript; shows `recommended_plan` and
-`handoff` only — not `state`/`intent`), `planes`, `portafolio`, `prospectos`, `ajustes`,
+`app/admin/(panel)/`: `conversaciones` (read-only session list + transcript; shows `recommended_plan`, `handoff`, and now
+`state`, `intent`, `booking_status`, `handoff_status`, the last error code and the saved qualification), `planes`, `portafolio`, `prospectos`, `ajustes`,
 `market-*`. Auth via Supabase; authorization enforced in the layout and by RLS.
 
-## Planned: unified orchestration [planned — Step 5, not started]
+## Unified orchestration [implemented in code, not yet verified live — Step 5]
 
-Target: one orchestration layer inside the existing route that takes (stored state, last message)
-and decides the active capability (receptionist / sales / booking / handoff), a state-specific
-prompt addendum and the allowed tools. Constraints already decided: extend `/api/chat`,
-`chat_sessions` and the current tools; no second chatbot, API or conversation store. See
-[DECISIONS.md](DECISIONS.md) and [TASKS.md](TASKS.md).
+One conversational system, four capabilities. `lib/agent/orchestrator.ts` is pure (no model, database or network):
+`planTurn({ storedState, storedIntent, message, qualification })` returns the intent, the state to ask the database for,
+the active capability, a short prompt addendum and the allowed tools. `/api/chat` appends the addendum to the existing
+system prompt. If `planTurn` throws, `fallbackPlan()` restores the pre-orchestration behavior (classify the message alone,
+no addendum, the original three tools). The database still decides whether a state change is allowed.
+
+| Capability | Active when | Tools offered | Focus |
+| --- | --- | --- | --- |
+| Receptionist | general inquiry, services, pricing, unknown, new | `calculate_roi`, `record_qualification` | answer from approved facts; no call button |
+| Sales | `sales_qualification`, `plan_recommendation` | `calculate_roi`, `recommend_plan`, `record_qualification` | ask only the next useful question; recommend when business type, appointments/orders and average sale are known |
+| Booking | `booking_intent`, `booking_offered` | `offer_call`, `record_qualification` | ask only the missing item (business type, goal, timing); never claim a booking |
+| Human handoff | `human_handoff_requested` | `offer_call` | point to WhatsApp and the call; never claim anyone was notified; no response times |
+
+**Intent switching (`resolveIntent` in `lib/chat-state.ts`).** The classifier is unchanged. Outside an active flow a message
+that names no topic continues the stored intent (Step 4 behavior). Inside an active flow (sales, booking, human_handoff) weak
+keywords ("servicios", "empezar", "cuánto" in an answer) do not switch it. Strong changes do: asking to book, asking for a
+person, asking which plan fits (from booking/handoff), or an explicit price question (from booking/handoff).
+
+**Qualification memory (`lib/agent/qualification.ts`).** Stored in the existing `chat_sessions.qualification` (no migration) via
+`chat_apply_state`. Keys: `business_type`, `has_website`, `has_google_profile`, `customer_channel`, `appointments_or_orders`,
+`average_sale`, `goal`, `timing`. Text is capped (60–120 characters), stripped of control characters, and dropped if it looks like
+an email, link, handle or phone number. The orchestrator tells the model what is known, and what to ask next, as data rather than
+instructions. If the state change is rejected, that turn's qualification is not stored.
+
+**State behavior.** `offer_call` moves to `booking_offered` except in the handoff capability, which keeps
+`human_handoff_requested` (the call button is recorded in `booking_status`). An Autoridad recommendation stays
+`plan_recommendation` (D15). `booking_confirmed`, `completed` and handoff `completed` remain reachable only via the trusted RPC, which
+nothing calls.
+
+**Out of scope (not implemented):** human-handoff notification (WhatsApp/Telegram/Kapso), Cal.com webhook or automatic booking,
+`booking_confirmed`, lead/order creation from chat, provider changes. See [DECISIONS.md](DECISIONS.md) (D16) and [TASKS.md](TASKS.md).

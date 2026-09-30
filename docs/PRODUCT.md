@@ -52,10 +52,10 @@ Product intent: that single system has four capabilities.
 
 | Capability | What it means | Status |
 | --- | --- | --- |
-| AI Receptionist | Greets, answers questions from approved facts (plans, pricing, FAQ, process) | Partially present: prompt + FAQ + plan data; no dedicated code |
-| AI Sales Agent | Qualifies the visitor, runs the ROI method, recommends one plan | Present: `calculate_roi`, `recommend_plan` tools |
-| AI Booking Agent | Offers the free 20-minute call | Partial: `offer_call` shows a Cal.com link; no availability lookup, booking creation or confirmation |
-| Human Handoff | Routes the visitor to a person | Minimal: intent/status are recorded and the prompt cites the WhatsApp number; no alert, no tool |
+| AI Receptionist | Greets, answers questions from approved facts (plans, pricing, FAQ, process) | Implemented in code (Step 5 receptionist capability: approved facts only, no call button); live check pending |
+| AI Sales Agent | Qualifies the visitor, runs the ROI method, recommends one plan | Implemented: sales capability with `calculate_roi`, `recommend_plan`, `record_qualification`; Autoridad opens the call booking |
+| AI Booking Agent | Offers the free 20-minute call | Partial: booking capability with `offer_call` (Cal.com link only; never claims a booking); no availability lookup, booking creation or confirmation |
+| Human Handoff | Routes the visitor to a person | Minimal: handoff capability points to WhatsApp and the call; intent/status recorded; never claims anyone was notified; no alert or notification tool |
 
 These are capabilities of the one system — not separate agents, APIs, databases or widgets.
 

@@ -16,9 +16,8 @@ Immediate development sequence. Keep this list short and current; move finished 
   appointments/orders, recommended Autoridad, ROI correct (RD$70,999.87), `intent = sales` held across 7 turns, ended
   `plan_recommendation` with `recommended_plan = autoridad`. Booking chat: one question at a time, never claimed to schedule, said the
   button lets the visitor pick the time, ended `booking_offered` + `handoff = cal_com`. One flaw: see T3c.
-- [ ] **T3c — Intent flips on a stray keyword.** In the booking chat, "comprar uno de sus servicios" contained "servicios", so the stored
-  intent switched booking → services (final row: `intent = services`, `state = booking_offered`). State was still right. Address in Step 5
-  (e.g. only switch away from an active flow on a strong topic).
+- [~] **T3c — Intent flips on a stray keyword.** Implemented in Step 5 (strong/weak active-flow rule; offline harness passes, including
+  the exact live case "comprar uno de sus servicios" during booking). Verify live in T9 (item 14).
 
 - [ ] **T3d — Retest the Autoridad button** once deployed: a sales chat that ends in an Autoridad recommendation shows "Hablar de
   Autoridad" (opens cal.com with the plan prefilled, not the order form); a Conversión or Presencia recommendation still shows
@@ -36,16 +35,34 @@ Immediate development sequence. Keep this list short and current; move finished 
 6. Break the provider key on a preview → 502 fallback, `state: "external_failure"` (or kept state),
    `last_error_code = 'provider_failure'`.
 
-## Step 5 — Unified Oryn AI orchestration (not started; needs go-ahead)
+## Step 5 — Unified Oryn AI orchestration (implemented in code 2026-09-30; NOT yet verified live)
 
-- [ ] **T4** — Design note first (append to DECISIONS.md): where the orchestrator lives
-  (`lib/agent/`), its input (stored state + last message), its output (active capability, prompt
-  addendum, allowed tools), and how it stays inside the existing route and tables.
-- [ ] **T5** — Implement the orchestrator; keep the three current tools working unchanged.
-- [ ] **T6** — Feed state into the prompt (state-specific addendum); keep Dominican Spanish output and the
-  no-invented-facts rules.
-- [ ] **T7** — Small read-only admin surfacing of `state`, `intent`, `handoff_status`.
-- [ ] **T8** — Update CURRENT-STATE.md and ARCHITECTURE.md.
+- [x] **T4** — Design recorded as D16 (owner approved: qualification memory and admin view in; handoff alert out).
+- [x] **T5** — `lib/agent/orchestrator.ts` (pure) + fallback; the three original tools unchanged.
+- [x] **T6** — Addendum per capability fed into the prompt; state and qualification are now model inputs.
+- [x] **T7** — Admin conversations show `state`, `intent`, `booking_status`, `handoff_status`, last error, qualification (read-only).
+- [x] **T8** — ARCHITECTURE, CURRENT-STATE, DECISIONS, ROADMAP, TASKS updated.
+- [ ] **T9 — Live verification after deploy** (Spanish, fresh tab per scenario unless noted; then read `chat_sessions` in Supabase):
+  1. "¿A qué se dedican?" → Dominican Spanish answer from approved facts; `capability: receptionist`.
+  2. "¿Qué servicios ofrecen?" → services from the facts, no invented claims.
+  3. "¿Cuánto cuestan los planes?" → exact prices with decimals.
+  4. "¿Qué plan me conviene?" → `intent = sales`, one question at a time.
+  5. Give business context → `chat_sessions.qualification` holds only the whitelisted fields (no contact details).
+  6. Reach a recommendation → `recommended_plan` set, `state = plan_recommendation`.
+  7. Presencia recommendation → "Elegir Presencia", opens the order form.
+  8. Conversión recommendation → "Elegir Conversión", opens the order form.
+  9. Autoridad recommendation → "Hablar de Autoridad", opens Cal.com with the plan prefilled.
+  10. Autoridad text never says a booking was made.
+  11. "Sí" / "Claro" after a question keeps the intent.
+  12. Sales → "Mejor quiero agendar una llamada" → `intent = booking`.
+  13. Booking → "Prefiero hablar con una persona" → `intent = human_handoff`, state `human_handoff_requested`.
+  14. During booking answer "comprar uno de sus servicios" → intent stays `booking`.
+  15. An unknown question (e.g. an office in another country) → safe answer, no invention.
+  16. Booking chat: never says scheduled/confirmed; `booking_status` stays `offered`.
+  17. Handoff chat: gives the WhatsApp number/call button, never says anyone was notified, no response times.
+  18. Admin → Conversations: list shows state · intent; detail shows the status fields and qualification.
+  19. Rejected transition (only reproducible by editing a row by hand) → `stateUpdate: "rejected"`, stored state unchanged.
+  20. Existing chat still works end to end (greeting chips, ROI card, rate limits).
 
 ## Later (each needs its own decision entry)
 
