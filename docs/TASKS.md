@@ -33,6 +33,17 @@ Immediate development sequence. Keep this list short and current; move finished 
   recommendation, answer "claro" → no raw `[text](url)` in the reply, it points to the existing "Hablar de Autoridad" button; (c) no reply ever
   contains a markdown link.
 
+- [~] **T9 round 3 results (live, 2026-09-30, deploys b9faffd/ce57391; owner tested four more chats and the admin page).** Verified: 2, 3, 4, 5, 6,
+  9-10 (text), 11, 13, 15, 16, 17 (no false claims; WhatsApp number was missing, fixed in D18), 18 (screenshots of the detail page; the list line
+  "state · intent" was not shown), 20. Not verified live: 1 (only "Hola"), 7/8 (button labels and links are not visible in the database), 12,
+  14, 19 (needs a hand-edited row). Defects found and fixed in D18: negated/plural "agendar citas" read as a call request, "no sé cuál me
+  convendría" not read as which-plan, markdown asterisks in replies, the ROI input assumed from a unit price.
+- [ ] **T9c — Live retest of D17/D18** (deferred by the owner, "we will fix that later"): (a) in a booking chat answer the goal with "una asesoría
+  para saber qué plan me conviene" → stays booking and shows the real Cal.com button; (b) an Autoridad recommendation, then "claro" → no link text,
+  it points to the existing "Hablar de Autoridad" button; (c) "no es necesario agendar citas" does not start booking; (d) no asterisks in any reply;
+  (e) handoff reply includes +1 809-603-4113; (f) with "2 cajas de 12 al día, la unidad a 250 pesos" the assistant asks what a customer spends in one
+  purchase or order before any ROI numbers, and says "ventas".
+
 ### T3 manual checklist
 
 1. First message "Quiero agendar una llamada" → reply + call button; response `stateUpdate: "ok"`,

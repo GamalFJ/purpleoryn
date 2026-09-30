@@ -34,7 +34,7 @@ app/api/chat/route.ts (Node runtime)
      → { intent, baseState, capability, addendum, allowedTools }; if planTurn throws → fallbackPlan()
   4. getTiers()/getAddons() → buildSystemPrompt() (lib/agent/prompt.ts) + the capability addendum
   5. tool loop, max 3 rounds: chatWithFallback() with only the allowed tools → runTool() (lib/agent/tools.ts);
-     a tool the capability was not offered is refused
+     a tool the capability was not offered is refused; the final reply goes through toPlainText() (lib/agent/plain-text.ts)
   6. chat_log_message (assistant reply); chat_record_outcome (anon RPC, legacy outcome fields)
   7. persistState → chat_apply_state (service-role RPC; also writes merged qualification when the visitor gave
      something new) → { state, intent, stateUpdate }
@@ -144,7 +144,7 @@ no addendum, the original three tools). The database still decides whether a sta
 **Intent switching (`resolveIntent` in `lib/chat-state.ts`).** The classifier is unchanged. Outside an active flow a message
 that names no topic continues the stored intent (Step 4 behavior). Inside an active flow (sales, booking, human_handoff) weak
 keywords ("servicios", "empezar", "cuánto" or "qué plan me conviene" inside an answer) do not switch it. Strong changes do: asking
-to book, asking for a person, or an explicit price question (from booking/handoff). See D17.
+to book, asking for a person, or an explicit price question (from booking/handoff). Booking and handoff are detected only from a real request (negated phrases and plural "citas"/"llamadas" are ignored, D18). See D17.
 
 **Qualification memory (`lib/agent/qualification.ts`).** Stored in the existing `chat_sessions.qualification` (no migration) via
 `chat_apply_state`. Keys: `business_type`, `has_website`, `has_google_profile`, `customer_channel`, `appointments_or_orders`,

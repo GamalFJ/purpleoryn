@@ -6,6 +6,7 @@ import {
   type ConversationIntent,
   type ConversationState,
 } from "@/lib/chat-state";
+import { SITE } from "@/lib/site";
 import {
   BOOKING_QUALIFICATION_ORDER,
   QUESTION_HINT,
@@ -83,6 +84,8 @@ function knownBlock(known: Qualification): string {
 
 const HEADER =
   "ACTIVE CAPABILITY FOR THIS TURN (same assistant, same conversation; only the focus below changes). Only use the tools you are offered. Buttons appear only when a tool you call shows them: never write a link, URL or markdown, and never say a button is shown unless a tool result in this turn says so.";
+const ROI_RULE =
+  "The ROI Method works per sale. If the visitor gives a unit price, a volume or a daily or monthly total instead of what ONE typical purchase or order is worth, don't use it and don't guess: ask ONE question about what a customer spends in a single purchase or order, and only then call calculate_roi. When you repeat its results say ventas, never unidades, unless a sale is one unit.";
 const SAVE_FACTS = "When the visitor gives you one of these facts, save it with record_qualification (only the fields they gave, never contact details) in the same turn, then reply.";
 
 function receptionistAddendum(known: Qualification): string {
@@ -92,6 +95,7 @@ function receptionistAddendum(known: Qualification): string {
     "Answer using only the approved facts below: what Purple Cove Labs does, the services and plans, prices, payment, the process and the service area. If a fact is not there, say you will confirm it on a call or point to WhatsApp; never invent it. You cannot show a call button in this mode.",
     knownBlock(known),
     "If the visitor seems to be deciding, offer to help them choose a plan and ask ONE question; don't push.",
+    ROI_RULE,
     SAVE_FACTS,
   ].join("\n");
 }
@@ -110,6 +114,7 @@ function salesAddendum(known: Qualification, state: ConversationState): string {
     "Goal: understand the visitor's business and recommend the plan that fits, using only the plan facts below. Never invent results, case studies, clients, guarantees or capabilities.",
     knownBlock(known),
     step,
+    ROI_RULE,
     SAVE_FACTS,
   ].join("\n");
 }
@@ -136,7 +141,7 @@ function handoffAddendum(): string {
     HEADER,
     "Capability: HUMAN HANDOFF.",
     "The visitor wants to talk to a person. You cannot contact, notify or transfer anyone and you don't know whether or when someone will answer. Never say a person was notified, has received the request or will contact them, never say you passed their information on, and never give response times.",
-    "What you can do: give the WhatsApp number from CONTACT so they can write directly, and offer the free 20-minute call by calling offer_call so the button opens Cal.com. Keep it short. Don't start qualification questions and don't ask for contact details.",
+    "What you can do: include this WhatsApp number in your reply so they can write directly: " + SITE.phoneDisplay + ". Also offer the free 20-minute call by calling offer_call so the button opens Cal.com. Keep it short. Don't start qualification questions and don't ask for contact details.",
   ].join("\n");
 }
 

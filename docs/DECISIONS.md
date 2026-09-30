@@ -122,3 +122,20 @@ already shown. The live chats had produced fake `[...](https://cal.com)` links a
 defers question order to the "next question" in the ACTIVE CAPABILITY section (it had asked about a website before appointments/orders).
 **Consequence:** a visitor who is booking cannot get a plan recommendation without finishing or leaving the booking (by asking for a
 person or a price); accepted, because booking is the higher-stakes flow. Verified offline (harness) and pending a live retest (TASKS.md T9b).
+
+## D18 — Classifier false positives, plain-text guard, handoff number, per-sale ROI question (after live round 3)
+**Decision (2026-09-30, owner approved):** Live chats showed (1) "no es necesario agendar citas" and "un sitio web donde puedan agendar
+citas" were read as a request for a call, (2) "no sé cuál me convendría" was not read as wanting a plan, (3) the model kept writing
+markdown (`**Presencia**`) although the UI is plain text, (4) the handoff reply omitted the WhatsApp number, and (5) for "vendo 2 cajas de
+12 al día, la unidad a 250 pesos" the assistant silently used the unit price (RD$250) as the average sale and reported "134 unidades".
+Fixes: booking detection now needs a real request for a call (agendar/reservar/programar not followed by a plural object such as "citas",
+"llamada" not "llamadas", "reunión", "cal.com", "calendario", singular "cita"); text after a negation ("no", "ni", "sin", up to a comma,
+"pero" or "gracias") is ignored for booking and handoff detection; "convendría", "no sé cuál", "cuál me", "ayúdame a elegir/escoger/decidir"
+count as a which-plan question; `toPlainText()` (`lib/agent/plain-text.ts`) strips markdown (bold, italics, headings, code, markdown links)
+from every reply server-side; the handoff addendum now contains the WhatsApp number from `SITE.phoneDisplay`; and the ROI method stays
+**per sale** (owner chose option a): if the visitor gives a unit price, a volume or a daily/monthly total, the assistant asks ONE question
+about what a customer spends in one purchase or order, does not call `calculate_roi` until it has that, and says "ventas" (not
+"unidades") unless a sale is one unit. **Not done (would be a new method, needs its own decision):** a volume-based ROI estimate.
+**Consequences:** "servicios" inside "empresa de servicios de data" is still a weak services keyword (harmless outside an active flow);
+the plain-text guard also removes the URL of any markdown link, so URLs must be written plainly; the deterministic fixes are verified
+offline only. The owner deferred the remaining live T9 checks (see TASKS.md).

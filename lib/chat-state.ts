@@ -40,17 +40,26 @@ export function isConversationIntent(value: unknown): value is ConversationInten
 // Order matters: the first match wins.
 const HANDOFF_RE =
   /(hablar con|habla con|hablarle|hablarles|contactar|comunicar(?:me|nos)? con|persona real|agente humano|humano|asesor(?:es|a)?(?![\p{L}])|representante|alguien (?:del equipo|real))|(?:escrib|habl|contact|comunic)\p{L}*[^.?!]{0,40}whatsapp/u;
-const BOOKING_RE = /(agendar|agenda|reservar|reserva|cita|llamada|reunión|reunion|cal\.com|calendario)/u;
+// A call the visitor wants for themselves. A plural object ("agendar citas" as a feature
+// of their own site, "llamadas") is not a request for one.
+const BOOKING_RE =
+  /(?:agend(?:ar|emos|amos|e)|reservar|programar)(?!\s+(?:(?:las|sus|tus|mis)\s+)?(?:citas|reservas|consultas|clientes|turnos|llamadas))|llamada(?!s)|reuni[oó]n|cal\.com|calendario|(?<![\p{L}])cita(?![\p{L}])/u;
+// "no es necesario agendar citas", "no quiero hablar con una persona": what follows a
+// negation (up to a comma, "pero", "gracias"...) is not what the visitor is asking for.
+const NEGATED_RE =
+  /(?<![\p{L}])(?:no|ni|sin)(?![\p{L}])(?:(?!pero|sino|aunque|gracias)[^.,;?!]){0,25}?(?:agend\p{L}*|citas?|reserv\p{L}*|llamad\p{L}*|reuni[oó]n|hablar|contactar|persona|humano|asesor\p{L}*|representante)/gu;
 const PRICING_RE = /(precio|precios|cu[aá]nto|costo|costos|cuesta|cuestan|mensualidad|pago)/u;
-const SALES_RE = /(qu[eé] plan|cu[aá]l plan|conviene|recomiend|recomendar|contratar|ventas|objetivo|problema|negocio|empezar|comenzar)/u;
+const SALES_RE =
+  /(qu[eé] plan|cu[aá]l plan|conviene|convendr|recomiend|recomendar|no s[eé] cu[aá]l|cu[aá]l me|ay[uú]d\p{L}* a (?:elegir|escoger|decidir)|escoger|decidir|contratar|ventas|objetivo|problema|negocio|empezar|comenzar)/u;
 const PLAN_RE = /(plan|planes)/u;
 const SERVICES_RE = /(servicio|servicios|p[aá]gina|sitio web|seo|google business|perfil de negocio|agente de ia|oryn|qu[eé] hacen)/u;
 const GREETING_RE = /^(hola|buenas|buenos d[ií]as|buenas tardes|buenas noches|qui[eé]n eres|qu[eé] es oryn)[!.?\s]*$/u;
 
 export function classifyIntent(content: string): ConversationIntent {
   const text = content.toLocaleLowerCase("es-DO");
-  if (HANDOFF_RE.test(text)) return "human_handoff";
-  if (BOOKING_RE.test(text)) return "booking";
+  const asked = text.replace(NEGATED_RE, " ");
+  if (HANDOFF_RE.test(asked)) return "human_handoff";
+  if (BOOKING_RE.test(asked)) return "booking";
   if (PRICING_RE.test(text)) return "pricing";
   if (SALES_RE.test(text)) return "sales";
   if (PLAN_RE.test(text)) return "pricing";

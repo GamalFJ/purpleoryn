@@ -86,7 +86,7 @@ export const QUESTION_HINT: Record<QualificationKey, string> = {
   has_google_profile: "whether they have a Google Business Profile",
   customer_channel: "how customers find them today",
   appointments_or_orders: "whether their customers need to book appointments or place orders",
-  average_sale: "the average value of one sale, in RD$",
+  average_sale: "what a customer spends in ONE typical purchase or order, in RD$ (not a unit price, a volume or a daily or monthly total)",
   goal: "their main goal",
   timing: "how soon they want to start",
 };

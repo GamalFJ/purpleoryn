@@ -5,6 +5,7 @@ import { chatWithFallback, isAgentConfigured } from "@/lib/ai";
 import type { AgentMessage } from "@/lib/ai/types";
 import { buildSystemPrompt } from "@/lib/agent/prompt";
 import { fallbackPlan, planTurn, type TurnPlan } from "@/lib/agent/orchestrator";
+import { toPlainText } from "@/lib/agent/plain-text";
 import { mergeQualification, sanitizeQualification, type Qualification } from "@/lib/agent/qualification";
 import { runTool, toolsFor, type AgentAction } from "@/lib/agent/tools";
 import { getAddons, getTiers } from "@/lib/content";
@@ -187,7 +188,7 @@ ${plan.addendum}` : basePrompt;
     for (let round = 0; round <= MAX_TOOL_ROUNDS; round++) {
       const result = await chatWithFallback({ system, messages: conversation, tools: round < MAX_TOOL_ROUNDS ? toolsFor(plan.allowedTools) : [] });
       if (!result.toolCalls.length) {
-        reply = result.text.trim();
+        reply = toPlainText(result.text);
         break;
       }
       conversation.push({ role: "assistant", content: result.text, toolCalls: result.toolCalls });

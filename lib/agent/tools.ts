@@ -16,12 +16,13 @@ const PLAN_ENUM = { type: "string", enum: ["presencia", "conversion", "autoridad
 export const AGENT_TOOLS: ToolDefinition[] = [
   {
     name: "calculate_roi",
-    description: "Compute the Oryn ROI Method for a plan given the visitor's average sale value in Dominican pesos. Always use this instead of doing math.",
+    description:
+      "Compute the Oryn ROI Method for a plan given the value of ONE typical sale (what a customer spends in one purchase or order) in Dominican pesos. Never pass a unit price, a volume or a daily/monthly total. Always use this instead of doing math.",
     parameters: {
       type: "object",
       properties: {
         plan: PLAN_ENUM,
-        average_sale_value: { type: "number", description: "Average sale value in RD$, greater than 0." },
+        average_sale_value: { type: "number", description: "Value of ONE typical sale or order in RD$, greater than 0. Not a unit price, volume or total." },
       },
       required: ["plan", "average_sale_value"],
       additionalProperties: false,
@@ -65,7 +66,7 @@ export const AGENT_TOOLS: ToolDefinition[] = [
         has_google_profile: { type: "boolean", description: "Whether they already have a Google Business Profile." },
         customer_channel: { type: "string", description: "How customers find them today, at most 80 characters." },
         appointments_or_orders: { type: "string", enum: [...APPOINTMENTS_OR_ORDERS], description: "Whether their customers book appointments, place orders, both or neither." },
-        average_sale: { type: "number", description: "Average value of one sale in RD$, greater than 0." },
+        average_sale: { type: "number", description: "What a customer spends in one typical purchase or order in RD$, greater than 0 (not a unit price, volume or total)." },
         goal: { type: "string", description: "Their main goal, at most 120 characters." },
         timing: { type: "string", description: "How soon they want to start, at most 60 characters." },
       },
