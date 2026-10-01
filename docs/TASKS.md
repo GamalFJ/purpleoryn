@@ -38,11 +38,24 @@ Immediate development sequence. Keep this list short and current; move finished 
   "state · intent" was not shown), 20. Not verified live: 1 (only "Hola"), 7/8 (button labels and links are not visible in the database), 12,
   14, 19 (needs a hand-edited row). Defects found and fixed in D18: negated/plural "agendar citas" read as a call request, "no sé cuál me
   convendría" not read as which-plan, markdown asterisks in replies, the ROI input assumed from a unit price.
-- [ ] **T9c — Live retest of D17/D18** (deferred by the owner, "we will fix that later"): (a) in a booking chat answer the goal with "una asesoría
-  para saber qué plan me conviene" → stays booking and shows the real Cal.com button; (b) an Autoridad recommendation, then "claro" → no link text,
-  it points to the existing "Hablar de Autoridad" button; (c) "no es necesario agendar citas" does not start booking; (d) no asterisks in any reply;
-  (e) handoff reply includes +1 809-603-4113; (f) with "2 cajas de 12 al día, la unidad a 250 pesos" the assistant asks what a customer spends in one
-  purchase or order before any ROI numbers, and says "ventas".
+- [ ] **T9c — Live retest of D17/D18. OUTSTANDING: deferred by the owner ("we will fix that later"); no live results are recorded.** Fresh tab per check,
+  then read `chat_sessions` in Supabase. The six required checks:
+  1. **Booking stays booking when asked which plan fits:** "Quiero agendar una llamada", answer the goal with "una asesoría para saber qué plan me conviene" →
+     stays in booking, shows the real Cal.com button, `intent` stays `booking`.
+  2. **No fake links:** after an Autoridad recommendation answer "claro" → the reply contains no link text and points to the existing button.
+  3. **No Markdown/asterisks:** no `**`, `*`, `#` or `[text](url)` in any reply (try the plans list and the pricing answer).
+  4. **Correct WhatsApp number in handoff:** "prefiero hablar con una persona" → the reply includes +1 809-603-4113, claims nobody was notified, gives no response time.
+  5. **Negation and plural booking detection:** "no es necesario agendar citas" and "quiero un sitio web donde puedan agendar citas" do NOT start booking;
+     "Quiero agendar una llamada" still does.
+  6. **ROI asks for the value of one purchase first:** "vendo 2 cajas de 12 al día, la unidad a 250 pesos" → the assistant asks what a customer spends in one
+     purchase or order before any ROI numbers, and says "ventas", not "unidades".
+  **Still UNVERIFIED live from earlier rounds (do not mark verified until seen):** the exact "Hablar de Autoridad" button label and its Cal.com link; a Conversión
+  recommendation showing "Elegir Conversión" and opening the order form (T9 item 8); the sales → booking transition (T9 item 12); the admin conversations **list**
+  line "state · intent" (T9 item 18; the detail page was verified by screenshots). Also not covered: T9 items 1, 14 and 19.
+- [ ] **T10 — Production must run the rotated OpenRouter key.** The owner rotated the key; `OPENROUTER_API_KEY` was edited in Vercel on 2026-10-01 00:31 UTC, which is
+  after production deployment `10f75be` (2026-09-30 23:43 UTC) was created. Env changes apply only to new deployments, so confirm a production deployment created
+  after the edit is READY and that a test chat still answers. (The old key was committed nowhere; a real key was only ever in an uncommitted local edit of
+  `.env.example`, now reverted.)
 
 ### T3 manual checklist
 
@@ -89,5 +102,4 @@ Immediate development sequence. Keep this list short and current; move finished 
 
 - Human-handoff tool + alert channel.
 - Cal.com webhook/API → `chat_apply_trusted_state` for `booking_confirmed`.
-- Structured qualification into `chat_sessions.qualification`.
 - Decide what to do about the anon-callable legacy RPCs (`chat_record_outcome`).

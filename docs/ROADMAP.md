@@ -11,7 +11,7 @@ follows the original handoff plan.
   with fallback (`lib/ai/*`).
 - **Step 4 — Conversation state and intent:** state/intent columns on `chat_sessions`, deterministic
   intent classifier, state persisted by `/api/chat`.
-- **Step 4b — Stabilization (this commit):** database-authoritative transitions, service-role-only
+- **Step 4b — Stabilization (commits a77c437, 1b489b9):** database-authoritative transitions, service-role-only
   state RPCs with a separate trusted path, rejections reported instead of swallowed, affirmation
   intent inheritance, shared project docs (`/docs`, `CLAUDE.md`, `MANUS.md`).
 
@@ -21,11 +21,11 @@ follows the original handoff plan.
 
 ## Current
 
-- **Verify Step 5 live** (TASKS.md T9) after it is deployed and the deployment is confirmed.
+- **Step 5 is deployed to production** (latest commit 10f75be, deployment READY). **T9c, the live retest of the D17/D18 fixes, is outstanding** (TASKS.md T9c), plus T10 (confirm production runs the rotated OpenRouter key).
 
 ## Next
 
-- Nothing is scheduled until Step 5 is verified. Candidates, each needing the owner's go-ahead and a decision entry: the human-handoff
+- Nothing is scheduled until T9c is completed. Candidates, each needing the owner's go-ahead and a decision entry: the human-handoff
   notification, the Cal.com webhook/API, and reconciling the Supabase migration history.
 
 ## Future (not started, each needs a decision entry first)
