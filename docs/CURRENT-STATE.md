@@ -124,5 +124,5 @@ is `unknown`; a genuinely off-topic message inside an active flow keeps that flo
 6. Concurrent requests on one session can interleave state writes (last write wins under the row lock).
 7. Four old local worktree folders still hold legacy branches with uncommitted work (feat/presencia-digital-express, feat/purpleoryn-rebuild,
    fix/header-tablet-overflow, claude/como-trabajamos-road-page-d93721). Nothing was deleted; they are outside this repo's main history.
-8. A stronger runtime model has not been adopted: with `AI_MODEL` unset OpenRouter uses the default `openai/gpt-4o-mini`, which sometimes ignores
+8. Sonnet 5.5 and `gpt-4.1-mini` were tried and rejected (D19); production runs the default `openai/gpt-4o-mini`. A stronger runtime model has not been adopted: with `AI_MODEL` unset OpenRouter uses the default `openai/gpt-4o-mini`, which sometimes ignores
    prompt ordering rules. T9c is complete. The rotated OpenRouter key is live in production (TASKS.md T10).

@@ -61,6 +61,11 @@ Immediate development sequence. Keep this list short and current; move finished 
 - [x] **T10 — Production runs the rotated OpenRouter key (2026-10-01).** Production deployment 25480f5 (created after the 00:31 UTC env edit) is READY and
   production chats answered during T9c. The old key was committed nowhere.
 
+- [ ] **T11 — Live retest of the D19 prompt rules on `gpt-4o-mini`.** Scripts G and H (fresh tab each). Pass: a plan button appears in the same turn as the
+  recommendation; the reply includes the exact price and the break-even; no reply asks permission to show a button; in H, where the visitor skips the website
+  question, `chat_sessions.qualification` holds only `business_type`, `goal` and `timing` (no `has_website`, `has_google_profile` or
+  `appointments_or_orders`); the call is not offered before the pending question is answered.
+
 ### T3 manual checklist
 
 1. First message "Quiero agendar una llamada" → reply + call button; response `stateUpdate: "ok"`,

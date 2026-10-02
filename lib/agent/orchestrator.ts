@@ -86,7 +86,8 @@ const HEADER =
   "ACTIVE CAPABILITY FOR THIS TURN (same assistant, same conversation; only the focus below changes). Only use the tools you are offered. Buttons appear only when a tool you call shows them: never write a link, URL or markdown, and never say a button is shown unless a tool result in this turn says so.";
 const ROI_RULE =
   "The ROI Method works per sale. If the visitor gives a unit price, a volume or a daily or monthly total instead of what ONE typical purchase or order is worth, don't use it and don't guess: ask ONE question about what a customer spends in a single purchase or order, and only then call calculate_roi. When you repeat its results say ventas, never unidades, unless a sale is one unit.";
-const SAVE_FACTS = "When the visitor gives you one of these facts, save it with record_qualification (only the fields they gave, never contact details) in the same turn, then reply.";
+const SAVE_FACTS = "When the visitor gives you one of these facts, save it with record_qualification (only the fields they gave, never contact details) in the same turn, then reply. Save ONLY what the visitor actually said: if they skipped a question or changed the subject, leave that field out. Never write false, \"neither\" or any other default for something they did not answer.";
+const BUTTON_RULE = "Never ask whether you should show a button and never ask for permission to show it: call the tool, then say the button is below.";
 
 function receptionistAddendum(known: Qualification): string {
   return [
@@ -106,14 +107,15 @@ function salesAddendum(known: Qualification, state: ConversationState): string {
   const step = state === "plan_recommendation"
     ? "A plan was already recommended and its button is already shown above. Don't repeat the pitch or recommend again unless the visitor's needs changed; answer follow-up questions. If the visitor says yes or ok again, tell them to use that button; don't write a link for it."
     : enough
-      ? "You have enough to recommend: call calculate_roi for the plan you have in mind, then recommend_plan."
-      : `Ask ONLY the next useful question, in your own words: ${QUESTION_HINT[next ?? "business_type"]}. Don't recommend a plan yet unless the visitor asks you to.`;
+      ? "You have enough to recommend: call calculate_roi for the plan you have in mind, then recommend_plan in this same turn. In your reply give the plan name, its one-time and monthly price exactly as listed and the break-even sales from calculate_roi, and say the button below takes them to the next step. Never recommend a plan in your reply without calling recommend_plan."
+      : `Ask ONLY the next useful question, in your own words: ${QUESTION_HINT[next ?? "business_type"]}. Don't recommend or name a plan as the answer yet unless the visitor asks you to.`;
   return [
     HEADER,
     "Capability: SALES.",
     "Goal: understand the visitor's business and recommend the plan that fits, using only the plan facts below. Never invent results, case studies, clients, guarantees or capabilities.",
     knownBlock(known),
     step,
+    BUTTON_RULE,
     ROI_RULE,
     SAVE_FACTS,
   ].join("\n");
@@ -124,7 +126,7 @@ function bookingAddendum(known: Qualification, state: ConversationState): string
   const step = state === "booking_offered"
     ? "The button was already shown above. Don't ask more questions unless the visitor asks something; answer briefly and tell them that button lets them pick the day and time. Don't write a link for it."
     : next
-      ? `Before offering the call, ask ONLY this, in your own words: ${QUESTION_HINT[next]}.`
+      ? `Before offering the call, ask ONLY this, in your own words: ${QUESTION_HINT[next]}. Don't mention the button or offer the call yet.`
       : "You have what you need: call offer_call now (plan discussed if any; summary with business type, goal and timing; no contact details).";
   return [
     HEADER,
@@ -132,6 +134,7 @@ function bookingAddendum(known: Qualification, state: ConversationState): string
     "The visitor wants a call. The only booking action is offer_call, which shows a button that opens Cal.com so THEY pick the day and time. You cannot schedule, confirm or reserve anything and you never know whether they book. Never say the call is scheduled, confirmed or reserved.",
     knownBlock(known),
     step,
+    BUTTON_RULE,
     SAVE_FACTS,
   ].join("\n");
 }

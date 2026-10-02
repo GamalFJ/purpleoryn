@@ -139,3 +139,17 @@ about what a customer spends in one purchase or order, does not call `calculate_
 **Consequences:** "servicios" inside "empresa de servicios de data" is still a weak services keyword (harmless outside an active flow);
 the plain-text guard also removes the URL of any markdown link, so URLs must be written plainly; the deterministic fixes are verified
 offline only. The owner deferred the remaining live T9 checks (see TASKS.md).
+
+## D19 — Runtime model stays `openai/gpt-4o-mini`; prompt rules after the model trials (2026-10-02)
+**Decision (owner approved):** Two models were tried in production through `AI_MODEL`. `anthropic/claude-sonnet-5.5` used far more tokens and
+a turn failed with an OpenRouter 4xx (`provider_failure`; the status is not logged, so the cause is unknown). `openai/gpt-4.1-mini` was stable
+and stated plan facts correctly (Autoridad is the only plan whose agent agenda citas and toma pedidos), but in Scripts G and H it saved
+qualification fields the visitor never gave (`has_website: false`, `has_google_profile: false`, `appointments_or_orders: "neither"`), asked
+permission to show the button instead of pointing to it, looped after "Sí, por favor", and gave no price or break-even. Production `AI_MODEL`
+was set back to `openai/gpt-4o-mini` (the default). The same prompt gaps are fixed in the prompt, not by the model: `SAVE_FACTS` and the
+`record_qualification` description say to save only what the visitor stated and never default a skipped answer; a `BUTTON_RULE` forbids asking
+permission to show a button; the sales "enough to recommend" step requires `recommend_plan` in the same turn, the exact plan prices and the
+`calculate_roi` break-even in the reply, and never recommending a plan in prose without the tool; the booking step says not to mention the
+button until the pending question is answered. **Consequences:** these are prompt rules the model can still ignore; there is no server-side
+guard on saved qualification values (a possible follow-up in `lib/agent/qualification.ts`). The earlier `gpt-4o-mini` reply that Conversión
+"toma pedidos" contradicted `tiers` (Conversión has lead scoring and 24-hour follow-up). Live retest of G and H is pending (TASKS.md T11).

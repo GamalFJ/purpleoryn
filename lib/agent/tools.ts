@@ -57,7 +57,7 @@ export const AGENT_TOOLS: ToolDefinition[] = [
   {
     name: "record_qualification",
     description:
-      "Save facts the visitor has told you about their business so you don't ask again. Include only the fields the visitor actually gave you; never contact details (phone, email, links, handles). Nothing is shown to the visitor.",
+      "Save facts the visitor has told you about their business so you don't ask again. Include only the fields the visitor actually gave you; leave out anything they did not state. Never infer, guess or default a value (no false or \"neither\" for a question they skipped), and never contact details (phone, email, links, handles). Nothing is shown to the visitor.",
     parameters: {
       type: "object",
       properties: {
