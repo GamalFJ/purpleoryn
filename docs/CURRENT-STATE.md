@@ -46,9 +46,9 @@ lint, production build, and an offline harness over the pure modules (intent swi
 qualification sanitizing, fallback). Verified live (2026-09-30, deploys b9faffd and ce57391): qualification memory (whitelisted fields only), plan
 recommendation and `recommended_plan`, the Autoridad text (call button, no booking claim), state holding and intent inheritance, booking →
 handoff (state held, `handoff_status = requested`, summary saved, nothing claimed as notified), a safe answer to an out-of-area question,
-no state errors, the admin detail page (screenshots). Fixed since (D17, D18) and **verified offline only**: no switch out of booking on a
+no state errors, the admin detail page (screenshots). Fixed since (D17, D18) and **verified live (2026-09-30/10-01, T9c)**: no switch out of booking on a
 plan-fit phrase, no invented links, negation/plural-aware booking detection, wider which-plan phrases, server-side markdown stripping, the
-WhatsApp number in the handoff reply, and the per-sale ROI question. **Deferred by the owner:** the remaining live T9 checks.
+WhatsApp number in the handoff reply, and the per-sale ROI question. Also verified live: the Autoridad, Conversión and call buttons, sales → booking, no switch on a weak keyword in booking, the admin list line. Not verified: T9 items 1 and 19.
 Not implemented and out of scope: handoff notification, Cal.com webhook, automatic booking, `booking_confirmed`, lead creation.
 
 ## Conversation state — implemented, verified live (Step 4)
@@ -125,4 +125,4 @@ is `unknown`; a genuinely off-topic message inside an active flow keeps that flo
 7. Four old local worktree folders still hold legacy branches with uncommitted work (feat/presencia-digital-express, feat/purpleoryn-rebuild,
    fix/header-tablet-overflow, claude/como-trabajamos-road-page-d93721). Nothing was deleted; they are outside this repo's main history.
 8. A stronger runtime model has not been adopted: with `AI_MODEL` unset OpenRouter uses the default `openai/gpt-4o-mini`, which sometimes ignores
-   prompt ordering rules. T9c (live retest of D17/D18) is outstanding. The OpenRouter key was rotated by the owner; production must be redeployed to use it (TASKS.md T10).
+   prompt ordering rules. T9c is complete. The rotated OpenRouter key is live in production (TASKS.md T10).

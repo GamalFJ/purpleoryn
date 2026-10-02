@@ -19,7 +19,7 @@ Immediate development sequence. Keep this list short and current; move finished 
 - [~] **T3c — Intent flips on a stray keyword.** Implemented in Step 5 (strong/weak active-flow rule; offline harness passes, including
   the exact live case "comprar uno de sus servicios" during booking). Verify live in T9 (item 14).
 
-- [ ] **T3d — Retest the Autoridad button** once deployed: a sales chat that ends in an Autoridad recommendation shows "Hablar de
+- [x] **T3d — Autoridad button verified live (2026-10-01).** Original check: retest the Autoridad button once deployed: a sales chat that ends in an Autoridad recommendation shows "Hablar de
   Autoridad" (opens cal.com with the plan prefilled, not the order form); a Conversión or Presencia recommendation still shows
   "Elegir <plan>" and opens the form.
 
@@ -28,7 +28,7 @@ Immediate development sequence. Keep this list short and current; move finished 
   and hold the state, no state errors); items 9-10 passed on the text (the Autoridad reply says the button lets the visitor pick day and hour,
   never claims a booking) but the button label and link were not checked. Found and fixed in D17: the booking chat was switched to sales by a
   plan-fit phrase and never got the call button; the model wrote fake markdown cal.com links. Still untested: 1-3, 7, 8, 12-20.
-- [ ] **T9b — Retest the D17 fixes live** (fresh tab each): (a) "Quiero agendar una llamada" → answer the goal with "una asesoría para saber qué
+- [x] **T9b — D17 fixes retested live (see T9c).** Original checks: Retest the D17 fixes live (fresh tab each): (a) "Quiero agendar una llamada" → answer the goal with "una asesoría para saber qué
   plan me conviene" → the chat stays in booking and shows the real Cal.com button; `chat_sessions.intent` stays `booking`; (b) after an Autoridad
   recommendation, answer "claro" → no raw `[text](url)` in the reply, it points to the existing "Hablar de Autoridad" button; (c) no reply ever
   contains a markdown link.
@@ -38,24 +38,28 @@ Immediate development sequence. Keep this list short and current; move finished 
   "state · intent" was not shown), 20. Not verified live: 1 (only "Hola"), 7/8 (button labels and links are not visible in the database), 12,
   14, 19 (needs a hand-edited row). Defects found and fixed in D18: negated/plural "agendar citas" read as a call request, "no sé cuál me
   convendría" not read as which-plan, markdown asterisks in replies, the ROI input assumed from a unit price.
-- [ ] **T9c — Live retest of D17/D18. OUTSTANDING: deferred by the owner ("we will fix that later"); no live results are recorded.** Fresh tab per check,
-  then read `chat_sessions` in Supabase. The six required checks:
-  1. **Booking stays booking when asked which plan fits:** "Quiero agendar una llamada", answer the goal with "una asesoría para saber qué plan me conviene" →
-     stays in booking, shows the real Cal.com button, `intent` stays `booking`.
-  2. **No fake links:** after an Autoridad recommendation answer "claro" → the reply contains no link text and points to the existing button.
-  3. **No Markdown/asterisks:** no `**`, `*`, `#` or `[text](url)` in any reply (try the plans list and the pricing answer).
-  4. **Correct WhatsApp number in handoff:** "prefiero hablar con una persona" → the reply includes +1 809-603-4113, claims nobody was notified, gives no response time.
-  5. **Negation and plural booking detection:** "no es necesario agendar citas" and "quiero un sitio web donde puedan agendar citas" do NOT start booking;
-     "Quiero agendar una llamada" still does.
-  6. **ROI asks for the value of one purchase first:** "vendo 2 cajas de 12 al día, la unidad a 250 pesos" → the assistant asks what a customer spends in one
-     purchase or order before any ROI numbers, and says "ventas", not "unidades".
-  **Still UNVERIFIED live from earlier rounds (do not mark verified until seen):** the exact "Hablar de Autoridad" button label and its Cal.com link; a Conversión
-  recommendation showing "Elegir Conversión" and opening the order form (T9 item 8); the sales → booking transition (T9 item 12); the admin conversations **list**
-  line "state · intent" (T9 item 18; the detail page was verified by screenshots). Also not covered: T9 items 1, 14 and 19.
-- [ ] **T10 — Production must run the rotated OpenRouter key.** The owner rotated the key; `OPENROUTER_API_KEY` was edited in Vercel on 2026-10-01 00:31 UTC, which is
-  after production deployment `10f75be` (2026-09-30 23:43 UTC) was created. Env changes apply only to new deployments, so confirm a production deployment created
-  after the edit is READY and that a test chat still answers. (The old key was committed nowhere; a real key was only ever in an uncommitted local edit of
-  `.env.example`, now reverted.)
+- [x] **T9c — Live retest of D17/D18: DONE (2026-09-30 and 2026-10-01, production 10f75be).** Fresh tab per script; results read from `chat_sessions` /
+  `chat_messages` and confirmed by the owner for what the database cannot show (buttons).
+  1. **Booking stays booking when asked which plan fits:** PASS (intent stayed `booking`, call button shown).
+  2. **No fake links after Autoridad + "claro":** PASS.
+  3. **No Markdown/asterisks, exact prices:** PASS.
+  4. **Handoff reply:** PASS (includes +1 809-603-4113, no "notified" claim).
+  5. **Negation and plural booking detection:** PASS ("agendar citas" does not start booking; a real request still does).
+  6. **ROI asks for the value of one purchase first:** PASS (then 3000 pesos gave Presencia RD$33,499.87 / 12 / 34 / 3).
+  Batch 2 (2026-10-01):
+  - **G, order-form link:** PASS. A business with a website but no Google profile ended `plan_recommendation` with `recommended_plan = conversion`;
+    the owner confirmed the "Elegir Conversión" button opens the order form with the plan preselected (T9 item 8). The Presencia button is covered by check 6's chat.
+  - **H, sales → booking:** PASS (intent `booking` after "Mejor quiero agendar una llamada", one call question, stayed `booking`, ended `booking_offered`
+    with the call button; T9 item 12).
+  - **J, weak keyword inside booking:** PASS (intent stayed `booking` on "Quiero comprar uno de sus servicios"; T9 item 14).
+  - **K, receptionist and unknown question:** PASS (service area Santo Domingo / Este / Oeste, no Miami office invented; T9 item 15).
+  Also confirmed by the owner: "Hablar de Autoridad" opens Cal.com (T3d, T9 item 9); the admin list line "state · intent" and the detail page display correctly (T9 item 18).
+  **Still not verified live:** T9 item 19 (rejected transition; needs a hand-edited row) and T9 item 1 (only "Hola" was ever sent as a first message).
+  Small issues seen, not fixed (owner has not asked): the Conversión reply called the plan "Conversion" (no accent) and its feature wording should be checked
+  against `tiers`; the booking call button appears before timing is asked; "Ya registré tus datos" slightly overstates; the model sometimes states a plan in
+  prose without calling `recommend_plan`; classifier quirks ("¿Qué planes tienen?" starts sales; "agendar visitas"/"reuniones" can start booking).
+- [x] **T10 — Production runs the rotated OpenRouter key (2026-10-01).** Production deployment 25480f5 (created after the 00:31 UTC env edit) is READY and
+  production chats answered during T9c. The old key was committed nowhere.
 
 ### T3 manual checklist
 

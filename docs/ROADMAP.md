@@ -15,17 +15,17 @@ follows the original handoff plan.
   state RPCs with a separate trusted path, rejections reported instead of swallowed, affirmation
   intent inheritance, shared project docs (`/docs`, `CLAUDE.md`, `MANUS.md`).
 
-- **Step 4c — Autoridad recommendation opens the call booking** (D15; live retest pending, TASKS.md T3d and T9) and chat-behavior fixes (D14, verified live).
+- **Step 4c — Autoridad recommendation opens the call booking** (D15; verified live 2026-10-01) and chat-behavior fixes (D14, verified live).
 - **Step 5 — Unified Oryn orchestration: implemented in code** (D16): orchestrator, four capabilities, tool gating, qualification
   memory, stronger intent switching, read-only admin fields, safe fallback. **Live verification pending** (TASKS.md T9).
 
 ## Current
 
-- **Step 5 is deployed to production** (latest commit 10f75be, deployment READY). **T9c, the live retest of the D17/D18 fixes, is outstanding** (TASKS.md T9c), plus T10 (confirm production runs the rotated OpenRouter key).
+- **Step 5 is deployed to production** (latest commit 10f75be, deployment READY). **T9c (live retest of D17/D18) and T10 (rotated OpenRouter key) are done and recorded in TASKS.md.** Not verified live: T9 items 1 and 19.
 
 ## Next
 
-- Nothing is scheduled until T9c is completed. Candidates, each needing the owner's go-ahead and a decision entry: the human-handoff
+- T9c is complete, so new work can start with the owner's go-ahead. Candidates, each needing the owner's go-ahead and a decision entry: the human-handoff
   notification, the Cal.com webhook/API, and reconciling the Supabase migration history.
 
 ## Future (not started, each needs a decision entry first)
