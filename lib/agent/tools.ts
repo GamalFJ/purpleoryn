@@ -29,6 +29,9 @@ export interface ToolContext {
   asked?: readonly QualificationKey[];
   // After a recommendation, a price objection may be answered with the plan one step down.
   stage?: SalesStage;
+  // On the recommendation turn the ROI must be computed for the plan the rubric chose: the numbers the
+  // visitor reads have to match the plan they are told about.
+  roiPlan?: TierSlug;
 }
 
 const PLAN_ENUM = { type: "string", enum: ["presencia", "conversion", "autoridad"] };
@@ -146,6 +149,9 @@ export function runTool(call: ToolCall, tiers: Tier[], context: ToolContext = { 
       const asv = Number(args.average_sale_value);
       const roi = tier ? computeRoi({ oneTime: tier.oneTime, monthly: tier.monthly, averageSaleValue: asv }) : null;
       if (!tier || !roi) return { content: JSON.stringify({ error: "Plan o valor promedio de venta inválido." }) };
+      if (context.roiPlan && tier.slug !== context.roiPlan) {
+        return { content: JSON.stringify({ ok: false, error: `Not allowed. For this recommendation call calculate_roi with plan="${context.roiPlan}": the numbers must match the plan you recommend.` }) };
+      }
       const rounded = {
         breakEvenSales: Math.ceil(roi.breakEvenSales),
         targetSalesPerYear: Math.ceil(roi.targetSalesPerYear),

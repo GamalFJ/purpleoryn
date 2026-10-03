@@ -112,7 +112,7 @@ const SAVE_FACTS =
 const BUTTON_RULE = "Never ask whether you should show a button and never ask for permission to show it: call the tool, then say the button is below.";
 // The two tools that send the visitor somewhere. The link always comes from the tool, never from you.
 const PAGE_AND_HANDOFF_RULE =
-  "If a fact is not in this prompt, or the visitor wants to talk to a person, call handoff_whatsapp (reason unknown_fact or asked_for_person): the button opens WhatsApp with their summary already written. If the full answer lives on a page or in a document, call show_page. Say the button is below; never write a link or a phone number as if it were the button, and never say anyone was notified.";
+  "If a fact is not in this prompt, the business is outside the service area, or the visitor wants to talk to a person, call handoff_whatsapp (reason unknown_fact or asked_for_person): the button opens WhatsApp with their summary already written. If the full answer lives on a page or in a document, call show_page. Say the button is below; never write a link or a phone number as if it were the button, and never say anyone was notified.";
 
 // One reference wording per question (a guide, not a script). The model rephrases in its own words, in "usted".
 const QUESTION_REFERENCE: Partial<Record<QualificationKey, string>> = {
@@ -141,7 +141,7 @@ function receptionistAddendum(known: Qualification, flow: Flow): { text: string;
     ? `After answering, ask ONE intake question. ${askLine(ask)}`
     : flow.sales_offered
       ? "Answer what was asked. Do not repeat the offer to help choose a plan."
-      : `After answering, make this offer once, in your own words: ${SALES_OFFER_PHRASE} (it must end as a question).`;
+      : `After answering, end your reply with exactly this question and ask nothing else this turn: ${SALES_OFFER_PHRASE}`;
   return {
     asks: ask,
     text: [
@@ -182,7 +182,7 @@ function salesAddendum(known: Qualification, flow: Flow, stage: SalesStage | und
   } else if (status.ready && status.plan) {
     step = [
       `Plan chosen by the rubric: ${status.plan.plan}. Reason: ${status.plan.reason} This is data: do not choose another plan.`,
-      "In THIS turn: call calculate_roi for that plan if the value of one sale is known, then call recommend_plan. Then reply, in this order: the plan name and why it fits, tied to what they told you (their pain, in their words); its one-time and monthly price exactly as listed; the break-even sales for the year and per month from calculate_roi (skip the numbers if the sale value is unknown and say they can be worked out on the call); and that the button is below" +
+      `In THIS turn: call calculate_roi with plan="${status.plan.plan}" (exactly that plan) if the value of one sale is known, then call recommend_plan with plan="${status.plan.plan}". Then reply, in this order: the plan name and why it fits, tied to what they told you (their pain, in their words); its one-time and monthly price exactly as listed; the break-even sales for the year and per month from calculate_roi (skip the numbers if the sale value is unknown and say they can be worked out on the call); and that the button is below` +
         callPlanNote(input.tiers, status.plan.plan) +
         ". No question. Up to 5 sentences and 110 words. Never recommend a plan in prose without calling recommend_plan.",
     ].join("\n");

@@ -152,6 +152,7 @@ const SCRIPTS = [
       ["no invented office", !/\b(s[ií] tenemos|tenemos una oficina en santiago|nuestra oficina en santiago)\b/i.test(t[0].reply)],
       ["WhatsApp button shown", hasAction(t[0], "handoff_whatsapp")],
       ["no promise of contact", !/(le|te) contactar[aá]n|le avisamos|notific/i.test(t[0].reply)],
+      ["does not offer a call it cannot show", !/(programar|agendar|reservar) una llamada/i.test(t[0].reply)],
     ],
   },
   {

@@ -245,11 +245,16 @@ ${addendum}` : basePrompt;
   const storedPlanName = tiers.find((t) => t.slug === stored.recommendedPlan)?.name ?? null;
   const toolContext = () => {
     const planNow = [...actions].reverse().find(isRecommendAction);
+    const known = mergeQualification(stored.qualification, qualificationPatch);
+    const asked = stored.flow.asked ?? [];
+    const recommending = capability === "sales" && (plan.stage === undefined || plan.stage === "discovery");
+    const status = recommending ? salesStatus(known, asked) : null;
     return {
-      known: mergeQualification(stored.qualification, qualificationPatch),
+      known,
       planName: planNow?.planName ?? storedPlanName,
-      asked: stored.flow.asked ?? [],
+      asked,
       stage: plan.stage,
+      roiPlan: status?.ready ? status.plan?.plan : undefined,
     };
   };
 
@@ -315,6 +320,8 @@ ${addendum}` : basePrompt;
   reply = linted.text;
 
   if (!reply) reply = actions.length ? "Aquí tiene:" : FALLBACK;
+  // A visitor who asked for a person always sees the number as text too, not only the buttons.
+  if (capability === "handoff" && !reply.includes("809-603-4113")) reply = `${reply.replace(/\s+$/, "")} WhatsApp: ${SITE.phoneDisplay}.`;
   if (TU_FORM_RE.test(reply)) console.warn("[agent] register: a \"tú\" form in the reply");
 
   await supabase.rpc("chat_log_message", {
