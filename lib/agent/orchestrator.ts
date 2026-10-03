@@ -26,7 +26,7 @@ import {
 // this only chooses the state to ask for.
 
 export type Capability = "receptionist" | "sales" | "booking" | "handoff";
-export type AgentToolName = "calculate_roi" | "recommend_plan" | "offer_call" | "record_qualification";
+export type AgentToolName = "calculate_roi" | "recommend_plan" | "offer_call" | "record_qualification" | "handoff_whatsapp" | "show_page";
 
 export interface TurnInput {
   storedState: ConversationState | null;
@@ -50,10 +50,10 @@ export interface TurnPlan {
 // it can only point to the existing contact options (WhatsApp in the prompt,
 // the call button).
 const TOOLS_BY_CAPABILITY: Record<Capability, readonly AgentToolName[]> = {
-  receptionist: ["calculate_roi", "record_qualification"],
-  sales: ["calculate_roi", "recommend_plan", "record_qualification"],
-  booking: ["offer_call", "record_qualification"],
-  handoff: ["offer_call"],
+  receptionist: ["calculate_roi", "record_qualification", "show_page", "handoff_whatsapp"],
+  sales: ["calculate_roi", "recommend_plan", "record_qualification", "show_page", "handoff_whatsapp"],
+  booking: ["offer_call", "record_qualification", "handoff_whatsapp"],
+  handoff: ["handoff_whatsapp", "offer_call"],
 };
 
 // What the site did before orchestration existed; used if planning throws.
@@ -88,14 +88,18 @@ const ROI_RULE =
   "The ROI Method works per sale. If the visitor gives a unit price, a volume or a daily or monthly total instead of what ONE typical purchase or order is worth, don't use it and don't guess: ask ONE question about what a customer spends in a single purchase or order, and only then call calculate_roi. When you repeat its results say ventas, never unidades, unless a sale is one unit.";
 const SAVE_FACTS = "When the visitor gives you one of these facts, save it with record_qualification (only the fields they gave, never contact details) in the same turn, then reply. Save ONLY what the visitor actually said: if they skipped a question or changed the subject, leave that field out. Never write false, \"neither\" or any other default for something they did not answer.";
 const BUTTON_RULE = "Never ask whether you should show a button and never ask for permission to show it: call the tool, then say the button is below.";
+// The two tools that send the visitor somewhere. The link always comes from the tool, never from you.
+const PAGE_AND_HANDOFF_RULE =
+  "If a fact is not in this prompt, or the visitor wants to talk to a person, call handoff_whatsapp (reason unknown_fact or asked_for_person): the button opens WhatsApp with their summary already written. If the full answer lives on a page or in a document, call show_page. Say the button is below; never write a link or a phone number as if it were the button, and never say anyone was notified.";
 
 function receptionistAddendum(known: Qualification): string {
   return [
     HEADER,
     "Capability: RECEPTIONIST.",
-    "Answer using only the approved facts below: what Purple Cove Labs does, the services and plans, prices, payment, the process and the service area. If a fact is not there, say you will confirm it on a call or point to WhatsApp; never invent it. You cannot show a call button in this mode.",
+    "Answer using only the approved facts below: what Purple Cove Labs does, the services and plans, prices, payment, the process and the service area. If a fact is not there, say the team confirms it directly; never invent it. You cannot show a call button in this mode.",
     knownBlock(known),
     "If the visitor seems to be deciding, offer to help them choose a plan and ask ONE question; don't push.",
+    PAGE_AND_HANDOFF_RULE,
     ROI_RULE,
     SAVE_FACTS,
   ].join("\n");
@@ -116,6 +120,7 @@ function salesAddendum(known: Qualification, state: ConversationState): string {
     knownBlock(known),
     step,
     BUTTON_RULE,
+    PAGE_AND_HANDOFF_RULE,
     ROI_RULE,
     SAVE_FACTS,
   ].join("\n");
@@ -135,6 +140,7 @@ function bookingAddendum(known: Qualification, state: ConversationState): string
     knownBlock(known),
     step,
     BUTTON_RULE,
+    "If the visitor says they prefer not to take a call, call handoff_whatsapp with reason declined_call instead.",
     SAVE_FACTS,
   ].join("\n");
 }
@@ -144,7 +150,7 @@ function handoffAddendum(): string {
     HEADER,
     "Capability: HUMAN HANDOFF.",
     "The visitor wants to talk to a person. You cannot contact, notify or transfer anyone and you don't know whether or when someone will answer. Never say a person was notified, has received the request or will contact them, never say you passed their information on, and never give response times.",
-    "What you can do: include this WhatsApp number in your reply so they can write directly: " + SITE.phoneDisplay + ". Also offer the free 20-minute call by calling offer_call so the button opens Cal.com. Keep it short. Don't start qualification questions and don't ask for contact details.",
+    "What you can do: call handoff_whatsapp with reason asked_for_person (the button opens WhatsApp with their summary already written), include this WhatsApp number in your reply as text as well: " + SITE.phoneDisplay + ", and offer the free 20-minute call by calling offer_call so the button opens Cal.com. Say the buttons are below. Keep it short. Don't start qualification questions and don't ask for contact details.",
   ].join("\n");
 }
 

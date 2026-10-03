@@ -1,14 +1,18 @@
 import { createHash } from "node:crypto";
-import { NextResponse, type NextRequest } from "next/server";
+import { after, NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { chatWithFallback, isAgentConfigured } from "@/lib/ai";
 import type { AgentMessage } from "@/lib/ai/types";
-import { nextSalesStage, sanitizeFlow, type Flow } from "@/lib/agent/flow";
+import { nextSalesStage, sanitizeFlow, type AlertKind, type Flow } from "@/lib/agent/flow";
+import { chatAlertText } from "@/lib/agent/handoff";
+import { classifyObjection } from "@/lib/agent/objections";
 import { buildSystemPrompt } from "@/lib/agent/prompt";
 import { fallbackPlan, planTurn, type TurnPlan } from "@/lib/agent/orchestrator";
 import { toPlainText } from "@/lib/agent/plain-text";
-import { mergeQualification, sanitizeQualification, type Qualification } from "@/lib/agent/qualification";
+import { guardQualification, isKnown, mergeQualification, sanitizeQualification, SALES_ENOUGH, type Qualification } from "@/lib/agent/qualification";
+import { lintReply } from "@/lib/agent/reply-lint";
 import { runTool, toolsFor, type AgentAction } from "@/lib/agent/tools";
+import { notifyChatEvent } from "@/lib/telegram";
 import { getAddons, getTiers } from "@/lib/content";
 import {
   isConversationIntent,
@@ -39,6 +43,25 @@ const bodySchema = z.object({
     .max(80),
 });
 
+// Turn budget (E4): after this many visitor messages without a decision the agent stops asking and offers a person.
+const MAX_VISITOR_TURNS_BEFORE_HANDOFF = 10;
+const MAX_VISITOR_TURNS_SHORT = 16;
+
+const foldForMatch = (text: string) =>
+  text
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "");
+// A reply that recommends a plan ("te recomiendo ...", "el plan que le conviene es ...").
+const RECOMMENDS_PLAN_RE = /\b(te|le) recomiendo\b|\brecomiend[oa]\b.*\b(presencia|conversion|autoridad)\b|\b(presencia|conversion|autoridad)\b.*\b(es el plan|es el ideal|es la mejor|te conviene|le conviene)\b/;
+
+type RecommendAction = Extract<AgentAction, { type: "recommend_plan" }>;
+type OfferCallAction = Extract<AgentAction, { type: "offer_call" }>;
+type HandoffAction = Extract<AgentAction, { type: "handoff_whatsapp" }>;
+const isRecommendAction = (a: AgentAction): a is RecommendAction => a.type === "recommend_plan";
+const isOfferCallAction = (a: AgentAction): a is OfferCallAction => a.type === "offer_call";
+const isHandoffAction = (a: AgentAction): a is HandoffAction => a.type === "handoff_whatsapp";
+
 const FALLBACK = `Ahora mismo no puedo responder. Escríbenos por WhatsApp al ${SITE.phoneDisplay} y te atendemos.`;
 
 function ipHash(request: NextRequest) {
@@ -55,12 +78,18 @@ interface StoredSession {
   state: ConversationState | null;
   qualification: Qualification;
   flow: Flow;
+  recommendedPlan: string | null;
+  handoffStatus: string | null;
 }
 
 async function readStoredState(sessionId: string): Promise<StoredSession> {
-  const none: StoredSession = { intent: null, state: null, qualification: {}, flow: {} };
+  const none: StoredSession = { intent: null, state: null, qualification: {}, flow: {}, recommendedPlan: null, handoffStatus: null };
   if (!isServiceRoleConfigured()) return none;
-  const { data, error } = await serviceClient().from("chat_sessions").select("intent, state, qualification, flow").eq("id", sessionId).maybeSingle();
+  const { data, error } = await serviceClient()
+    .from("chat_sessions")
+    .select("intent, state, qualification, flow, recommended_plan, handoff_status")
+    .eq("id", sessionId)
+    .maybeSingle();
   if (error) {
     console.error("[agent] state read failed:", error.message);
     return none;
@@ -70,6 +99,8 @@ async function readStoredState(sessionId: string): Promise<StoredSession> {
     state: isConversationState(data?.state) ? data.state : null,
     qualification: sanitizeQualification(data?.qualification),
     flow: sanitizeFlow(data?.flow),
+    recommendedPlan: typeof data?.recommended_plan === "string" ? data.recommended_plan : null,
+    handoffStatus: typeof data?.handoff_status === "string" ? data.handoff_status : null,
   };
 }
 
@@ -90,7 +121,7 @@ async function persistState(
     flow?: Flow | null;
     recommendedPlan?: string | null;
     bookingStatus?: "offered" | "failed" | null;
-    handoffStatus?: "requested" | "failed" | null;
+    handoffStatus?: "offered" | "requested" | "failed" | null;
     handoffSummary?: string | null;
     outcome?: string | null;
     lastErrorCode?: string | null;
@@ -181,13 +212,30 @@ export async function POST(request: NextRequest) {
 
   const [tiers, addons] = await Promise.all([getTiers(), getAddons()]);
   const basePrompt = buildSystemPrompt(tiers, addons);
-  const system = plan.addendum ? `${basePrompt}
+  // Turn budget (E4): a long conversation that has not reached a button stops asking and hands over.
+  const visitorTurns = messages.filter((m) => m.role === "user").length;
+  const budgetNote =
+    visitorTurns >= MAX_VISITOR_TURNS_SHORT
+      ? "This conversation is very long. Reply in at most two sentences, ask nothing new and point to the WhatsApp button (handoff_whatsapp) if you have it."
+      : visitorTurns >= MAX_VISITOR_TURNS_BEFORE_HANDOFF
+        ? "This conversation has gone on for many turns without a decision. Stop asking questions: answer what was asked and, if you have handoff_whatsapp, offer it so a person can take over."
+        : "";
+  const addendum = [plan.addendum, budgetNote].filter(Boolean).join("\n");
+  const system = addendum ? `${basePrompt}
 
-${plan.addendum}` : basePrompt;
+${addendum}` : basePrompt;
   let qualificationPatch: Qualification = {};
   const conversation: AgentMessage[] = messages.slice(-HISTORY_WINDOW).map((m) => ({ role: m.role, content: m.content }));
   const actions: AgentAction[] = [];
   let reply = "";
+
+  // Evidence for what the model may save: only the visitor's own words count (E1).
+  const visitorText = messages.filter((m) => m.role === "user").map((m) => m.content).join("\n");
+  const storedPlanName = tiers.find((t) => t.slug === stored.recommendedPlan)?.name ?? null;
+  const toolContext = () => {
+    const planNow = [...actions].reverse().find(isRecommendAction);
+    return { known: mergeQualification(stored.qualification, qualificationPatch), planName: planNow?.planName ?? storedPlanName };
+  };
 
   try {
     for (let round = 0; round <= MAX_TOOL_ROUNDS; round++) {
@@ -199,10 +247,42 @@ ${plan.addendum}` : basePrompt;
       conversation.push({ role: "assistant", content: result.text, toolCalls: result.toolCalls });
       for (const call of result.toolCalls) {
         // Only tools the active capability was offered may run.
-        const out = allowedTools.has(call.name) ? runTool(call, tiers) : { content: JSON.stringify({ error: "Herramienta no disponible ahora." }) };
+        const out = allowedTools.has(call.name) ? runTool(call, tiers, toolContext()) : { content: JSON.stringify({ error: "Herramienta no disponible ahora." }) };
         if ("action" in out && out.action) actions.push(out.action);
-        if ("qualification" in out && out.qualification) qualificationPatch = mergeQualification(qualificationPatch, out.qualification);
+        if ("qualification" in out && out.qualification) {
+          qualificationPatch = mergeQualification(qualificationPatch, guardQualification(out.qualification, visitorText));
+        }
         conversation.push({ role: "tool", toolCallId: call.id, name: call.name, content: out.content });
+      }
+    }
+
+    // E2: in sales, with enough known, a reply that recommends a plan must come with its button.
+    // If the model named a plan without calling recommend_plan, ask once for just that call and
+    // keep the reply it already wrote.
+    const known = toolContext().known;
+    const stage = stored.flow.sales_stage;
+    if (
+      reply &&
+      capability === "sales" &&
+      (stage === undefined || stage === "discovery") &&
+      !actions.some((a) => a.type === "recommend_plan") &&
+      SALES_ENOUGH.every((key) => isKnown(known, key)) &&
+      RECOMMENDS_PLAN_RE.test(foldForMatch(reply))
+    ) {
+      try {
+        const retry = await chatWithFallback({
+          system: `${system}\nYou just named a plan as the recommendation in your reply but did not call recommend_plan. Call recommend_plan now for that plan. Write no text.`,
+          messages: [...conversation, { role: "assistant", content: reply }],
+          tools: toolsFor(["recommend_plan"]),
+        });
+        for (const call of retry.toolCalls) {
+          if (call.name !== "recommend_plan") continue;
+          const out = runTool(call, tiers, toolContext());
+          if ("action" in out && out.action) actions.push(out.action);
+        }
+        console.warn(`[agent] recommend_plan retry: ${actions.some((a) => a.type === "recommend_plan") ? "ok" : "no call"}`);
+      } catch (error) {
+        console.error("[agent] recommend_plan retry failed:", error instanceof Error ? error.message : "unknown error");
       }
     }
   } catch {
@@ -214,6 +294,11 @@ ${plan.addendum}` : basePrompt;
     return NextResponse.json({ reply: FALLBACK, actions: [], state: failure.state, stateUpdate: failure.status, capability }, { status: 502 });
   }
 
+  // Sentences that break the contract (permission questions, false claims, promises) are removed.
+  const linted = lintReply(reply);
+  if (linted.removed.length) console.warn(`[agent] reply lint removed: ${linted.removed.join(",")}`);
+  reply = linted.text;
+
   if (!reply) reply = actions.length ? "Aquí tienes:" : FALLBACK;
 
   await supabase.rpc("chat_log_message", {
@@ -223,8 +308,9 @@ ${plan.addendum}` : basePrompt;
     p_content: reply.slice(0, 4000),
   });
 
-  const recommended = [...actions].reverse().find((a) => a.type === "recommend_plan");
-  const call = actions.find((a) => a.type === "offer_call");
+  const recommended = [...actions].reverse().find(isRecommendAction);
+  const call = actions.find(isOfferCallAction);
+  const handoff = [...actions].reverse().find(isHandoffAction);
   if (recommended || call) {
     await supabase.rpc("chat_record_outcome", {
       p_session_id: sessionId,
@@ -235,19 +321,38 @@ ${plan.addendum}` : basePrompt;
 
   const finalState = resolveResponseState(intentState, actions);
   // Only code advances the sales stage; it is written only when it changed.
-  const salesStage = nextSalesStage(stored.flow.sales_stage, Boolean(recommended));
-  const flowChanged = salesStage !== stored.flow.sales_stage;
+  const salesStage = nextSalesStage(stored.flow.sales_stage, Boolean(recommended), classifyObjection(last.content));
+  // Each alert kind (WhatsApp handoff, call button) is sent once per conversation.
+  const sentAlerts = stored.flow.alerts ?? [];
+  const newAlerts: AlertKind[] = [];
+  if (handoff && !sentAlerts.includes("handoff")) newAlerts.push("handoff");
+  if (call && !sentAlerts.includes("call")) newAlerts.push("call");
+  const flowChanged = salesStage !== stored.flow.sales_stage || newAlerts.length > 0;
+  // A visitor who asked for a person stays "requested"; the WhatsApp button only marks "offered".
+  const handoffStatus = intent === "human_handoff" ? "requested" : handoff && stored.handoffStatus !== "requested" && stored.handoffStatus !== "completed" ? "offered" : null;
   const update = await persistState(sessionId, finalState, intent, {
     // Merge into what was stored; only written when the visitor gave something new.
     qualification: Object.keys(qualificationPatch).length ? mergeQualification(stored.qualification, qualificationPatch) : null,
-    flow: flowChanged ? { ...stored.flow, sales_stage: salesStage } : null,
+    flow: flowChanged ? { ...stored.flow, ...(salesStage ? { sales_stage: salesStage } : {}), ...(newAlerts.length ? { alerts: [...sentAlerts, ...newAlerts] } : {}) } : null,
     recommendedPlan: recommended?.plan ?? null,
     bookingStatus: call ? "offered" : null,
-    handoffStatus: intent === "human_handoff" ? "requested" : null,
+    handoffStatus,
     // An inherited intent ("Sí") is not the visitor's own description of what they need.
-    handoffSummary: intent === "human_handoff" && !inherited ? last.content : null,
+    handoffSummary: intent === "human_handoff" && !inherited ? last.content : (handoff?.summary ?? null),
     outcome: finalState,
   });
+
+  // Alerts go out after the response so the visitor never waits on Telegram, and only once the
+  // state is stored, so a failed write can be retried by the next event instead of being lost.
+  if (update.status === "ok" && newAlerts.length) {
+    const known = mergeQualification(stored.qualification, qualificationPatch);
+    const planName = recommended?.planName ?? storedPlanName;
+    after(async () => {
+      for (const kind of newAlerts) {
+        await notifyChatEvent(chatAlertText(kind, sessionId, known, planName, kind === "handoff" ? handoff?.reason : undefined));
+      }
+    });
+  }
 
   // Keep one action of each kind (the latest) so the widget doesn't stack duplicates.
   // `state` is what the database actually stored; `stateUpdate` says whether it moved.

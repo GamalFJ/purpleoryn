@@ -23,6 +23,25 @@ export interface LeadAlert {
   landingPage: string | null;
 }
 
+// Oryn chat alert: a visitor was sent to WhatsApp or shown the call button. Same channel and
+// env vars, same rule: off when unset, never throws. The caller sends each kind once per chat.
+export async function notifyChatEvent(text: string): Promise<void> {
+  const token = process.env.TELEGRAM_BOT_TOKEN;
+  const chatId = process.env.TELEGRAM_CHAT_ID;
+  if (!token || !chatId) return;
+  try {
+    const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ chat_id: chatId, text: text.slice(0, 1500), disable_web_page_preview: true }),
+      signal: AbortSignal.timeout(5000),
+    });
+    if (!res.ok) console.error("[chat] Telegram alert failed:", res.status);
+  } catch (err) {
+    console.error("[chat] Telegram alert failed:", err instanceof Error ? err.message : err);
+  }
+}
+
 export async function notifyNewLead(lead: LeadAlert): Promise<void> {
   const token = process.env.TELEGRAM_BOT_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID;

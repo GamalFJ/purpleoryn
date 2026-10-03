@@ -3,13 +3,28 @@ import { computeRoi } from "@/lib/roi";
 import { TIER_CTA, isTierSlug, type Tier, type TierSlug } from "@/lib/tiers";
 import type { ToolCall, ToolDefinition } from "@/lib/ai/types";
 import type { AgentToolName } from "@/lib/agent/orchestrator";
+import { AGENT_PAGES, AGENT_PAGE_KEYS, buildHandoffUrl, HANDOFF_REASONS, isAgentPage, isHandoffReason, type AgentPageKey, type HandoffReason } from "@/lib/agent/handoff";
+import { choosePlan } from "@/lib/agent/plan-rubric";
 import { APPOINTMENTS_OR_ORDERS, sanitizeQualification, type Qualification } from "@/lib/agent/qualification";
+
+// While the prompt does not yet ask the questions the plan rubric needs, a missing rubric result
+// must not block a recommendation. The prompt phase flips this to true: no rubric result, no plan.
+const REQUIRE_RUBRIC = false;
 
 // UI actions the chat widget renders under the assistant's reply.
 export type AgentAction =
   | { type: "roi"; plan: TierSlug; planName: string; averageSaleValue: number; yearOneInvestment: number; breakEvenSales: number; targetSalesPerYear: number; targetSalesPerMonth: number }
   | { type: "recommend_plan"; plan: TierSlug; planName: string }
-  | { type: "offer_call"; plan: TierSlug | null; planName: string | null; summary: string };
+  | { type: "offer_call"; plan: TierSlug | null; planName: string | null; summary: string }
+  | { type: "handoff_whatsapp"; reason: HandoffReason; url: string; summary: string }
+  | { type: "show_page"; page: AgentPageKey; label: string; href: string; newTab: boolean };
+
+// What a tool may need to know about the conversation; read from what is stored, never from the model.
+export interface ToolContext {
+  known: Qualification;
+  // The plan already recommended in this conversation, if any.
+  planName: string | null;
+}
 
 const PLAN_ENUM = { type: "string", enum: ["presencia", "conversion", "autoridad"] };
 
@@ -55,6 +70,27 @@ export const AGENT_TOOLS: ToolDefinition[] = [
     },
   },
   {
+    name: "handoff_whatsapp",
+    description:
+      "Show the visitor a WhatsApp button that opens a chat with the Purple Cove Labs team with a summary already written. Use it when the visitor asks for a person, when a fact is not in the prompt, when they decline the call, or when they have decided not to go ahead for now. The summary is built by the system; you only choose the reason. Nothing is sent and nobody is notified by this tool.",
+    parameters: {
+      type: "object",
+      properties: { reason: { type: "string", enum: [...HANDOFF_REASONS] } },
+      required: ["reason"],
+      additionalProperties: false,
+    },
+  },
+  {
+    name: "show_page",
+    description: "Show the visitor a button to one page or document of the site (plans and prices, how we work, or the PDF documents). Use it when the full answer lives there. You only choose the page; the link comes from the system.",
+    parameters: {
+      type: "object",
+      properties: { page: { type: "string", enum: [...AGENT_PAGE_KEYS] } },
+      required: ["page"],
+      additionalProperties: false,
+    },
+  },
+  {
     name: "record_qualification",
     description:
       "Save facts the visitor has told you about their business so you don't ask again. Include only the fields the visitor actually gave you; leave out anything they did not state. Never infer, guess or default a value (no false or \"neither\" for a question they skipped), and never contact details (phone, email, links, handles). Nothing is shown to the visitor.",
@@ -87,7 +123,7 @@ export interface ToolResult {
   qualification?: Qualification;
 }
 
-export function runTool(call: ToolCall, tiers: Tier[]): ToolResult {
+export function runTool(call: ToolCall, tiers: Tier[], context: ToolContext = { known: {}, planName: null }): ToolResult {
   const args = call.arguments;
   const tierFor = (slug: unknown) => (isTierSlug(slug) ? tiers.find((t) => t.slug === slug) : undefined);
 
@@ -108,6 +144,7 @@ export function runTool(call: ToolCall, tiers: Tier[]): ToolResult {
           average_sale_value: formatRD(asv),
           year_one_investment: formatRD(roi.yearOneInvestment),
           break_even_sales: rounded.breakEvenSales,
+          break_even_sales_per_month: Math.ceil(roi.breakEvenSales / 12),
           target_3x_sales_per_year: rounded.targetSalesPerYear,
           target_3x_sales_per_month: rounded.targetSalesPerMonth,
         }),
@@ -117,6 +154,14 @@ export function runTool(call: ToolCall, tiers: Tier[]): ToolResult {
     case "recommend_plan": {
       const tier = tierFor(args.plan);
       if (!tier) return { content: JSON.stringify({ error: "Plan inválido." }) };
+      // The plan is chosen in code from what the visitor said; the model explains it.
+      const chosen = choosePlan(context.known);
+      if (chosen && chosen.plan !== tier.slug) {
+        return { content: JSON.stringify({ ok: false, error: `Not allowed. The plan chosen from what the visitor told you is ${chosen.plan}. Reason: ${chosen.reason}. Recommend that plan.` }) };
+      }
+      if (!chosen && REQUIRE_RUBRIC) {
+        return { content: JSON.stringify({ ok: false, error: "Not enough is known yet to choose a plan. Ask the next question instead." }) };
+      }
       const cta = TIER_CTA[tier.slug];
       const shown =
         cta.action === "call"
@@ -137,6 +182,26 @@ export function runTool(call: ToolCall, tiers: Tier[]): ToolResult {
           note: "Nada quedó agendado. El visitante todavía tiene que elegir el horario en Cal.com.",
         }),
         action: { type: "offer_call", plan: tier?.slug ?? null, planName: tier?.name ?? null, summary },
+      };
+    }
+    case "handoff_whatsapp": {
+      if (!isHandoffReason(args.reason)) return { content: JSON.stringify({ ok: false, error: "Invalid reason." }) };
+      const { url, summary } = buildHandoffUrl(args.reason, context.known, context.planName);
+      return {
+        content: JSON.stringify({
+          ok: true,
+          shown_to_visitor: 'Botón "Escribir por WhatsApp" que abre el chat con el resumen ya escrito',
+          note: "Nothing was sent and nobody was notified. The visitor still has to press send in WhatsApp. Never say the team was notified or will answer by a certain time.",
+        }),
+        action: { type: "handoff_whatsapp", reason: args.reason, url, summary },
+      };
+    }
+    case "show_page": {
+      if (!isAgentPage(args.page)) return { content: JSON.stringify({ ok: false, error: "Invalid page." }) };
+      const page = AGENT_PAGES[args.page];
+      return {
+        content: JSON.stringify({ ok: true, shown_to_visitor: `Botón "${page.label}"` }),
+        action: { type: "show_page", page: args.page, label: page.label, href: page.href, newTab: page.newTab },
       };
     }
     case "record_qualification": {

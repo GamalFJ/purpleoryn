@@ -87,6 +87,82 @@ export function mergeQualification(known: Qualification, patch: Qualification): 
   return { ...known, ...patch };
 }
 
+// Evidence guard. The model decides what to save, but a fact is only kept if the visitor's own
+// words support it. This is what stops a skipped question from being saved as "no" or "neither".
+// Intentionally strict: a dropped fact only means the agent asks again.
+const fold = (text: string) =>
+  text
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+
+const WEBSITE_RE = /\b(pagina|sitio|web|website|landing|dominio)\b/;
+const GOOGLE_RE = /\b(google|perfil|ficha|maps|my business)\b/;
+const ORDERS_RE = /\b(pedido|pedidos|orden|ordenes|encargo|encargos|compra|compras|compran|ordenan|piden|venta|ventas|vendo|vendemos)\b/;
+const APPOINTMENTS_RE = /\b(cita|citas|reserva|reservas|reservan|reservar|agenda|agendar|agendan|turno|turnos|consulta|consultas|visita|visitas)\b/;
+const NEITHER_RE = /\b(ninguno|ninguna|ningun)\b|\bni (citas|pedidos|reservas)\b|\bno (reservan|agendan|hacen pedidos|piden|necesitan (citas|pedidos))\b|\bsolo (informacion|consultas?|preguntas?|visitas?)\b/;
+
+const STOPWORDS = new Set(["para", "como", "tengo", "quiero", "esta", "este", "sobre", "tipo", "algo", "unos", "unas", "pero", "porque", "cuando", "donde", "tiene", "hacer", "desde", "hasta", "entre"]);
+
+function contentWords(text: string): Set<string> {
+  return new Set(
+    fold(text)
+      .split(/[^a-z0-9]+/)
+      .filter((w) => w.length >= 4 && !STOPWORDS.has(w)),
+  );
+}
+
+// Every number the visitor wrote: "2500", "2,500", "2.500", "2 500", "2.5k", "3 mil".
+function numbersIn(text: string): number[] {
+  const out: number[] = [];
+  const t = fold(text);
+  for (const m of t.matchAll(/(\d+(?:[.,]\d+)?)\s*(k|mil)\b/g)) out.push(parseFloat(m[1].replace(",", ".")) * 1000);
+  for (const m of t.matchAll(/\d{1,3}(?:[.,\s]\d{3})+(?:[.,]\d{1,2})?|\d+(?:[.,]\d{1,2})?/g)) {
+    const raw = m[0];
+    const grouped = raw.replace(/[.,\s](?=\d{3}(?:\D|$))/g, "");
+    out.push(parseFloat(grouped.replace(",", ".")));
+  }
+  return out.filter((n) => Number.isFinite(n));
+}
+
+// `allowRubricKeys` stays false until the prompt asks for business_model and customer_interaction:
+// until then the model has no business writing them, and the plan rubric reads them.
+export function guardQualification(patch: Qualification, visitorText: string, options: { allowRubricKeys?: boolean } = {}): Qualification {
+  const text = fold(visitorText);
+  const words = contentWords(visitorText);
+  const out: Qualification = {};
+
+  for (const key of ["business_type", "customer_channel", "goal", "timing", "pain"] as const) {
+    const value = patch[key];
+    if (value && [...contentWords(value)].some((w) => words.has(w))) out[key] = value;
+  }
+  if (patch.has_website !== undefined && WEBSITE_RE.test(text)) out.has_website = patch.has_website;
+  if (patch.has_google_profile !== undefined && GOOGLE_RE.test(text)) out.has_google_profile = patch.has_google_profile;
+  if (patch.appointments_or_orders) {
+    const hasOrders = ORDERS_RE.test(text);
+    const hasAppointments = APPOINTMENTS_RE.test(text);
+    const ok =
+      patch.appointments_or_orders === "orders"
+        ? hasOrders
+        : patch.appointments_or_orders === "appointments"
+          ? hasAppointments
+          : patch.appointments_or_orders === "both"
+            ? hasOrders && hasAppointments
+            : NEITHER_RE.test(text);
+    if (ok) out.appointments_or_orders = patch.appointments_or_orders;
+  }
+  if (patch.average_sale !== undefined && numbersIn(visitorText).some((n) => Math.abs(n - patch.average_sale!) < 0.01)) {
+    out.average_sale = patch.average_sale;
+  }
+  if (options.allowRubricKeys) {
+    if (patch.business_model) out.business_model = patch.business_model;
+    if (patch.customer_interaction) out.customer_interaction = patch.customer_interaction;
+  }
+  return out;
+}
+
 // Order in which the next useful question is picked, per capability.
 export const SALES_QUALIFICATION_ORDER: readonly QualificationKey[] = [
   "business_type",

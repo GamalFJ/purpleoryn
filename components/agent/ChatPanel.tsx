@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUp, CalendarBlank, X } from "@phosphor-icons/react";
+import { ArrowUp, CalendarBlank, WhatsappLogo, X } from "@phosphor-icons/react";
 import { TrackedLink } from "@/components/analytics/TrackedLink";
 import { buttonClass } from "@/components/ui/button";
 import type { AgentAction } from "@/lib/agent/tools";
@@ -88,6 +88,26 @@ function ActionBlock({ action }: { action: AgentAction }) {
         className={buttonClass("primary", "sm", "w-full")}
       >
         Elegir {action.planName}
+      </Link>
+    );
+  }
+  if (action.type === "handoff_whatsapp") {
+    // The URL (and the summary prefilled in it) is built on the server from what is saved, never by the model.
+    return (
+      <TrackedLink href={action.url} event="whatsapp_click" location="chat_agent" className={buttonClass("primary", "sm", "w-full")}>
+        <WhatsappLogo size={16} weight="bold" />
+        Escribir por WhatsApp
+      </TrackedLink>
+    );
+  }
+  if (action.type === "show_page") {
+    return action.newTab ? (
+      <a href={action.href} target="_blank" rel="noopener noreferrer" className={buttonClass("secondary", "sm", "w-full")}>
+        {action.label}
+      </a>
+    ) : (
+      <Link href={action.href} className={buttonClass("secondary", "sm", "w-full")}>
+        {action.label}
       </Link>
     );
   }

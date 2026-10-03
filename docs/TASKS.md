@@ -68,6 +68,8 @@ Immediate development sequence. Keep this list short and current; move finished 
 
 - [x] **T12 - Brain phase 1 (2026-10-02):** migration `20261002000000_chat_flow.sql` applied and verified in the Purple Cove Labs Website project (`flow` column, `'offered'` handoff status, `chat_apply_state` with `p_flow`; anon has no execute rights; the old call style still resolves). Code: `lib/agent/plan-rubric.ts` (D21), `lib/agent/flow.ts`, the new qualification keys (D22). No live behavior change. Next phases: tools (`handoff_whatsapp`, `show_page`) and guards, then the prompt rewrite in usted (D20), then chips, lead score and alerts.
 
+- [ ] **T13 - Brain phase 2 live check (2026-10-02, code in D23).** After deploy, fresh tab each: (a) Script H with "Mejor quiero agendar una llamada" at message 3 -> `qualification` has no `has_website`, `has_google_profile` or `appointments_or_orders` (E1); (b) "prefiero hablar con una persona" -> a WhatsApp button that opens a prefilled message with no phone or email in it, `handoff_status` is `offered` or `requested`, one Telegram alert, none on a second ask; (c) "¿Dónde puedo ver el documento del sistema?" -> a `show_page` button; (d) an Autoridad recommendation chat -> one Telegram alert when the call button is shown; (e) in a recommended chat answer "está caro" and then "lo voy a pensar" -> `flow.sales_stage` is `objection_1` then `objection_2`; (f) no reply asks permission to show a button or says it registered data. Check `flow` and `handoff_status` in `chat_sessions`.
+
 ### T3 manual checklist
 
 1. First message "Quiero agendar una llamada" → reply + call button; response `stateUpdate: "ok"`,

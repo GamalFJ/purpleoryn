@@ -179,3 +179,19 @@ added: `pain` (what is not working, 120 characters), `business_model` and `custo
 old code keeps working because it calls the RPC with named parameters. **Consequences:** the new keys are not yet in the `record_qualification`
 tool schema or the prompt, so nothing writes them until the prompt phase; the Supabase migration history is still out of sync with the repo (apply
 through the connector, never `db push`).
+
+## D23 — Brain phase 2: tools, guards and alerts (2026-10-02, owner approved)
+**Decision:** (1) New tools `handoff_whatsapp` (reason enum; the summary and the `wa.me` link are built in code from saved facts, never by the model; sets
+`handoff_status = 'offered'`, never downgrading `requested`) and `show_page` (key from a whitelist of the plans page, how we work and the two PDFs). The
+chat panel renders both. (2) `calculate_roi` also returns the per-month break-even. (3) Evidence guard (E1): a fact the model saves is kept only if the visitor's own
+words support it (keyword evidence for website, Google profile and appointments or orders; the number must appear for the average sale; a shared word for the text
+fields); `business_model` and `customer_interaction` are not model-writable until the prompt asks for them. (4) Recommendation retry (E2): in sales, with enough
+known and no stage yet, a reply that recommends a plan without `recommend_plan` triggers one extra model call restricted to that tool; the reply is kept. (5) Reply lint
+(a sentence-stripping E3): sentences that ask permission to show a button, claim an unverified action (registered, notified, will contact you, "contactar a alguien de
+inmediato"), promise a guarantee or a ranking, or apply pressure are removed; removals are logged. (6) Turn budget (E4): from 10 visitor messages the agent stops asking and
+offers a person; from 16 it answers in two sentences. (7) Objection classifier (price, think, partner, not_now, decline) and a sales stage machine in `flow`
+(recommended, objection_1, objection_2, released) advanced only by code; nothing reads the stage yet. (8) Rubric lock (E6) in `recommend_plan`, with a transitional switch
+(`REQUIRE_RUBRIC = false`) because nothing can save `customer_interaction` until the prompt phase. (9) Telegram alerts (admin-facing, English, plain text, off
+when the bot variables are unset) the first time per conversation a visitor is sent to WhatsApp or shown the call button, sent after the response and only once the state is
+stored; each kind is recorded in `flow.alerts` so it is not repeated. **Consequences:** the lint is regex-based and can miss paraphrases; it is a safety net, not a
+substitute for the prompt rewrite. The receptionist still has `calculate_roi`. Alerts say a visitor was shown a button, not that they wrote or booked.

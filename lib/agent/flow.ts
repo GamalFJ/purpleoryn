@@ -1,9 +1,14 @@
 // Conversation-flow bookkeeping kept in chat_sessions.flow (jsonb), separate from the visitor's
 // own words in `qualification`. Written only by /api/chat through chat_apply_state. Nothing here
 // is shown to the visitor.
+import type { Objection } from "@/lib/agent/objections";
 
 export const SALES_STAGES = ["discovery", "recommended", "objection_1", "objection_2", "released"] as const;
 export type SalesStage = (typeof SALES_STAGES)[number];
+
+// Telegram alerts already sent for this conversation; each kind is sent at most once.
+export const ALERT_KINDS = ["handoff", "call"] as const;
+export type AlertKind = (typeof ALERT_KINDS)[number];
 
 export interface Flow {
   sales_stage?: SalesStage;
@@ -13,6 +18,7 @@ export interface Flow {
   failed_turns?: number;
   // The "this chat is the agent we install" line may be used once per conversation.
   demo_line_used?: boolean;
+  alerts?: AlertKind[];
 }
 
 export function sanitizeFlow(raw: unknown): Flow {
@@ -26,13 +32,26 @@ export function sanitizeFlow(raw: unknown): Flow {
     out.failed_turns = src.failed_turns;
   }
   if (src.demo_line_used === true) out.demo_line_used = true;
+  if (Array.isArray(src.alerts)) {
+    const kinds = src.alerts.filter((k): k is AlertKind => (ALERT_KINDS as readonly unknown[]).includes(k));
+    if (kinds.length) out.alerts = [...new Set(kinds)];
+  }
   return out;
 }
 
-// The sales stage after this turn. Only code advances it, never the model: a plan button shown
-// this turn moves discovery to recommended; every later stage is advanced by the objection logic
-// (a later phase) and is left alone here.
-export function nextSalesStage(current: SalesStage | undefined, recommendedThisTurn: boolean): SalesStage | undefined {
-  if (recommendedThisTurn && (current === undefined || current === "discovery")) return "recommended";
-  return current;
+const AFTER_RECOMMENDATION: readonly SalesStage[] = ["recommended", "objection_1", "objection_2"];
+
+// The sales stage after this turn. Only code advances it, never the model.
+//   discovery -> recommended when a plan button is shown this turn;
+//   recommended -> objection_1 -> objection_2 on each objection;
+//   a second objection round that still ends in an objection, a clear no or "not now" -> released.
+// `released` is final: the agent stops pitching.
+export function nextSalesStage(current: SalesStage | undefined, recommendedThisTurn: boolean, objection: Objection | null = null): SalesStage | undefined {
+  if (current === "released") return current;
+  if (current === undefined || current === "discovery") return recommendedThisTurn ? "recommended" : current;
+  if (!AFTER_RECOMMENDATION.includes(current) || !objection) return current;
+  if (objection === "decline" || objection === "not_now") return "released";
+  if (current === "recommended") return "objection_1";
+  if (current === "objection_1") return "objection_2";
+  return "released"; // objection_2 and another objection
 }
