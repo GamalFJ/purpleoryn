@@ -57,6 +57,9 @@ const QUALIFICATION_LABEL: Record<(typeof QUALIFICATION_KEYS)[number], string> =
   average_sale: "Average sale (RD$)",
   goal: "Goal",
   timing: "Timing",
+  pain: "What is not working today",
+  business_model: "Sells products, services or both",
+  customer_interaction: "How the agent should deal with their customers",
 };
 
 // What the visitor told Oryn (chat_sessions.qualification), as label/value rows.

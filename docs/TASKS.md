@@ -66,6 +66,8 @@ Immediate development sequence. Keep this list short and current; move finished 
   question, `chat_sessions.qualification` holds only `business_type`, `goal` and `timing` (no `has_website`, `has_google_profile` or
   `appointments_or_orders`); the call is not offered before the pending question is answered.
 
+- [x] **T12 - Brain phase 1 (2026-10-02):** migration `20261002000000_chat_flow.sql` applied and verified in the Purple Cove Labs Website project (`flow` column, `'offered'` handoff status, `chat_apply_state` with `p_flow`; anon has no execute rights; the old call style still resolves). Code: `lib/agent/plan-rubric.ts` (D21), `lib/agent/flow.ts`, the new qualification keys (D22). No live behavior change. Next phases: tools (`handoff_whatsapp`, `show_page`) and guards, then the prompt rewrite in usted (D20), then chips, lead score and alerts.
+
 ### T3 manual checklist
 
 1. First message "Quiero agendar una llamada" → reply + call button; response `stateUpdate: "ok"`,

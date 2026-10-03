@@ -4,6 +4,14 @@
 // capped, and never contact details (phone, email, links, handles).
 
 export const APPOINTMENTS_OR_ORDERS = ["appointments", "orders", "both", "neither"] as const;
+// What the business sells, from the visitor's own description.
+export const BUSINESS_MODELS = ["products", "services", "both"] as const;
+// What the visitor wants the agent to do with THEIR customers (drives the plan, see plan-rubric.ts):
+// presence_only = digital presence plus answering a few questions (a launch or a start-up);
+// qualify_followup = qualify each lead and follow up, the owner closes;
+// agent_completes = the agent books the appointment or takes the order by itself;
+// unsure = the visitor does not know what they want.
+export const CUSTOMER_INTERACTIONS = ["presence_only", "qualify_followup", "agent_completes", "unsure"] as const;
 
 export interface Qualification {
   business_type?: string;
@@ -14,6 +22,9 @@ export interface Qualification {
   average_sale?: number;
   goal?: string;
   timing?: string;
+  pain?: string;
+  business_model?: (typeof BUSINESS_MODELS)[number];
+  customer_interaction?: (typeof CUSTOMER_INTERACTIONS)[number];
 }
 
 export type QualificationKey = keyof Qualification;
@@ -27,9 +38,12 @@ export const QUALIFICATION_KEYS: readonly QualificationKey[] = [
   "average_sale",
   "goal",
   "timing",
+  "pain",
+  "business_model",
+  "customer_interaction",
 ];
 
-const TEXT_LIMITS = { business_type: 80, customer_channel: 80, goal: 120, timing: 60 } as const;
+const TEXT_LIMITS = { business_type: 80, customer_channel: 80, goal: 120, timing: 60, pain: 120 } as const;
 const MAX_AVERAGE_SALE = 1_000_000_000;
 
 // Anything that looks like an email, a link, a handle or a phone number.
@@ -48,7 +62,7 @@ export function sanitizeQualification(raw: unknown): Qualification {
   const src = raw && typeof raw === "object" && !Array.isArray(raw) ? (raw as Record<string, unknown>) : {};
   const out: Qualification = {};
 
-  for (const key of ["business_type", "customer_channel", "goal", "timing"] as const) {
+  for (const key of ["business_type", "customer_channel", "goal", "timing", "pain"] as const) {
     const text = cleanText(src[key], TEXT_LIMITS[key]);
     if (text) out[key] = text;
   }
@@ -56,6 +70,12 @@ export function sanitizeQualification(raw: unknown): Qualification {
   if (typeof src.has_google_profile === "boolean") out.has_google_profile = src.has_google_profile;
   if (typeof src.appointments_or_orders === "string" && (APPOINTMENTS_OR_ORDERS as readonly string[]).includes(src.appointments_or_orders)) {
     out.appointments_or_orders = src.appointments_or_orders as Qualification["appointments_or_orders"];
+  }
+  if (typeof src.business_model === "string" && (BUSINESS_MODELS as readonly string[]).includes(src.business_model)) {
+    out.business_model = src.business_model as Qualification["business_model"];
+  }
+  if (typeof src.customer_interaction === "string" && (CUSTOMER_INTERACTIONS as readonly string[]).includes(src.customer_interaction)) {
+    out.customer_interaction = src.customer_interaction as Qualification["customer_interaction"];
   }
   const sale = typeof src.average_sale === "number" ? src.average_sale : NaN;
   if (Number.isFinite(sale) && sale > 0 && sale <= MAX_AVERAGE_SALE) out.average_sale = Math.round(sale * 100) / 100;
@@ -89,6 +109,10 @@ export const QUESTION_HINT: Record<QualificationKey, string> = {
   average_sale: "what a customer spends in ONE typical purchase or order, in RD$ (not a unit price, a volume or a daily or monthly total)",
   goal: "their main goal",
   timing: "how soon they want to start",
+  pain: "what is not working in their business today, for example how customers reach them and what slips through",
+  business_model: "whether they sell products, services or both",
+  customer_interaction:
+    "how they want the agent to deal with their customers: only give information and pass them on, qualify each lead and follow up while the owner closes, or take the appointment or order by itself",
 };
 
 export function isKnown(known: Qualification, key: QualificationKey): boolean {

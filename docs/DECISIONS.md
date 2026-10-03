@@ -153,3 +153,29 @@ permission to show a button; the sales "enough to recommend" step requires `reco
 button until the pending question is answered. **Consequences:** these are prompt rules the model can still ignore; there is no server-side
 guard on saved qualification values (a possible follow-up in `lib/agent/qualification.ts`). The earlier `gpt-4o-mini` reply that Conversión
 "toma pedidos" contradicted `tiers` (Conversión has lead scoring and 24-hour follow-up). Live retest of G and H is pending (TASKS.md T11).
+
+## D20 — The chat speaks "usted" (2026-10-02, owner approved)
+**Decision:** Oryn addresses visitors as "usted" (su, le), not "tú". Business owners are the audience and the register fits a front desk that
+sells to them. **Scope and timing:** the prompt, the static greeting and the launcher label ("Pregúntale a Oryn") change together in the prompt
+rewrite phase, not before, so a visitor never sees two registers; the project CLAUDE.md line that says "tú" is updated in that same change.
+**Consequence:** until then the live chat still uses "tú".
+
+## D21 — Plan choice is made in code from the visitor's business reality (2026-10-02, owner approved; supersedes the model-picks-from-rows rule)
+**Decision:** `choosePlan()` (`lib/agent/plan-rubric.ts`) picks the plan from `customer_interaction`, what the visitor wants the agent to do with
+their own customers: `presence_only` (a digital presence plus answering a few questions, e.g. a launch or start-up) gives Presencia;
+`qualify_followup` gives Conversión; `agent_completes` (the agent books or takes orders by itself) gives Autoridad once `business_model`
+(products, services or both) is known; `unsure` gives Conversión. **There is no default plan:** with no `customer_interaction` the result is null
+and the agent keeps asking. The model explains the choice and may not pick another; `recommend_plan` will refuse a different plan in the tools
+phase. **Consequence:** the reasons in the rubric must stay consistent with the `tiers` rows; the sales question order and the prompt text that
+use the rubric ship in a later phase, so today's live behavior is unchanged.
+
+## D22 — Flow bookkeeping column, new qualification keys, 'offered' handoff status (2026-10-02, owner approved migration)
+**Decision:** Migration `20261002000000_chat_flow.sql` adds `chat_sessions.flow` (jsonb object: `sales_stage`, `pending_offer`, `failed_turns`,
+`demo_line_used`), kept apart from `qualification` because it is not something the visitor said and `sanitizeQualification` drops unknown keys.
+`handoff_status` accepts `'offered'` (the WhatsApp handoff button was shown); `'completed'` stays trusted-path only. `chat_apply_state` and
+`chat_apply_trusted_state` take an optional `p_flow`; privileged-value rules and the transition table are unchanged. Three qualification keys are
+added: `pain` (what is not working, 120 characters), `business_model` and `customer_interaction`. `/api/chat` reads `flow`, advances
+`sales_stage` to `recommended` when a plan button is shown, and writes `flow` only when it changed. **Deploy order:** apply the migration first;
+old code keeps working because it calls the RPC with named parameters. **Consequences:** the new keys are not yet in the `record_qualification`
+tool schema or the prompt, so nothing writes them until the prompt phase; the Supabase migration history is still out of sync with the repo (apply
+through the connector, never `db push`).

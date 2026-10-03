@@ -3,6 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { chatWithFallback, isAgentConfigured } from "@/lib/ai";
 import type { AgentMessage } from "@/lib/ai/types";
+import { nextSalesStage, sanitizeFlow, type Flow } from "@/lib/agent/flow";
 import { buildSystemPrompt } from "@/lib/agent/prompt";
 import { fallbackPlan, planTurn, type TurnPlan } from "@/lib/agent/orchestrator";
 import { toPlainText } from "@/lib/agent/plain-text";
@@ -53,12 +54,13 @@ interface StoredSession {
   intent: ConversationIntent | null;
   state: ConversationState | null;
   qualification: Qualification;
+  flow: Flow;
 }
 
 async function readStoredState(sessionId: string): Promise<StoredSession> {
-  const none: StoredSession = { intent: null, state: null, qualification: {} };
+  const none: StoredSession = { intent: null, state: null, qualification: {}, flow: {} };
   if (!isServiceRoleConfigured()) return none;
-  const { data, error } = await serviceClient().from("chat_sessions").select("intent, state, qualification").eq("id", sessionId).maybeSingle();
+  const { data, error } = await serviceClient().from("chat_sessions").select("intent, state, qualification, flow").eq("id", sessionId).maybeSingle();
   if (error) {
     console.error("[agent] state read failed:", error.message);
     return none;
@@ -67,6 +69,7 @@ async function readStoredState(sessionId: string): Promise<StoredSession> {
     intent: isConversationIntent(data?.intent) ? data.intent : null,
     state: isConversationState(data?.state) ? data.state : null,
     qualification: sanitizeQualification(data?.qualification),
+    flow: sanitizeFlow(data?.flow),
   };
 }
 
@@ -84,6 +87,7 @@ async function persistState(
   intent: ConversationIntent,
   options: {
     qualification?: Qualification | null;
+    flow?: Flow | null;
     recommendedPlan?: string | null;
     bookingStatus?: "offered" | "failed" | null;
     handoffStatus?: "requested" | "failed" | null;
@@ -101,6 +105,7 @@ async function persistState(
     p_state: state,
     p_intent: intent,
     p_qualification: options.qualification ?? null,
+    p_flow: options.flow ?? null,
     p_recommended_plan: options.recommendedPlan ?? null,
     p_booking_status: options.bookingStatus ?? null,
     p_handoff_status: options.handoffStatus ?? null,
@@ -229,9 +234,13 @@ ${plan.addendum}` : basePrompt;
   }
 
   const finalState = resolveResponseState(intentState, actions);
+  // Only code advances the sales stage; it is written only when it changed.
+  const salesStage = nextSalesStage(stored.flow.sales_stage, Boolean(recommended));
+  const flowChanged = salesStage !== stored.flow.sales_stage;
   const update = await persistState(sessionId, finalState, intent, {
     // Merge into what was stored; only written when the visitor gave something new.
     qualification: Object.keys(qualificationPatch).length ? mergeQualification(stored.qualification, qualificationPatch) : null,
+    flow: flowChanged ? { ...stored.flow, sales_stage: salesStage } : null,
     recommendedPlan: recommended?.plan ?? null,
     bookingStatus: call ? "offered" : null,
     handoffStatus: intent === "human_handoff" ? "requested" : null,
