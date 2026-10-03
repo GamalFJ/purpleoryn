@@ -1,6 +1,6 @@
 import { createOpenAIProvider } from "./openai";
 import { createOpenRouterProvider } from "./openrouter";
-import type { ChatProvider, ChatRequest, ChatResponse } from "./types";
+import { ProviderError, type ChatProvider, type ChatRequest, type ChatResponse } from "./types";
 
 function configuredProviders(): ChatProvider[] {
   const providers: ChatProvider[] = [];
@@ -47,7 +47,12 @@ export async function chatWithFallback(request: ChatRequest): Promise<ChatRespon
       return { ...(await provider.chat(request)), provider: provider.name };
     } catch (err) {
       lastError = err;
-      console.error(`[agent] ${provider.name} failed:`, err instanceof Error ? err.message : "unknown provider error");
+      if (err instanceof ProviderError) {
+        const status = err.status !== undefined ? ` status=${err.status}` : "";
+        console.error(`[agent] ${provider.name} failed: ${err.message} (${err.code}${status}${err.detail ? ` ${err.detail}` : ""})`);
+      } else {
+        console.error(`[agent] ${provider.name} failed:`, err instanceof Error ? err.message : "unknown provider error");
+      }
     }
   }
   throw lastError;

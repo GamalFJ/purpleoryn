@@ -37,10 +37,29 @@ function toOpenRouter(system: string, messages: AgentMessage[]): OpenRouterMessa
   ];
 }
 
-function providerError(status: number): ProviderError {
-  if (status === 401 || status === 403) return new ProviderError("OpenRouter authentication failed.", status, "unauthorized");
-  if (status === 429) return new ProviderError("OpenRouter rate limit reached.", status, "rate_limit");
-  return new ProviderError(status >= 500 ? "OpenRouter is temporarily unavailable." : "OpenRouter request failed.", status, "upstream");
+function providerError(status: number, detail?: string): ProviderError {
+  if (status === 401 || status === 403) return new ProviderError("OpenRouter authentication failed.", status, "unauthorized", detail);
+  if (status === 429) return new ProviderError("OpenRouter rate limit reached.", status, "rate_limit", detail);
+  return new ProviderError(status >= 500 ? "OpenRouter is temporarily unavailable." : "OpenRouter request failed.", status, "upstream", detail);
+}
+
+// What OpenRouter said about a failed request, reduced to a short log line: the model we asked for,
+// its error code/type, the upstream provider it routed to and a capped message. Never the request.
+async function failureDetail(response: Response, model: string): Promise<string> {
+  const text = await response.text().catch(() => "");
+  let parsed: { error?: { code?: unknown; type?: unknown; message?: unknown; metadata?: { provider_name?: unknown } } } | null = null;
+  try {
+    parsed = JSON.parse(text);
+  } catch {
+    // Not JSON; fall through with the model only.
+  }
+  const error = parsed?.error;
+  const parts = [`model=${model}`];
+  if (error?.code !== undefined) parts.push(`code=${String(error.code).slice(0, 40)}`);
+  if (typeof error?.type === "string") parts.push(`type=${error.type.slice(0, 40)}`);
+  if (typeof error?.metadata?.provider_name === "string") parts.push(`upstream=${error.metadata.provider_name.slice(0, 40)}`);
+  if (typeof error?.message === "string") parts.push(`message="${error.message.replace(/\s+/g, " ").slice(0, 160)}"`);
+  return parts.join(" ");
 }
 
 export function createOpenRouterProvider(apiKey: string, model = process.env.AI_MODEL || process.env.OPENROUTER_MODEL || DEFAULT_MODEL): ChatProvider {
@@ -76,8 +95,7 @@ export function createOpenRouterProvider(apiKey: string, model = process.env.AI_
       }
 
       if (!response.ok) {
-        await response.arrayBuffer().catch(() => undefined);
-        throw providerError(response.status);
+        throw providerError(response.status, await failureDetail(response, model));
       }
 
       const json = (await response.json().catch(() => null)) as {

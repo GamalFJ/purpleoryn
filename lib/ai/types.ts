@@ -42,6 +42,8 @@ export class ProviderError extends Error {
     message: string,
     readonly status?: number,
     readonly code: ProviderErrorCode = "upstream",
+    // Short, server-log-only context (model, upstream error code); never sent to the visitor.
+    readonly detail?: string,
   ) {
     super(message);
     this.name = "ProviderError";
