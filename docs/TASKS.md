@@ -70,6 +70,8 @@ Immediate development sequence. Keep this list short and current; move finished 
 
 - [ ] **T13 - Brain phase 2 live check (2026-10-02, code in D23).** After deploy, fresh tab each: (a) Script H with "Mejor quiero agendar una llamada" at message 3 -> `qualification` has no `has_website`, `has_google_profile` or `appointments_or_orders` (E1); (b) "prefiero hablar con una persona" -> a WhatsApp button that opens a prefilled message with no phone or email in it, `handoff_status` is `offered` or `requested`, one Telegram alert, none on a second ask; (c) "¿Dónde puedo ver el documento del sistema?" -> a `show_page` button; (d) an Autoridad recommendation chat -> one Telegram alert when the call button is shown; (e) in a recommended chat answer "está caro" and then "lo voy a pensar" -> `flow.sales_stage` is `objection_1` then `objection_2`; (f) no reply asks permission to show a button or says it registered data. Check `flow` and `handoff_status` in `chat_sessions`.
 
+- [ ] **T14 - Brain phase 3 live check (2026-10-02, D24 and D25).** Run the replay scripts of the contract (section F) with `node scripts/oryn-replay.mjs`, or by hand, fresh tab each. Must pass first: B1, B2, B3, A1, H1, S1, V1 (no "tú"), C1 and D1. Read `chat_sessions.flow` and `qualification` for each. Known risks to look for: the agent asking the same question twice; a plan recommended with no `customer_interaction` saved; "tú" forms; a receptionist that never makes the offer; a recommendation reply that is too long.
+
 ### T3 manual checklist
 
 1. First message "Quiero agendar una llamada" → reply + call button; response `stateUpdate: "ok"`,

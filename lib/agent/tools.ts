@@ -4,12 +4,13 @@ import { TIER_CTA, isTierSlug, type Tier, type TierSlug } from "@/lib/tiers";
 import type { ToolCall, ToolDefinition } from "@/lib/ai/types";
 import type { AgentToolName } from "@/lib/agent/orchestrator";
 import { AGENT_PAGES, AGENT_PAGE_KEYS, buildHandoffUrl, HANDOFF_REASONS, isAgentPage, isHandoffReason, type AgentPageKey, type HandoffReason } from "@/lib/agent/handoff";
-import { choosePlan } from "@/lib/agent/plan-rubric";
-import { APPOINTMENTS_OR_ORDERS, sanitizeQualification, type Qualification } from "@/lib/agent/qualification";
+import type { SalesStage } from "@/lib/agent/flow";
+import { choosePlan, stepDownFrom } from "@/lib/agent/plan-rubric";
+import { APPOINTMENTS_OR_ORDERS, BUSINESS_MODELS, CUSTOMER_INTERACTIONS, sanitizeQualification, type Qualification, type QualificationKey } from "@/lib/agent/qualification";
 
-// While the prompt does not yet ask the questions the plan rubric needs, a missing rubric result
-// must not block a recommendation. The prompt phase flips this to true: no rubric result, no plan.
-const REQUIRE_RUBRIC = false;
+// No rubric result, no plan: until what the visitor wants from the agent is known (or was asked
+// once and skipped), a recommendation is refused and the agent asks the next question instead.
+const REQUIRE_RUBRIC = true;
 
 // UI actions the chat widget renders under the assistant's reply.
 export type AgentAction =
@@ -24,6 +25,10 @@ export interface ToolContext {
   known: Qualification;
   // The plan already recommended in this conversation, if any.
   planName: string | null;
+  // Questions already asked once (the rubric treats a skipped answer as "unsure").
+  asked?: readonly QualificationKey[];
+  // After a recommendation, a price objection may be answered with the plan one step down.
+  stage?: SalesStage;
 }
 
 const PLAN_ENUM = { type: "string", enum: ["presencia", "conversion", "autoridad"] };
@@ -105,6 +110,14 @@ export const AGENT_TOOLS: ToolDefinition[] = [
         average_sale: { type: "number", description: "What a customer spends in one typical purchase or order in RD$, greater than 0 (not a unit price, volume or total)." },
         goal: { type: "string", description: "Their main goal, at most 120 characters." },
         timing: { type: "string", description: "How soon they want to start, at most 60 characters." },
+        pain: { type: "string", description: "What is not working in their business today, in their own words, at most 120 characters." },
+        business_model: { type: "string", enum: [...BUSINESS_MODELS], description: "Whether they sell products, services or both." },
+        customer_interaction: {
+          type: "string",
+          enum: [...CUSTOMER_INTERACTIONS],
+          description:
+            "What they want the agent to do with THEIR customers: presence_only (be found online and have a few questions answered, typical of a launch or start-up), qualify_followup (qualify each lead and follow up while they close), agent_completes (the agent books the appointment or takes the order by itself) or unsure (they say they do not know). Only when their answer says so.",
+        },
       },
       additionalProperties: false,
     },
@@ -155,8 +168,10 @@ export function runTool(call: ToolCall, tiers: Tier[], context: ToolContext = { 
       const tier = tierFor(args.plan);
       if (!tier) return { content: JSON.stringify({ error: "Plan inválido." }) };
       // The plan is chosen in code from what the visitor said; the model explains it.
-      const chosen = choosePlan(context.known);
-      if (chosen && chosen.plan !== tier.slug) {
+      const chosen = choosePlan(context.known, context.asked ?? []);
+      const afterRecommendation = context.stage === "recommended" || context.stage === "objection_1" || context.stage === "objection_2";
+      const stepDown = chosen && afterRecommendation && stepDownFrom(chosen.plan) === tier.slug;
+      if (chosen && chosen.plan !== tier.slug && !stepDown) {
         return { content: JSON.stringify({ ok: false, error: `Not allowed. The plan chosen from what the visitor told you is ${chosen.plan}. Reason: ${chosen.reason}. Recommend that plan.` }) };
       }
       if (!chosen && REQUIRE_RUBRIC) {

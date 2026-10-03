@@ -195,3 +195,23 @@ offers a person; from 16 it answers in two sentences. (7) Objection classifier (
 when the bot variables are unset) the first time per conversation a visitor is sent to WhatsApp or shown the call button, sent after the response and only once the state is
 stored; each kind is recorded in `flow.alerts` so it is not repeated. **Consequences:** the lint is regex-based and can miss paraphrases; it is a safety net, not a
 substitute for the prompt rewrite. The receptionist still has `calculate_roi`. Alerts say a visitor was shown a button, not that they wrote or booked.
+
+## D24 — Brain phase 3: the prompt rewrite, the plan questions and the objection cards (2026-10-02, owner approved)
+**Decision:** (1) The base prompt is rewritten in "usted" (D20) around identity, voice, hard rules and the facts; the sales and appointment steps live only in the capability addenda. The
+old business rules (formal order with a 7-day reservation, add-ons paid 100% upfront, only three plans, the service area) are kept. A new APPROVED CLAIMS block holds two Google
+statistics, checked against Google's own page on 2026-10-02 (the second is worded "2.7 veces más probabilidad de considerarlo confiable", as Google says); the Harvard Business
+Review claim is left out until the article itself is checked. (2) The sales questions are: business type, what is not working today, products or services or both, what they want the
+agent to do with their own customers, the value of one sale; each is asked at most once (`flow.asked`). `choosePlan` decides from that, with no default plan; a skipped
+`customer_interaction` question counts as "unsure" and gives Conversión. `REQUIRE_RUBRIC` is now true: `recommend_plan` is refused until the rubric has a result, and refused for any
+plan but the rubric's, except one step down after a price objection. `business_model` and `customer_interaction` are now model-writable, without a keyword guard. (3) The receptionist
+asks an intake question (business type, then what is not working), offers once «¿Le ayudo a elegir su plan?»; the offer is recognised in the reply (`flow.pending_offer`) so a bare "Sí"
+goes to sales. (4) Objection cards (price, think, partner or another quote, not now, decline) are injected only when the visitor's message matched; the second round or a clear no
+releases the conversation (only `show_page` and `handoff_whatsapp`). (5) Booking asks at most business type and goal, each once, then offers the call whether or not they were answered
+(D25). (6) The static greeting, the chips, the launcher labels and the fallback messages are in "usted"; the CLAUDE.md and PRODUCT.md lines are updated. (7) A "tú" form in a reply is
+logged, not stripped. **Consequences:** the site-wide CTA labels (`CTA`, `TIER_CTA`) are still in "tú"; changing them is a separate, site-wide decision. The FAQ answers are worded with "tú" in places;
+the prompt tells the model to give them in "usted". The first live results decide how much of the card wording needs tuning.
+
+## D25 — Booking offers the call without waiting for every answer (2026-10-02)
+**Decision:** supersedes the contract rule that business type, goal and timing were all required before `offer_call`. Booking asks business type and the goal of the call, each once, then calls
+`offer_call` whether or not they were answered; timing is saved if mentioned, never asked. **Why:** a setter's one job is the booking; the call itself does the qualifying, and the live tests showed
+visitors skipping questions.

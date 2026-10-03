@@ -23,9 +23,9 @@ interface ChatMessage {
 const STORAGE_KEY = "pcl_chat";
 const GREETING: ChatMessage = {
   role: "assistant",
-  content: "Hola, soy Oryn. Te ayudo a ver qué plan le conviene a tu negocio o a agendar una llamada gratis. ¿Qué tipo de negocio tienes?",
+  content: "Hola, soy Oryn, el asistente de IA de Purple Cove Labs. Puedo explicarle los planes, ayudarle a elegir el suyo o ponerle en contacto con el equipo.",
 };
-const STARTERS = ["¿Qué plan me conviene?", "¿Cuánto cuestan los planes?", "Quiero agendar una llamada"];
+const STARTERS = ["Ver planes y precios", "Ayúdeme a elegir un plan", "Hablar con una persona"];
 
 function loadState(): { sessionId: string; messages: ChatMessage[] } {
   try {
@@ -168,9 +168,9 @@ export function ChatPanel({ open, onClose }: { open: boolean; onClose: () => voi
         }),
       });
       const data = (await res.json()) as { reply?: string; actions?: AgentAction[] };
-      reply = { role: "assistant", content: data.reply || "No pude responder. Intenta de nuevo.", actions: data.actions };
+      reply = { role: "assistant", content: data.reply || "No pude responder. Inténtelo de nuevo.", actions: data.actions };
     } catch {
-      reply = { role: "assistant", content: "Se perdió la conexión. Intenta de nuevo en un momento." };
+      reply = { role: "assistant", content: "Se perdió la conexión. Inténtelo de nuevo en un momento." };
     }
     setState((s) => ({ ...s, messages: [...s.messages, reply] }));
     setSending(false);
@@ -250,7 +250,7 @@ export function ChatPanel({ open, onClose }: { open: boolean; onClose: () => voi
           >
             <div className="flex items-end gap-2">
               <label htmlFor="chat-input" className="sr-only">
-                Escribe tu mensaje
+                Escriba su mensaje
               </label>
               <textarea
                 id="chat-input"
@@ -265,7 +265,7 @@ export function ChatPanel({ open, onClose }: { open: boolean; onClose: () => voi
                     void send(input);
                   }
                 }}
-                placeholder="Escribe aquí..."
+                placeholder="Escriba aquí..."
                 className="max-h-32 min-h-11 flex-1 resize-none rounded-[var(--radius-field)] border border-line bg-paper px-3.5 py-2.5 text-base outline-none focus:border-accent"
               />
               <button

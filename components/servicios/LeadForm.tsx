@@ -298,7 +298,7 @@ export function LeadForm({ tiers, addons, marketId }: { tiers: Tier[]; addons: A
                 className="inline-flex cursor-pointer items-center gap-1 font-semibold text-accent underline underline-offset-4 hover:text-accent-hover"
               >
                 <Sparkle size={16} weight="duotone" aria-hidden="true" />
-                Pregúntale a Oryn AI
+                Pregúntele a Oryn AI
               </button>{" "}
               o revisa las{" "}
               <Link href="/#preguntas" className="font-semibold text-accent underline underline-offset-4 hover:text-accent-hover">

@@ -61,7 +61,7 @@ These are capabilities of the one system — not separate agents, APIs, database
 
 ## Language and content rules
 
-- **Client-facing AI output is Dominican Spanish** ("tú", warm, direct, no emojis, short
+- **Client-facing AI output is Dominican Spanish** ("usted", warm, direct, no emojis, short
   replies). The system prompt is written in English and instructs Spanish output.
 - **Admin and developer-facing content stays in English** (admin panel labels for
   conversations are currently English; code, comments, docs and logs are English).

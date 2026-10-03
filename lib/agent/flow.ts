@@ -2,6 +2,7 @@
 // own words in `qualification`. Written only by /api/chat through chat_apply_state. Nothing here
 // is shown to the visitor.
 import type { Objection } from "@/lib/agent/objections";
+import { QUALIFICATION_KEYS, type QualificationKey } from "@/lib/agent/qualification";
 
 export const SALES_STAGES = ["discovery", "recommended", "objection_1", "objection_2", "released"] as const;
 export type SalesStage = (typeof SALES_STAGES)[number];
@@ -14,6 +15,10 @@ export interface Flow {
   sales_stage?: SalesStage;
   // The receptionist made an offer a bare "Sí" would accept; the next turn resolves it.
   pending_offer?: "sales";
+  // That offer was already made once in this conversation; it is not repeated.
+  sales_offered?: boolean;
+  // Questions already asked once. A question is never asked twice: a skipped answer is not pressed.
+  asked?: QualificationKey[];
   // Consecutive turns that ended on an unknown fact or a repeated question.
   failed_turns?: number;
   // The "this chat is the agent we install" line may be used once per conversation.
@@ -28,6 +33,11 @@ export function sanitizeFlow(raw: unknown): Flow {
     out.sales_stage = src.sales_stage as SalesStage;
   }
   if (src.pending_offer === "sales") out.pending_offer = "sales";
+  if (src.sales_offered === true) out.sales_offered = true;
+  if (Array.isArray(src.asked)) {
+    const keys = src.asked.filter((k): k is QualificationKey => (QUALIFICATION_KEYS as readonly unknown[]).includes(k));
+    if (keys.length) out.asked = [...new Set(keys)];
+  }
   if (typeof src.failed_turns === "number" && Number.isInteger(src.failed_turns) && src.failed_turns >= 0 && src.failed_turns <= 50) {
     out.failed_turns = src.failed_turns;
   }
@@ -54,4 +64,35 @@ export function nextSalesStage(current: SalesStage | undefined, recommendedThisT
   if (current === "recommended") return "objection_1";
   if (current === "objection_1") return "objection_2";
   return "released"; // objection_2 and another objection
+}
+
+export interface FlowTurn {
+  recommended: boolean;
+  objection: Objection | null;
+  // The question this turn asked the visitor (sales or booking), if any.
+  asks: QualificationKey | null;
+  // The receptionist offered to help choose a plan: a bare "Sí" next turn means yes.
+  offeredSales: boolean;
+  newAlerts: readonly AlertKind[];
+}
+
+// The whole flow after this turn, computed in one place so it can be tested.
+export function nextFlow(stored: Flow, turn: FlowTurn): Flow {
+  const next: Flow = { ...stored };
+  delete next.pending_offer; // a pending offer lives for exactly one turn
+  if (turn.offeredSales) {
+    next.pending_offer = "sales";
+    next.sales_offered = true;
+  }
+
+  const stage = nextSalesStage(stored.sales_stage, turn.recommended, turn.objection);
+  if (stage) next.sales_stage = stage;
+
+  if (turn.asks && !(stored.asked ?? []).includes(turn.asks)) next.asked = [...(stored.asked ?? []), turn.asks];
+  if (turn.newAlerts.length) next.alerts = [...new Set([...(stored.alerts ?? []), ...turn.newAlerts])];
+  return next;
+}
+
+export function sameFlow(a: Flow, b: Flow): boolean {
+  return JSON.stringify(a) === JSON.stringify(b);
 }

@@ -163,18 +163,12 @@ export function guardQualification(patch: Qualification, visitorText: string, op
   return out;
 }
 
-// Order in which the next useful question is picked, per capability.
-export const SALES_QUALIFICATION_ORDER: readonly QualificationKey[] = [
-  "business_type",
-  "appointments_or_orders",
-  "average_sale",
-  "has_website",
-  "has_google_profile",
-  "customer_channel",
-];
-// Enough to run the ROI method and pick a plan; the rest is optional.
-export const SALES_ENOUGH: readonly QualificationKey[] = ["business_type", "appointments_or_orders", "average_sale"];
-export const BOOKING_QUALIFICATION_ORDER: readonly QualificationKey[] = ["business_type", "goal", "timing"];
+// Order in which the next useful question is picked, per capability. The sales questions find out
+// the business reality that decides the plan (plan-rubric.ts); website, Google profile and how
+// customers arrive are not asked: they are saved when the visitor mentions them.
+export const SALES_QUALIFICATION_ORDER: readonly QualificationKey[] = ["business_type", "pain", "business_model", "customer_interaction", "average_sale"];
+// A call needs very little: what the business is and what they want from the call. Each is asked once.
+export const BOOKING_QUALIFICATION_ORDER: readonly QualificationKey[] = ["business_type", "goal"];
 
 export const QUESTION_HINT: Record<QualificationKey, string> = {
   business_type: "what type of business they have",
@@ -195,6 +189,8 @@ export function isKnown(known: Qualification, key: QualificationKey): boolean {
   return known[key] !== undefined;
 }
 
-export function nextMissing(known: Qualification, order: readonly QualificationKey[]): QualificationKey | null {
-  return order.find((key) => !isKnown(known, key)) ?? null;
+// The next question to ask: unknown and not asked before. A question is asked at most once; a visitor
+// who skipped it is not pressed (the agent works with what it has).
+export function nextMissing(known: Qualification, order: readonly QualificationKey[], asked: readonly QualificationKey[] = []): QualificationKey | null {
+  return order.find((key) => !isKnown(known, key) && !asked.includes(key)) ?? null;
 }

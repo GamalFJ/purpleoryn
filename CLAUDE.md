@@ -17,7 +17,7 @@ then fix the doc.
 
 - Oryn is **one conversational AI system** with four capabilities (Receptionist, Sales, Booking, Human
   Handoff). Not separate agents, APIs, databases or widgets.
-- **Client-facing AI output is Dominican Spanish** (natural, "tú", no emojis). Admin/developer-facing
+- **Client-facing AI output is Dominican Spanish** (natural, "usted", no emojis; decided 2026-10-02, D20). Admin/developer-facing
   content, code, comments, docs and logs are English.
 - **Never invent business information** (prices, discounts, timelines, guarantees, results, clients,
   addresses, hours). Plan and price facts come from Supabase `tiers`/`addons` at runtime.

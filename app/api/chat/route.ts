@@ -3,13 +3,13 @@ import { after, NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { chatWithFallback, isAgentConfigured } from "@/lib/ai";
 import type { AgentMessage } from "@/lib/ai/types";
-import { nextSalesStage, sanitizeFlow, type AlertKind, type Flow } from "@/lib/agent/flow";
+import { nextFlow, sameFlow, sanitizeFlow, type AlertKind, type Flow } from "@/lib/agent/flow";
 import { chatAlertText } from "@/lib/agent/handoff";
-import { classifyObjection } from "@/lib/agent/objections";
 import { buildSystemPrompt } from "@/lib/agent/prompt";
-import { fallbackPlan, planTurn, type TurnPlan } from "@/lib/agent/orchestrator";
+import { fallbackPlan, planTurn, SALES_OFFER_RE, type TurnPlan } from "@/lib/agent/orchestrator";
 import { toPlainText } from "@/lib/agent/plain-text";
-import { guardQualification, isKnown, mergeQualification, sanitizeQualification, SALES_ENOUGH, type Qualification } from "@/lib/agent/qualification";
+import { guardQualification, mergeQualification, sanitizeQualification, type Qualification } from "@/lib/agent/qualification";
+import { salesStatus } from "@/lib/agent/sales";
 import { lintReply } from "@/lib/agent/reply-lint";
 import { runTool, toolsFor, type AgentAction } from "@/lib/agent/tools";
 import { notifyChatEvent } from "@/lib/telegram";
@@ -62,7 +62,11 @@ const isRecommendAction = (a: AgentAction): a is RecommendAction => a.type === "
 const isOfferCallAction = (a: AgentAction): a is OfferCallAction => a.type === "offer_call";
 const isHandoffAction = (a: AgentAction): a is HandoffAction => a.type === "handoff_whatsapp";
 
-const FALLBACK = `Ahora mismo no puedo responder. Escríbenos por WhatsApp al ${SITE.phoneDisplay} y te atendemos.`;
+// The visitor is addressed as "usted" everywhere. A "tú" form in a reply is only logged: removing it
+// sentence by sentence would delete content, and the prompt and the replay scripts are what hold the register.
+const TU_FORM_RE = /\b(tienes|quieres|puedes|necesitas|buscas|vendes|haces|eres|tu negocio|tus clientes|te recomiendo|te ayudo|cuéntame|dime)\b/i;
+
+const FALLBACK = `Ahora mismo no puedo responder. Escríbanos por WhatsApp al ${SITE.phoneDisplay} y le atendemos.`;
 
 function ipHash(request: NextRequest) {
   const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || request.headers.get("x-real-ip") || "unknown";
@@ -188,7 +192,7 @@ export async function POST(request: NextRequest) {
   if (session_messages > MAX_SESSION_MESSAGES || ip_user_messages_last_hour > MAX_IP_USER_MESSAGES_PER_HOUR) {
     return NextResponse.json(
       {
-        reply: `Llegamos al límite de mensajes por ahora. Para seguir, agenda una llamada gratis o escríbenos por WhatsApp al ${SITE.phoneDisplay}.`,
+        reply: `Llegamos al límite de mensajes por ahora. Para seguir, agende una llamada gratis o escríbanos por WhatsApp al ${SITE.phoneDisplay}.`,
         actions: [{ type: "offer_call", plan: null, planName: null, summary: "" } satisfies AgentAction],
         limited: true,
       },
@@ -199,10 +203,18 @@ export async function POST(request: NextRequest) {
   // The orchestrator turns what is stored (state, intent, qualification) plus the last
   // message into this turn's capability, prompt addendum and allowed tools. If it ever
   // fails, fall back to the pre-orchestration behavior instead of breaking the chat.
-  const stored = await readStoredState(sessionId);
+  const [stored, tiers, addons] = await Promise.all([readStoredState(sessionId), getTiers(), getAddons()]);
   let plan: TurnPlan;
   try {
-    plan = planTurn({ storedState: stored.state, storedIntent: stored.intent, message: last.content, qualification: stored.qualification });
+    plan = planTurn({
+      storedState: stored.state,
+      storedIntent: stored.intent,
+      message: last.content,
+      qualification: stored.qualification,
+      flow: stored.flow,
+      tiers,
+      recommendedPlan: stored.recommendedPlan,
+    });
   } catch (error) {
     console.error("[agent] orchestration failed, using fallback:", error instanceof Error ? error.message : "unknown error");
     plan = fallbackPlan(last.content);
@@ -210,7 +222,6 @@ export async function POST(request: NextRequest) {
   const { intent, inherited, baseState: intentState, capability } = plan;
   const allowedTools = new Set<string>(plan.allowedTools);
 
-  const [tiers, addons] = await Promise.all([getTiers(), getAddons()]);
   const basePrompt = buildSystemPrompt(tiers, addons);
   // Turn budget (E4): a long conversation that has not reached a button stops asking and hands over.
   const visitorTurns = messages.filter((m) => m.role === "user").length;
@@ -234,7 +245,12 @@ ${addendum}` : basePrompt;
   const storedPlanName = tiers.find((t) => t.slug === stored.recommendedPlan)?.name ?? null;
   const toolContext = () => {
     const planNow = [...actions].reverse().find(isRecommendAction);
-    return { known: mergeQualification(stored.qualification, qualificationPatch), planName: planNow?.planName ?? storedPlanName };
+    return {
+      known: mergeQualification(stored.qualification, qualificationPatch),
+      planName: planNow?.planName ?? storedPlanName,
+      asked: stored.flow.asked ?? [],
+      stage: plan.stage,
+    };
   };
 
   try {
@@ -250,7 +266,7 @@ ${addendum}` : basePrompt;
         const out = allowedTools.has(call.name) ? runTool(call, tiers, toolContext()) : { content: JSON.stringify({ error: "Herramienta no disponible ahora." }) };
         if ("action" in out && out.action) actions.push(out.action);
         if ("qualification" in out && out.qualification) {
-          qualificationPatch = mergeQualification(qualificationPatch, guardQualification(out.qualification, visitorText));
+          qualificationPatch = mergeQualification(qualificationPatch, guardQualification(out.qualification, visitorText, { allowRubricKeys: true }));
         }
         conversation.push({ role: "tool", toolCallId: call.id, name: call.name, content: out.content });
       }
@@ -259,14 +275,13 @@ ${addendum}` : basePrompt;
     // E2: in sales, with enough known, a reply that recommends a plan must come with its button.
     // If the model named a plan without calling recommend_plan, ask once for just that call and
     // keep the reply it already wrote.
-    const known = toolContext().known;
     const stage = stored.flow.sales_stage;
     if (
       reply &&
       capability === "sales" &&
       (stage === undefined || stage === "discovery") &&
       !actions.some((a) => a.type === "recommend_plan") &&
-      SALES_ENOUGH.every((key) => isKnown(known, key)) &&
+      salesStatus(toolContext().known, stored.flow.asked ?? []).ready &&
       RECOMMENDS_PLAN_RE.test(foldForMatch(reply))
     ) {
       try {
@@ -299,7 +314,8 @@ ${addendum}` : basePrompt;
   if (linted.removed.length) console.warn(`[agent] reply lint removed: ${linted.removed.join(",")}`);
   reply = linted.text;
 
-  if (!reply) reply = actions.length ? "Aquí tienes:" : FALLBACK;
+  if (!reply) reply = actions.length ? "Aquí tiene:" : FALLBACK;
+  if (TU_FORM_RE.test(reply)) console.warn("[agent] register: a \"tú\" form in the reply");
 
   await supabase.rpc("chat_log_message", {
     p_session_id: sessionId,
@@ -320,20 +336,27 @@ ${addendum}` : basePrompt;
   }
 
   const finalState = resolveResponseState(intentState, actions);
-  // Only code advances the sales stage; it is written only when it changed.
-  const salesStage = nextSalesStage(stored.flow.sales_stage, Boolean(recommended), classifyObjection(last.content));
   // Each alert kind (WhatsApp handoff, call button) is sent once per conversation.
   const sentAlerts = stored.flow.alerts ?? [];
   const newAlerts: AlertKind[] = [];
   if (handoff && !sentAlerts.includes("handoff")) newAlerts.push("handoff");
   if (call && !sentAlerts.includes("call")) newAlerts.push("call");
-  const flowChanged = salesStage !== stored.flow.sales_stage || newAlerts.length > 0;
+  // Only code advances the flow. A question counts as asked only if this reply really asked one and no
+  // button took its place; the receptionist's offer to help choose a plan is recognised in the reply.
+  const nextFlowValue = nextFlow(stored.flow, {
+    recommended: Boolean(recommended),
+    objection: plan.objection,
+    asks: !recommended && !call && reply.includes("?") ? plan.asks : null,
+    offeredSales: capability === "receptionist" && SALES_OFFER_RE.test(foldForMatch(reply)),
+    newAlerts,
+  });
+  const flowChanged = !sameFlow(stored.flow, nextFlowValue);
   // A visitor who asked for a person stays "requested"; the WhatsApp button only marks "offered".
   const handoffStatus = intent === "human_handoff" ? "requested" : handoff && stored.handoffStatus !== "requested" && stored.handoffStatus !== "completed" ? "offered" : null;
   const update = await persistState(sessionId, finalState, intent, {
     // Merge into what was stored; only written when the visitor gave something new.
     qualification: Object.keys(qualificationPatch).length ? mergeQualification(stored.qualification, qualificationPatch) : null,
-    flow: flowChanged ? { ...stored.flow, ...(salesStage ? { sales_stage: salesStage } : {}), ...(newAlerts.length ? { alerts: [...sentAlerts, ...newAlerts] } : {}) } : null,
+    flow: flowChanged ? nextFlowValue : null,
     recommendedPlan: recommended?.plan ?? null,
     bookingStatus: call ? "offered" : null,
     handoffStatus,
@@ -344,7 +367,9 @@ ${addendum}` : basePrompt;
 
   // Alerts go out after the response so the visitor never waits on Telegram, and only once the
   // state is stored, so a failed write can be retried by the next event instead of being lost.
-  if (update.status === "ok" && newAlerts.length) {
+  // Replay scripts (scripts/oryn-replay.mjs) mark their conversations with this landing page and never alert.
+  const isReplay = landingPage?.startsWith("/__replay") ?? false;
+  if (update.status === "ok" && newAlerts.length && !isReplay) {
     const known = mergeQualification(stored.qualification, qualificationPatch);
     const planName = recommended?.planName ?? storedPlanName;
     after(async () => {

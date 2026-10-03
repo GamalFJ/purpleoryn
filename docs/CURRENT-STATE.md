@@ -49,7 +49,11 @@ handoff (state held, `handoff_status = requested`, summary saved, nothing claime
 no state errors, the admin detail page (screenshots). Fixed since (D17, D18) and **verified live (2026-09-30/10-01, T9c)**: no switch out of booking on a
 plan-fit phrase, no invented links, negation/plural-aware booking detection, wider which-plan phrases, server-side markdown stripping, the
 WhatsApp number in the handoff reply, and the per-sale ROI question. Also verified live: the Autoridad, Conversión and call buttons, sales → booking, no switch on a weak keyword in booking, the admin list line. Not verified: T9 items 1 and 19.
-Not implemented and out of scope: handoff notification, Cal.com webhook, automatic booking, `booking_confirmed`, lead creation.
+Since then (2026-10-02, D19 to D25, "Oryn brain"): the plan is chosen in code from what the visitor wants the agent to do with their own customers (`lib/agent/plan-rubric.ts`, no default plan);
+`chat_sessions.flow` keeps the asked questions, the sales stage and the alerts already sent; the tools `handoff_whatsapp` (prefilled WhatsApp message built in code) and `show_page` exist; saved facts are
+checked against the visitor's words; reply sentences that ask permission to show a button or claim an unverified action are stripped; Telegram alerts fire once per conversation when a visitor is sent to
+WhatsApp or shown the call button; the chat speaks "usted"; objection cards, a sales stage machine and the replay script (`scripts/oryn-replay.mjs`) exist. The phase 3 prompt rewrite is **not verified live yet** (TASKS.md T14).
+Not implemented and out of scope: a real human-handoff channel (the WhatsApp button only prefills a message; nobody is notified that the visitor wrote), Cal.com webhook, automatic booking, `booking_confirmed`, lead creation, lead score.
 
 ## Conversation state — implemented, verified live (Step 4)
 
