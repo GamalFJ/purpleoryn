@@ -215,3 +215,16 @@ the prompt tells the model to give them in "usted". The first live results decid
 **Decision:** supersedes the contract rule that business type, goal and timing were all required before `offer_call`. Booking asks business type and the goal of the call, each once, then calls
 `offer_call` whether or not they were answered; timing is saved if mentioned, never asked. **Why:** a setter's one job is the booking; the call itself does the qualifying, and the live tests showed
 visitors skipping questions.
+
+## D26 — What the stage requires is guaranteed in code, not asked of the model (2026-10-03, after the first live replays)
+**Decision:** The live replays (scripts B1, D2, S1, U1, E1, A1) showed `gpt-4o-mini` skipping steps the prompt requires: not saving an answer (so the next turn planned with a missing fact and sent the
+visitor to the wrong plan), calling `calculate_roi` for a plan other than the one recommended (wrong break-even in the reply and the card), recommending in prose without the button, saying "los botones
+están abajo" with no button, computing from an invented unit price. These are now guaranteed by code. (1) `inferAnswer` reads the visitor's answer to the question asked last (what they sell, what they want from the
+agent, the value of a sale, business type, pain, goal) and saves it when the model did not; what the model saves wins. (2) The recommendation turn (`lib/agent/enforce.ts`): when the rubric has decided and the
+sale value is settled, code runs `recommend_plan` and the figures card for the rubric's plan if the model did not, drops a figures card for any other plan, and replaces the reply with one built from the tier data
+(`lib/agent/recommendation.ts`) if it does not name the plan with both exact prices and the break-even; the model's reply is kept when it is right. The addendum now gives the model the exact figures. (3) Released:
+the PDF and the WhatsApp buttons are added on the turn of release; booking: the call button once nothing is left to ask; handoff: both buttons on the request; "el equipo lo confirma directamente" always comes with the
+WhatsApp button; the receptionist's reply ends with the exact offer question. (4) `calculate_roi` and the saved `average_sale` accept only a number the visitor wrote that is not a unit price, a volume or a recurring total;
+such an answer gets ONE clarifying question (`flow.sale_clarified`), then the agent continues without a figure. (5) A sentence that points at a button when none is shown is removed. (6) The ROI is locked to the rubric's plan from
+the moment the plan is decided. **Consequences:** a forced recommendation reads more like a template than the model's own wording (the model's reply wins whenever it is right); when a visitor asks a question on the
+recommendation turn, nothing is forced. The E2 retry call is gone (replaced by 2).

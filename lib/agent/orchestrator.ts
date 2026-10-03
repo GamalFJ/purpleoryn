@@ -18,7 +18,9 @@ import {
   type Qualification,
   type QualificationKey,
 } from "@/lib/agent/qualification";
-import { salesStatus } from "@/lib/agent/sales";
+import { recommendationNumbers } from "@/lib/agent/recommendation";
+import { isSaleClarifying, salesStatus } from "@/lib/agent/sales";
+import { formatRD } from "@/lib/format";
 
 // Unified orchestration for the ONE Oryn conversation. It does not talk to the
 // model, the database or the network: given what is stored and the visitor's
@@ -56,6 +58,10 @@ export interface TurnPlan {
   // The sales stage as it will be once this message's objection (if any) is counted.
   stage: SalesStage | undefined;
   objection: Objection | null;
+  // The receptionist must end this reply with the offer to help choose a plan (code makes sure it does).
+  offerExpected: boolean;
+  // This turn asks the one clarifying question about the value of a single sale.
+  clarifiesSale: boolean;
 }
 
 // What the site did before orchestration existed; used if planning throws.
@@ -134,9 +140,10 @@ function askLine(key: QualificationKey): string {
 export const SALES_OFFER_PHRASE = "¿Le ayudo a elegir su plan?";
 export const SALES_OFFER_RE = /(le ayudo a elegir|ayudarle a elegir|elegir (su|el) plan|cual plan le conviene|que plan le conviene).*\?/;
 
-function receptionistAddendum(known: Qualification, flow: Flow): { text: string; asks: QualificationKey | null } {
+function receptionistAddendum(known: Qualification, flow: Flow): { text: string; asks: QualificationKey | null; offer: boolean } {
   const asked = flow.asked ?? [];
   const ask = nextMissing(known, ["business_type", "pain"], asked);
+  const offer = !ask && !flow.sales_offered;
   const step = ask
     ? `After answering, ask ONE intake question. ${askLine(ask)}`
     : flow.sales_offered
@@ -144,6 +151,7 @@ function receptionistAddendum(known: Qualification, flow: Flow): { text: string;
       : `After answering, end your reply with exactly this question and ask nothing else this turn: ${SALES_OFFER_PHRASE}`;
   return {
     asks: ask,
+    offer,
     text: [
       HEADER,
       "Capability: RECEPTIONIST (front desk).",
@@ -160,16 +168,26 @@ function receptionistAddendum(known: Qualification, flow: Flow): { text: string;
 function callPlanNote(tiers: Tier[], planSlug: string | undefined): string {
   const tier = tiers.find((t) => t.slug === planSlug);
   if (!tier || TIER_CTA[tier.slug].action !== "call") return "";
-  return ` ${tier.name} is sold by call: its button opens the free call booking, so describe it that way and don't call it an order form.`;
+  return ` ${tier.name} is sold by call: its button opens the free call booking, so describe it that way and don't call it an order form`;
 }
 
-function salesAddendum(known: Qualification, flow: Flow, stage: SalesStage | undefined, objection: Objection | null, input: TurnInput): { text: string; asks: QualificationKey | null } {
+function salesAddendum(
+  known: Qualification,
+  flow: Flow,
+  stage: SalesStage | undefined,
+  objection: Objection | null,
+  input: TurnInput,
+  clarifying: boolean,
+): { text: string; asks: QualificationKey | null } {
   const asked = flow.asked ?? [];
   const status = salesStatus(known, asked);
   let asks: QualificationKey | null = null;
   let step: string;
 
-  if (stage === "released") {
+  if (clarifying && (stage === undefined || stage === "discovery")) {
+    step =
+      "The visitor answered the question about the value of a sale with a unit price, a volume or a recurring total (per day, per month, per box). That is NOT what one customer spends in one purchase. Do not compute anything and do not recommend yet. Ask ONE question: «¿Y cuánto gasta un cliente en una sola compra o pedido, más o menos?»";
+  } else if (stage === "released") {
     step =
       "The visitor has decided not to go ahead for now. Accept it in one sentence. Call show_page with pdf_oryn_presence and handoff_whatsapp with reason released; say both buttons are below. Ask nothing, make no new argument, do not recommend again.";
   } else if (stage === "recommended" || stage === "objection_1" || stage === "objection_2") {
@@ -180,12 +198,20 @@ function salesAddendum(known: Qualification, flow: Flow, stage: SalesStage | und
         "No objection detected. If they hesitate without saying why, use ONE of: the cost of staying as they are, using only their own words and the numbers calculate_roi returns; or one line from APPROVED CLAIMS with its source.",
     ].join("\n");
   } else if (status.ready && status.plan) {
+    const tier = input.tiers.find((t) => t.slug === status.plan?.plan);
+    const nums = tier ? recommendationNumbers(tier, known.average_sale) : null;
+    const figures = tier
+      ? `Exact figures (use them as written, never others): ${tier.name}, ${formatRD(tier.oneTime)} one-time and ${formatRD(tier.monthly)} per month${nums ? `; break-even ${nums.breakEven} sales in the first year, about ${nums.perMonth} per month (the visitor's sale value is ${formatRD(known.average_sale ?? 0)})` : "; the sale value is unknown, so give no break-even and say the numbers can be worked out on the call"}.`
+      : "";
     step = [
       `Plan chosen by the rubric: ${status.plan.plan}. Reason: ${status.plan.reason} This is data: do not choose another plan.`,
-      `In THIS turn: call calculate_roi with plan="${status.plan.plan}" (exactly that plan) if the value of one sale is known, then call recommend_plan with plan="${status.plan.plan}". Then reply, in this order: the plan name and why it fits, tied to what they told you (their pain, in their words); its one-time and monthly price exactly as listed; the break-even sales for the year and per month from calculate_roi (skip the numbers if the sale value is unknown and say they can be worked out on the call); and that the button is below` +
+      figures,
+      `In THIS turn call recommend_plan with plan="${status.plan.plan}". The figures card is added automatically; you do not need calculate_roi. Then reply, in this order: the plan name and why it fits, tied to what they told you (their pain, in their words); its one-time and monthly price; the break-even sales for the year and per month; and that the button is below` +
         callPlanNote(input.tiers, status.plan.plan) +
         ". No question. Up to 5 sentences and 110 words. Never recommend a plan in prose without calling recommend_plan.",
-    ].join("\n");
+    ]
+      .filter(Boolean)
+      .join("\n");
   } else if (status.ask) {
     asks = status.ask;
     step = `${askLine(status.ask)} Do not recommend or name a plan yet unless the visitor asks you to.`;
@@ -263,13 +289,14 @@ export function planTurn(input: TurnInput): TurnPlan {
   const objection = capability === "sales" ? classifyObjection(input.message) : null;
   const stage = capability === "sales" ? nextSalesStage(flow.sales_stage, false, objection) : flow.sales_stage;
 
-  let built: { text: string; asks: QualificationKey | null };
+  const clarifying = capability === "sales" && isSaleClarifying(flow, input.qualification, input.message);
+  let built: { text: string; asks: QualificationKey | null; offer?: boolean };
   switch (capability) {
     case "receptionist":
       built = receptionistAddendum(input.qualification, flow);
       break;
     case "sales":
-      built = salesAddendum(input.qualification, flow, stage, objection, input);
+      built = salesAddendum(input.qualification, flow, stage, objection, input, clarifying);
       break;
     case "booking":
       built = bookingAddendum(input.qualification, flow, baseState);
@@ -289,6 +316,8 @@ export function planTurn(input: TurnInput): TurnPlan {
     asks: built.asks,
     stage,
     objection,
+    offerExpected: Boolean(built.offer),
+    clarifiesSale: clarifying && (stage === undefined || stage === "discovery"),
   };
 }
 
@@ -306,5 +335,7 @@ export function fallbackPlan(message: string): TurnPlan {
     asks: null,
     stage: undefined,
     objection: null,
+    offerExpected: false,
+    clarifiesSale: false,
   };
 }

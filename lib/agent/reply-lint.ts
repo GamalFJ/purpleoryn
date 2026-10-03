@@ -42,9 +42,16 @@ export interface LintResult {
   removed: string[]; // rule ids that fired
 }
 
-export function lintReply(reply: string): LintResult {
+// A sentence that points at a button when this turn shows none (G7).
+const PHANTOM_BUTTON_RE = /\bbot(on|ones)\b.*\b(abajo|a continuacion|debajo)\b|\b(abajo|a continuacion|debajo)\b.*\bbot(on|ones)\b|\bbot(on|ones) (esta|estan|aparece|aparecen)\b/;
+
+export function lintReply(reply: string, options: { hasButtons?: boolean } = {}): LintResult {
   const removed: string[] = [];
   const kept = sentences(reply).filter((sentence) => {
+    if (options.hasButtons === false && PHANTOM_BUTTON_RE.test(fold(sentence))) {
+      removed.push("phantom_button");
+      return false;
+    }
     const hit = RULES.find(([, pattern]) => pattern.test(fold(sentence)));
     if (hit) removed.push(hit[0]);
     return !hit;

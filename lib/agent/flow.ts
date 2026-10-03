@@ -19,6 +19,8 @@ export interface Flow {
   sales_offered?: boolean;
   // Questions already asked once. A question is never asked twice: a skipped answer is not pressed.
   asked?: QualificationKey[];
+  // The one clarifying question about the value of a single sale was already asked.
+  sale_clarified?: boolean;
   // Consecutive turns that ended on an unknown fact or a repeated question.
   failed_turns?: number;
   // The "this chat is the agent we install" line may be used once per conversation.
@@ -34,6 +36,7 @@ export function sanitizeFlow(raw: unknown): Flow {
   }
   if (src.pending_offer === "sales") out.pending_offer = "sales";
   if (src.sales_offered === true) out.sales_offered = true;
+  if (src.sale_clarified === true) out.sale_clarified = true;
   if (Array.isArray(src.asked)) {
     const keys = src.asked.filter((k): k is QualificationKey => (QUALIFICATION_KEYS as readonly unknown[]).includes(k));
     if (keys.length) out.asked = [...new Set(keys)];
@@ -73,6 +76,8 @@ export interface FlowTurn {
   asks: QualificationKey | null;
   // The receptionist offered to help choose a plan: a bare "Sí" next turn means yes.
   offeredSales: boolean;
+  // This turn asked the one clarifying question about the value of a single sale.
+  clarifiedSale?: boolean;
   newAlerts: readonly AlertKind[];
 }
 
@@ -89,6 +94,7 @@ export function nextFlow(stored: Flow, turn: FlowTurn): Flow {
   if (stage) next.sales_stage = stage;
 
   if (turn.asks && !(stored.asked ?? []).includes(turn.asks)) next.asked = [...(stored.asked ?? []), turn.asks];
+  if (turn.clarifiedSale) next.sale_clarified = true;
   if (turn.newAlerts.length) next.alerts = [...new Set([...(stored.alerts ?? []), ...turn.newAlerts])];
   return next;
 }

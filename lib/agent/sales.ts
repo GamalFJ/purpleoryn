@@ -1,3 +1,5 @@
+import { looksLikeUnitOrVolume } from "@/lib/agent/answers";
+import type { Flow } from "@/lib/agent/flow";
 import { choosePlan, type PlanChoice } from "@/lib/agent/plan-rubric";
 import { isKnown, nextMissing, SALES_QUALIFICATION_ORDER, type Qualification, type QualificationKey } from "@/lib/agent/qualification";
 
@@ -22,4 +24,12 @@ export function salesStatus(known: Qualification, asked: readonly QualificationK
   if (!settled(known, asked, "business_type")) return { ask: "business_type", plan, ready: false };
   if (!settled(known, asked, "average_sale")) return { ask: "average_sale", plan, ready: false };
   return { ask: null, plan, ready: true };
+}
+
+// The visitor answered the question about the value of ONE sale with a unit price, a volume or a
+// recurring total. That is not what the ROI method needs: ask ONE clarifying question, once, and
+// do not compute anything from it.
+export function isSaleClarifying(flow: Flow, known: Qualification, message: string): boolean {
+  const lastAsked = (flow.asked ?? []).at(-1);
+  return lastAsked === "average_sale" && !isKnown(known, "average_sale") && !flow.sale_clarified && looksLikeUnitOrVolume(message);
 }

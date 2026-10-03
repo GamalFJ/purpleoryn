@@ -232,7 +232,7 @@ Gating (`toolsFor` in `lib/agent/orchestrator.ts`): receptionist `calculate_roi`
 
 ### E. Code guards (all implemented)
 
-E1 evidence guard (Q2). E2 recommendation retry: in sales, with the plan decided and the sale settled, a reply that recommends a plan without `recommend_plan` triggers one call restricted to that tool. E3 reply lint (sentence stripping; narrow patterns for G7, G8, G13, G15). E4 turn budget (10 and 16 visitor turns). E5 per-month break-even from the tool. E6 rubric lock with the one-step-down exception. E7 stage machine (`flow.sales_stage`), advanced by code only. E9 provider error logging. Telegram alerts: once per conversation when a visitor is sent to WhatsApp or shown the call button.
+E1 evidence guard (Q2). E2 recommendation guarantee (`lib/agent/enforce.ts`, D26): with the plan decided and the sale settled, code runs `recommend_plan` and the figures card for the rubric's plan if the model did not, and builds the reply from the tier data when the model's reply lacks the plan, the exact prices or the break-even; the same module guarantees the released, booking and handoff buttons, the WhatsApp button for "the team confirms it directly" and the receptionist's offer question. E2b answers read in code (`lib/agent/answers.ts`). E3 reply lint (sentence stripping; narrow patterns for G7, G8, G13, G15). E4 turn budget (10 and 16 visitor turns). E5 per-month break-even from the tool. E6 rubric lock with the one-step-down exception. E7 stage machine (`flow.sales_stage`), advanced by code only. E9 provider error logging. Telegram alerts: once per conversation when a visitor is sent to WhatsApp or shown the call button.
 
 ### F. Replay scripts (live, fresh conversation each; pass or fail from the API response and `chat_sessions`)
 

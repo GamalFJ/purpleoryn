@@ -115,7 +115,7 @@ function contentWords(text: string): Set<string> {
 }
 
 // Every number the visitor wrote: "2500", "2,500", "2.500", "2 500", "2.5k", "3 mil".
-function numbersIn(text: string): number[] {
+export function numbersIn(text: string): number[] {
   const out: number[] = [];
   const t = fold(text);
   for (const m of t.matchAll(/(\d+(?:[.,]\d+)?)\s*(k|mil)\b/g)) out.push(parseFloat(m[1].replace(",", ".")) * 1000);

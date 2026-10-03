@@ -4,6 +4,7 @@ import { TIER_CTA, isTierSlug, type Tier, type TierSlug } from "@/lib/tiers";
 import type { ToolCall, ToolDefinition } from "@/lib/ai/types";
 import type { AgentToolName } from "@/lib/agent/orchestrator";
 import { AGENT_PAGES, AGENT_PAGE_KEYS, buildHandoffUrl, HANDOFF_REASONS, isAgentPage, isHandoffReason, type AgentPageKey, type HandoffReason } from "@/lib/agent/handoff";
+import { isSingleSaleValue } from "@/lib/agent/answers";
 import type { SalesStage } from "@/lib/agent/flow";
 import { choosePlan, stepDownFrom } from "@/lib/agent/plan-rubric";
 import { APPOINTMENTS_OR_ORDERS, BUSINESS_MODELS, CUSTOMER_INTERACTIONS, sanitizeQualification, type Qualification, type QualificationKey } from "@/lib/agent/qualification";
@@ -32,6 +33,9 @@ export interface ToolContext {
   // On the recommendation turn the ROI must be computed for the plan the rubric chose: the numbers the
   // visitor reads have to match the plan they are told about.
   roiPlan?: TierSlug;
+  // What the visitor wrote in this conversation: the sale value passed to calculate_roi must be a number
+  // they gave and must not be a unit price or a volume. Left out, no check.
+  visitorText?: string;
 }
 
 const PLAN_ENUM = { type: "string", enum: ["presencia", "conversion", "autoridad"] };
@@ -149,6 +153,14 @@ export function runTool(call: ToolCall, tiers: Tier[], context: ToolContext = { 
       const asv = Number(args.average_sale_value);
       const roi = tier ? computeRoi({ oneTime: tier.oneTime, monthly: tier.monthly, averageSaleValue: asv }) : null;
       if (!tier || !roi) return { content: JSON.stringify({ error: "Plan o valor promedio de venta inválido." }) };
+      if (context.visitorText !== undefined && !isSingleSaleValue(context.visitorText, asv)) {
+        return {
+          content: JSON.stringify({
+            ok: false,
+            error: "Not allowed. That value is not something the visitor said as what ONE customer spends in ONE purchase (it may be invented, a unit price, a volume or a daily or monthly total). Do not compute anything; ask ONE question about a single purchase.",
+          }),
+        };
+      }
       if (context.roiPlan && tier.slug !== context.roiPlan) {
         return { content: JSON.stringify({ ok: false, error: `Not allowed. For this recommendation call calculate_roi with plan="${context.roiPlan}": the numbers must match the plan you recommend.` }) };
       }

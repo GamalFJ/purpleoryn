@@ -4,6 +4,8 @@ import { z } from "zod";
 import { chatWithFallback, isAgentConfigured } from "@/lib/ai";
 import type { AgentMessage } from "@/lib/ai/types";
 import { nextFlow, sameFlow, sanitizeFlow, type AlertKind, type Flow } from "@/lib/agent/flow";
+import { inferAnswer, isSingleSaleValue } from "@/lib/agent/answers";
+import { enforceTurn } from "@/lib/agent/enforce";
 import { chatAlertText } from "@/lib/agent/handoff";
 import { buildSystemPrompt } from "@/lib/agent/prompt";
 import { fallbackPlan, planTurn, SALES_OFFER_RE, type TurnPlan } from "@/lib/agent/orchestrator";
@@ -52,8 +54,6 @@ const foldForMatch = (text: string) =>
     .toLowerCase()
     .normalize("NFD")
     .replace(/[̀-ͯ]/g, "");
-// A reply that recommends a plan ("te recomiendo ...", "el plan que le conviene es ...").
-const RECOMMENDS_PLAN_RE = /\b(te|le) recomiendo\b|\brecomiend[oa]\b.*\b(presencia|conversion|autoridad)\b|\b(presencia|conversion|autoridad)\b.*\b(es el plan|es el ideal|es la mejor|te conviene|le conviene)\b/;
 
 type RecommendAction = Extract<AgentAction, { type: "recommend_plan" }>;
 type OfferCallAction = Extract<AgentAction, { type: "offer_call" }>;
@@ -204,13 +204,17 @@ export async function POST(request: NextRequest) {
   // message into this turn's capability, prompt addendum and allowed tools. If it ever
   // fails, fall back to the pre-orchestration behavior instead of breaking the chat.
   const [stored, tiers, addons] = await Promise.all([readStoredState(sessionId), getTiers(), getAddons()]);
+  // The visitor's answer to the question the agent asked last, read in code, so a fact the model
+  // forgets to save still counts this turn (whatever the model saves wins over this).
+  const lastAsked = stored.flow.asked?.at(-1);
+  const inferred: Qualification = lastAsked && stored.qualification[lastAsked] === undefined ? inferAnswer(lastAsked, last.content) : {};
   let plan: TurnPlan;
   try {
     plan = planTurn({
       storedState: stored.state,
       storedIntent: stored.intent,
       message: last.content,
-      qualification: stored.qualification,
+      qualification: mergeQualification(stored.qualification, inferred),
       flow: stored.flow,
       tiers,
       recommendedPlan: stored.recommendedPlan,
@@ -235,7 +239,7 @@ export async function POST(request: NextRequest) {
   const system = addendum ? `${basePrompt}
 
 ${addendum}` : basePrompt;
-  let qualificationPatch: Qualification = {};
+  let qualificationPatch: Qualification = { ...inferred };
   const conversation: AgentMessage[] = messages.slice(-HISTORY_WINDOW).map((m) => ({ role: m.role, content: m.content }));
   const actions: AgentAction[] = [];
   let reply = "";
@@ -254,9 +258,12 @@ ${addendum}` : basePrompt;
       planName: planNow?.planName ?? storedPlanName,
       asked,
       stage: plan.stage,
-      roiPlan: status?.ready ? status.plan?.plan : undefined,
+      // From the moment the rubric has decided, any figures card is for that plan.
+      roiPlan: status?.plan?.plan,
     };
   };
+  // Tools called by the model also check the sale value against what the visitor actually wrote.
+  const modelToolContext = () => ({ ...toolContext(), visitorText });
 
   try {
     for (let round = 0; round <= MAX_TOOL_ROUNDS; round++) {
@@ -268,43 +275,18 @@ ${addendum}` : basePrompt;
       conversation.push({ role: "assistant", content: result.text, toolCalls: result.toolCalls });
       for (const call of result.toolCalls) {
         // Only tools the active capability was offered may run.
-        const out = allowedTools.has(call.name) ? runTool(call, tiers, toolContext()) : { content: JSON.stringify({ error: "Herramienta no disponible ahora." }) };
+        const out = allowedTools.has(call.name) ? runTool(call, tiers, modelToolContext()) : { content: JSON.stringify({ error: "Herramienta no disponible ahora." }) };
         if ("action" in out && out.action) actions.push(out.action);
         if ("qualification" in out && out.qualification) {
-          qualificationPatch = mergeQualification(qualificationPatch, guardQualification(out.qualification, visitorText, { allowRubricKeys: true }));
+          const kept = guardQualification(out.qualification, visitorText, { allowRubricKeys: true });
+          // A unit price or a volume is not the value of one sale, even when the visitor did say the number.
+          if (kept.average_sale !== undefined && !isSingleSaleValue(visitorText, kept.average_sale)) delete kept.average_sale;
+          qualificationPatch = mergeQualification(qualificationPatch, kept);
         }
         conversation.push({ role: "tool", toolCallId: call.id, name: call.name, content: out.content });
       }
     }
 
-    // E2: in sales, with enough known, a reply that recommends a plan must come with its button.
-    // If the model named a plan without calling recommend_plan, ask once for just that call and
-    // keep the reply it already wrote.
-    const stage = stored.flow.sales_stage;
-    if (
-      reply &&
-      capability === "sales" &&
-      (stage === undefined || stage === "discovery") &&
-      !actions.some((a) => a.type === "recommend_plan") &&
-      salesStatus(toolContext().known, stored.flow.asked ?? []).ready &&
-      RECOMMENDS_PLAN_RE.test(foldForMatch(reply))
-    ) {
-      try {
-        const retry = await chatWithFallback({
-          system: `${system}\nYou just named a plan as the recommendation in your reply but did not call recommend_plan. Call recommend_plan now for that plan. Write no text.`,
-          messages: [...conversation, { role: "assistant", content: reply }],
-          tools: toolsFor(["recommend_plan"]),
-        });
-        for (const call of retry.toolCalls) {
-          if (call.name !== "recommend_plan") continue;
-          const out = runTool(call, tiers, toolContext());
-          if ("action" in out && out.action) actions.push(out.action);
-        }
-        console.warn(`[agent] recommend_plan retry: ${actions.some((a) => a.type === "recommend_plan") ? "ok" : "no call"}`);
-      } catch (error) {
-        console.error("[agent] recommend_plan retry failed:", error instanceof Error ? error.message : "unknown error");
-      }
-    }
   } catch {
     const failureState = resolveResponseState(intentState, [], true);
     const failure = await persistState(sessionId, failureState, intent, {
@@ -314,12 +296,41 @@ ${addendum}` : basePrompt;
     return NextResponse.json({ reply: FALLBACK, actions: [], state: failure.state, stateUpdate: failure.status, capability }, { status: 502 });
   }
 
-  // Sentences that break the contract (permission questions, false claims, promises) are removed.
-  const linted = lintReply(reply);
+  // What the stage requires and the model skipped is done here: the recommendation with its plan, prices
+  // and break-even, the released buttons, the call button, the WhatsApp button (see lib/agent/enforce.ts).
+  // Each planned call goes through the same runTool, so every rule of the tools still applies.
+  const enforced = enforceTurn({
+    capability,
+    plan,
+    baseState: intentState,
+    inherited,
+    storedStage: stored.flow.sales_stage,
+    known: toolContext().known,
+    asked: stored.flow.asked ?? [],
+    tiers,
+    message: last.content,
+    reply,
+    actions,
+  });
+  if (enforced.dropRoiOtherThan) {
+    const keep = actions.filter((a) => !(a.type === "roi" && a.plan !== enforced.dropRoiOtherThan));
+    actions.splice(0, actions.length, ...keep);
+  }
+  for (const [i, planned] of enforced.calls.entries()) {
+    const out = runTool({ id: `code-${i}`, name: planned.name, arguments: planned.arguments }, tiers, toolContext());
+    if ("action" in out && out.action) actions.push(out.action);
+  }
+  if (enforced.calls.length || enforced.reply !== reply) {
+    console.warn(`[agent] enforced: ${enforced.calls.map((c) => c.name).join(",") || "reply only"}`);
+  }
+  reply = enforced.reply;
+
+  // Sentences that break the contract (permission questions, false claims, promises, a button that is not there) are removed.
+  const linted = lintReply(reply, { hasButtons: actions.some((a) => a.type !== "roi") });
   if (linted.removed.length) console.warn(`[agent] reply lint removed: ${linted.removed.join(",")}`);
   reply = linted.text;
 
-  if (!reply) reply = actions.length ? "Aquí tiene:" : FALLBACK;
+  if (!reply) reply = actions.length ? "Aquí tiene:" : "Cuénteme un poco más para poder ayudarle.";
   // A visitor who asked for a person always sees the number as text too, not only the buttons.
   if (capability === "handoff" && !reply.includes("809-603-4113")) reply = `${reply.replace(/\s+$/, "")} WhatsApp: ${SITE.phoneDisplay}.`;
   if (TU_FORM_RE.test(reply)) console.warn("[agent] register: a \"tú\" form in the reply");
@@ -355,6 +366,7 @@ ${addendum}` : basePrompt;
     objection: plan.objection,
     asks: !recommended && !call && reply.includes("?") ? plan.asks : null,
     offeredSales: capability === "receptionist" && SALES_OFFER_RE.test(foldForMatch(reply)),
+    clarifiedSale: plan.clarifiesSale && reply.includes("?"),
     newAlerts,
   });
   const flowChanged = !sameFlow(stored.flow, nextFlowValue);
