@@ -1,4 +1,4 @@
-import { numbersIn, type Qualification, type QualificationKey } from "@/lib/agent/qualification";
+import { normalizeBusinessType, numbersIn, type Qualification, type QualificationKey } from "@/lib/agent/qualification";
 
 // Code-side reading of the visitor's answer to the question the agent asked last. The model is asked
 // to save every fact with record_qualification, but it sometimes forgets, and the next turn then
@@ -49,7 +49,7 @@ export function inferAnswer(key: QualificationKey, message: string): Qualificati
 
   switch (key) {
     case "business_type": {
-      const value = raw.replace(/^(tengo|soy|es|manejo|trabajo con|tenemos|me dedico a)\s+(una|un|unas|unos)?\s*/i, "").replace(/[.!]+$/, "").trim();
+      const value = normalizeBusinessType(raw);
       return value && value.length <= 80 ? { business_type: value } : {};
     }
     case "pain":

@@ -52,7 +52,7 @@ WhatsApp number in the handoff reply, and the per-sale ROI question. Also verifi
 Since then (2026-10-02, D19 to D25, "Oryn brain"): the plan is chosen in code from what the visitor wants the agent to do with their own customers (`lib/agent/plan-rubric.ts`, no default plan);
 `chat_sessions.flow` keeps the asked questions, the sales stage and the alerts already sent; the tools `handoff_whatsapp` (prefilled WhatsApp message built in code) and `show_page` exist; saved facts are
 checked against the visitor's words; reply sentences that ask permission to show a button or claim an unverified action are stripped; Telegram alerts fire once per conversation when a visitor is sent to
-WhatsApp or shown the call button; the chat speaks "usted"; objection cards, a sales stage machine and the replay script (`scripts/oryn-replay.mjs`) exist. The phase 3 prompt rewrite is **not verified live yet** (TASKS.md T14).
+WhatsApp or shown the call button; the chat speaks "usted"; objection cards, a sales stage machine and the replay script (`scripts/oryn-replay.mjs`) exist. D26 (code-side guarantees, `b6f892a`) is deployed and 12 replay scripts passed live on it (TASKS.md T14); C2, D1, I1 and L1 still need a valid run (OpenRouter was out of credits, T15). Free-text `business_type` is now normalized in `sanitizeQualification` (`normalizeBusinessType`).
 Not implemented and out of scope: a real human-handoff channel (the WhatsApp button only prefills a message; nobody is notified that the visitor wrote), Cal.com webhook, automatic booking, `booking_confirmed`, lead creation, lead score.
 
 ## Conversation state — implemented, verified live (Step 4)

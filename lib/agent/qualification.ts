@@ -56,6 +56,19 @@ function cleanText(value: unknown, max: number): string | undefined {
   return text.slice(0, max);
 }
 
+// The visitor's sentence reduced to the label of the business ("Estoy lanzando una tienda de ropa" ->
+// "tienda de ropa"). A skipped answer ("Mejor no sé") is not a business type and yields nothing.
+const BUSINESS_TYPE_NON_ANSWER_RE = /^(?:mejor\s+)?no\s+s[eé](?![a-záéíóúñ])|^no\s+estoy\s+segur[oa]\b|^ni\s+idea\b|^cualquiera\b/i;
+const BUSINESS_TYPE_LEAD_RE =
+  /^(?:(?:estoy|estamos)\s+(?:lanzando|empezando|abriendo|montando|iniciando)(?:\s+con)?|(?:acabo|acabamos)\s+de\s+(?:abrir|lanzar|montar)|tengo|tenemos|soy|somos|es|manejo|manejamos|trabajo\s+con|trabajamos\s+con|me\s+dedico\s+a|nos\s+dedicamos\s+a|vendo|vendemos)\s+(?:(?:una|un|unas|unos|la|el|las|los)\s+)?(?:negocio\s+de\s+)?/i;
+
+export function normalizeBusinessType(value: string): string | undefined {
+  const text = value.trim();
+  if (BUSINESS_TYPE_NON_ANSWER_RE.test(text)) return undefined;
+  const label = text.replace(BUSINESS_TYPE_LEAD_RE, "").replace(/[.!]+$/, "").trim();
+  return label || undefined;
+}
+
 // Used for tool arguments and for whatever is read back from the database:
 // unknown keys, wrong types and contact-like text are dropped.
 export function sanitizeQualification(raw: unknown): Qualification {
@@ -63,7 +76,8 @@ export function sanitizeQualification(raw: unknown): Qualification {
   const out: Qualification = {};
 
   for (const key of ["business_type", "customer_channel", "goal", "timing", "pain"] as const) {
-    const text = cleanText(src[key], TEXT_LIMITS[key]);
+    const cleaned = cleanText(src[key], TEXT_LIMITS[key]);
+    const text = key === "business_type" && cleaned ? normalizeBusinessType(cleaned) : cleaned;
     if (text) out[key] = text;
   }
   if (typeof src.has_website === "boolean") out.has_website = src.has_website;
