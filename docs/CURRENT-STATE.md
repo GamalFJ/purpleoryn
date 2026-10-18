@@ -114,6 +114,15 @@ is `unknown`; a genuinely off-topic message inside an active flow keeps that flo
 | Supabase | Anon, cookie and service-role clients; RLS on; migrations in repo. |
 | Kapso | Not present. |
 
+## Portfolio
+
+- `/portafolio` renders the published rows of `portfolio_items` (`getPortfolio`); with no rows it shows the "Casos de éxito
+  próximamente" placeholder. Rows are managed in the admin (`/admin/portafolio`).
+- Seven project covers (16:9 WebP, real captures of the delivered sites) live in `public/portafolio/`.
+  `supabase/seeds/portfolio-snapshots.sql` inserts the seven rows (no results claimed, no links); it must be run once in the
+  purpleoryn Supabase project's SQL editor — it was NOT applied from the repo session, and the Supabase connector there
+  points at a different project.
+
 ## Known gaps / risks
 
 1. Migration history in Supabase is out of sync with the repo (see above); the deployed code that calls
