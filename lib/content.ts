@@ -16,7 +16,7 @@ export interface SiteSettings {
 // panel's site settings; no code change needed.
 export const DEFAULT_SETTINGS: SiteSettings = {
   heroHeadline: "Sitios web, SEO y agentes de IA para negocios en Santo Domingo",
-  heroSubheadline: "Tres planes con precio fijo para que tu negocio aparezca en Google y reciba clientes por WhatsApp.",
+  heroSubheadline: "Tres planes con precio fijo para que su negocio aparezca en Google y reciba clientes por WhatsApp.",
   heroImageUrl: "/media/fundador.webp",
   aboutImageUrl: "/media/fundador-2.webp",
   aboutBio:

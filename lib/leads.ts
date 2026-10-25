@@ -5,29 +5,29 @@ const phone = z
   .string()
   .trim()
   .transform((v) => v.replace(/\D/g, ""))
-  .refine((d) => /^1?(809|829|849)\d{7}$/.test(d), "Escribe un número dominicano de 10 dígitos, por ejemplo 809-555-1234.")
+  .refine((d) => /^1?(809|829|849)\d{7}$/.test(d), "Escriba un número dominicano de 10 dígitos, por ejemplo 809-555-1234.")
   .transform((d) => `+1${d.slice(-10)}`);
 
 export const leadSchema = z.object({
-  plan: z.enum(["presencia", "conversion", "autoridad"], { message: "Elige un plan." }),
+  plan: z.enum(["presencia", "conversion", "autoridad"], { message: "Elija un plan." }),
   // Sending this form is a formal order, so the confirmation is validated on
   // the server too: a disabled submit button is a courtesy, not a record.
   confirmed: z
     .string()
-    .refine((v) => v === "on", "Marca la confirmación para enviar tu pedido."),
+    .refine((v) => v === "on", "Marque la confirmación para enviar su pedido."),
   // Add-on slugs; checked against the live `addons` table in the action.
   addons: z.array(z.string().trim().min(1).max(60)).max(10),
-  name: z.string().trim().min(2, "Escribe tu nombre.").max(120),
+  name: z.string().trim().min(2, "Escriba su nombre.").max(120),
   whatsapp: phone,
   email: z
     .string()
     .trim()
     .max(160)
-    .refine((v) => v === "" || z.email().safeParse(v).success, "Revisa el correo o déjalo en blanco."),
-  business: z.string().trim().min(2, "Escribe el nombre de tu negocio.").max(160),
+    .refine((v) => v === "" || z.email().safeParse(v).success, "Revise el correo o déjelo en blanco."),
+  business: z.string().trim().min(2, "Escriba el nombre de su negocio.").max(160),
   // Free text with on-page suggestions, not a fixed enum: a niche the list
   // doesn't cover must never be rejected.
-  businessNiche: z.string().trim().min(2, "Escribe el rubro de tu negocio.").max(120),
+  businessNiche: z.string().trim().min(2, "Escriba el rubro de su negocio.").max(120),
   // Optional: a handle, or a link to any platform, not only Instagram.
   socialHandle: z.string().trim().max(200),
   message: z.string().trim().max(1500),

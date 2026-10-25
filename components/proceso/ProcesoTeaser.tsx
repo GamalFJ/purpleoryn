@@ -15,8 +15,8 @@ export function ProcesoTeaser() {
           De la primera conversación al sitio en vivo, en siete pasos
         </h2>
         <p className="mt-4 text-lg leading-relaxed text-body">
-          Todo inicia con un diagnóstico sin costo y sin compromiso. De ahí en adelante el camino está escrito: sabes qué
-          sigue, cuándo pagas y cuándo sale en vivo tu sistema.
+          Todo inicia con un diagnóstico sin costo y sin compromiso. De ahí en adelante el camino está escrito: sabe qué
+          sigue, cuándo paga y cuándo sale en vivo su sistema.
         </p>
       </div>
 

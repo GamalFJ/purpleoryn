@@ -60,7 +60,7 @@ export function RoiCalculator({ tiers }: { tiers: Tier[] }) {
           label: "Inversión del primer año",
           value: formatRD(result.yearOneInvestment),
           exact: null,
-          note: "Todo lo que pagas por el servicio en tu primer año.",
+          note: "Todo lo que paga por el servicio en su primer año.",
           tone: "warm" as const,
         },
         {
@@ -114,10 +114,10 @@ export function RoiCalculator({ tiers }: { tiers: Tier[] }) {
           <div>
             <RoiBadge className="mb-4" />
             <h2 id="calculadora-titulo" className="text-3xl font-semibold sm:text-4xl">
-              ¿Cuántas ventas necesitas para que se pague solo?
+              ¿Cuántas ventas necesita para que se pague solo?
             </h2>
             <p className="mt-4 text-lg leading-relaxed text-body">
-              Elige un plan y escribe cuánto vale una venta promedio en tu negocio. El resultado se actualiza al escribir.
+              Elija un plan y escriba cuánto vale una venta promedio en su negocio. El resultado se actualiza al escribir.
             </p>
           </div>
         </div>
@@ -177,7 +177,7 @@ export function RoiCalculator({ tiers }: { tiers: Tier[] }) {
                 />
               </div>
               <p id={`${asvId}-help`} className="text-sm text-muted">
-                Lo que te paga un cliente en una compra típica.
+                Lo que le paga un cliente en una compra típica.
               </p>
             </div>
           </div>
@@ -235,12 +235,12 @@ export function RoiCalculator({ tiers }: { tiers: Tier[] }) {
                     <div>
                       <p className="text-[15px] font-semibold text-ink">¿Qué es la Meta 3x?</p>
                       <p className="mt-1.5 text-sm leading-relaxed text-body">
-                        No nos conformamos con que el sistema se pague solo. Nuestra meta es que, en tu primer año, te devuelva 3 veces lo que
-                        invertiste — no romper parejo, generar ganancia real.
+                        No nos conformamos con que el sistema se pague solo. Nuestra meta es que, en su primer año, le devuelva 3 veces lo que
+                        invirtió; no romper parejo, generar ganancia real.
                       </p>
                       <p className="mt-2 text-sm leading-relaxed text-muted">
-                        Esta es tu meta de referencia, no una garantía de ventas — depende de tu mercado, tu oferta y el seguimiento que le des a
-                        cada cliente que te llega.
+                        Esta es su meta de referencia, no una garantía de ventas. Depende de su mercado, su oferta y el seguimiento que le dé a
+                        cada cliente que le llega.
                       </p>
                     </div>
                   </div>
@@ -253,7 +253,7 @@ export function RoiCalculator({ tiers }: { tiers: Tier[] }) {
                     >
                       Elegir {tier.name}
                     </button>
-                    <p className="text-sm text-muted">Tu cálculo se guarda junto con tu solicitud.</p>
+                    <p className="text-sm text-muted">Su cálculo se guarda junto con tu solicitud.</p>
                   </div>
                 </motion.div>
               ) : (
@@ -264,9 +264,9 @@ export function RoiCalculator({ tiers }: { tiers: Tier[] }) {
                   exit={{ opacity: 0 }}
                   className="flex h-full min-h-56 flex-col justify-center"
                 >
-                  <p className="font-display text-xl font-semibold">Escribe el valor de una venta para ver el resultado.</p>
+                  <p className="font-display text-xl font-semibold">Escriba el valor de una venta para ver el resultado.</p>
                   <p className="mt-2 max-w-[48ch] text-[15px] leading-relaxed text-body">
-                    Verás la inversión del primer año, las ventas que necesitas para recuperarla y la meta para triplicarla.
+                    Verá la inversión del primer año, las ventas que necesita para recuperarla y la meta para triplicarla.
                   </p>
                 </motion.div>
               )}
@@ -277,7 +277,7 @@ export function RoiCalculator({ tiers }: { tiers: Tier[] }) {
         <details className="group mt-6 max-w-3xl text-[15px] text-body">
           <summary className="cursor-pointer font-medium text-ink marker:text-accent">Cómo se calcula</summary>
           <p className="mt-3 leading-relaxed">
-            En corto: escribes cuánto vale una venta típica tuya, y calculamos cuántas ventas de ese tamaño se necesitan para pagar el sistema — y
+            En corto: escribe cuánto vale una venta típica suya, y calculamos cuántas ventas de ese tamaño se necesitan para pagar el sistema, y
             cuántas para triplicar la inversión.
           </p>
           <ul className="mt-3 space-y-1.5 leading-relaxed">

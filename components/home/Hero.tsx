@@ -25,10 +25,10 @@ export function Hero({ settings }: { settings: SiteSettings }) {
       <section className="mx-auto grid max-w-6xl items-end gap-10 px-4 pt-10 sm:px-6 md:grid-cols-[1.35fr_0.65fr] md:gap-12 md:pt-16">
         <div className="pb-2 md:pb-16">
           <p className="mb-4 text-lg font-medium text-ink">
-            <span className="sr-only">Para tu negocio, un socio {DESCRIPTORS.slice(0, -1).join(", ")} y {DESCRIPTORS.at(-1)}.</span>
+            <span className="sr-only">Para su negocio, un socio {DESCRIPTORS.slice(0, -1).join(", ")} y {DESCRIPTORS.at(-1)}.</span>
             {/* The word ends the line, so shorter words leave no visible gap. */}
             <span aria-hidden="true">
-              Para tu negocio, un socio <RotatingWord words={DESCRIPTORS} />
+              Para su negocio, un socio <RotatingWord words={DESCRIPTORS} />
             </span>
           </p>
           {/* pb keeps descenders inside the clipped gradient. */}

@@ -39,7 +39,7 @@ export default function ComoTrabajamosPage() {
               location="como_trabajamos_inicio"
               className={buttonClass("primary", "lg")}
             >
-              Agenda tu diagnóstico gratis
+              Agende su diagnóstico gratis
             </TrackedLink>
           </div>
           <p className="mt-10 text-sm text-muted">
@@ -70,11 +70,11 @@ export default function ComoTrabajamosPage() {
             Ya conoces el camino
           </h2>
           <p className="mt-4 max-w-[52ch] text-lg leading-relaxed text-body">
-            Elige tu plan y envía el formulario. Ese envío es el paso 02: tu pedido en firme y tu cupo reservado por 7
+            Elija su plan y envíe el formulario. Ese envío es el paso 02: su pedido en firme y su cupo reservado por 7
             días.
           </p>
           <Link href="/servicios#elegir-plan" className={buttonClass("primary", "lg", "mt-8")}>
-            Empieza tu proyecto
+            Empiece su proyecto
           </Link>
         </section>
       </main>

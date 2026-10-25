@@ -4,6 +4,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { JsonLd, offerCatalogSchema } from "@/components/seo/JsonLd";
 import { AddonSection } from "@/components/servicios/AddonSection";
+import { OfferBlock } from "@/components/servicios/OfferBlock";
 import { LeadForm } from "@/components/servicios/LeadForm";
 import { PlanSelectionProvider } from "@/components/servicios/PlanSelection";
 import { RoiCalculator } from "@/components/servicios/RoiCalculator";
@@ -18,7 +19,7 @@ export const revalidate = 300;
 export const metadata = pageMetadata({
   title: "Planes y precios",
   description:
-    "Compara los planes Presencia, Conversión y Autoridad: sitio web, SEO local, Google Business Profile, analítica y agente de IA. Calcula tu retorno y elige tu plan.",
+    "Compare los planes Presencia, Conversión y Autoridad: sitio web, SEO local, Google Business Profile, analítica y agente de IA. Calcule su retorno y elija su plan.",
   path: "/servicios",
 });
 
@@ -37,19 +38,20 @@ export default async function ServiciosPage() {
               Cada plan tiene un pago único y una mensualidad, y cada uno incluye todo lo del anterior. Precios en pesos dominicanos.
             </p>
             <p className="mt-3 text-[15px] text-muted">
-              ¿Quieres todo el detalle antes de elegir?{" "}
+              ¿Desea todo el detalle antes de elegir?{" "}
               <DownloadLink
                 slug="oryn-presence"
                 location="servicios_intro"
                 className="font-medium text-accent underline-offset-4 hover:underline"
               >
-                Descarga Oryn Presence
+                Descargue Oryn Presence
               </DownloadLink>{" "}
               ({documentMeta(DOCUMENTS["oryn-presence"])}).
             </p>
           </div>
           <TierComparison tiers={tiers} />
           <AddonSection addons={addons} marketId={marketId} />
+          <OfferBlock />
           <RoiCalculator tiers={tiers} />
           <LeadForm tiers={tiers} addons={addons} marketId={marketId} />
         </PlanSelectionProvider>

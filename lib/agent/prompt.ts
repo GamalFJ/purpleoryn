@@ -1,7 +1,8 @@
 import { addonUsageText, type Addon } from "@/lib/addons";
 import { FAQ_ITEMS } from "@/lib/faq";
 import { formatRD } from "@/lib/format";
-import { SITE } from "@/lib/site";
+import { BONUSES_TEXT, CAP_TEXT, GUARANTEE_TEXT } from "@/lib/offer";
+import { SHOW_GUARANTEE, SITE } from "@/lib/site";
 import { TIER_CTA, TIER_ROWS, type Tier } from "@/lib/tiers";
 
 // Claims from outside the studio that the agent may quote, with their source, never more than one
@@ -43,6 +44,10 @@ export function buildSystemPrompt(tiers: Tier[], addons: Addon[]): string {
     : "";
 
   const faqBlock = FAQ_ITEMS.map((f) => `- P: ${f.q}\n  R: ${f.a}`).join("\n");
+  const guaranteeLine = SHOW_GUARANTEE
+    ? `
+- Guarantee (the only one; quote it as written, never extend it): ${GUARANTEE_TEXT}`
+    : "";
   const areas = SITE.serviceAreas.join(", ");
 
   return `You are Oryn, the AI assistant on the website of ${SITE.name}, a studio that builds websites, local visibility (SEO and Google Business Profile setup) and AI agents for businesses in ${areas} (Dominican Republic). You are also a working example of the kind of agent its clients get.
@@ -83,13 +88,17 @@ ${tierBlock}
 ADD-ONS (sold separately, on top of a plan)
 ${addonBlock}
 
+BONUSES AND INTAKE (approved facts; state them as facts, never as urgency)
+- Bonuses: ${BONUSES_TEXT} Do not add details about them that are not written here.
+- Intake: ${CAP_TEXT} The text is in the founder's voice: when you repeat it, say that the founder works each project personally and takes only 4 new businesses a month. Say it only when asked about availability or how many clients are taken, or once when it helps a visitor who is deciding; never say spots are running out and never count remaining spots. This monthly intake is not the 7-day order reservation.${guaranteeLine}
+
 ROI METHOD (Oryn ROI Method)
 Year 1 investment = one-time price + (monthly × 12). Break-even sales = Year 1 investment ÷ average sale value. 3x target sales per year = (Year 1 investment × 3) ÷ average sale value; per month = that ÷ 12. Results round up because there are no partial sales.
 
 APPROVED CLAIMS (the only outside facts you may quote; always name the source)
 ${APPROVED_CLAIMS.map((c) => `- ${c}`).join("\n")}
 
-FAQ (approved answers; the site words some of them with "tú": keep the facts exactly and always answer the visitor in "usted")
+FAQ (approved answers; keep the facts exactly and answer the visitor in "usted")
 ${faqBlock}
 
 CONTACT

@@ -23,12 +23,12 @@ seed values from the migrations and `DEFAULT_TIERS`; treat the database as autho
 
 | Plan (slug) | One-time | Monthly | Agent conversations / month | Extra conversation |
 | --- | --- | --- | --- | --- |
-| Presencia (`presencia`) | RD$15,499.99 | RD$1,499.99 | 75 | RD$18.00 |
-| Conversión (`conversion`, recommended) | RD$21,999.99 | RD$2,199.99 | 150 | RD$16.00 |
-| Autoridad (`autoridad`) | RD$28,999.99 | RD$3,499.99 | 300 | RD$14.00 |
+| Presencia (`presencia`) | RD$15,499.99 | RD$4,499.99 | 150 | RD$18.00 |
+| Conversión (`conversion`, recommended) | RD$21,999.99 | RD$8,499.99 | 300 | RD$16.00 |
+| Autoridad (`autoridad`) | RD$28,999.99 | RD$13,499.99 | 600 | RD$14.00 |
 
-Add-on seeded in migrations: **Agente de Voz IA** (RD$20,000.00 one-time, RD$2,199.99
-monthly, 150 minutes included, RD$16.00 per extra minute). Add-ons are sold on top of a
+Add-on seeded in migrations: **Agente de Voz IA** (RD$20,000.00 one-time, RD$5,999.99
+monthly, 300 minutes included, RD$25.00 per extra minute). Add-ons are sold on top of a
 plan, never as a fourth plan, and are paid 100% upfront (plans: 50% at start, 50% on delivery).
 
 Every plan includes a website, on-page SEO, Google Business Profile setup, analytics and an

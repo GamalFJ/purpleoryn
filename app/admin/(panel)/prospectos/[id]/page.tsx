@@ -56,7 +56,7 @@ export default async function ProspectoPage({ params }: { params: Params }) {
   const firstName = String(lead.name).split(" ")[0];
   // Sent to a Dominican client over WhatsApp: stays in Spanish regardless of
   // the admin panel's own display language.
-  const waText = `Hola ${firstName}, te escribe Gamal de Purple Cove Labs. Recibimos tu solicitud${plan ? ` del plan ${plan.name}` : ""} para ${lead.business}.`;
+  const waText = `Hola ${firstName}, le escribe Gamal de Purple Cove Labs. Recibimos su solicitud${plan ? ` del plan ${plan.name}` : ""} para ${lead.business}.`;
   const waHref = `https://wa.me/${String(lead.whatsapp).replace("+", "")}?text=${encodeURIComponent(waText)}`;
 
   return (

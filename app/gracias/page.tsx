@@ -20,7 +20,7 @@ export async function generateMetadata({ searchParams }: { searchParams: SearchP
   const fromCall = origen === "llamada";
   return pageMetadata({
     title: fromCall ? "Llamada agendada" : "Pedido confirmado",
-    description: fromCall ? "Tu llamada quedó agendada." : "Tu pedido quedó confirmado.",
+    description: fromCall ? "Su llamada quedó agendada." : "Su pedido quedó confirmado.",
     path: "/gracias",
     noIndex: true,
   });
@@ -51,9 +51,9 @@ export default async function GraciasPage({ searchParams }: { searchParams: Sear
 
         {fromCall ? (
           <>
-            <h1 className="mt-5 text-4xl font-semibold leading-tight sm:text-5xl">Tu llamada está agendada</h1>
+            <h1 className="mt-5 text-4xl font-semibold leading-tight sm:text-5xl">Su llamada está agendada</h1>
             <p className="mt-4 text-lg leading-relaxed text-body">
-              Te llegará la confirmación por correo con el enlace de la reunión. Si necesitas cambiar la hora, usa el enlace de ese correo.
+              Le llegará la confirmación por correo con el enlace de la reunión. Si necesita cambiar la hora, use el enlace de ese correo.
             </p>
             <Link href="/servicios" className={buttonClass("secondary", "lg", "mt-8")}>
               Ver los planes antes de la llamada
@@ -61,13 +61,13 @@ export default async function GraciasPage({ searchParams }: { searchParams: Sear
           </>
         ) : (
           <>
-            <h1 className="mt-5 text-4xl font-semibold leading-tight sm:text-5xl">Tu pedido está confirmado</h1>
+            <h1 className="mt-5 text-4xl font-semibold leading-tight sm:text-5xl">Su pedido está confirmado</h1>
             <p className="mt-4 text-lg leading-relaxed text-body">
-              {plan ? `Registramos tu pedido del plan ${plan.name}` : "Registramos tu pedido"}
+              {plan ? `Registramos su pedido del plan ${plan.name}` : "Registramos su pedido"}
               {orderedAddons.length > 0 && ` con ${orderedAddons.map((a) => `el módulo ${a.name}`).join(" y ")}`}
               {". "}
-              Tu cupo queda reservado por 7 días calendario. Te escribimos por WhatsApp para hacer el seguimiento. Si
-              quieres adelantar, elige una de estas opciones.
+              Su cupo queda reservado por 7 días calendario. Le escribimos por WhatsApp para hacer el seguimiento. Si
+              desea adelantar, elija una de estas opciones.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <TrackedLink

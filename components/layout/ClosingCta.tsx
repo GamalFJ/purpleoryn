@@ -19,10 +19,10 @@ export function ClosingCta({ location }: { location: string }) {
           <RocketLaunch size={30} weight="duotone" aria-hidden="true" />
         </span>
         <h2 id="cierre-titulo" className="max-w-[20ch] text-3xl font-semibold leading-tight text-plum-ink sm:text-[2.6rem]">
-          ¿Cuál plan le conviene a tu negocio?
+          ¿Cuál plan le conviene a su negocio?
         </h2>
         <p className="mt-4 max-w-[52ch] text-lg leading-relaxed text-plum-muted">
-          Compara los tres planes o reserva 20 minutos para decidirlo con nosotros.
+          Compare los tres planes o reserve 20 minutos para decidirlo con nosotros.
         </p>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
           <Link href="/servicios#elegir-plan" className={buttonClass("onPlum", "lg")}>

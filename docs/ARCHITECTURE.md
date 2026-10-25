@@ -241,7 +241,7 @@ Run with `node scripts/oryn-replay.mjs` (see its header for pacing and options).
 | Script | Covers | Pass |
 | --- | --- | --- |
 | A1 | receptionist offer then "Sí" | next turn is sales and asks the next sales question |
-| B1 | salon, services, "que el agente agende solo", RD$2,500 | Autoridad; RD$28,999.99 and RD$3,499.99; break-even; call button; no question |
+| B1 | salon, services, "que el agente agende solo", RD$2,500 | Autoridad; RD$28,999.99 and RD$13,499.99; break-even; call button; no question |
 | B2 | same, "yo cierro" | Conversión; order-form button |
 | B3 | launch, "solo quiero que me encuentren" | Presencia |
 | B4 | "no sé qué necesito" | Conversión |

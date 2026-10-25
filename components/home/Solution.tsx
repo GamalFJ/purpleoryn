@@ -10,14 +10,14 @@ import type { Tone } from "@/lib/tone";
 import { WhatsAppMock } from "./WhatsAppMock";
 
 const STEPS: { title: string; text: string; icon: typeof Robot; tone: Tone }[] = [
-  { title: "Un cliente escribe", text: "Pregunta desde tu sitio web, a cualquier hora.", icon: ChatCircleText, tone: "teal" },
+  { title: "Un cliente escribe", text: "Pregunta desde su sitio web, a cualquier hora.", icon: ChatCircleText, tone: "teal" },
   {
     title: "El Agente de IA responde al instante",
-    text: "Contesta sus dudas, le hace las preguntas clave y te lo pasa por WhatsApp con todo organizado.",
+    text: "Contesta sus dudas, le hace las preguntas clave y se lo pasa a usted por WhatsApp con todo organizado.",
     icon: Robot,
     tone: "violet",
   },
-  { title: "Se agenda o se convierte en venta", text: "Tú confirmas la cita o cierras la venta con la información en la mano.", icon: CalendarCheck, tone: "amber" },
+  { title: "Se agenda o se convierte en venta", text: "Usted confirma la cita o cierra la venta con la información en la mano.", icon: CalendarCheck, tone: "amber" },
 ];
 
 // Official logos from svgl (github.com/pheralb/svgl). "Trabajamos con" covers
@@ -60,7 +60,7 @@ export function Solution() {
               Oryn Presence: un solo sistema que no deja enfriar a ningún cliente
             </h2>
             <p className="mt-4 text-lg leading-relaxed text-body">
-              Un sitio que aparece cuando te buscan y un Agente de IA que atiende a cada cliente en el momento.
+              Un sitio que aparece cuando le buscan y un Agente de IA que atiende a cada cliente en el momento.
             </p>
           </div>
         </div>
@@ -98,10 +98,10 @@ export function Solution() {
       <div className="mt-14 grid items-center gap-12 md:grid-cols-[1fr_1fr] md:gap-16">
         <WhatsAppMock />
         <div>
-          <h3 className="text-2xl font-semibold leading-tight sm:text-[1.75rem]">Así te llega cada cliente</h3>
+          <h3 className="text-2xl font-semibold leading-tight sm:text-[1.75rem]">Así le llega cada cliente</h3>
           <p className="mt-4 max-w-[46ch] text-[15px] leading-relaxed text-body">
-            Aunque te escriban de noche, el asistente los atiende en tu sitio y te los pasa por WhatsApp con el servicio, la fecha que prefieren y
-            la zona. Tú solo confirmas.
+            Aunque le escriban de noche, el asistente los atiende en su sitio y se los pasa a usted por WhatsApp con el servicio, la fecha que prefieren y
+            la zona. Usted solo confirma.
           </p>
           <p className="mt-8 text-sm font-semibold text-ink">Trabajamos con</p>
           <ul className="mt-3 flex flex-wrap gap-3">

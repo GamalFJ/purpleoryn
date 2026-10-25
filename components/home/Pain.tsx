@@ -9,18 +9,18 @@ const PAINS = [
   },
   {
     icon: MapPinArea,
-    title: "Invisible cuando te buscan cerca",
-    text: "Alguien busca lo que vendes en tu zona y tu negocio no aparece.",
+    title: "Invisible cuando le buscan cerca",
+    text: "Alguien busca lo que vende en su zona y su negocio no aparece.",
   },
   {
     icon: ChartBar,
     title: "Consultas que nadie cuenta",
-    text: "No tienes forma de saber cuántas consultas se están perdiendo.",
+    text: "No tiene forma de saber cuántas consultas se están perdiendo.",
   },
   {
     icon: Storefront,
     title: "Sin presencia real",
-    text: "Tienes un sitio genérico, o ninguno, mientras tu competencia sí tiene presencia real.",
+    text: "Tiene un sitio genérico, o ninguno, mientras su competencia sí tiene presencia real.",
   },
 ];
 
@@ -29,7 +29,7 @@ export function Pain() {
   return (
     <section aria-labelledby="dolor-titulo" className="mx-auto max-w-6xl px-4 pt-24 sm:px-6 md:pt-32">
       <h2 id="dolor-titulo" className="max-w-2xl text-3xl font-semibold leading-tight sm:text-4xl">
-        Lo que hoy le está costando clientes a tu negocio
+        Lo que hoy le está costando clientes a su negocio
       </h2>
       <ul className="mt-10 grid gap-x-12 sm:grid-cols-2">
         {PAINS.map(({ icon: Icon, title, text }) => (

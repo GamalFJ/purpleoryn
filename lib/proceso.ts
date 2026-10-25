@@ -15,8 +15,7 @@ import type { Tone } from "@/lib/tone";
 // on. Source of truth for the copy is the client document "Cómo Trabajamos"
 // (brand/docs/como-trabajamos): titles and step copy are kept word for word
 // with that document, because it and the site have to describe the same
-// process. The document is written in usted; here it is tú, like the rest of
-// the site.
+// process. The document and the site are both written in usted.
 
 export interface Waypoint {
   id: string;
@@ -38,7 +37,7 @@ export const STEPS: Waypoint[] = [
     title: "Presentación",
     short: "Presentación",
     detail:
-      "Te mostramos el sistema en vivo, te enviamos el documento de Oryn Presence, o coordinamos un diagnóstico gratis.",
+      "Le mostramos el sistema en vivo, le enviamos el documento de Oryn Presence, o coordinamos un diagnóstico gratis.",
     icon: MonitorPlay,
     tone: "teal",
   },
@@ -46,8 +45,8 @@ export const STEPS: Waypoint[] = [
     id: "eleccion-del-plan",
     number: "02",
     title: "Elección del Plan",
-    short: "Tu plan",
-    detail: "Eliges tu plan (y módulo adicional, si deseas) y envías el formulario en purpleoryn.com.",
+    short: "Su plan",
+    detail: "Elige su plan (y módulo adicional, si desea) y envía el formulario en purpleoryn.com.",
     icon: FileText,
     tone: "teal",
   },
@@ -56,7 +55,7 @@ export const STEPS: Waypoint[] = [
     number: "03",
     title: "Confirmación",
     short: "Confirmación",
-    detail: "Confirmamos tu pedido y te enviamos el formulario de configuración de tu plan.",
+    detail: "Confirmamos su pedido y le enviamos el formulario de configuración de su plan.",
     icon: CheckCircle,
     tone: "amber",
   },
@@ -66,7 +65,7 @@ export const STEPS: Waypoint[] = [
     title: "Primer Pago",
     short: "Primer pago",
     detail:
-      "Pagas el 50% del plan (el módulo adicional se paga 100% aquí) y nos devuelves el formulario completo.",
+      "Paga el 50% del plan (el módulo adicional se paga 100% aquí) y nos devuelve el formulario completo.",
     icon: CreditCard,
     tone: "amber",
   },
@@ -75,7 +74,7 @@ export const STEPS: Waypoint[] = [
     number: "05",
     title: "Inicio y Construcción",
     short: "Construcción",
-    detail: "Arrancamos oficialmente y construimos tu sistema.",
+    detail: "Arrancamos oficialmente y construimos su sistema.",
     icon: Hammer,
     tone: "violet",
   },
@@ -84,7 +83,7 @@ export const STEPS: Waypoint[] = [
     number: "06",
     title: "Revisión",
     short: "Revisión",
-    detail: "Una ronda de ajustes estéticos, luego tu aprobación.",
+    detail: "Una ronda de ajustes estéticos, luego su aprobación.",
     icon: Eye,
     tone: "violet",
   },
@@ -93,7 +92,7 @@ export const STEPS: Waypoint[] = [
     number: "07",
     title: "Entrega",
     short: "Entrega",
-    detail: "Pagas el final (50% del plan) y tu sistema sale en vivo.",
+    detail: "Paga el final (50% del plan) y su sistema sale en vivo.",
     icon: RocketLaunch,
     tone: "rose",
   },

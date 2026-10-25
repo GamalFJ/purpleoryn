@@ -60,7 +60,7 @@ const SCRIPTS = [
       const rec = recommend(t);
       return [
         ["recommend_plan = autoridad", rec?.action.plan === "autoridad"],
-        ["price RD$28,999.99 and RD$3,499.99", has(rec?.reply, "28,999.99") && has(rec?.reply, "3,499.99")],
+        ["price RD$28,999.99 and RD$13,499.99", has(rec?.reply, "28,999.99") && has(rec?.reply, "13,499.99")],
         ["break-even (29) in the reply", /\b29\b/.test(rec?.reply ?? "")],
         ["no question on the recommendation turn", !(rec?.reply ?? "?").includes("?")],
         ["a call button, not a form (Autoridad)", Boolean(rec)],

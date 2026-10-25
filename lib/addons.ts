@@ -41,16 +41,16 @@ export const DEFAULT_ADDONS: Addon[] = [
   {
     slug: "agente-de-voz",
     name: "Agente de Voz IA",
-    description: "Un agente de IA que contesta las llamadas de tu negocio.",
+    description: "Un agente de IA que contesta, con voz natural y las 24 horas, las llamadas que sus clientes hacen al WhatsApp de su negocio.",
     oneTime: 20000,
-    monthly: 2199.99,
-    includedUnits: 150,
+    monthly: 5999.99,
+    includedUnits: 300,
     unitLabel: "minutos",
-    overageRate: 16,
+    overageRate: 25,
   },
 ];
 
-// "150 minutos al mes. Cada minuto adicional: RD$16.00"
+// "300 minutos al mes. Cada minuto adicional: RD$25.00"
 export function addonUsageText(a: Pick<Addon, "includedUnits" | "unitLabel" | "overageRate">): string {
   const singular = a.unitLabel.replace(/s$/, "");
   return `${formatCount(a.includedUnits)} ${a.unitLabel} al mes. Cada ${singular} adicional: ${formatRD(a.overageRate)}`;

@@ -23,7 +23,7 @@ export default function PrivacidadPage() {
           <section>
             <h2>Quiénes somos</h2>
             <p className="mt-3">
-              {SITE.name} es responsable de los datos recopilados en {SITE.url.replace("https://", "")}. Puedes escribirnos a{" "}
+              {SITE.name} es responsable de los datos recopilados en {SITE.url.replace("https://", "")}. Puede escribirnos a{" "}
               <a href={`mailto:${SITE.email}`} className="text-accent underline underline-offset-2">
                 {SITE.email}
               </a>{" "}
@@ -34,8 +34,8 @@ export default function PrivacidadPage() {
           <section>
             <h2>Qué datos recopilamos</h2>
             <ul>
-              <li>Los datos que escribes en el formulario: nombre, WhatsApp, correo, nombre del negocio, mensaje y el plan elegido.</li>
-              <li>Si usaste la calculadora, el valor promedio de venta que escribiste.</li>
+              <li>Los datos que escribe en el formulario: nombre, WhatsApp, correo, nombre del negocio, mensaje y el plan elegido.</li>
+              <li>Si usó la calculadora, el valor promedio de venta que escribió.</li>
               <li>De dónde llegaste al sitio (por ejemplo, un enlace de Google) y la página por la que entraste.</li>
               <li>Datos de uso anónimos del sitio, como páginas visitadas y clics en botones.</li>
               <li>Si conversas con nuestro asistente de IA, el contenido de esa conversación.</li>
@@ -46,10 +46,10 @@ export default function PrivacidadPage() {
             <h2>Para qué los usamos</h2>
             <ul>
               <li>Contactarte sobre el plan o servicio que solicitaste.</li>
-              <li>Preparar tu propuesta y dar seguimiento a tu solicitud.</li>
+              <li>Preparar su propuesta y dar seguimiento a su solicitud.</li>
               <li>Entender qué partes del sitio funcionan y mejorarlo.</li>
             </ul>
-            <p className="mt-3">No vendemos ni alquilamos tus datos.</p>
+            <p className="mt-3">No vendemos ni alquilamos sus datos.</p>
           </section>
 
           <section>
@@ -68,20 +68,20 @@ export default function PrivacidadPage() {
           <section>
             <h2>Cookies</h2>
             <p className="mt-3">
-              Google Analytics usa cookies para distinguir visitantes y sesiones. Puedes bloquearlas o borrarlas desde la configuración de tu
+              Google Analytics usa cookies para distinguir visitantes y sesiones. Puede bloquearlas o borrarlas desde la configuración de su
               navegador; el sitio sigue funcionando sin ellas.
             </p>
           </section>
 
           <section>
-            <h2>Tus derechos</h2>
+            <h2>Sus derechos</h2>
             <p className="mt-3">
-              De acuerdo con la Ley 172-13 sobre protección de datos personales, puedes pedirnos acceder a tus datos, corregirlos o eliminarlos.
-              Escríbenos a{" "}
+              De acuerdo con la Ley 172-13 sobre protección de datos personales, puede pedirnos acceder a sus datos, corregirlos o eliminarlos.
+              Escríbanos a{" "}
               <a href={`mailto:${SITE.email}`} className="text-accent underline underline-offset-2">
                 {SITE.email}
               </a>{" "}
-              y respondemos tu solicitud.
+              y respondemos su solicitud.
             </p>
           </section>
 

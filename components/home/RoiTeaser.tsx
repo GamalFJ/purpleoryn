@@ -42,7 +42,7 @@ export function RoiTeaser({ tiers }: { tiers: Tier[] }) {
       <div className="grid gap-8 md:grid-cols-[1fr_1fr] md:gap-12">
         <div>
           <RoiBadge />
-          <h3 className="mt-4 text-2xl font-semibold leading-tight sm:text-[1.75rem]">¿Cuántas ventas necesitas para recuperarlo?</h3>
+          <h3 className="mt-4 text-2xl font-semibold leading-tight sm:text-[1.75rem]">¿Cuántas ventas necesita para recuperarlo?</h3>
 
           <fieldset className="mt-6">
             <legend className="text-[15px] font-semibold">Plan</legend>
@@ -97,15 +97,15 @@ export function RoiTeaser({ tiers }: { tiers: Tier[] }) {
                 <p className="mt-3 text-[15px] leading-relaxed text-body">
                   Plan {tier.name}: inversión del primer año de{" "}
                   <span className="tabular font-semibold text-warm-ink">{formatRD(result.yearOneInvestment)}</span>. Nuestra meta es triplicarla:
-                  necesitas <span className="tabular font-semibold text-ink">{salesLabel(Math.ceil(result.targetSalesPerMonth))}</span> al mes.
+                  necesita <span className="tabular font-semibold text-ink">{salesLabel(Math.ceil(result.targetSalesPerMonth))}</span> al mes.
                 </p>
                 <p className="mt-1.5 text-xs text-muted">Meta de referencia, no una garantía.</p>
               </motion.div>
             ) : (
               <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex-1">
-                <p className="font-display text-xl font-semibold text-ink">Escribe el valor de una venta.</p>
+                <p className="font-display text-xl font-semibold text-ink">Escriba el valor de una venta.</p>
                 <p className="mt-2 text-[15px] leading-relaxed text-body">
-                  Te mostramos cuántas ventas recuperan la inversión del primer año del plan {tier.name}.
+                  Le mostramos cuántas ventas recuperan la inversión del primer año del plan {tier.name}.
                 </p>
               </motion.div>
             )}

@@ -15,7 +15,7 @@ type Item =
 // answers on the website and passes the customer to WhatsApp).
 const THREAD: Item[] = [
   { kind: "date", text: "Ayer" },
-  { kind: "system", text: "Oryn atendió a Ana en tu sitio web a las 9:38 p. m. y te la pasó por WhatsApp." },
+  { kind: "system", text: "Oryn atendió a Ana en su sitio web a las 9:38 p. m. y se la pasó a usted por WhatsApp." },
   {
     kind: "in",
     time: "9:41 p. m.",
@@ -105,7 +105,7 @@ export function WhatsAppMock() {
                     out ? cn("rounded-tr-none", C.out) : cn("rounded-tl-none", C.in),
                   )}
                 >
-                  <span className="sr-only">{out ? "Tu negocio: " : "Ana: "}</span>
+                  <span className="sr-only">{out ? "Su negocio: " : "Ana: "}</span>
                   {item.text}
                   <span className={cn("float-right ml-2.5 mt-1.5 inline-flex translate-y-0.5 items-center gap-0.5 text-[11px]", C.meta)}>
                     {item.time}
@@ -129,7 +129,7 @@ export function WhatsAppMock() {
           </span>
         </div>
       </div>
-      <figcaption className="mt-4 text-center text-sm text-muted">Conversación de ejemplo, vista desde el WhatsApp de tu negocio.</figcaption>
+      <figcaption className="mt-4 text-center text-sm text-muted">Conversación de ejemplo, vista desde el WhatsApp de su negocio.</figcaption>
     </figure>
   );
 }

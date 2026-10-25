@@ -12,7 +12,7 @@ import { AddAddonButton } from "./PlanSelection";
 
 // Technology behind each add-on, keyed by slug (see lib/logos.ts).
 const PROVIDERS: Record<string, LogoKey[]> = {
-  "agente-de-voz": ["retell", "vapi", "elevenlabs"],
+  "agente-de-voz": ["elevenlabs"],
 };
 
 // Add-ons live in their own section, never as a fourth plan card.
@@ -25,7 +25,7 @@ export function AddonSection({ addons, marketId }: { addons: Addon[]; marketId: 
         Complementos
       </h2>
       <p className="mt-4 max-w-[58ch] text-lg leading-relaxed text-body">
-        Se suman a cualquier plan y los puedes agregar en el mismo formulario de tu pedido. {ADDON_PAYMENT_RULE}
+        Se suman a cualquier plan y los puede agregar en el mismo formulario de su pedido. {ADDON_PAYMENT_RULE}
       </p>
 
       <ul className="mt-10 space-y-4">

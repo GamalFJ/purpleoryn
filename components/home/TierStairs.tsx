@@ -78,7 +78,7 @@ export function TierStairs({ tiers, addons }: { tiers: Tier[]; addons: Addon[] }
 
       {addons[0] && (
         <p className="mt-8 text-[15px] text-body">
-          ¿También quieres que alguien conteste tus llamadas? Conoce el{" "}
+          ¿También desea que alguien conteste sus llamadas? Conozca el{" "}
           <Link href={`/servicios#${ADDONS_ANCHOR}`} className="font-medium text-accent underline-offset-4 hover:underline">
             {addons[0].name}
           </Link>

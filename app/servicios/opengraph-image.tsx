@@ -7,6 +7,6 @@ export const contentType = "image/png";
 export default function Image() {
   return renderOgImage({
     title: "Planes y precios",
-    subtitle: "Presencia, Conversión y Autoridad. Compara, calcula tu retorno y elige tu plan.",
+    subtitle: "Presencia, Conversión y Autoridad. Compare, calcule su retorno y elija su plan.",
   });
 }

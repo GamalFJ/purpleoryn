@@ -25,7 +25,7 @@ export async function submitLead(_prev: LeadActionState, formData: FormData): Pr
   if (field("company_website")) return { status: "success", plan: field("plan"), addons: [] };
   const startedAt = Number(field("started_at"));
   if (!startedAt || Date.now() - startedAt < MIN_FILL_MS) {
-    return { status: "error", message: "No pudimos enviar el formulario. Espera un momento y vuelve a intentarlo." };
+    return { status: "error", message: "No pudimos enviar el formulario. Espere un momento y vuelva a intentarlo." };
   }
 
   const parsed = leadSchema.safeParse({
@@ -53,7 +53,7 @@ export async function submitLead(_prev: LeadActionState, formData: FormData): Pr
       const key = issue.path[0] as keyof LeadFieldErrors;
       if (key && !fieldErrors[key]) fieldErrors[key] = issue.message;
     }
-    return { status: "error", message: "Revisa los campos marcados.", fieldErrors };
+    return { status: "error", message: "Revise los campos marcados.", fieldErrors };
   }
 
   const lead = parsed.data;
@@ -68,7 +68,7 @@ export async function submitLead(_prev: LeadActionState, formData: FormData): Pr
   if (chosenAddons.some((a) => !a)) {
     return {
       status: "error",
-      message: "Uno de los módulos que elegiste ya no está disponible. Recarga la página y revisa tu pedido.",
+      message: "Uno de los módulos que eligió ya no está disponible. Recargue la página y revise su pedido.",
       fieldErrors: { addons: "Este módulo ya no está disponible." },
     };
   }
@@ -78,7 +78,7 @@ export async function submitLead(_prev: LeadActionState, formData: FormData): Pr
     console.error("[lead] Supabase is not configured; lead was not saved.");
     return {
       status: "error",
-      message: "El formulario todavía no está conectado. Escríbenos por WhatsApp mientras tanto.",
+      message: "El formulario todavía no está conectado. Escríbanos por WhatsApp mientras tanto.",
     };
   }
 
@@ -114,7 +114,7 @@ export async function submitLead(_prev: LeadActionState, formData: FormData): Pr
     console.error("[lead] insert failed:", error.message);
     return {
       status: "error",
-      message: "No pudimos guardar tu pedido. Vuelve a intentarlo o escríbenos por WhatsApp.",
+      message: "No pudimos guardar su pedido. Vuelva a intentarlo o escríbanos por WhatsApp.",
     };
   }
 

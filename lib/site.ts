@@ -30,7 +30,11 @@ export const NAV_LINKS = [
 
 // One label per intent, used identically everywhere on the site.
 export const CTA = {
-  plan: "Elige tu plan",
-  call: "Agenda una llamada gratis",
-  whatsapp: "Escríbenos por WhatsApp",
+  plan: "Elija su plan",
+  call: "Agende una llamada gratis",
+  whatsapp: "Escríbanos por WhatsApp",
 } as const;
+
+// Show the delivery guarantee (page block, short note above the order button,
+// FAQ entry and the agent's knowledge). Off until the owner turns it on.
+export const SHOW_GUARANTEE = false;

@@ -7,6 +7,6 @@ export const contentType = "image/png";
 export default function Image() {
   return renderOgImage({
     title: "Cómo trabajamos",
-    subtitle: "Siete pasos, sin sorpresas. Del diagnóstico gratis a la salida en vivo de tu sistema.",
+    subtitle: "Siete pasos, sin sorpresas. Del diagnóstico gratis a la salida en vivo de su sistema.",
   });
 }

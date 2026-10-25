@@ -17,6 +17,7 @@ import { cn } from "@/lib/cn";
 import { formatRD } from "@/lib/format";
 import { BUSINESS_NICHE_SUGGESTIONS, type LeadActionState, type LeadFieldErrors } from "@/lib/leads";
 import { WHATSAPP_GENERAL, whatsappUrl } from "@/lib/links";
+import { OFFER_HEADING, OFFER_POINTS } from "@/lib/offer";
 import { CTA } from "@/lib/site";
 import type { Tier, TierSlug } from "@/lib/tiers";
 import { usePlanSelection } from "./PlanSelection";
@@ -93,19 +94,19 @@ export function LeadForm({ tiers, addons, marketId }: { tiers: Tier[]; addons: A
             {CTA.plan}
           </h2>
           <p className="mt-4 max-w-[46ch] text-lg leading-relaxed text-body">
-            Enviar este formulario es tu pedido: constituye una orden formal, con el mismo peso que una confirmación
-            por WhatsApp o correo, y reserva tu cupo por 7 días calendario.
+            Enviar este formulario es su pedido: constituye una orden formal, con el mismo peso que una confirmación
+            por WhatsApp o correo, y reserva su cupo por 7 días calendario.
           </p>
           <p className="mt-4 max-w-[46ch] text-[15px] leading-relaxed text-muted">
-            Lee toda la información del sitio antes de enviarlo. Después confirmamos tu pedido y te enviamos el
-            formulario de configuración de tu plan.{" "}
+            Lea toda la información del sitio antes de enviarlo. Después confirmamos su pedido y le enviamos el
+            formulario de configuración de su plan.{" "}
             <Link href="/como-trabajamos" className="font-medium text-accent underline-offset-4 hover:underline">
               Ver los siete pasos
             </Link>
             .
           </p>
           <p className="mt-6 text-[15px] text-muted">
-            ¿Prefieres escribir directo?{" "}
+            ¿Prefiere escribir directo?{" "}
             <TrackedLink
               href={whatsappUrl(WHATSAPP_GENERAL)}
               event="whatsapp_click"
@@ -291,7 +292,7 @@ export function LeadForm({ tiers, addons, marketId }: { tiers: Tier[]; addons: A
               not after: this submission is the confirmation. */}
           <div className="mt-7 rounded-[var(--radius-panel)] border border-warm-line bg-warm-soft p-5">
             <p className="text-[15px] leading-relaxed text-body">
-              ¿Tienes preguntas antes de confirmar?{" "}
+              ¿Tiene preguntas antes de confirmar?{" "}
               <button
                 type="button"
                 onClick={openChat}
@@ -300,7 +301,7 @@ export function LeadForm({ tiers, addons, marketId }: { tiers: Tier[]; addons: A
                 <Sparkle size={16} weight="duotone" aria-hidden="true" />
                 Pregúntele a Oryn AI
               </button>{" "}
-              o revisa las{" "}
+              o revise las{" "}
               <Link href="/#preguntas" className="font-semibold text-accent underline underline-offset-4 hover:text-accent-hover">
                 preguntas frecuentes
               </Link>
@@ -338,9 +339,20 @@ export function LeadForm({ tiers, addons, marketId }: { tiers: Tier[]; addons: A
             )}
           </div>
 
+          <div className="mt-6 rounded-[var(--radius-panel)] border border-line bg-surface p-5">
+            <p className="text-sm font-semibold text-ink">{OFFER_HEADING}</p>
+            <ul className="mt-2 space-y-1.5 text-sm leading-relaxed text-body">
+              {OFFER_POINTS.map((p) => (
+                <li key={p.id}>
+                  <span className="font-semibold text-ink">{p.title}.</span> {p.short}
+                </li>
+              ))}
+            </ul>
+          </div>
+
           <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-sm text-muted">
-              Al enviar aceptas nuestra{" "}
+              Al enviar acepta nuestra{" "}
               <Link href="/privacidad" className="underline underline-offset-2 hover:text-ink">
                 política de privacidad
               </Link>
