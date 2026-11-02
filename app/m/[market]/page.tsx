@@ -38,11 +38,22 @@ export default async function MarketPage({ params, searchParams }: PageProps) {
   }
 
   const reqHeaders = await headers();
+  const rawHost = (reqHeaders.get('x-forwarded-host') || reqHeaders.get('host') || '').toLowerCase();
+  const isLocalhost = rawHost.includes('localhost') || rawHost.includes('127.0.0.1');
+
+  const resolvedSearchParams = await searchParams;
+  const isDevPreview =
+    Boolean(resolvedSearchParams.preview) ||
+    Boolean(resolvedSearchParams.dev) ||
+    resolvedSearchParams.show_prices === 'true' ||
+    resolvedSearchParams.prices === 'true';
+
   const showPricesHeader = reqHeaders.get('x-show-prices');
-  const showPrices = showPricesHeader === 'true';
+
+  // On localhost (developer computer) or dev preview query, show prices!
+  const showPrices = isLocalhost || isDevPreview || showPricesHeader === 'true';
 
   const defaultLocaleHeader = reqHeaders.get('x-market-locale') || 'en';
-  const resolvedSearchParams = await searchParams;
   const requestedLang = typeof resolvedSearchParams.lang === 'string' ? resolvedSearchParams.lang : null;
 
   const config = await getMarketConfig(market as MarketId);

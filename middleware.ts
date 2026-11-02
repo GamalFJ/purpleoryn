@@ -9,14 +9,15 @@ import { logRoutingEvent } from "@/lib/routing/logger";
 export async function middleware(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
 
-  // Step 0a: Block direct external requests to internal route group /m/*
+  // Step 0a: Block direct access to internal route group /m/*
   if (pathname === "/m" || pathname.startsWith("/m/")) {
     return new NextResponse(null, { status: 404 });
   }
 
-  // Step 0b: Allow static assets and Next.js internal files without routing overhead
+  // Step 0b: Skip entirely for static assets, api, next internals, robots, favicon
   if (
     pathname.startsWith("/_next") ||
+    pathname.startsWith("/api") ||
     pathname === "/favicon.ico" ||
     pathname === "/robots.txt" ||
     pathname.startsWith("/docs/") ||
@@ -27,14 +28,9 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Step 0c: Admin and Auth routes maintain existing Supabase authentication flow
-  if (pathname.startsWith("/admin") || pathname.startsWith("/auth") || pathname.startsWith("/api")) {
-    const requestHeaders = new Headers(request.headers);
-    requestHeaders.set("x-market", "dr");
-    let response = NextResponse.next({ request: { headers: requestHeaders } });
-
-    if (!isSupabaseConfigured()) return response;
-
+  // Optional Supabase session refresh
+  if (isSupabaseConfigured()) {
+    let response = NextResponse.next({ request });
     const supabase = createServerClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
       cookies: {
         getAll() {
@@ -42,7 +38,7 @@ export async function middleware(request: NextRequest) {
         },
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
-          response = NextResponse.next({ request: { headers: requestHeaders } });
+          response = NextResponse.next({ request });
           cookiesToSet.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
         },
       },
@@ -52,14 +48,16 @@ export async function middleware(request: NextRequest) {
       data: { user },
     } = await supabase.auth.getUser();
 
+    // Protect /admin routes (except /admin/login)
     if (!user && pathname.startsWith("/admin") && pathname !== "/admin/login") {
-      const url = request.nextUrl.clone();
-      url.pathname = "/admin/login";
-      url.search = "";
-      return NextResponse.redirect(url);
+      const loginUrl = new URL("/admin/login", request.url);
+      loginUrl.searchParams.set("redirectTo", pathname);
+      return NextResponse.redirect(loginUrl);
     }
 
-    return response;
+    if (user && pathname === "/admin/login") {
+      return NextResponse.redirect(new URL("/admin", request.url));
+    }
   }
 
   // Multi-market routing resolution
@@ -83,11 +81,15 @@ export async function middleware(request: NextRequest) {
   ) as MarketId | null;
 
   const devCookie = request.cookies.get("pcl_dev_market")?.value as MarketId | undefined;
+  
+  // On localhost, default to DR if no other preview/dev cookie is set
   const devMarket =
     previewParam && HOST_BY_MARKET[previewParam]
       ? previewParam
       : devCookie && HOST_BY_MARKET[devCookie]
       ? devCookie
+      : isLocalhost && pathname !== "/choose"
+      ? "dr"
       : null;
 
   // Extract link token (?k=) and market cookie (pcl_market)
@@ -136,6 +138,20 @@ export async function middleware(request: NextRequest) {
   }
 
   if (resolution.action === "redirect") {
+    // On localhost, never redirect away to production domains! Keep navigation local
+    if (isLocalhost) {
+      const localTarget = new URL(request.url);
+      if (resolution.market && resolution.market !== "dr") {
+        localTarget.searchParams.set("preview", resolution.market);
+      } else {
+        localTarget.searchParams.delete("preview");
+      }
+      if (resolution.targetPath && resolution.targetPath !== "/") {
+        localTarget.pathname = resolution.targetPath;
+      }
+      return NextResponse.redirect(localTarget, 307);
+    }
+
     const targetUrl = new URL(resolution.targetPath || "/", `https://${resolution.targetHost}`);
     const redirectResponse = NextResponse.redirect(targetUrl, 307);
 
@@ -155,15 +171,16 @@ export async function middleware(request: NextRequest) {
   }
 
   if (resolution.action === "neutral") {
-    const isApex = host === "purpleoryn.com" || host === "www.purpleoryn.com" || isLocalhost;
-    if (isApex && pathname === "/choose") {
+    // If visitor is requesting /choose, serve the neutral page
+    if (pathname === "/choose") {
       const reqHeaders = new Headers(request.headers);
       reqHeaders.set("x-market", "dr");
       reqHeaders.set("x-show-prices", "false");
       return NextResponse.next({ request: { headers: reqHeaders } });
     }
 
-    const chooseUrl = new URL("/choose", "https://purpleoryn.com");
+    // On localhost, redirect to local /choose rather than production
+    const chooseUrl = isLocalhost ? new URL("/choose", request.url) : new URL("/choose", "https://purpleoryn.com");
     return NextResponse.redirect(chooseUrl, 307);
   }
 
@@ -171,7 +188,10 @@ export async function middleware(request: NextRequest) {
   const market = resolution.market || "dr";
   const reqHeaders = new Headers(request.headers);
   reqHeaders.set("x-market", market);
-  reqHeaders.set("x-show-prices", resolution.showPrices ? "true" : "false");
+
+  // On localhost or dev override, always force showPrices: true!
+  const showPrices = isLocalhost || resolution.showPrices;
+  reqHeaders.set("x-show-prices", showPrices ? "true" : "false");
   reqHeaders.set("x-market-locale", resolution.locale || (market === "dr" ? "es" : market === "us" ? "en" : market === "ht" ? "fr" : "en"));
 
   let response: NextResponse;
@@ -183,6 +203,9 @@ export async function middleware(request: NextRequest) {
     // Rewrite non-DR market requests to internal route /m/[market]
     const rewriteUrl = request.nextUrl.clone();
     rewriteUrl.pathname = `/m/${market}`;
+    if (showPrices) {
+      rewriteUrl.searchParams.set("show_prices", "true");
+    }
     response = NextResponse.rewrite(rewriteUrl, { request: { headers: reqHeaders } });
   }
 
@@ -201,13 +224,12 @@ export async function middleware(request: NextRequest) {
   }
 
   // Non-DR hosts get noindex
-  const isApex = host === "purpleoryn.com" || host === "www.purpleoryn.com" || isLocalhost;
-  if (!isApex) {
+  if (!isLocalhost && host !== "purpleoryn.com" && host !== "www.purpleoryn.com") {
     response.headers.set("X-Robots-Tag", "noindex");
   }
 
   // HTML for priced pages must not be cached by edge/browser caches
-  if (resolution.showPrices) {
+  if (showPrices) {
     response.headers.set("Cache-Control", "private, no-store");
   }
 

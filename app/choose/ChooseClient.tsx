@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Globe, ArrowRight, CalendarBlank, MapPin } from '@phosphor-icons/react';
@@ -53,6 +53,11 @@ const REGIONS = [
 
 export function ChooseClient({ initialLocale, bookingUrl }: ChooseClientProps) {
   const [locale, setLocale] = useState<'en' | 'fr'>(initialLocale);
+  const [isLocalhost, setIsLocalhost] = useState(false);
+
+  useEffect(() => {
+    setIsLocalhost(window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+  }, []);
 
   const t = {
     en: {
@@ -178,7 +183,7 @@ export function ChooseClient({ initialLocale, bookingUrl }: ChooseClientProps) {
               return (
                 <Link
                   key={r.id}
-                  href={r.href}
+                  href={isLocalhost ? `/?preview=${r.id}` : r.href}
                   className="group p-6 rounded-[var(--radius-panel)] bg-surface hover:bg-surface border border-line hover:border-accent/50 transition-all duration-300 hover:-translate-y-1 shadow-xs flex flex-col justify-between"
                 >
                   <div>

@@ -216,7 +216,7 @@ export function resolveMarket(input: ResolveMarketInput): ResolveMarketOutput {
     return {
       action: 'serve',
       market: effectiveManualMarket,
-      showPrices: false,
+      showPrices: Boolean(isLocalhost && input.devShowPrices),
       locale: resolveLocale(effectiveManualMarket, input.ipRegion, input.acceptLanguage),
       reason: 'manual_region_pick',
     };
@@ -358,7 +358,23 @@ export function resolveMarket(input: ResolveMarketInput): ResolveMarketOutput {
     ? 'missing_country'
     : 'unsupported_country';
 
-  if (host === APEX_HOST || host === 'www.' + APEX_HOST || isLocalhost) {
+  if (isLocalhost) {
+    if (pathname === '/choose' || pathname.startsWith('/choose/')) {
+      return {
+        action: 'serve',
+        showPrices: false,
+        reason: 'neutral_page',
+      };
+    }
+    return {
+      action: 'serve',
+      market: 'dr',
+      showPrices: true,
+      reason: 'dev_localhost_default',
+    };
+  }
+
+  if (host === APEX_HOST || host === 'www.' + APEX_HOST) {
     return {
       action: 'neutral',
       targetHost: APEX_HOST,
