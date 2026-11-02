@@ -6,7 +6,6 @@ import {
   ArrowRight,
   ArrowUpRight,
   CheckCircle,
-  Globe,
   DeviceMobile,
   MagnifyingGlass,
   Robot,
