@@ -126,7 +126,7 @@ export function MarketLanding({ config, showPrices, locale }: MarketLandingProps
                 {config.supportedLocales.map((loc) => (
                   <Link
                     key={loc}
-                    href={`/?lang=${loc}`}
+                    href={`?lang=${loc}`}
                     className={cn(
                       'rounded-full px-2.5 py-0.5 text-xs font-semibold transition-all',
                       locale.startsWith(loc)

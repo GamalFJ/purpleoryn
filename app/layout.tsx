@@ -5,7 +5,6 @@ import { Analytics } from "@vercel/analytics/next";
 import { ChatLauncher } from "@/components/agent/ChatLauncher";
 import { AttributionCapture } from "@/components/analytics/Attribution";
 import { GoogleTagManagerNoScript, GoogleTagManagerScript } from "@/components/analytics/GoogleTagManager";
-import { DevMarketSwitcher } from "@/components/dev/DevMarketSwitcher";
 import { MotionProvider } from "@/components/motion/MotionProvider";
 import { JsonLd, businessSchema, websiteSchema } from "@/components/seo/JsonLd";
 import { SITE } from "@/lib/site";
@@ -73,7 +72,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <MotionProvider>{children}</MotionProvider>
         <AttributionCapture />
         <ChatLauncher market={market} locale={locale} />
-        <DevMarketSwitcher currentMarket={market} currentLocale={locale} />
         <JsonLd data={businessSchema()} />
         <JsonLd data={websiteSchema()} />
         <Analytics />
