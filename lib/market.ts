@@ -47,12 +47,14 @@ export async function getCurrentMarket(): Promise<CurrentMarket> {
   const marketId = rawMarketId === "dr" ? "do" : rawMarketId;
   const supabase = serviceClient();
 
-  const query = Promise.all([
-    supabase.from("markets").select("*").eq("id", marketId).single(),
-    supabase.from("pricing_tiers").select("*").eq("market_id", marketId).order("sort_order"),
-    supabase.from("market_content").select("section_key, content").eq("market_id", marketId),
-  ])
-    .then(([{ data: market }, { data: pricing }, { data: contentRows }]) => {
+  const task = (async () => {
+    try {
+      const [{ data: market }, { data: pricing }, { data: contentRows }] = await Promise.all([
+        supabase.from("markets").select("*").eq("id", marketId).single(),
+        supabase.from("pricing_tiers").select("*").eq("market_id", marketId).order("sort_order"),
+        supabase.from("market_content").select("section_key, content").eq("market_id", marketId),
+      ]);
+
       const content = Object.fromEntries((contentRows ?? []).map((c) => [c.section_key, c.content as string]));
       return {
         market: market
@@ -79,8 +81,10 @@ export async function getCurrentMarket(): Promise<CurrentMarket> {
         })),
         content,
       };
-    })
-    .catch(() => EMPTY_MARKET);
+    } catch {
+      return EMPTY_MARKET;
+    }
+  })();
 
-  return withTimeout(query, 1200, EMPTY_MARKET);
+  return withTimeout(task, 1200, EMPTY_MARKET);
 }

@@ -47,17 +47,15 @@ function withTimeout<T>(promise: Promise<T>, ms: number, fallback: T): Promise<T
 
 export async function getTiers(): Promise<Tier[]> {
   if (!isSupabaseConfigured()) return DEFAULT_TIERS;
-  const task = publicClient()
-    .from("tiers")
-    .select("*")
-    .order("sort_order")
-    .then(({ data, error }) => {
+  const task = (async () => {
+    try {
+      const { data, error } = await publicClient().from("tiers").select("*").order("sort_order");
       if (error || !data?.length) return DEFAULT_TIERS;
-      return (data as Row[])
-        .filter((r) => isTierSlug(r.slug))
-        .map((r) => mapTier(r));
-    })
-    .catch(() => DEFAULT_TIERS);
+      return (data as Row[]).filter((r) => isTierSlug(r.slug)).map((r) => mapTier(r));
+    } catch {
+      return DEFAULT_TIERS;
+    }
+  })();
 
   return withTimeout(task, 1200, DEFAULT_TIERS);
 }
@@ -86,12 +84,9 @@ function mapTier(r: Row): Tier {
 
 export async function getAddons(): Promise<Addon[]> {
   if (!isSupabaseConfigured()) return DEFAULT_ADDONS;
-  const task = publicClient()
-    .from("addons")
-    .select("*")
-    .eq("published", true)
-    .order("sort_order")
-    .then(({ data, error }) => {
+  const task = (async () => {
+    try {
+      const { data, error } = await publicClient().from("addons").select("*").eq("published", true).order("sort_order");
       if (error || !data) return DEFAULT_ADDONS;
       return (data as Row[]).map((r) => ({
         slug: str(r.slug),
@@ -103,20 +98,19 @@ export async function getAddons(): Promise<Addon[]> {
         unitLabel: str(r.unit_label),
         overageRate: num(r.overage_rate),
       }));
-    })
-    .catch(() => DEFAULT_ADDONS);
+    } catch {
+      return DEFAULT_ADDONS;
+    }
+  })();
 
   return withTimeout(task, 1200, DEFAULT_ADDONS);
 }
 
 export async function getSiteSettings(): Promise<SiteSettings> {
   if (!isSupabaseConfigured()) return DEFAULT_SETTINGS;
-  const task = publicClient()
-    .from("site_settings")
-    .select("*")
-    .eq("id", 1)
-    .maybeSingle()
-    .then(({ data, error }) => {
+  const task = (async () => {
+    try {
+      const { data, error } = await publicClient().from("site_settings").select("*").eq("id", 1).maybeSingle();
       if (error || !data) return DEFAULT_SETTINGS;
       const r = data as Row;
       return {
@@ -126,24 +120,26 @@ export async function getSiteSettings(): Promise<SiteSettings> {
         aboutImageUrl: str(r.about_image_url) || DEFAULT_SETTINGS.aboutImageUrl,
         aboutBio: str(r.about_bio) || DEFAULT_SETTINGS.aboutBio,
       };
-    })
-    .catch(() => DEFAULT_SETTINGS);
+    } catch {
+      return DEFAULT_SETTINGS;
+    }
+  })();
 
   return withTimeout(task, 1200, DEFAULT_SETTINGS);
 }
 
 export async function getPortfolio(limit?: number): Promise<PortfolioItem[]> {
   if (!isSupabaseConfigured()) return [];
-  let query = publicClient()
-    .from("portfolio_items")
-    .select("*")
-    .eq("published", true)
-    .order("sort_order")
-    .order("created_at", { ascending: false });
-  if (limit) query = query.limit(limit);
-
-  const task = query
-    .then(({ data, error }) => {
+  const task = (async () => {
+    try {
+      let query = publicClient()
+        .from("portfolio_items")
+        .select("*")
+        .eq("published", true)
+        .order("sort_order")
+        .order("created_at", { ascending: false });
+      if (limit) query = query.limit(limit);
+      const { data, error } = await query;
       if (error || !data) return [];
       return (data as Row[]).map((r) => ({
         id: str(r.id),
@@ -157,8 +153,10 @@ export async function getPortfolio(limit?: number): Promise<PortfolioItem[]> {
         coverImageUrl: str(r.cover_image_url) || null,
         imageUrls: Array.isArray(r.image_urls) ? (r.image_urls as string[]) : [],
       }));
-    })
-    .catch(() => []);
+    } catch {
+      return [];
+    }
+  })();
 
   return withTimeout(task, 1200, []);
 }
