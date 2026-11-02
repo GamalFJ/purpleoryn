@@ -16,7 +16,7 @@ import {
   Microphone,
   Globe,
   Robot,
-} from '@phosphor-icons/react';
+} from '@phosphor-icons/react/dist/ssr';
 import { buttonClass } from '@/components/ui/button';
 import { IconTile } from '@/components/ui/IconTile';
 import { BrandLogo } from '@/components/ui/BrandLogo';

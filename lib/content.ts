@@ -11,9 +11,7 @@ export interface SiteSettings {
   aboutBio: string;
 }
 
-// PLACEHOLDER COPY — pending Gamal's real hero headline and bio. Factual only:
-// what PCL sells (from the tier table) and who runs it. Replace in the admin
-// panel's site settings; no code change needed.
+// Factual placeholder copy falling back if remote database is unreachable.
 export const DEFAULT_SETTINGS: SiteSettings = {
   heroHeadline: "Sitios web, SEO y agentes de IA para negocios en Santo Domingo",
   heroSubheadline: "Tres planes con precio fijo para que su negocio aparezca en Google y reciba clientes por WhatsApp.",
@@ -40,17 +38,30 @@ type Row = Record<string, unknown>;
 const str = (v: unknown, fallback = "") => (typeof v === "string" ? v : fallback);
 const num = (v: unknown, fallback = 0) => (typeof v === "number" ? v : typeof v === "string" ? Number(v) : fallback);
 
-export async function getTiers(): Promise<Tier[]> {
-  if (!isSupabaseConfigured()) return DEFAULT_TIERS;
-  const { data, error } = await publicClient().from("tiers").select("*").order("sort_order");
-  if (error || !data?.length) return DEFAULT_TIERS;
-  return (data as Row[])
-    .filter((r) => isTierSlug(r.slug))
-    .map((r) => mapTier(r));
+function withTimeout<T>(promise: Promise<T>, ms: number, fallback: T): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<T>((resolve) => setTimeout(() => resolve(fallback), ms)),
+  ]);
 }
 
-// Columns added by 20260916000000_pricing_addons.sql fall back to the defaults
-// until that migration is applied, so a deploy can't show "0 al mes".
+export async function getTiers(): Promise<Tier[]> {
+  if (!isSupabaseConfigured()) return DEFAULT_TIERS;
+  const task = publicClient()
+    .from("tiers")
+    .select("*")
+    .order("sort_order")
+    .then(({ data, error }) => {
+      if (error || !data?.length) return DEFAULT_TIERS;
+      return (data as Row[])
+        .filter((r) => isTierSlug(r.slug))
+        .map((r) => mapTier(r));
+    })
+    .catch(() => DEFAULT_TIERS);
+
+  return withTimeout(task, 1200, DEFAULT_TIERS);
+}
+
 function mapTier(r: Row): Tier {
   const fallback = DEFAULT_TIERS.find((d) => d.slug === r.slug) ?? DEFAULT_TIERS[0];
   const has = (col: string) => col in r && r[col] !== null;
@@ -75,32 +86,50 @@ function mapTier(r: Row): Tier {
 
 export async function getAddons(): Promise<Addon[]> {
   if (!isSupabaseConfigured()) return DEFAULT_ADDONS;
-  const { data, error } = await publicClient().from("addons").select("*").eq("published", true).order("sort_order");
-  if (error || !data) return DEFAULT_ADDONS;
-  return (data as Row[]).map((r) => ({
-    slug: str(r.slug),
-    name: str(r.name),
-    description: str(r.description),
-    oneTime: num(r.one_time_price),
-    monthly: num(r.monthly_price),
-    includedUnits: num(r.included_units),
-    unitLabel: str(r.unit_label),
-    overageRate: num(r.overage_rate),
-  }));
+  const task = publicClient()
+    .from("addons")
+    .select("*")
+    .eq("published", true)
+    .order("sort_order")
+    .then(({ data, error }) => {
+      if (error || !data) return DEFAULT_ADDONS;
+      return (data as Row[]).map((r) => ({
+        slug: str(r.slug),
+        name: str(r.name),
+        description: str(r.description),
+        oneTime: num(r.one_time_price),
+        monthly: num(r.monthly_price),
+        includedUnits: num(r.included_units),
+        unitLabel: str(r.unit_label),
+        overageRate: num(r.overage_rate),
+      }));
+    })
+    .catch(() => DEFAULT_ADDONS);
+
+  return withTimeout(task, 1200, DEFAULT_ADDONS);
 }
 
 export async function getSiteSettings(): Promise<SiteSettings> {
   if (!isSupabaseConfigured()) return DEFAULT_SETTINGS;
-  const { data, error } = await publicClient().from("site_settings").select("*").eq("id", 1).maybeSingle();
-  if (error || !data) return DEFAULT_SETTINGS;
-  const r = data as Row;
-  return {
-    heroHeadline: str(r.hero_headline) || DEFAULT_SETTINGS.heroHeadline,
-    heroSubheadline: str(r.hero_subheadline) || DEFAULT_SETTINGS.heroSubheadline,
-    heroImageUrl: str(r.hero_image_url) || DEFAULT_SETTINGS.heroImageUrl,
-    aboutImageUrl: str(r.about_image_url) || DEFAULT_SETTINGS.aboutImageUrl,
-    aboutBio: str(r.about_bio) || DEFAULT_SETTINGS.aboutBio,
-  };
+  const task = publicClient()
+    .from("site_settings")
+    .select("*")
+    .eq("id", 1)
+    .maybeSingle()
+    .then(({ data, error }) => {
+      if (error || !data) return DEFAULT_SETTINGS;
+      const r = data as Row;
+      return {
+        heroHeadline: str(r.hero_headline) || DEFAULT_SETTINGS.heroHeadline,
+        heroSubheadline: str(r.hero_subheadline) || DEFAULT_SETTINGS.heroSubheadline,
+        heroImageUrl: str(r.hero_image_url) || DEFAULT_SETTINGS.heroImageUrl,
+        aboutImageUrl: str(r.about_image_url) || DEFAULT_SETTINGS.aboutImageUrl,
+        aboutBio: str(r.about_bio) || DEFAULT_SETTINGS.aboutBio,
+      };
+    })
+    .catch(() => DEFAULT_SETTINGS);
+
+  return withTimeout(task, 1200, DEFAULT_SETTINGS);
 }
 
 export async function getPortfolio(limit?: number): Promise<PortfolioItem[]> {
@@ -112,18 +141,24 @@ export async function getPortfolio(limit?: number): Promise<PortfolioItem[]> {
     .order("sort_order")
     .order("created_at", { ascending: false });
   if (limit) query = query.limit(limit);
-  const { data, error } = await query;
-  if (error || !data) return [];
-  return (data as Row[]).map((r) => ({
-    id: str(r.id),
-    slug: str(r.slug),
-    title: str(r.title),
-    summary: str(r.summary),
-    description: str(r.description),
-    results: str(r.results),
-    resultsSource: str(r.results_source),
-    link: str(r.link) || null,
-    coverImageUrl: str(r.cover_image_url) || null,
-    imageUrls: Array.isArray(r.image_urls) ? (r.image_urls as string[]) : [],
-  }));
+
+  const task = query
+    .then(({ data, error }) => {
+      if (error || !data) return [];
+      return (data as Row[]).map((r) => ({
+        id: str(r.id),
+        slug: str(r.slug),
+        title: str(r.title),
+        summary: str(r.summary),
+        description: str(r.description),
+        results: str(r.results),
+        resultsSource: str(r.results_source),
+        link: str(r.link) || null,
+        coverImageUrl: str(r.cover_image_url) || null,
+        imageUrls: Array.isArray(r.image_urls) ? (r.image_urls as string[]) : [],
+      }));
+    })
+    .catch(() => []);
+
+  return withTimeout(task, 1200, []);
 }

@@ -32,43 +32,55 @@ export interface CurrentMarket {
 
 const EMPTY_MARKET: CurrentMarket = { market: null, pricing: [], content: {} };
 
+function withTimeout<T>(promise: Promise<T>, ms: number, fallback: T): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<T>((resolve) => setTimeout(() => resolve(fallback), ms)),
+  ]);
+}
+
 export async function getCurrentMarket(): Promise<CurrentMarket> {
   if (!isServiceRoleConfigured()) return EMPTY_MARKET;
 
-  const marketId = (await headers()).get("x-market") ?? "do";
+  const rawMarketId = (await headers()).get("x-market") ?? "do";
+  // The database markets table uses 'do', multi-market router uses 'dr'
+  const marketId = rawMarketId === "dr" ? "do" : rawMarketId;
   const supabase = serviceClient();
 
-  const [{ data: market }, { data: pricing }, { data: contentRows }] = await Promise.all([
+  const query = Promise.all([
     supabase.from("markets").select("*").eq("id", marketId).single(),
     supabase.from("pricing_tiers").select("*").eq("market_id", marketId).order("sort_order"),
     supabase.from("market_content").select("section_key, content").eq("market_id", marketId),
-  ]);
+  ])
+    .then(([{ data: market }, { data: pricing }, { data: contentRows }]) => {
+      const content = Object.fromEntries((contentRows ?? []).map((c) => [c.section_key, c.content as string]));
+      return {
+        market: market
+          ? {
+              id: market.id,
+              name: market.name,
+              domain: market.domain,
+              language: market.language,
+              currency: market.currency,
+              primaryChannel: market.primary_channel,
+              whatsappNumber: market.whatsapp_number,
+            }
+          : null,
+        pricing: (pricing ?? []).map((t) => ({
+          id: t.id,
+          tierKey: t.tier_key,
+          tierName: t.tier_name,
+          oneTimePrice: t.one_time_price,
+          monthlyPrice: t.monthly_price,
+          conversationCap: t.conversation_cap,
+          overageRate: t.overage_rate,
+          recommended: t.recommended,
+          sortOrder: t.sort_order,
+        })),
+        content,
+      };
+    })
+    .catch(() => EMPTY_MARKET);
 
-  const content = Object.fromEntries((contentRows ?? []).map((c) => [c.section_key, c.content as string]));
-
-  return {
-    market: market
-      ? {
-          id: market.id,
-          name: market.name,
-          domain: market.domain,
-          language: market.language,
-          currency: market.currency,
-          primaryChannel: market.primary_channel,
-          whatsappNumber: market.whatsapp_number,
-        }
-      : null,
-    pricing: (pricing ?? []).map((t) => ({
-      id: t.id,
-      tierKey: t.tier_key,
-      tierName: t.tier_name,
-      oneTimePrice: t.one_time_price,
-      monthlyPrice: t.monthly_price,
-      conversationCap: t.conversation_cap,
-      overageRate: t.overage_rate,
-      recommended: t.recommended,
-      sortOrder: t.sort_order,
-    })),
-    content,
-  };
+  return withTimeout(query, 1200, EMPTY_MARKET);
 }
