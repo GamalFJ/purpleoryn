@@ -1,9 +1,11 @@
 import type { Metadata, Viewport } from "next";
+import { headers } from "next/headers";
 import { Bricolage_Grotesque, Geist } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { ChatLauncher } from "@/components/agent/ChatLauncher";
 import { AttributionCapture } from "@/components/analytics/Attribution";
 import { GoogleTagManagerNoScript, GoogleTagManagerScript } from "@/components/analytics/GoogleTagManager";
+import { DevMarketSwitcher } from "@/components/dev/DevMarketSwitcher";
 import { MotionProvider } from "@/components/motion/MotionProvider";
 import { JsonLd, businessSchema, websiteSchema } from "@/components/seo/JsonLd";
 import { SITE } from "@/lib/site";
@@ -44,9 +46,16 @@ export const viewport: Viewport = {
   ],
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const reqHeaders = await headers();
+  const market = reqHeaders.get("x-market") || "dr";
+  const locale =
+    reqHeaders.get("x-market-locale") ||
+    (market === "dr" ? "es" : market === "us" ? "en" : market === "ht" ? "fr" : "en");
+  const htmlLang = locale === "es" ? "es-DO" : locale === "fr" ? "fr" : "en";
+
   return (
-    <html lang="es-DO" className={`${bricolage.variable} ${geist.variable}`}>
+    <html lang={htmlLang} className={`${bricolage.variable} ${geist.variable}`}>
       <head>
         <GoogleTagManagerScript />
         <noscript>
@@ -63,7 +72,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </a>
         <MotionProvider>{children}</MotionProvider>
         <AttributionCapture />
-        <ChatLauncher />
+        <ChatLauncher market={market} locale={locale} />
+        <DevMarketSwitcher currentMarket={market} currentLocale={locale} />
         <JsonLd data={businessSchema()} />
         <JsonLd data={websiteSchema()} />
         <Analytics />

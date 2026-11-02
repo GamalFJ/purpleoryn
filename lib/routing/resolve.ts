@@ -27,6 +27,8 @@ export interface ResolveMarketInput {
   geoStrict?: boolean;
   acceptLanguage?: string | null;
   manualMarket?: MarketId | null;
+  devMarketOverride?: MarketId | null;
+  devShowPrices?: boolean;
 }
 
 export type ResolveAction = 'serve' | 'redirect' | 'neutral' | 'notFound' | 'passthrough';
@@ -73,7 +75,6 @@ export const COUNTRY_TO_MARKET: Record<string, MarketId> = {
 
 export function normalizeHost(host: string): string {
   const withoutPort = host.split(':')[0].trim().toLowerCase();
-  // Map local dev hosts to apex DR
   if (withoutPort === 'localhost' || withoutPort === '127.0.0.1') {
     return APEX_HOST;
   }
@@ -117,6 +118,8 @@ export function resolveLocale(
  */
 export function resolveMarket(input: ResolveMarketInput): ResolveMarketOutput {
   const host = normalizeHost(input.host);
+  const rawHost = (input.host || '').split(':')[0].trim().toLowerCase();
+  const isLocalhost = rawHost === 'localhost' || rawHost === '127.0.0.1';
   const rawPath = input.path || '/';
   const pathname = rawPath.split('?')[0];
   const search = rawPath.includes('?') ? rawPath.slice(rawPath.indexOf('?')) : '';
@@ -140,6 +143,7 @@ export function resolveMarket(input: ResolveMarketInput): ResolveMarketOutput {
     pathname === '/robots.txt' ||
     pathname.startsWith('/docs/') ||
     pathname.startsWith('/portafolio/') ||
+    pathname.startsWith('/media/') ||
     pathname.endsWith('.png') ||
     pathname.endsWith('.jpg') ||
     pathname.endsWith('.jpeg') ||
@@ -151,6 +155,29 @@ export function resolveMarket(input: ResolveMarketInput): ResolveMarketOutput {
       action: 'passthrough',
       showPrices: false,
       reason: 'static_asset',
+    };
+  }
+
+  // Developer Computer Override:
+  // When testing on local computer or using a developer preview parameter,
+  // allow viewing any market with full prices enabled!
+  const previewParam = (
+    searchParams.get('preview') ||
+    searchParams.get('preview_market') ||
+    (isLocalhost ? (searchParams.get('market') || searchParams.get('m')) : null)
+  ) as MarketId | null;
+
+  const effectiveDevMarket =
+    input.devMarketOverride ||
+    (previewParam && HOST_BY_MARKET[previewParam] ? previewParam : null);
+
+  if (effectiveDevMarket) {
+    return {
+      action: 'serve',
+      market: effectiveDevMarket,
+      showPrices: input.devShowPrices !== false, // default true
+      locale: resolveLocale(effectiveDevMarket, input.ipRegion, input.acceptLanguage),
+      reason: 'dev_override',
     };
   }
 
@@ -168,7 +195,6 @@ export function resolveMarket(input: ResolveMarketInput): ResolveMarketOutput {
   }
 
   // Manual region selection from /choose:
-  // Can be passed via manualMarket in input OR via ?region= in query param
   const manualRegionParam = searchParams.get('region') as MarketId | null;
   const effectiveManualMarket =
     input.manualMarket ||
@@ -176,7 +202,7 @@ export function resolveMarket(input: ResolveMarketInput): ResolveMarketOutput {
 
   if (effectiveManualMarket) {
     const targetHost = HOST_BY_MARKET[effectiveManualMarket];
-    if (host !== targetHost) {
+    if (host !== targetHost && !isLocalhost) {
       return {
         action: 'redirect',
         market: effectiveManualMarket,
@@ -198,7 +224,7 @@ export function resolveMarket(input: ResolveMarketInput): ResolveMarketOutput {
 
   // Check if visitor is already requesting /choose on apex host
   if (pathname === '/choose' || pathname.startsWith('/choose/')) {
-    if (host === APEX_HOST || host === 'www.' + APEX_HOST) {
+    if (host === APEX_HOST || host === 'www.' + APEX_HOST || isLocalhost) {
       return {
         action: 'serve',
         showPrices: false,
@@ -220,7 +246,7 @@ export function resolveMarket(input: ResolveMarketInput): ResolveMarketOutput {
     const targetHost = HOST_BY_MARKET[tokenMarket];
 
     // If host differs from token market host, redirect there with the token preserved
-    if (host !== targetHost) {
+    if (host !== targetHost && !isLocalhost) {
       return {
         action: 'redirect',
         market: tokenMarket,
@@ -233,7 +259,6 @@ export function resolveMarket(input: ResolveMarketInput): ResolveMarketOutput {
     }
 
     // On the right host:
-    // If the URL has ?k=, strip k and set cookie
     if (searchParams.has('k')) {
       const cleanParams = new URLSearchParams(searchParams);
       cleanParams.delete('k');
@@ -271,7 +296,7 @@ export function resolveMarket(input: ResolveMarketInput): ResolveMarketOutput {
     const cookieMarket = input.cookieMarket;
     const targetHost = HOST_BY_MARKET[cookieMarket];
 
-    if (host !== targetHost) {
+    if (host !== targetHost && !isLocalhost) {
       return {
         action: 'redirect',
         market: cookieMarket,
@@ -303,7 +328,7 @@ export function resolveMarket(input: ResolveMarketInput): ResolveMarketOutput {
     const targetHost = HOST_BY_MARKET[ipMarket];
 
     // If resolved market differs from host's market, redirect (307) to resolved market root
-    if (host !== targetHost) {
+    if (host !== targetHost && !isLocalhost) {
       return {
         action: 'redirect',
         market: ipMarket,
@@ -325,8 +350,6 @@ export function resolveMarket(input: ResolveMarketInput): ResolveMarketOutput {
   }
 
   // Step 4: Neutral (fail closed)
-  // Foreign countries, flagged proxies, unknown, missing headers.
-  // Serve the neutral page at https://purpleoryn.com/choose. Other hosts redirect there.
   const neutralReason = input.proxyFlag === true
     ? 'flagged_proxy'
     : input.proxyFlag === 'unknown' && geoStrict
@@ -335,7 +358,7 @@ export function resolveMarket(input: ResolveMarketInput): ResolveMarketOutput {
     ? 'missing_country'
     : 'unsupported_country';
 
-  if (host === APEX_HOST || host === 'www.' + APEX_HOST) {
+  if (host === APEX_HOST || host === 'www.' + APEX_HOST || isLocalhost) {
     return {
       action: 'neutral',
       targetHost: APEX_HOST,
@@ -353,4 +376,3 @@ export function resolveMarket(input: ResolveMarketInput): ResolveMarketOutput {
     reason: neutralReason,
   };
 }
-

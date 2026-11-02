@@ -20,22 +20,87 @@ interface ChatMessage {
   actions?: AgentAction[];
 }
 
-const STORAGE_KEY = "pcl_chat";
-const GREETING: ChatMessage = {
-  role: "assistant",
-  content: "Hola, soy Oryn, el asistente de IA de Purple Cove Labs. Puedo explicarle los planes, ayudarle a elegir el suyo o ponerle en contacto con el equipo.",
-};
-const STARTERS = ["Ver planes y precios", "Ayúdeme a elegir un plan", "Hablar con una persona"];
-
-function loadState(): { sessionId: string; messages: ChatMessage[] } {
-  try {
-    const raw = sessionStorage.getItem(STORAGE_KEY);
-    if (raw) return JSON.parse(raw);
-  } catch {}
-  return { sessionId: crypto.randomUUID(), messages: [GREETING] };
+interface ChatPanelProps {
+  open: boolean;
+  onClose: () => void;
+  market?: string;
+  locale?: string;
 }
 
-function ActionBlock({ action }: { action: AgentAction }) {
+const STORAGE_PREFIX = "pcl_chat_";
+
+const LOCALIZED_COPY = {
+  es: {
+    greeting: "Hola, soy Oryn, el asistente de IA de Purple Cove Labs. Puedo explicarle los planes, ayudarle a elegir el suyo o ponerle en contacto con el equipo.",
+    starters: ["Ver planes y precios", "Ayúdeme a elegir un plan", "Hablar con una persona"],
+    subtitle: "Asistente de IA de Purple Cove Labs. Puede equivocarse.",
+    typing: "Escribiendo...",
+    inputLabel: "Escriba su mensaje",
+    placeholder: "Escriba aquí...",
+    send: "Enviar",
+    close: "Cerrar asistente",
+    ariaLabel: "Asistente Oryn",
+    privacy: "Guardamos esta conversación para mejorar el servicio.",
+    privacyLink: "Privacidad",
+    errGeneral: "No pude responder. Inténtelo de nuevo.",
+    errConn: "Se perdió la conexión. Inténtelo de nuevo en un momento.",
+    whatsappCta: "Escribir por WhatsApp",
+    callCta: "Agendar llamada",
+  },
+  en: {
+    greeting: "Hello, I am Oryn, Purple Cove Labs' AI assistant. I can explain our plans, help you choose yours, or connect you directly with our team.",
+    starters: ["View plans and pricing", "Help me choose a plan", "Speak with someone"],
+    subtitle: "Purple Cove Labs AI assistant. Can make mistakes.",
+    typing: "Typing...",
+    inputLabel: "Type your message",
+    placeholder: "Type here...",
+    send: "Send",
+    close: "Close assistant",
+    ariaLabel: "Oryn Assistant",
+    privacy: "We save this conversation to improve the service.",
+    privacyLink: "Privacy",
+    errGeneral: "I couldn't respond. Please try again.",
+    errConn: "Connection lost. Please try again in a moment.",
+    whatsappCta: "Chat on WhatsApp",
+    callCta: "Book a consultation",
+  },
+  fr: {
+    greeting: "Bonjour, je suis Oryn, l'assistant IA de Purple Cove Labs. Je peux vous présenter nos offres, vous aider à choisir la vôtre ou vous mettre en relation avec l'équipe.",
+    starters: ["Découvrir les offres et tarifs", "Aidez-moi à choisir une offre", "Parler à un conseiller"],
+    subtitle: "Assistant IA de Purple Cove Labs. Peut faire des erreurs.",
+    typing: "En train d'écrire...",
+    inputLabel: "Écrivez votre message",
+    placeholder: "Écrivez ici...",
+    send: "Envoyer",
+    close: "Fermer l'assistant",
+    ariaLabel: "Assistant Oryn",
+    privacy: "Nous conservons cet échange pour améliorer notre service.",
+    privacyLink: "Confidentialité",
+    errGeneral: "Je n'ai pas pu répondre. Veuillez réessayer.",
+    errConn: "Connexion perdue. Veuillez réessayer dans un instant.",
+    whatsappCta: "Écrire sur WhatsApp",
+    callCta: "Planifier un rendez-vous",
+  },
+};
+
+function getCopy(locale: string = "es") {
+  if (locale.startsWith("fr")) return LOCALIZED_COPY.fr;
+  if (locale.startsWith("en")) return LOCALIZED_COPY.en;
+  return LOCALIZED_COPY.es;
+}
+
+function loadState(locale: string = "es"): { sessionId: string; messages: ChatMessage[] } {
+  const copy = getCopy(locale);
+  const greetingMsg: ChatMessage = { role: "assistant", content: copy.greeting };
+  try {
+    const raw = sessionStorage.getItem(`${STORAGE_PREFIX}${locale.slice(0, 2)}`);
+    if (raw) return JSON.parse(raw);
+  } catch {}
+  return { sessionId: crypto.randomUUID(), messages: [greetingMsg] };
+}
+
+function ActionBlock({ action, locale = "es" }: { action: AgentAction; locale?: string }) {
+  const copy = getCopy(locale);
   if (action.type === "roi") {
     return (
       <dl className="grid grid-cols-2 gap-3 rounded-[var(--radius-field)] border border-warm-line bg-warm-soft p-3 text-sm">
@@ -66,7 +131,6 @@ function ActionBlock({ action }: { action: AgentAction }) {
   }
   if (action.type === "recommend_plan") {
     const cta = TIER_CTA[action.plan];
-    // A plan sold by call (Autoridad) sends to the call booking, same as the plan's own button on the site.
     if (cta.action === "call") {
       return (
         <TrackedLink
@@ -77,7 +141,7 @@ function ActionBlock({ action }: { action: AgentAction }) {
           className={buttonClass("primary", "sm", "w-full")}
         >
           <CalendarBlank size={16} weight="bold" />
-          {cta.label}
+          {copy.callCta}
         </TrackedLink>
       );
     }
@@ -92,11 +156,10 @@ function ActionBlock({ action }: { action: AgentAction }) {
     );
   }
   if (action.type === "handoff_whatsapp") {
-    // The URL (and the summary prefilled in it) is built on the server from what is saved, never by the model.
     return (
       <TrackedLink href={action.url} event="whatsapp_click" location="chat_agent" className={buttonClass("primary", "sm", "w-full")}>
         <WhatsappLogo size={16} weight="bold" />
-        Escribir por WhatsApp
+        {copy.whatsappCta}
       </TrackedLink>
     );
   }
@@ -120,13 +183,14 @@ function ActionBlock({ action }: { action: AgentAction }) {
       className={buttonClass("primary", "sm", "w-full")}
     >
       <CalendarBlank size={16} weight="bold" />
-      {CTA.call}
+      {copy.callCta || CTA.call}
     </TrackedLink>
   );
 }
 
-export function ChatPanel({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const [state, setState] = useState(loadState);
+export function ChatPanel({ open, onClose, market = "dr", locale = "es" }: ChatPanelProps) {
+  const copy = getCopy(locale);
+  const [state, setState] = useState(() => loadState(locale));
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
@@ -134,10 +198,10 @@ export function ChatPanel({ open, onClose }: { open: boolean; onClose: () => voi
 
   useEffect(() => {
     try {
-      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      sessionStorage.setItem(`${STORAGE_PREFIX}${locale.slice(0, 2)}`, JSON.stringify(state));
     } catch {}
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" });
-  }, [state]);
+  }, [state, locale]);
 
   useEffect(() => {
     if (!open) return;
@@ -163,14 +227,16 @@ export function ChatPanel({ open, onClose }: { open: boolean; onClose: () => voi
         body: JSON.stringify({
           sessionId: state.sessionId,
           landingPage: window.location.pathname,
+          market,
+          locale,
           // The static greeting isn't part of the model conversation.
           messages: history.slice(1).map(({ role, content }) => ({ role, content })),
         }),
       });
       const data = (await res.json()) as { reply?: string; actions?: AgentAction[] };
-      reply = { role: "assistant", content: data.reply || "No pude responder. Inténtelo de nuevo.", actions: data.actions };
+      reply = { role: "assistant", content: data.reply || copy.errGeneral, actions: data.actions };
     } catch {
-      reply = { role: "assistant", content: "Se perdió la conexión. Inténtelo de nuevo en un momento." };
+      reply = { role: "assistant", content: copy.errConn };
     }
     setState((s) => ({ ...s, messages: [...s.messages, reply] }));
     setSending(false);
@@ -182,7 +248,7 @@ export function ChatPanel({ open, onClose }: { open: boolean; onClose: () => voi
         <motion.div
           role="dialog"
           aria-modal="false"
-          aria-label="Asistente Oryn"
+          aria-label={copy.ariaLabel}
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 16 }}
@@ -192,13 +258,13 @@ export function ChatPanel({ open, onClose }: { open: boolean; onClose: () => voi
           <header className="flex items-center gap-3 border-b border-line px-4 py-3">
             <Image src="/media/oryn.webp" alt="" width={36} height={36} className="h-9 w-9 rounded-full" />
             <div className="min-w-0 flex-1">
-              <p className="font-display font-semibold leading-tight">Oryn</p>
-              <p className="text-xs text-muted">Asistente de IA de Purple Cove Labs. Puede equivocarse.</p>
+              <p className="font-display font-semibold leading-tight">{locale.startsWith("fr") ? "Oryn" : "Oryn"}</p>
+              <p className="text-xs text-muted">{copy.subtitle}</p>
             </div>
             <button
               type="button"
               onClick={onClose}
-              aria-label="Cerrar asistente"
+              aria-label={copy.close}
               className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-muted hover:bg-accent-soft hover:text-ink"
             >
               <X size={20} weight="bold" />
@@ -219,20 +285,20 @@ export function ChatPanel({ open, onClose }: { open: boolean; onClose: () => voi
                 </p>
                 {m.actions?.map((a, j) => (
                   <div key={j} className="max-w-[92%]">
-                    <ActionBlock action={a} />
+                    <ActionBlock action={a} locale={locale} />
                   </div>
                 ))}
               </div>
             ))}
-            {sending && <p className="w-fit rounded-2xl bg-paper px-4 py-2.5 text-[15px] text-muted">Escribiendo...</p>}
+            {sending && <p className="w-fit rounded-2xl bg-paper px-4 py-2.5 text-[15px] text-muted">{copy.typing}</p>}
             {state.messages.length === 1 && !sending && (
               <div className="flex flex-wrap gap-2 pt-1">
-                {STARTERS.map((s) => (
+                {copy.starters.map((s) => (
                   <button
                     key={s}
                     type="button"
                     onClick={() => send(s)}
-                    className="cursor-pointer rounded-full border border-line px-3.5 py-2 text-sm hover:border-accent hover:text-accent"
+                    className="cursor-pointer rounded-full border border-line px-3.5 py-2 text-sm hover:border-accent hover:text-accent transition-colors"
                   >
                     {s}
                   </button>
@@ -250,7 +316,7 @@ export function ChatPanel({ open, onClose }: { open: boolean; onClose: () => voi
           >
             <div className="flex items-end gap-2">
               <label htmlFor="chat-input" className="sr-only">
-                Escriba su mensaje
+                {copy.inputLabel}
               </label>
               <textarea
                 id="chat-input"
@@ -265,22 +331,22 @@ export function ChatPanel({ open, onClose }: { open: boolean; onClose: () => voi
                     void send(input);
                   }
                 }}
-                placeholder="Escriba aquí..."
+                placeholder={copy.placeholder}
                 className="max-h-32 min-h-11 flex-1 resize-none rounded-[var(--radius-field)] border border-line bg-paper px-3.5 py-2.5 text-base outline-none focus:border-accent"
               />
               <button
                 type="submit"
                 disabled={sending || !input.trim()}
-                aria-label="Enviar"
-                className="flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-full bg-linear-to-br from-accent to-fuchsia text-accent-ink disabled:opacity-50"
+                aria-label={copy.send}
+                className="flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-full bg-linear-to-br from-accent to-fuchsia text-accent-ink disabled:opacity-50 transition-opacity"
               >
                 <ArrowUp size={20} weight="bold" />
               </button>
             </div>
             <p className="mt-2 px-1 text-[11px] text-muted">
-              Guardamos esta conversación para mejorar el servicio.{" "}
+              {copy.privacy}{" "}
               <Link href="/privacidad" className="underline">
-                Privacidad
+                {copy.privacyLink}
               </Link>
             </p>
           </form>

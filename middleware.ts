@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { SUPABASE_ANON_KEY, SUPABASE_URL, isSupabaseConfigured } from "@/lib/supabase/env";
-import { resolveMarket, type MarketId } from "@/lib/routing/resolve";
+import { resolveMarket, HOST_BY_MARKET, type MarketId } from "@/lib/routing/resolve";
 import { verifyLinkToken, verifyMarketCookie, signMarketCookie } from "@/lib/routing/token";
 import { checkIpReputation } from "@/lib/routing/ipReputation";
 import { logRoutingEvent } from "@/lib/routing/logger";
@@ -21,6 +21,7 @@ export async function middleware(request: NextRequest) {
     pathname === "/robots.txt" ||
     pathname.startsWith("/docs/") ||
     pathname.startsWith("/portafolio/") ||
+    pathname.startsWith("/media/") ||
     /\.(?:png|jpg|jpeg|webp|svg|pdf|ico|css|js)$/i.test(pathname)
   ) {
     return NextResponse.next();
@@ -62,13 +63,32 @@ export async function middleware(request: NextRequest) {
   }
 
   // Multi-market routing resolution
-  const host = (request.headers.get("x-forwarded-host") || request.headers.get("host") || "").toLowerCase();
+  const rawHost = (request.headers.get("x-forwarded-host") || request.headers.get("host") || "").toLowerCase();
+  const host = rawHost.split(":")[0];
+  const isLocalhost = host === "localhost" || host === "127.0.0.1";
   const rawPath = pathname + search;
   const userAgent = request.headers.get("user-agent");
   const ipCountry = request.headers.get("x-vercel-ip-country");
   const ipRegion = request.headers.get("x-vercel-ip-country-region");
   const acceptLanguage = request.headers.get("accept-language");
   const clientIp = request.headers.get("x-real-ip") || request.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
+
+  // Developer Computer Override:
+  // On localhost or via preview parameters (?preview=us, ?market=us, ?m=us),
+  // allows developer to view full website for any market with pricing!
+  const previewParam = (
+    request.nextUrl.searchParams.get("preview") ||
+    request.nextUrl.searchParams.get("preview_market") ||
+    (isLocalhost ? (request.nextUrl.searchParams.get("market") || request.nextUrl.searchParams.get("m")) : null)
+  ) as MarketId | null;
+
+  const devCookie = request.cookies.get("pcl_dev_market")?.value as MarketId | undefined;
+  const devMarket =
+    previewParam && HOST_BY_MARKET[previewParam]
+      ? previewParam
+      : devCookie && HOST_BY_MARKET[devCookie]
+      ? devCookie
+      : null;
 
   // Extract link token (?k=) and market cookie (pcl_market)
   const tokenParam = request.nextUrl.searchParams.get("k");
@@ -94,6 +114,8 @@ export async function middleware(request: NextRequest) {
     geoStrict,
     acceptLanguage,
     manualMarket: manualRegionParam,
+    devMarketOverride: devMarket,
+    devShowPrices: true,
   });
 
   // Asynchronously record routing event (non-blocking)
@@ -133,7 +155,7 @@ export async function middleware(request: NextRequest) {
   }
 
   if (resolution.action === "neutral") {
-    const isApex = host === "purpleoryn.com" || host === "www.purpleoryn.com" || host.startsWith("localhost");
+    const isApex = host === "purpleoryn.com" || host === "www.purpleoryn.com" || isLocalhost;
     if (isApex && pathname === "/choose") {
       const reqHeaders = new Headers(request.headers);
       reqHeaders.set("x-market", "dr");
@@ -150,7 +172,7 @@ export async function middleware(request: NextRequest) {
   const reqHeaders = new Headers(request.headers);
   reqHeaders.set("x-market", market);
   reqHeaders.set("x-show-prices", resolution.showPrices ? "true" : "false");
-  reqHeaders.set("x-market-locale", resolution.locale || "en");
+  reqHeaders.set("x-market-locale", resolution.locale || (market === "dr" ? "es" : market === "us" ? "en" : market === "ht" ? "fr" : "en"));
 
   let response: NextResponse;
 
@@ -164,8 +186,22 @@ export async function middleware(request: NextRequest) {
     response = NextResponse.rewrite(rewriteUrl, { request: { headers: reqHeaders } });
   }
 
+  // If developer set preview query parameter, persist it in cookie for their computer
+  if (previewParam && HOST_BY_MARKET[previewParam]) {
+    response.cookies.set("pcl_dev_market", previewParam, {
+      path: "/",
+      maxAge: 7 * 24 * 60 * 60,
+      sameSite: "lax",
+    });
+  }
+
+  // Clear developer preview if requested (?clear_preview=true)
+  if (request.nextUrl.searchParams.has("clear_preview") || request.nextUrl.searchParams.has("clear_dev")) {
+    response.cookies.delete("pcl_dev_market");
+  }
+
   // Non-DR hosts get noindex
-  const isApex = host === "purpleoryn.com" || host === "www.purpleoryn.com" || host.startsWith("localhost");
+  const isApex = host === "purpleoryn.com" || host === "www.purpleoryn.com" || isLocalhost;
   if (!isApex) {
     response.headers.set("X-Robots-Tag", "noindex");
   }
