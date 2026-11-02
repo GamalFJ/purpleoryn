@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
 import { GearSix, X, Check, Eye } from "@phosphor-icons/react";
 
 interface DevMarketSwitcherProps {
@@ -21,10 +20,6 @@ const MARKETS = [
 export function DevMarketSwitcher({ currentMarket, currentLocale }: DevMarketSwitcherProps) {
   const [mounted, setMounted] = useState(false);
   const [expanded, setExpanded] = useState(false);
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-
-  // Detect whether dev mode is enabled: localhost or pcl_dev_market cookie exists
   const [isDev, setIsDev] = useState(false);
 
   useEffect(() => {
@@ -42,11 +37,12 @@ export function DevMarketSwitcher({ currentMarket, currentLocale }: DevMarketSwi
     // Set 30-day developer cookie
     document.cookie = `pcl_dev_market=${marketId}; path=/; max-age=${30 * 24 * 60 * 60}; SameSite=Lax`;
     
-    // Navigate with query parameters to immediately trigger middleware rewrite
-    const params = new URLSearchParams(searchParams.toString());
+    // Navigate with query parameters
+    const params = new URLSearchParams(window.location.search);
     params.set("preview", marketId);
     params.set("locale", localeChoice);
     
+    const pathname = window.location.pathname;
     const targetUrl = `${pathname === "/choose" ? "/" : pathname}?${params.toString()}`;
     window.location.href = targetUrl;
   }
@@ -65,7 +61,7 @@ export function DevMarketSwitcher({ currentMarket, currentLocale }: DevMarketSwi
           className="flex items-center gap-2 rounded-full border border-purple-500/40 bg-purple-950/90 px-3.5 py-2 font-medium text-purple-200 shadow-xl backdrop-blur-md transition-all hover:border-purple-400 hover:bg-purple-900 hover:text-white"
           title="Developer Market Switcher"
         >
-          <GearSix size={16} className="animate-spin-slow text-purple-300" />
+          <GearSix size={16} className="text-purple-300" />
           <span>Dev Market:</span>
           <span className="font-semibold uppercase text-amber-300">{currentMarket}</span>
           <span className="rounded bg-purple-800/80 px-1.5 py-0.5 text-[10px] uppercase font-mono text-purple-200">
