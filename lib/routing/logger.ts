@@ -26,6 +26,11 @@ async function hashIp(rawIp?: string | null): Promise<string | null> {
  * Never throws and never blocks the response.
  */
 export function logRoutingEvent(input: RoutingEventInput): void {
+  // Do not log events on localhost
+  if (input.host === 'localhost' || input.host.startsWith('127.0.0.1')) {
+    return;
+  }
+
   // Run in a detached microtask
   queueMicrotask(async () => {
     try {

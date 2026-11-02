@@ -28,8 +28,8 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Optional Supabase session refresh
-  if (isSupabaseConfigured()) {
+  // Optional Supabase session refresh: ONLY run on /admin routes to avoid blocking public pages
+  if (isSupabaseConfigured() && pathname.startsWith("/admin")) {
     let response = NextResponse.next({ request });
     const supabase = createServerClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
       cookies: {
@@ -49,7 +49,7 @@ export async function middleware(request: NextRequest) {
     } = await supabase.auth.getUser();
 
     // Protect /admin routes (except /admin/login)
-    if (!user && pathname.startsWith("/admin") && pathname !== "/admin/login") {
+    if (!user && pathname !== "/admin/login") {
       const loginUrl = new URL("/admin/login", request.url);
       loginUrl.searchParams.set("redirectTo", pathname);
       return NextResponse.redirect(loginUrl);
@@ -96,11 +96,11 @@ export async function middleware(request: NextRequest) {
   const tokenParam = request.nextUrl.searchParams.get("k");
   const tokenResult = tokenParam ? await verifyLinkToken(tokenParam) : null;
   const cookieValue = request.cookies.get("pcl_market")?.value;
-  const cookieMarket = await verifyMarketCookie(cookieValue);
+  const cookieMarket = cookieValue ? await verifyMarketCookie(cookieValue) : null;
   const manualRegionParam = request.nextUrl.searchParams.get("region") as MarketId | null;
 
-  // Check IP reputation with provider interface
-  const proxyFlag = await checkIpReputation(clientIp);
+  // Check IP reputation with provider interface (skip on localhost)
+  const proxyFlag = isLocalhost ? false : await checkIpReputation(clientIp);
   const geoStrict = process.env.GEO_STRICT !== "false"; // Default true
 
   // Pure resolution
@@ -120,17 +120,19 @@ export async function middleware(request: NextRequest) {
     devShowPrices: true,
   });
 
-  // Asynchronously record routing event (non-blocking)
-  logRoutingEvent({
-    host,
-    market: resolution.market,
-    action: resolution.action,
-    reason: resolution.reason,
-    country: ipCountry,
-    region: ipRegion,
-    proxyFlag,
-    ip: clientIp,
-  });
+  // Asynchronously record routing event (non-blocking, skip localhost)
+  if (!isLocalhost) {
+    logRoutingEvent({
+      host,
+      market: resolution.market,
+      action: resolution.action,
+      reason: resolution.reason,
+      country: ipCountry,
+      region: ipRegion,
+      proxyFlag,
+      ip: clientIp,
+    });
+  }
 
   // Handle resolution actions
   if (resolution.action === "notFound") {
@@ -138,7 +140,7 @@ export async function middleware(request: NextRequest) {
   }
 
   if (resolution.action === "redirect") {
-    // On localhost, never redirect away to production domains! Keep navigation local
+    // On localhost, keep navigation local and never loop
     if (isLocalhost) {
       const localTarget = new URL(request.url);
       if (resolution.market && resolution.market !== "dr") {
@@ -149,25 +151,28 @@ export async function middleware(request: NextRequest) {
       if (resolution.targetPath && resolution.targetPath !== "/") {
         localTarget.pathname = resolution.targetPath;
       }
-      return NextResponse.redirect(localTarget, 307);
+      if (localTarget.href !== request.url) {
+        return NextResponse.redirect(localTarget, 307);
+      }
+      // If target is same as current URL, fall through to serve
+    } else {
+      const targetUrl = new URL(resolution.targetPath || "/", `https://${resolution.targetHost}`);
+      const redirectResponse = NextResponse.redirect(targetUrl, 307);
+
+      // If a signed link token was validated on target host, issue signed pcl_market cookie (30 days)
+      if (resolution.setCookie) {
+        const signedCookie = await signMarketCookie(resolution.setCookie.market);
+        redirectResponse.cookies.set("pcl_market", signedCookie, {
+          httpOnly: true,
+          secure: true,
+          sameSite: "lax",
+          maxAge: resolution.setCookie.days * 24 * 60 * 60,
+          path: "/",
+        });
+      }
+
+      return redirectResponse;
     }
-
-    const targetUrl = new URL(resolution.targetPath || "/", `https://${resolution.targetHost}`);
-    const redirectResponse = NextResponse.redirect(targetUrl, 307);
-
-    // If a signed link token was validated on target host, issue signed pcl_market cookie (30 days)
-    if (resolution.setCookie) {
-      const signedCookie = await signMarketCookie(resolution.setCookie.market);
-      redirectResponse.cookies.set("pcl_market", signedCookie, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "lax",
-        maxAge: resolution.setCookie.days * 24 * 60 * 60,
-        path: "/",
-      });
-    }
-
-    return redirectResponse;
   }
 
   if (resolution.action === "neutral") {
