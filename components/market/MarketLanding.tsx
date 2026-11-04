@@ -7,7 +7,6 @@ import {
   ShieldCheck,
   Gift,
   UsersThree,
-  ArrowUpRight,
   CheckCircle,
   DeviceMobile,
   CreditCard,
@@ -33,7 +32,7 @@ import { MarketOrderForm } from './MarketOrderForm';
 
 interface MarketLandingProps {
   config: MarketConfig;
-  showPrices: boolean;
+  showPrices?: boolean;
   locale: string;
 }
 
@@ -42,9 +41,9 @@ function formatPriceNumber(num: number | null | undefined, symbol: string): stri
   return `${symbol}${num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
-export function MarketLanding({ config, showPrices, locale }: MarketLandingProps) {
+export function MarketLanding({ config, locale }: MarketLandingProps) {
   const content = config.content[locale] || config.content[config.defaultLocale] || Object.values(config.content)[0];
-  const { hero, problemInsight, system, guarantee, founderNote, faq, paymentNote, cta, legal, askOrynName } = content;
+  const { hero, problemInsight, system, guarantee, founderNote, faq, paymentNote, cta, legal } = content;
   const prices = config.prices;
 
   const [selectedPlan, setSelectedPlan] = useState<'presence' | 'conversion' | 'authority'>('conversion');

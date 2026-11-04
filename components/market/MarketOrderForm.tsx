@@ -22,6 +22,15 @@ interface MarketOrderFormProps {
   averageSaleValue: number | null;
 }
 
+type PreferredContact = 'sms' | 'whatsapp' | 'email' | 'phone';
+
+const CONTACT_OPTIONS: { id: PreferredContact; label: string }[] = [
+  { id: 'sms', label: 'SMS Text' },
+  { id: 'whatsapp', label: 'WhatsApp' },
+  { id: 'email', label: 'Email' },
+  { id: 'phone', label: 'Phone Call' },
+];
+
 export function MarketOrderForm({
   config,
   locale,
@@ -35,7 +44,7 @@ export function MarketOrderForm({
   const [contactName, setContactName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
-  const [preferredContact, setPreferredContact] = useState<'sms' | 'whatsapp' | 'email' | 'phone'>(
+  const [preferredContact, setPreferredContact] = useState<PreferredContact>(
     config.primaryChannel === 'whatsapp' ? 'whatsapp' : 'sms',
   );
   const [notes, setNotes] = useState('');
@@ -343,16 +352,11 @@ export function MarketOrderForm({
               {labels.contactMethodLabel}
             </label>
             <div className="flex flex-wrap gap-2 text-xs font-medium">
-              {[
-                { id: 'sms', label: 'SMS Text' },
-                { id: 'whatsapp', label: 'WhatsApp' },
-                { id: 'email', label: 'Email' },
-                { id: 'phone', label: 'Phone Call' },
-              ].map((c) => (
+              {CONTACT_OPTIONS.map((c) => (
                 <button
                   key={c.id}
                   type="button"
-                  onClick={() => setPreferredContact(c.id as any)}
+                  onClick={() => setPreferredContact(c.id)}
                   className={cn(
                     'rounded-full border px-3 py-1.5 transition-colors cursor-pointer',
                     preferredContact === c.id

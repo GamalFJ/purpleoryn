@@ -1,6 +1,5 @@
 'use server';
 
-import { headers } from 'next/headers';
 import { after } from 'next/server';
 import { z } from 'zod';
 import { getMarketConfig } from '@/markets';

@@ -1,7 +1,7 @@
 'use client';
 
 import { useId } from 'react';
-import { Target, TrendUp, Calculator } from '@phosphor-icons/react';
+import { Target, Calculator } from '@phosphor-icons/react';
 import type { MarketPrices } from '@/markets/types';
 import { cn } from '@/lib/cn';
 
