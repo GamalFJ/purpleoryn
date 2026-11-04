@@ -9,6 +9,22 @@ export const metadata: Metadata = {
   title: 'Oryn Presence Canada | Système Commercial et Croissance Numérique',
   description:
     'Développement web de conversion, visibilité Google locale et qualification par SMS 24h/24 pour entreprises canadiennes. Bilingue français et anglais.',
+  openGraph: {
+    title: 'Oryn Presence Canada | Système Commercial et Croissance Numérique',
+    description:
+      'Développement web de conversion, visibilité Google locale et qualification par SMS 24h/24 pour entreprises canadiennes. Bilingue français et anglais.',
+    url: 'https://ca.purpleoryn.com',
+    siteName: 'Purple Cove Labs',
+    locale: 'fr_CA',
+    alternateLocale: ['en_CA'],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Oryn Presence Canada | Système Commercial et Croissance Numérique',
+    description:
+      'Développement web de conversion, visibilité Google locale et qualification par SMS 24h/24 pour entreprises canadiennes.',
+  },
   robots: {
     index: true,
     follow: true,

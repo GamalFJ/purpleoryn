@@ -21,7 +21,7 @@ export function PricingTierEditor({ tier, currency }: { tier: MarketPricingTierR
   const { state, pending, onSubmit } = useAdminForm(updateMarketPricingTier.bind(null, tier.id));
 
   return (
-    <form onSubmit={onSubmit} className="rounded-[var(--radius-panel)] border border-line bg-surface p-6 sm:p-8">
+    <form onSubmit={onSubmit} className="rounded-[var(--radius-panel)] border border-line bg-surface p-4 sm:p-8">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h3 className="text-xl font-semibold">
           {tier.tier_name} <span className="text-sm font-normal text-muted">({tier.tier_key})</span>

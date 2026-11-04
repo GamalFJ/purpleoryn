@@ -9,6 +9,7 @@ import { getAddons, getTiers } from "@/lib/content";
 import { orderTotals } from "@/lib/orders";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { publicClient } from "@/lib/supabase/server";
+import { serviceClient } from "@/lib/supabase/service";
 import { notifyNewLead } from "@/lib/telegram";
 
 const MIN_FILL_MS = 2500;
@@ -116,6 +117,41 @@ export async function submitLead(_prev: LeadActionState, formData: FormData): Pr
       status: "error",
       message: "No pudimos guardar su pedido. Vuelva a intentarlo o escríbanos por WhatsApp.",
     };
+  }
+
+  // Also mirror order into market_leads + orders so the unified Admin Orders tab sees it immediately
+  try {
+    const totals = orderTotals(tier, addonsSnapshot);
+    const svc = serviceClient();
+    const { data: mLeadRow } = await svc
+      .from("market_leads")
+      .insert({
+        market_id: "do",
+        name: lead.name,
+        business_name: lead.business,
+        email: lead.email || null,
+        phone: lead.whatsapp,
+        channel: "whatsapp",
+        tier_interest: `${lead.plan}${addonsSnapshot.length ? ` + ${addonsSnapshot.map((a) => a.name).join(", ")}` : ""}`,
+        message: `Rubro: ${lead.businessNiche}. Notas: ${lead.message || "Ninguna"}`,
+        source: lead.utmSource || lead.referrer || "servicios_form",
+        status: "new",
+      })
+      .select("id")
+      .single();
+
+    await svc.from("orders").insert({
+      lead_id: mLeadRow?.id ?? null,
+      market_id: "do",
+      tier_key: lead.plan,
+      addon: addonsSnapshot.map((a) => a.name).join(", ") || null,
+      one_time_price: totals.oneTime,
+      monthly_price: totals.monthly,
+      currency: "DOP",
+      payment_status: "pending_first_payment",
+    });
+  } catch (err) {
+    console.error("[servicios] order mirror exception:", err);
   }
 
   // Sent after the response so the visitor never waits on Telegram.

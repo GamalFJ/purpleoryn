@@ -379,5 +379,19 @@ export async function updateMarketOrderPaymentStatus(id: string, formData: FormD
   const status = String(formData.get("payment_status") ?? "").trim().slice(0, 60);
   if (!status) return;
   await serviceClient().from("orders").update({ payment_status: status }).eq("id", id);
+  revalidatePath("/admin/orders", "layout");
   revalidatePath("/admin/market-orders", "layout");
+  revalidatePath("/admin", "layout");
+}
+
+export async function setOrderPaymentStatus(id: string, paymentStatus: string): Promise<{ success: boolean; error?: string }> {
+  await requireAdmin();
+  const status = String(paymentStatus ?? "").trim().slice(0, 60);
+  if (!status) return { success: false, error: "Payment status is required." };
+  const { error } = await serviceClient().from("orders").update({ payment_status: status }).eq("id", id);
+  if (error) return { success: false, error: error.message };
+  revalidatePath("/admin/orders", "layout");
+  revalidatePath("/admin/market-orders", "layout");
+  revalidatePath("/admin", "layout");
+  return { success: true };
 }

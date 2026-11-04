@@ -28,7 +28,7 @@ export function TierEditor({ tier }: { tier: TierRow }) {
   const monthly = Number(tier.monthly_price);
 
   return (
-    <form onSubmit={onSubmit} className="rounded-[var(--radius-panel)] border border-line bg-surface p-6 sm:p-8">
+    <form onSubmit={onSubmit} className="rounded-[var(--radius-panel)] border border-line bg-surface p-4 sm:p-8">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h2 className="text-2xl font-semibold">{tier.name}</h2>
         <p className="tabular text-sm text-muted">

@@ -95,7 +95,7 @@ export default async function ConversacionPage({ params }: { params: Params }) {
             </span>
             <p
               className={cn(
-                "max-w-[85%] whitespace-pre-wrap rounded-2xl px-4 py-2.5 text-[15px] leading-relaxed",
+                "max-w-[85%] whitespace-pre-wrap break-words [overflow-wrap:anywhere] rounded-2xl px-4 py-2.5 text-sm sm:text-[15px] leading-relaxed",
                 m.role === "user" ? "rounded-br-md bg-accent text-accent-ink" : "rounded-bl-md border border-line bg-surface",
               )}
             >

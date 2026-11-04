@@ -24,7 +24,7 @@ export function SettingsForm({ settings, defaults }: { settings: Row; defaults: 
 
   return (
     <form onSubmit={onSubmit} className="mt-8 space-y-10">
-      <section className="rounded-[var(--radius-panel)] border border-line bg-surface p-6 sm:p-8">
+      <section className="rounded-[var(--radius-panel)] border border-line bg-surface p-4 sm:p-8">
         <h2 className="text-2xl font-semibold">Homepage</h2>
         <div className="mt-6 grid gap-5">
           <TextField
@@ -52,7 +52,7 @@ export function SettingsForm({ settings, defaults }: { settings: Row; defaults: 
         </div>
       </section>
 
-      <section className="rounded-[var(--radius-panel)] border border-line bg-surface p-6 sm:p-8">
+      <section className="rounded-[var(--radius-panel)] border border-line bg-surface p-4 sm:p-8">
         <h2 className="text-2xl font-semibold">Who&rsquo;s behind it</h2>
         <div className="mt-6 grid gap-5">
           <TextField
@@ -74,7 +74,7 @@ export function SettingsForm({ settings, defaults }: { settings: Row; defaults: 
         </div>
       </section>
 
-      <section className="rounded-[var(--radius-panel)] border border-line bg-surface p-6 sm:p-8">
+      <section className="rounded-[var(--radius-panel)] border border-line bg-surface p-4 sm:p-8">
         <h2 className="text-2xl font-semibold">Documentos</h2>
         <p className="mt-2 max-w-[60ch] text-sm text-muted">
           Reemplaza los PDF descargables del sitio. Si no subes uno, se sigue sirviendo el archivo por defecto en

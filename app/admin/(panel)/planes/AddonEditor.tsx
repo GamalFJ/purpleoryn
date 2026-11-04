@@ -22,7 +22,7 @@ export function AddonEditor({ addon }: { addon: AddonRow }) {
   const monthly = Number(addon.monthly_price);
 
   return (
-    <form onSubmit={onSubmit} className="rounded-[var(--radius-panel)] border border-line bg-surface p-6 sm:p-8">
+    <form onSubmit={onSubmit} className="rounded-[var(--radius-panel)] border border-line bg-surface p-4 sm:p-8">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h3 className="text-2xl font-semibold">{addon.name}</h3>
         <p className="tabular text-sm text-muted">

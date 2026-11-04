@@ -30,7 +30,7 @@ function Row({ label, children }: { label: string; children: React.ReactNode }) 
   return (
     <div className="grid gap-1 py-3 sm:grid-cols-[180px_1fr] sm:gap-4">
       <dt className="text-sm text-muted">{label}</dt>
-      <dd className="text-[15px]">{children}</dd>
+      <dd className="text-[15px] break-words [overflow-wrap:anywhere]">{children}</dd>
     </div>
   );
 }
@@ -90,7 +90,7 @@ export default async function ProspectoPage({ params }: { params: Params }) {
             id="status"
             name="status"
             defaultValue={lead.status}
-            className="h-12 rounded-full border border-line bg-surface px-4 text-[15px] outline-none focus:border-accent"
+            className="h-12 rounded-full border border-line bg-surface px-4 text-base sm:text-[15px] outline-none focus:border-accent"
           >
             {LEAD_STATUSES.map((s) => (
               <option key={s} value={s}>

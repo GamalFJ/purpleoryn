@@ -30,7 +30,7 @@ export function PortfolioForm({ item, justCreated }: { item: PortfolioRow | null
         <p className="mt-6 rounded-[var(--radius-field)] bg-success/10 px-4 py-3 text-[15px] text-success">Case study created.</p>
       )}
       <form onSubmit={onSubmit} className="mt-8 space-y-8">
-        <section className="grid gap-5 rounded-[var(--radius-panel)] border border-line bg-surface p-6 sm:grid-cols-2 sm:p-8">
+        <section className="grid gap-5 rounded-[var(--radius-panel)] border border-line bg-surface p-4 sm:grid-cols-2 sm:p-8">
           <TextField name="title" label="Title" defaultValue={item?.title} required />
           <TextField name="slug" label="Slug" defaultValue={item?.slug} help="Generated from the title if left blank." />
           <TextField name="summary" label="Short summary" defaultValue={item?.summary} className="sm:col-span-2" />
@@ -38,7 +38,7 @@ export function PortfolioForm({ item, justCreated }: { item: PortfolioRow | null
           <TextField name="link" label="Project link" defaultValue={item?.link} help="https://..." className="sm:col-span-2" />
         </section>
 
-        <section className="grid gap-5 rounded-[var(--radius-panel)] border border-line bg-surface p-6 sm:p-8">
+        <section className="grid gap-5 rounded-[var(--radius-panel)] border border-line bg-surface p-4 sm:p-8">
           <div>
             <h2 className="text-xl font-semibold">Results</h2>
             <p className="mt-1 text-[15px] text-muted">Real results only. If you write a result, say where it comes from so it can be published.</p>
@@ -52,12 +52,12 @@ export function PortfolioForm({ item, justCreated }: { item: PortfolioRow | null
           />
         </section>
 
-        <section className="grid gap-8 rounded-[var(--radius-panel)] border border-line bg-surface p-6 sm:p-8">
+        <section className="grid gap-8 rounded-[var(--radius-panel)] border border-line bg-surface p-4 sm:p-8">
           <ImageUploader name="cover_image_url" label="Cover image" folder={folder} defaultUrl={item?.cover_image_url ?? null} ratio="landscape" />
           <GalleryUploader name="image_urls" folder={folder} defaultUrls={item?.image_urls ?? []} />
         </section>
 
-        <section className="flex flex-wrap items-center gap-6 rounded-[var(--radius-panel)] border border-line bg-surface p-6 sm:p-8">
+        <section className="flex flex-wrap items-center gap-6 rounded-[var(--radius-panel)] border border-line bg-surface p-4 sm:p-8">
           <label className="flex cursor-pointer items-center gap-3 text-[15px] font-medium">
             <input type="checkbox" name="published" defaultChecked={item?.published ?? false} className="h-5 w-5 accent-[var(--accent)]" />
             Published on the site
