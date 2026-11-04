@@ -68,28 +68,28 @@ export function MarketRoiCalculator({
   };
 
   return (
-    <div className="rounded-[var(--radius-panel)] border border-line bg-surface p-6 sm:p-10 shadow-xs">
+    <div className="rounded-[var(--radius-panel)] border border-line bg-surface p-4 sm:p-8 md:p-10 shadow-xs">
       <div className="max-w-2xl">
         <span className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-accent">
           <Calculator size={16} weight="bold" />
           {labels.badge}
         </span>
-        <h3 className="mt-2 text-2xl font-semibold sm:text-3xl text-ink">
+        <h3 className="mt-2 text-2xl font-semibold sm:text-3xl text-ink break-words">
           {labels.title}
         </h3>
-        <p className="mt-2 text-base text-body leading-relaxed">
+        <p className="mt-2 text-sm sm:text-base text-body leading-relaxed">
           {labels.subtitle}
         </p>
       </div>
 
       <div className="mt-8 grid gap-8 lg:grid-cols-[1.1fr_1fr] lg:items-start">
         {/* Input & Tier Selector */}
-        <div className="space-y-6 rounded-2xl border border-line/60 bg-paper/60 p-5 sm:p-6">
+        <div className="space-y-6 rounded-2xl border border-line/60 bg-paper/60 p-4 sm:p-6">
           <div>
             <label className="text-xs font-semibold uppercase tracking-wider text-muted block mb-2.5">
               {labels.choosePlan}
             </label>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
               {(['presence', 'conversion', 'authority'] as const).map((p) => {
                 const isSelected = selectedPlan === p;
                 const displayName =
@@ -105,15 +105,15 @@ export function MarketRoiCalculator({
                     type="button"
                     onClick={() => onSelectPlan(p)}
                     className={cn(
-                      'rounded-xl border px-3 py-2.5 text-xs font-semibold transition-all cursor-pointer',
+                      'rounded-xl border px-1.5 sm:px-3 py-2 sm:py-2.5 text-[11px] sm:text-xs font-semibold transition-all cursor-pointer text-center',
                       isSelected
                         ? 'border-accent bg-accent text-accent-ink shadow-xs'
                         : 'border-line bg-surface text-body hover:border-accent/40 hover:text-ink',
                     )}
                   >
-                    <span>{displayName}</span>
+                    <span className="block truncate">{displayName}</span>
                     {p === 'conversion' && (
-                      <span className="block text-[9px] font-normal opacity-90">
+                      <span className="block text-[8.5px] sm:text-[9px] font-normal opacity-90 truncate">
                         {isFrench ? 'Recommandé' : 'Recommended'}
                       </span>
                     )}
@@ -147,7 +147,7 @@ export function MarketRoiCalculator({
             </div>
           </div>
 
-          <div className="rounded-xl border border-line/40 bg-surface/50 p-4 text-xs text-muted leading-relaxed">
+          <div className="rounded-xl border border-line/40 bg-surface/50 p-3.5 sm:p-4 text-xs text-muted leading-relaxed break-words">
             <span className="font-semibold text-ink">{labels.yearOneLabel}:</span>{' '}
             <span className="font-mono font-semibold text-warm-ink">
               {prices.currencySymbol}

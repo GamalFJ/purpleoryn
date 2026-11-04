@@ -19,17 +19,17 @@ const STEP_HEIGHT = ["md:min-h-[34rem]", "md:min-h-[38rem]", "md:min-h-[42rem]"]
 
 export function TierStairs({ tiers, addons }: { tiers: Tier[]; addons: Addon[] }) {
   return (
-    <section aria-labelledby="planes-titulo" className="mx-auto max-w-6xl px-4 pt-24 sm:px-6 md:pt-32">
+    <section aria-labelledby="planes-titulo" className="mx-auto max-w-6xl px-4 pt-16 sm:px-6 md:pt-32">
       <div className="max-w-2xl">
-        <h2 id="planes-titulo" className="text-3xl font-semibold leading-tight sm:text-4xl">
+        <h2 id="planes-titulo" className="text-2xl xs:text-3xl font-semibold leading-tight sm:text-4xl break-words">
           Tres planes con precio publicado
         </h2>
-        <p className="mt-4 text-lg leading-relaxed text-body">
+        <p className="mt-4 text-base sm:text-lg leading-relaxed text-body">
           Un pago único para construirlo y una mensualidad para mantenerlo funcionando. Cada plan incluye todo lo del anterior.
         </p>
       </div>
 
-      <ol className="mt-12 grid gap-4 md:grid-cols-3 md:items-end">
+      <ol className="mt-10 sm:mt-12 grid gap-4 md:grid-cols-3 md:items-end">
         {tiers.map((tier, i) => {
           const theme = TIER_THEME[tier.slug];
           return (
@@ -37,7 +37,7 @@ export function TierStairs({ tiers, addons }: { tiers: Tier[]; addons: Addon[] }
               <StairStep index={i}>
                 <article
                   className={cn(
-                    "group relative flex h-full flex-col overflow-hidden rounded-[var(--radius-panel)] bg-surface p-6 transition-transform duration-300 hover:-translate-y-1 motion-reduce:transition-none sm:p-7",
+                    "group relative flex h-full flex-col overflow-hidden rounded-[var(--radius-panel)] bg-surface p-5 sm:p-7 transition-transform duration-300 hover:-translate-y-1 motion-reduce:transition-none",
                     // The recommended plan carries more visual weight than the other two.
                     tier.recommended ? "border-glow shadow-[0_28px_56px_-30px_rgb(162_28_175/0.55)]" : cn("border", TONE[theme.tone].border),
                     STEP_HEIGHT[i],

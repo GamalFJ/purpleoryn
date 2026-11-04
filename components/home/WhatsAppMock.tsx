@@ -47,10 +47,10 @@ export function WhatsAppMock() {
   const hidden = armed && !inView;
 
   return (
-    <figure className="mx-auto w-full max-w-[22rem]">
+    <figure className="mx-auto w-full max-w-[min(22rem,100%)]">
       <div
         ref={ref}
-        className={cn("overflow-hidden rounded-[2.5rem] border-[10px] shadow-[0_32px_64px_-32px_rgb(28_16_48/0.55)]", C.frame)}
+        className={cn("overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] border-[8px] sm:border-[10px] shadow-[0_32px_64px_-32px_rgb(28_16_48/0.55)]", C.frame)}
         aria-label="Ejemplo de conversación de WhatsApp"
         role="group"
       >
@@ -101,7 +101,7 @@ export function WhatsAppMock() {
               <li key={i} className={cn("flex", out ? "justify-end" : "justify-start", reveal)} style={style}>
                 <p
                   className={cn(
-                    "relative max-w-[85%] whitespace-pre-line rounded-lg px-2.5 pb-1.5 pt-1.5 text-[14px] leading-[1.35] shadow-[0_1px_0.5px_rgb(11_20_26/0.13)]",
+                    "relative max-w-[85%] whitespace-pre-line rounded-lg px-2.5 pb-1.5 pt-1.5 text-[14px] leading-[1.35] shadow-[0_1px_0.5px_rgb(11_20_26/0.13)] break-words",
                     out ? cn("rounded-tr-none", C.out) : cn("rounded-tl-none", C.in),
                   )}
                 >

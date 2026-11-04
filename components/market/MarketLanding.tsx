@@ -109,37 +109,37 @@ export function MarketLanding({ config, locale }: MarketLandingProps) {
     <div className="min-h-screen bg-paper text-body selection:bg-accent selection:text-accent-ink">
       {/* ─── Sticky Header ───────────────────────────────────────────── */}
       <header className="sticky top-0 z-40 border-b border-line/70 bg-paper/85 backdrop-blur-md">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
-          <Link href="/" className="flex shrink-0 items-center gap-2.5">
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-3 sm:px-6">
+          <Link href="/" className="flex shrink-0 items-center gap-2 sm:gap-2.5">
             <Image
               src="/media/logo.webp"
               alt="Purple Cove Labs"
               width={36}
               height={36}
-              className="h-9 w-9 rounded-full"
+              className="h-8 w-8 sm:h-9 sm:w-9 rounded-full"
               priority
             />
-            <div className="flex items-center gap-2">
-              <span className="font-display text-[17px] font-semibold tracking-tight text-ink sm:inline">
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <span className="hidden font-display text-[17px] font-semibold tracking-tight text-ink sm:inline">
                 Purple Cove Labs
               </span>
-              <span className="rounded-full bg-accent-soft px-2 py-0.5 text-[11px] font-mono font-medium text-accent">
+              <span className="rounded-full bg-accent-soft px-2 py-0.5 text-[10px] sm:text-[11px] font-mono font-medium text-accent max-w-[110px] truncate sm:max-w-none">
                 {config.name}
               </span>
             </div>
           </Link>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5 sm:gap-3">
             {/* Multi-language switcher if supported */}
             {config.supportedLocales.length > 1 && (
-              <div className="flex items-center gap-1 rounded-full border border-line bg-surface p-1 shadow-xs">
-                <Globe size={14} className="text-muted ml-1.5 mr-0.5" />
+              <div className="flex items-center gap-0.5 sm:gap-1 rounded-full border border-line bg-surface p-0.5 sm:p-1 shadow-xs">
+                <Globe size={13} className="text-muted ml-1 mr-0.5 hidden xs:inline" />
                 {config.supportedLocales.map((loc) => (
                   <Link
                     key={loc}
                     href={`?lang=${loc}`}
                     className={cn(
-                      'rounded-full px-2.5 py-0.5 text-xs font-semibold transition-all',
+                      'rounded-full px-2 sm:px-2.5 py-0.5 text-[11px] sm:text-xs font-semibold transition-all',
                       locale.startsWith(loc)
                         ? 'bg-gradient-action text-accent-ink shadow-xs'
                         : 'text-muted hover:text-ink',
@@ -154,10 +154,13 @@ export function MarketLanding({ config, locale }: MarketLandingProps) {
             <button
               type="button"
               onClick={() => scrollToOrder('conversion')}
-              className={buttonClass('primary', 'sm')}
+              className={buttonClass('primary', 'sm', 'px-2.5 py-1.5 text-xs sm:px-4 sm:py-2 sm:text-sm whitespace-nowrap')}
             >
               {channelIcon}
-              <span>{cta.label}</span>
+              <span>
+                <span className="hidden xs:inline">{cta.label}</span>
+                <span className="xs:hidden">{isFrench ? 'Réserver' : 'Reserve'}</span>
+              </span>
             </button>
           </div>
         </div>
@@ -176,18 +179,18 @@ export function MarketLanding({ config, locale }: MarketLandingProps) {
           <div className="animate-drift absolute bottom-[-6rem] right-[-4rem] h-[18rem] w-[18rem] rounded-full bg-teal/15 blur-3xl [--drift-x:-30px] [animation-duration:18s]" />
         </div>
 
-        <section className="mx-auto grid max-w-6xl items-center gap-10 px-4 pt-12 sm:px-6 md:grid-cols-[1.3fr_0.7fr] md:gap-12 md:pt-16">
+        <section className="mx-auto grid max-w-6xl items-center gap-10 px-4 pt-10 sm:px-6 md:grid-cols-[1.3fr_0.7fr] md:gap-12 md:pt-16">
           <div className="pb-4 md:pb-12">
             <span className="inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent-soft px-3.5 py-1 text-xs font-semibold uppercase tracking-wide text-accent">
               <Sparkle size={14} weight="fill" />
               {hero.badge}
             </span>
 
-            <h1 className="text-gradient-brand mt-4 pb-[0.1em] text-[2.25rem] font-semibold leading-[1.06] sm:text-[2.75rem] lg:text-[3.25rem]">
+            <h1 className="text-gradient-brand mt-4 pb-[0.1em] text-[1.85rem] xs:text-[2.25rem] font-semibold leading-[1.08] sm:text-[2.75rem] lg:text-[3.25rem] break-words">
               {hero.title}
             </h1>
 
-            <p className="mt-5 max-w-[48ch] text-lg leading-relaxed text-body">
+            <p className="mt-4 sm:mt-5 max-w-[48ch] text-base sm:text-lg leading-relaxed text-body">
               {hero.subtitle}
             </p>
 
@@ -195,7 +198,7 @@ export function MarketLanding({ config, locale }: MarketLandingProps) {
               <button
                 type="button"
                 onClick={() => scrollToOrder('conversion')}
-                className={buttonClass('primary', 'lg')}
+                className={buttonClass('primary', 'lg', 'w-full sm:w-auto')}
               >
                 {channelIcon}
                 <span>{hero.ctaText}</span>
@@ -203,7 +206,7 @@ export function MarketLanding({ config, locale }: MarketLandingProps) {
 
               <a
                 href="#pricing"
-                className={buttonClass('secondary', 'lg')}
+                className={buttonClass('secondary', 'lg', 'w-full sm:w-auto')}
               >
                 <span>{copy.explorePlans}</span>
                 <ArrowDown size={16} weight="bold" />
@@ -212,19 +215,19 @@ export function MarketLanding({ config, locale }: MarketLandingProps) {
           </div>
 
           {/* Hero Visual Card */}
-          <div className="relative mx-auto w-full max-w-sm overflow-hidden rounded-[28px] border border-line bg-surface p-6 shadow-[0_24px_50px_-20px_rgb(28_16_48/0.2)] md:max-w-none">
+          <div className="relative mx-auto w-full max-w-sm overflow-hidden rounded-[24px] sm:rounded-[28px] border border-line bg-surface p-5 sm:p-6 shadow-[0_24px_50px_-20px_rgb(28_16_48/0.2)] md:max-w-none">
             <div className="flex items-center gap-4 border-b border-line pb-4">
               <Image
                 src="/media/oryn-presence.webp"
                 alt="Oryn Presence"
                 width={72}
                 height={72}
-                className="h-16 w-16 shrink-0 drop-shadow-[0_12px_24px_rgb(109_47_216/0.4)]"
+                className="h-14 w-14 sm:h-16 sm:w-16 shrink-0 drop-shadow-[0_12px_24px_rgb(109_47_216/0.4)]"
                 priority
               />
-              <div>
-                <p className="font-display text-lg font-semibold text-ink">Oryn Presence</p>
-                <p className="text-xs text-muted">Complete Commercial Client Engine</p>
+              <div className="min-w-0">
+                <p className="font-display text-base sm:text-lg font-semibold text-ink truncate">Oryn Presence</p>
+                <p className="text-xs text-muted truncate">Complete Commercial Client Engine</p>
               </div>
             </div>
 
@@ -243,7 +246,7 @@ export function MarketLanding({ config, locale }: MarketLandingProps) {
               </div>
             </div>
 
-            <div className="mt-5 flex items-center justify-between rounded-xl border border-line bg-paper/70 px-4 py-3 text-xs font-semibold text-ink">
+            <div className="mt-5 flex flex-col xs:flex-row xs:items-center justify-between gap-1 rounded-xl border border-line bg-paper/70 px-4 py-3 text-xs font-semibold text-ink">
               <span className="text-muted">{isFrench ? 'Exécution technique' : 'Implementation'}</span>
               <span className="font-mono text-accent font-medium">
                 {isFrench ? 'Personnellement par Gamal' : 'Personally Built by Gamal'}
@@ -255,18 +258,18 @@ export function MarketLanding({ config, locale }: MarketLandingProps) {
 
       {/* ─── Problem Insight Section (Challenger Pitch) ───────────────── */}
       {problemInsight && (
-        <section className="mx-auto max-w-6xl px-4 pt-20 sm:px-6 md:pt-28">
-          <div className="rounded-[var(--radius-panel)] border border-line bg-surface p-8 sm:p-12 shadow-xs">
-            <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
+        <section className="mx-auto max-w-6xl px-4 pt-16 sm:px-6 md:pt-28">
+          <div className="rounded-[var(--radius-panel)] border border-line bg-surface p-5 sm:p-8 md:p-12 shadow-xs">
+            <div className="grid gap-6 sm:gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
               <div>
                 <span className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-warm-ink">
                   <Clock size={16} weight="bold" />
                   {problemInsight.tag}
                 </span>
-                <h2 className="mt-3 text-2xl font-semibold sm:text-3xl text-ink leading-tight">
+                <h2 className="mt-3 text-2xl font-semibold sm:text-3xl text-ink leading-tight break-words">
                   {problemInsight.title}
                 </h2>
-                <div className="mt-4 rounded-xl border border-accent/20 bg-accent-soft/30 p-4 text-sm font-medium text-ink">
+                <div className="mt-4 rounded-xl border border-accent/20 bg-accent-soft/30 p-3.5 sm:p-4 text-sm font-medium text-ink leading-relaxed">
                   {problemInsight.statCallout}
                 </div>
                 <p className="mt-4 text-base leading-relaxed text-body">
@@ -274,9 +277,9 @@ export function MarketLanding({ config, locale }: MarketLandingProps) {
                 </p>
               </div>
 
-              <div className="space-y-4 rounded-2xl border border-line bg-paper/60 p-6 text-xs text-body">
+              <div className="space-y-4 rounded-2xl border border-line bg-paper/60 p-4 sm:p-6 text-xs text-body">
                 <div className="flex items-start gap-3">
-                  <div className="rounded-full bg-teal-soft p-2 text-teal-ink">
+                  <div className="rounded-full bg-teal-soft p-2 text-teal-ink shrink-0">
                     <UserCheck size={20} weight="bold" />
                   </div>
                   <div>
@@ -303,20 +306,20 @@ export function MarketLanding({ config, locale }: MarketLandingProps) {
       )}
 
       {/* ─── The Three-Part System ───────────────────────────────────── */}
-      <section className="mx-auto max-w-6xl px-4 pt-24 sm:px-6 md:pt-32">
+      <section className="mx-auto max-w-6xl px-4 pt-16 sm:px-6 md:pt-32">
         <div className="max-w-2xl">
           <span className="text-xs font-semibold uppercase tracking-wider text-accent">
             Architecture
           </span>
-          <h2 className="mt-2 text-3xl font-semibold leading-tight sm:text-4xl text-ink">
+          <h2 className="mt-2 text-2xl xs:text-3xl font-semibold leading-tight sm:text-4xl text-ink break-words">
             {system.sectionTitle}
           </h2>
-          <p className="mt-4 text-lg leading-relaxed text-body">
+          <p className="mt-3 sm:mt-4 text-base sm:text-lg leading-relaxed text-body">
             {system.sectionSubtitle}
           </p>
         </div>
 
-        <ol className="mt-12 grid gap-0 md:grid-cols-3 md:gap-6">
+        <ol className="mt-10 sm:mt-12 grid gap-0 md:grid-cols-3 md:gap-6">
           {system.parts.map((part, i) => {
             const tones = ['teal', 'violet', 'amber'] as const;
             const tone = tones[i % tones.length];
@@ -328,9 +331,9 @@ export function MarketLanding({ config, locale }: MarketLandingProps) {
               <li
                 key={part.title}
                 className={cn(
-                  'group relative flex gap-4 pb-8 md:flex-col md:pb-0',
+                  'group relative flex gap-3.5 sm:gap-4 pb-8 md:flex-col md:pb-0',
                   !last &&
-                    'before:absolute before:bottom-1 before:left-6 before:top-15 before:w-0.5 before:rounded-full before:bg-linear-to-b before:from-accent/50 before:to-fuchsia/10 md:before:hidden md:after:absolute md:after:left-17 md:after:right-2 md:after:top-6 md:after:h-0.5 md:after:rounded-full md:after:bg-linear-to-r md:after:from-accent/50 md:after:to-fuchsia/10',
+                    'before:absolute before:bottom-1 before:left-5 before:top-15 before:w-0.5 before:rounded-full before:bg-linear-to-b before:from-accent/50 before:to-fuchsia/10 md:before:hidden md:after:absolute md:after:left-17 md:after:right-2 md:after:top-6 md:after:h-0.5 md:after:rounded-full md:after:bg-linear-to-r md:after:from-accent/50 md:after:to-fuchsia/10',
                 )}
               >
                 <span className="relative z-10 shrink-0 self-start">
@@ -349,19 +352,19 @@ export function MarketLanding({ config, locale }: MarketLandingProps) {
         </ol>
 
         {/* Realistic Interactive Phone Mock (SMS for US/CA, WhatsApp for HT) */}
-        <div className="mt-16 grid items-center gap-10 md:grid-cols-[1fr_1.1fr] md:gap-14">
-          <figure className="mx-auto w-full max-w-[22rem]">
-            <div className="overflow-hidden rounded-[2.5rem] border-[10px] border-[#1c1c1e] bg-[#1c1c1e] shadow-[0_32px_64px_-32px_rgb(28_16_48/0.55)]">
+        <div className="mt-14 sm:mt-16 grid items-center gap-8 md:grid-cols-[1fr_1.1fr] md:gap-14">
+          <figure className="mx-auto w-full max-w-[min(22rem,100%)]">
+            <div className="overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] border-[8px] sm:border-[10px] border-[#1c1c1e] bg-[#1c1c1e] shadow-[0_32px_64px_-32px_rgb(28_16_48/0.55)]">
               {/* Phone Header */}
-              <div className="flex items-center gap-3 bg-[#f5f5f7] px-4 py-3 text-ink dark:bg-[#1f1f23] dark:text-[#f1ecf8]">
-                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-accent/20 text-xs font-bold text-accent">
+              <div className="flex items-center gap-3 bg-[#f5f5f7] px-3.5 py-3 text-ink dark:bg-[#1f1f23] dark:text-[#f1ecf8]">
+                <div className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full bg-accent/20 text-xs font-bold text-accent shrink-0">
                   {config.primaryChannel === 'sms' ? 'SMS' : 'WA'}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-xs font-semibold leading-tight">
+                  <p className="text-xs font-semibold leading-tight truncate">
                     {isFrench ? 'Nouvelle Demande Client' : 'New Inbound Client Inquiry'}
                   </p>
-                  <p className="text-[10px] text-muted font-mono">
+                  <p className="text-[10px] text-muted font-mono truncate">
                     {config.primaryChannel === 'sms'
                       ? 'SMS • Qualified by Oryn'
                       : 'WhatsApp • Qualifié par Oryn'}
@@ -377,7 +380,7 @@ export function MarketLanding({ config, locale }: MarketLandingProps) {
                   </span>
                 </div>
 
-                <div className="max-w-[85%] rounded-2xl rounded-bl-sm bg-surface p-3 text-ink shadow-xs">
+                <div className="max-w-[85%] rounded-2xl rounded-bl-sm bg-surface p-3 text-ink shadow-xs break-words">
                   <p>
                     {isFrench
                       ? 'Bonjour, j’ai trouvé votre entreprise sur Google. Avez-vous une disponibilité cette semaine?'
@@ -386,7 +389,7 @@ export function MarketLanding({ config, locale }: MarketLandingProps) {
                   <span className="mt-1 block text-right text-[10px] text-muted">9:38 PM</span>
                 </div>
 
-                <div className="ml-auto max-w-[85%] rounded-2xl rounded-br-sm bg-gradient-action p-3 text-accent-ink shadow-xs">
+                <div className="ml-auto max-w-[85%] rounded-2xl rounded-br-sm bg-gradient-action p-3 text-accent-ink shadow-xs break-words">
                   <p>
                     {isFrench
                       ? 'Bonjour! Oui tout à fait. Nous avons des ouvertures mercredi à 14h ou jeudi à 10h. Quel créneau vous convient le mieux?'
@@ -395,14 +398,14 @@ export function MarketLanding({ config, locale }: MarketLandingProps) {
                   <span className="mt-1 block text-right text-[10px] text-accent-ink/80">9:39 PM</span>
                 </div>
 
-                <div className="max-w-[85%] rounded-2xl rounded-bl-sm bg-surface p-3 text-ink shadow-xs">
+                <div className="max-w-[85%] rounded-2xl rounded-bl-sm bg-surface p-3 text-ink shadow-xs break-words">
                   <p>
                     {isFrench ? 'Jeudi à 10h est parfait.' : 'Thursday at 10:00 AM works great for me.'}
                   </p>
                   <span className="mt-1 block text-right text-[10px] text-muted">9:40 PM</span>
                 </div>
 
-                <div className="rounded-xl border border-teal/30 bg-teal-soft p-2.5 text-[11px] text-teal-ink">
+                <div className="rounded-xl border border-teal/30 bg-teal-soft p-2.5 text-[11px] text-teal-ink break-words">
                   <p className="font-semibold">
                     {isFrench ? '✓ Demande qualifiée par Oryn IA' : '✓ Lead Qualified by Oryn AI'}
                   </p>
@@ -420,7 +423,7 @@ export function MarketLanding({ config, locale }: MarketLandingProps) {
             <span className="text-xs font-semibold uppercase tracking-wider text-teal-ink">
               Seamless Handoff
             </span>
-            <h3 className="mt-2 text-2xl font-semibold sm:text-3xl text-ink">
+            <h3 className="mt-2 text-2xl font-semibold sm:text-3xl text-ink break-words">
               {isFrench
                 ? 'Ne laissez plus refroidir aucun prospect qualifié'
                 : 'Never let a qualified prospective buyer go cold'}
@@ -744,37 +747,37 @@ export function MarketLanding({ config, locale }: MarketLandingProps) {
 
         {/* AI Voice Agent Addon (Secondary add-on) */}
         {prices.voiceAddon && (
-          <div className="mt-10 overflow-hidden rounded-[var(--radius-panel)] border border-teal/30 bg-linear-to-br from-teal-soft via-surface to-accent-soft/60 p-6 sm:p-8">
+          <div className="mt-10 overflow-hidden rounded-[var(--radius-panel)] border border-teal/30 bg-linear-to-br from-teal-soft via-surface to-accent-soft/60 p-5 sm:p-8">
             <span
               aria-hidden="true"
               className="absolute inset-x-0 top-0 h-1.5 bg-linear-to-r from-teal via-accent to-fuchsia"
             />
             <div className="grid gap-6 md:grid-cols-[1.3fr_1fr] md:items-center">
-              <div className="flex gap-4">
-                <IconTile icon={Microphone} tone="teal" size="lg" />
+              <div className="flex flex-col xs:flex-row gap-3.5 sm:gap-4 items-start">
+                <IconTile icon={Microphone} tone="teal" size="lg" className="shrink-0" />
                 <div>
-                  <h3 className="text-2xl font-semibold text-teal-ink">
+                  <h3 className="text-xl sm:text-2xl font-semibold text-teal-ink break-words">
                     {copy.voiceAddonTitle}
                   </h3>
-                  <p className="mt-2 text-[15px] leading-relaxed text-body">
+                  <p className="mt-2 text-sm sm:text-[15px] leading-relaxed text-body">
                     {copy.voiceAddonDesc}
                   </p>
                   <p className="mt-2 text-xs text-muted font-medium">
                     {copy.voiceLineType}
                   </p>
-                  <p className="mt-3 text-sm font-medium text-ink">
+                  <p className="mt-3 text-xs sm:text-sm font-medium text-ink">
                     {prices.voiceAddon.includedUnits || 300} {copy.voiceMinutes}
                     {prices.voiceAddon.overageRate && ` • ${copy.voiceOverage} ${prices.voiceAddon.overageRate}`}
                   </p>
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-line bg-surface p-5 text-right md:text-left">
+              <div className="rounded-2xl border border-line bg-surface p-4 sm:p-5 text-left">
                 <p className="text-xs text-muted uppercase font-semibold">
                   {copy.setupLabel}: {formatPriceNumber(prices.voiceAddon.setup, prices.currencySymbol)}
                 </p>
-                <div className="mt-1 flex items-baseline justify-end md:justify-start gap-1">
-                  <span className="tabular text-3xl font-bold text-ink">
+                <div className="mt-1 flex items-baseline justify-start gap-1">
+                  <span className="tabular text-2xl sm:text-3xl font-bold text-ink">
                     {formatPriceNumber(prices.voiceAddon.monthly, prices.currencySymbol)}
                   </span>
                   <span className="text-sm text-muted">{copy.monthlyLabel}</span>
@@ -795,7 +798,7 @@ export function MarketLanding({ config, locale }: MarketLandingProps) {
         {content.serviceRows && content.serviceRows.length > 0 && (
           <div className="mt-16">
             <div className="text-center mb-8">
-              <h3 className="text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
+              <h3 className="text-2xl font-semibold tracking-tight text-ink sm:text-3xl break-words">
                 {isFrench ? 'Comparaison détaillée des services' : 'Detailed Service Comparison'}
               </h3>
               <p className="mt-2 text-sm text-muted max-w-xl mx-auto">
@@ -866,19 +869,25 @@ export function MarketLanding({ config, locale }: MarketLandingProps) {
             <div className="space-y-4 md:hidden">
               {content.serviceRows.map((row) => (
                 <div key={row.label} className="rounded-xl border border-line bg-surface p-4 shadow-xs">
-                  <p className="font-semibold text-ink text-base">{row.label}</p>
+                  <p className="font-semibold text-ink text-base break-words">{row.label}</p>
                   <div className="mt-3 space-y-2 text-xs">
                     <div className="rounded-lg bg-paper p-3 border border-line/50">
-                      <p className="font-semibold text-teal-ink mb-1">Presence</p>
-                      <p className="text-body leading-relaxed">{row.presence}</p>
+                      <p className="font-semibold text-teal-ink mb-1">
+                        {isFrench ? 'Présence' : 'Presence'}
+                      </p>
+                      <p className="text-body leading-relaxed break-words">{row.presence}</p>
                     </div>
                     <div className="rounded-lg bg-accent-soft/50 p-3 border border-accent/20">
-                      <p className="font-semibold text-accent mb-1">Conversion (Recommended)</p>
-                      <p className="text-body leading-relaxed">{row.conversion}</p>
+                      <p className="font-semibold text-accent mb-1">
+                        {isFrench ? 'Conversion (Recommandé)' : 'Conversion (Recommended)'}
+                      </p>
+                      <p className="text-body leading-relaxed break-words">{row.conversion}</p>
                     </div>
                     <div className="rounded-lg bg-paper p-3 border border-line/50">
-                      <p className="font-semibold text-rose-ink mb-1">Authority</p>
-                      <p className="text-body leading-relaxed">{row.authority}</p>
+                      <p className="font-semibold text-rose-ink mb-1">
+                        {isFrench ? 'Autorité' : 'Authority'}
+                      </p>
+                      <p className="text-body leading-relaxed break-words">{row.authority}</p>
                     </div>
                   </div>
                 </div>
@@ -942,9 +951,9 @@ export function MarketLanding({ config, locale }: MarketLandingProps) {
 
       {/* ─── Founder Note ────────────────────────────────────────────── */}
       {founderNote && (
-        <section className="mx-auto max-w-6xl px-4 pt-20 sm:px-6">
-          <div className="rounded-[var(--radius-panel)] border border-line bg-surface/70 p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center gap-5">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-accent/15 text-accent font-display text-xl font-bold">
+        <section className="mx-auto max-w-6xl px-4 pt-16 sm:px-6">
+          <div className="rounded-[var(--radius-panel)] border border-line bg-surface/70 p-5 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5">
+            <div className="flex h-12 w-12 sm:h-14 sm:w-14 shrink-0 items-center justify-center rounded-full bg-accent/15 text-accent font-display text-xl font-bold">
               G
             </div>
             <div>
@@ -960,7 +969,7 @@ export function MarketLanding({ config, locale }: MarketLandingProps) {
       )}
 
       {/* ─── ROI Calculator Section ──────────────────────────────────── */}
-      <section className="mx-auto max-w-6xl px-4 pt-24 sm:px-6 md:pt-32">
+      <section className="mx-auto max-w-6xl px-4 pt-16 sm:px-6 md:pt-32">
         <MarketRoiCalculator
           prices={prices}
           locale={locale}
@@ -972,7 +981,7 @@ export function MarketLanding({ config, locale }: MarketLandingProps) {
       </section>
 
       {/* ─── Order Form Section (Formal Intake) ───────────────────────── */}
-      <section className="mx-auto max-w-6xl px-4 pt-24 sm:px-6 md:pt-32">
+      <section className="mx-auto max-w-6xl px-4 pt-16 sm:px-6 md:pt-32">
         <MarketOrderForm
           config={config}
           locale={locale}
@@ -983,26 +992,26 @@ export function MarketLanding({ config, locale }: MarketLandingProps) {
       </section>
 
       {/* ─── FAQ Section ─────────────────────────────────────────────── */}
-      <section className="mx-auto max-w-6xl px-4 pt-24 sm:px-6 md:pt-32">
-        <h2 className="text-3xl font-semibold sm:text-4xl text-ink">{copy.faqTitle}</h2>
+      <section className="mx-auto max-w-6xl px-4 pt-16 sm:px-6 md:pt-32">
+        <h2 className="text-2xl xs:text-3xl font-semibold sm:text-4xl text-ink break-words">{copy.faqTitle}</h2>
 
         <div className="mt-8 grid gap-4 md:grid-cols-2">
           {faq.map((item) => (
             <div
               key={item.question}
-              className="rounded-[var(--radius-panel)] border border-line bg-surface p-6 shadow-xs"
+              className="rounded-[var(--radius-panel)] border border-line bg-surface p-5 sm:p-6 shadow-xs"
             >
-              <h3 className="text-lg font-semibold text-ink">{item.question}</h3>
-              <p className="mt-2.5 text-[15px] leading-relaxed text-body">{item.answer}</p>
+              <h3 className="text-base sm:text-lg font-semibold text-ink break-words">{item.question}</h3>
+              <p className="mt-2.5 text-sm sm:text-[15px] leading-relaxed text-body break-words">{item.answer}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* ─── Local Payment Rails Note ────────────────────────────────── */}
-      <section className="mx-auto max-w-6xl px-4 pt-16 sm:px-6">
-        <div className="flex items-start gap-4 rounded-[var(--radius-panel)] border border-teal/30 bg-teal-soft p-6">
-          <IconTile icon={CreditCard} tone="teal" />
+      <section className="mx-auto max-w-6xl px-4 pt-12 sm:px-6">
+        <div className="flex flex-col xs:flex-row items-start gap-3.5 sm:gap-4 rounded-[var(--radius-panel)] border border-teal/30 bg-teal-soft p-5 sm:p-6">
+          <IconTile icon={CreditCard} tone="teal" className="shrink-0" />
           <div>
             <h3 className="text-base font-semibold text-teal-ink">{copy.paymentHeading}</h3>
             <p className="mt-1 text-sm text-body leading-relaxed">{paymentNote}</p>
@@ -1011,24 +1020,24 @@ export function MarketLanding({ config, locale }: MarketLandingProps) {
       </section>
 
       {/* ─── Closing Deep Plum CTA Block (Secondary Walkthrough CTA) ─── */}
-      <section className="mx-auto max-w-6xl px-4 py-24 sm:px-6 md:py-32">
-        <div className="relative isolate overflow-hidden rounded-[28px] bg-plum p-8 text-plum-ink shadow-2xl sm:p-14">
+      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-32">
+        <div className="relative isolate overflow-hidden rounded-[24px] sm:rounded-[28px] bg-plum p-6 text-plum-ink shadow-2xl sm:p-14">
           <div
             aria-hidden="true"
             className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-plum-accent/20 blur-3xl"
           />
           <div className="relative z-10 max-w-2xl">
-            <h2 className="font-display text-3xl sm:text-4xl font-semibold text-plum-ink leading-tight">
+            <h2 className="font-display text-2xl xs:text-3xl sm:text-4xl font-semibold text-plum-ink leading-tight break-words">
               {hero.title}
             </h2>
-            <p className="mt-4 text-lg leading-relaxed text-plum-muted">
+            <p className="mt-4 text-base sm:text-lg leading-relaxed text-plum-muted">
               {copy.ctaSecondaryText}
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <button
                 type="button"
                 onClick={() => scrollToOrder('conversion')}
-                className={buttonClass('onPlum', 'lg')}
+                className={buttonClass('onPlum', 'lg', 'w-full sm:w-auto')}
               >
                 {channelIcon}
                 <span>{cta.label}</span>
@@ -1038,7 +1047,7 @@ export function MarketLanding({ config, locale }: MarketLandingProps) {
                 href="https://cal.com/purple-cove-labs/20-min-cafe-virtual"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 rounded-full border border-plum-line bg-plum-surface px-6 py-3.5 text-base font-semibold text-plum-ink hover:border-plum-accent hover:text-white transition-colors"
+                className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full border border-plum-line bg-plum-surface px-6 py-3.5 text-base font-semibold text-plum-ink hover:border-plum-accent hover:text-white transition-colors"
               >
                 <CalendarCheck size={18} weight="bold" />
                 <span>{copy.walkthroughLabel}</span>
@@ -1049,8 +1058,8 @@ export function MarketLanding({ config, locale }: MarketLandingProps) {
       </section>
 
       {/* ─── Footer ─────────────────────────────────────────────────── */}
-      <footer className="border-t border-line bg-surface/50 py-12">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 px-4 sm:flex-row sm:px-6 text-xs text-muted">
+      <footer className="border-t border-line bg-surface/50 py-10 sm:py-12">
+        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-5 px-4 text-center sm:flex-row sm:text-left sm:px-6 text-xs text-muted">
           <div className="flex items-center gap-2.5">
             <Image
               src="/media/logo.webp"
@@ -1063,7 +1072,7 @@ export function MarketLanding({ config, locale }: MarketLandingProps) {
             <span>• {config.name}</span>
           </div>
 
-          <div className="flex items-center gap-6">
+          <div className="flex flex-col sm:flex-row items-center gap-2.5 sm:gap-6">
             <a
               href="https://wa.me/18096034113"
               target="_blank"
@@ -1073,7 +1082,7 @@ export function MarketLanding({ config, locale }: MarketLandingProps) {
               <ChatCircleText size={15} />
               <span>WhatsApp: +1 809 603 4113</span>
             </a>
-            <p>{legal.footerText}</p>
+            <p className="break-words">{legal.footerText}</p>
           </div>
         </div>
       </footer>

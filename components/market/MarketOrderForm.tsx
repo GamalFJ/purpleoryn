@@ -186,16 +186,16 @@ export function MarketOrderForm({
   }
 
   return (
-    <div id="order" className="rounded-[var(--radius-panel)] border border-line bg-surface p-6 sm:p-10 shadow-xs">
+    <div id="order" className="rounded-[var(--radius-panel)] border border-line bg-surface p-4 sm:p-8 md:p-10 shadow-xs">
       <div className="max-w-2xl">
         <span className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-accent">
           <Sparkle size={14} weight="fill" />
           {labels.badge}
         </span>
-        <h3 className="mt-2 text-2xl font-semibold sm:text-3xl text-ink">
+        <h3 className="mt-2 text-2xl font-semibold sm:text-3xl text-ink break-words">
           {labels.title}
         </h3>
-        <p className="mt-2 text-base text-body leading-relaxed">
+        <p className="mt-2 text-sm sm:text-base text-body leading-relaxed">
           {labels.subtitle}
         </p>
       </div>
@@ -225,7 +225,7 @@ export function MarketOrderForm({
                     type="button"
                     onClick={() => onSelectPlan(p)}
                     className={cn(
-                      'flex flex-col items-start rounded-xl border p-4 text-left transition-all cursor-pointer',
+                      'flex flex-col items-start rounded-xl border p-3.5 sm:p-4 text-left transition-all cursor-pointer',
                       isSelected
                         ? 'border-accent bg-accent-soft/50 ring-2 ring-accent shadow-xs'
                         : 'border-line bg-paper/50 hover:border-line hover:bg-paper',
@@ -259,7 +259,7 @@ export function MarketOrderForm({
                   type="checkbox"
                   checked={withVoice}
                   onChange={(e) => setWithVoice(e.target.checked)}
-                  className="mt-1 h-4 w-4 rounded border-line text-accent focus:ring-accent"
+                  className="mt-1 h-4 w-4 rounded border-line text-accent focus:ring-accent shrink-0"
                 />
                 <div>
                   <span className="text-sm font-semibold text-ink block">
@@ -284,7 +284,7 @@ export function MarketOrderForm({
                 required
                 value={businessName}
                 onChange={(e) => setBusinessName(e.target.value)}
-                className="h-11 w-full rounded-xl border border-line bg-paper px-3.5 text-sm text-ink outline-none transition-colors focus:border-accent"
+                className="h-11 sm:h-12 w-full rounded-xl border border-line bg-paper px-3.5 text-base sm:text-sm text-ink outline-none transition-colors focus:border-accent"
                 placeholder={isFrench ? 'Ex: Clinique Dentaire Apex' : 'e.g. Apex Dental Group'}
               />
               {fieldErrors.businessName && (
@@ -301,7 +301,7 @@ export function MarketOrderForm({
                 required
                 value={contactName}
                 onChange={(e) => setContactName(e.target.value)}
-                className="h-11 w-full rounded-xl border border-line bg-paper px-3.5 text-sm text-ink outline-none transition-colors focus:border-accent"
+                className="h-11 sm:h-12 w-full rounded-xl border border-line bg-paper px-3.5 text-base sm:text-sm text-ink outline-none transition-colors focus:border-accent"
                 placeholder={isFrench ? 'Ex: Sophie Tremblay' : 'e.g. John Miller'}
               />
               {fieldErrors.contactName && (
@@ -320,7 +320,7 @@ export function MarketOrderForm({
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="h-11 w-full rounded-xl border border-line bg-paper px-3.5 text-sm text-ink outline-none transition-colors focus:border-accent"
+                className="h-11 sm:h-12 w-full rounded-xl border border-line bg-paper px-3.5 text-base sm:text-sm text-ink outline-none transition-colors focus:border-accent"
                 placeholder="contact@business.com"
               />
               {fieldErrors.email && (
@@ -337,7 +337,7 @@ export function MarketOrderForm({
                 required
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                className="h-11 w-full rounded-xl border border-line bg-paper px-3.5 text-sm text-ink outline-none transition-colors focus:border-accent"
+                className="h-11 sm:h-12 w-full rounded-xl border border-line bg-paper px-3.5 text-base sm:text-sm text-ink outline-none transition-colors focus:border-accent"
                 placeholder={config.id === 'ht' ? '+509 ...' : '+1 ...'}
               />
               {fieldErrors.phone && (
@@ -379,20 +379,20 @@ export function MarketOrderForm({
               rows={2}
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              className="w-full rounded-xl border border-line bg-paper p-3 text-sm text-ink outline-none transition-colors focus:border-accent"
+              className="w-full rounded-xl border border-line bg-paper p-3 text-base sm:text-sm text-ink outline-none transition-colors focus:border-accent"
               placeholder={isFrench ? 'Besoins particuliers, calendrier souhaité...' : 'Specific requirements or preferred timeline...'}
             />
           </div>
 
           {/* Confirmation Checkbox */}
-          <div className="rounded-xl border border-line bg-paper/40 p-4">
+          <div className="rounded-xl border border-line bg-paper/40 p-3.5 sm:p-4">
             <label className="flex items-start gap-3 cursor-pointer text-xs text-body leading-relaxed">
               <input
                 type="checkbox"
                 required
                 checked={confirmed}
                 onChange={(e) => setConfirmed(e.target.checked)}
-                className="mt-0.5 h-4 w-4 rounded border-line text-accent focus:ring-accent"
+                className="mt-0.5 h-4 w-4 rounded border-line text-accent focus:ring-accent shrink-0"
               />
               <span>{labels.confirmCheck}</span>
             </label>
@@ -418,14 +418,14 @@ export function MarketOrderForm({
         </div>
 
         {/* Investment summary breakdown card */}
-        <div className="rounded-2xl border border-line bg-paper/60 p-6 sm:p-7 space-y-6">
+        <div className="rounded-2xl border border-line bg-paper/60 p-4 sm:p-6 md:p-7 space-y-6">
           <div className="flex items-center gap-2 border-b border-line pb-4">
             <ShieldCheck size={20} className="text-accent" weight="fill" />
             <h4 className="text-base font-semibold text-ink">{labels.totalsHeading}</h4>
           </div>
 
           <div className="space-y-4 text-xs">
-            <div className="flex justify-between items-baseline">
+            <div className="flex justify-between items-baseline gap-2">
               <div>
                 <p className="font-semibold text-ink text-sm">
                   Oryn {selectedPlan.charAt(0).toUpperCase() + selectedPlan.slice(1)}
@@ -434,59 +434,59 @@ export function MarketOrderForm({
                   {prices.currencySymbol}{planSetup.toLocaleString('en-US', { minimumFractionDigits: 2 })} setup
                 </p>
               </div>
-              <p className="font-mono font-semibold text-ink text-sm">
+              <p className="font-mono font-semibold text-ink text-sm whitespace-nowrap">
                 {prices.currencySymbol}{planMonthly.toLocaleString('en-US', { minimumFractionDigits: 2 })}/{isFrench ? 'mois' : 'mo'}
               </p>
             </div>
 
             {withVoice && (
-              <div className="flex justify-between items-baseline border-t border-line/60 pt-3">
+              <div className="flex justify-between items-baseline gap-2 border-t border-line/60 pt-3">
                 <div>
                   <p className="font-semibold text-teal-ink">AI Voice Agent</p>
                   <p className="text-muted text-[11px]">
                     {prices.currencySymbol}{voiceSetup.toLocaleString('en-US', { minimumFractionDigits: 2 })} setup
                   </p>
                 </div>
-                <p className="font-mono font-semibold text-teal-ink">
+                <p className="font-mono font-semibold text-teal-ink whitespace-nowrap">
                   + {prices.currencySymbol}{voiceMonthly.toLocaleString('en-US', { minimumFractionDigits: 2 })}/{isFrench ? 'mois' : 'mo'}
                 </p>
               </div>
             )}
 
-            <div className="rounded-xl border border-accent/20 bg-accent-soft/40 p-4 space-y-2 mt-4">
-              <div className="flex justify-between items-baseline">
+            <div className="rounded-xl border border-accent/20 bg-accent-soft/40 p-3.5 sm:p-4 space-y-2.5 mt-4">
+              <div className="flex justify-between items-baseline gap-2">
                 <div>
                   <p className="font-semibold text-accent text-xs">{labels.upfrontLabel}</p>
                   <p className="text-[10px] text-muted">{labels.upfrontSub}</p>
                 </div>
-                <p className="font-mono font-bold text-base text-accent">
+                <p className="font-mono font-bold text-base text-accent whitespace-nowrap">
                   {prices.currencySymbol}{initialPayment.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                 </p>
               </div>
 
-              <div className="flex justify-between items-baseline border-t border-accent/15 pt-2">
+              <div className="flex justify-between items-baseline gap-2 border-t border-accent/15 pt-2">
                 <div>
                   <p className="font-medium text-ink text-[11px]">{labels.finalDeliveryLabel}</p>
                   <p className="text-[10px] text-muted">{labels.finalDeliverySub}</p>
                 </div>
-                <p className="font-mono font-semibold text-xs text-ink">
+                <p className="font-mono font-semibold text-xs text-ink whitespace-nowrap">
                   {prices.currencySymbol}{(Math.round(planSetup * 0.5 * 100) / 100).toLocaleString('en-US', { minimumFractionDigits: 2 })}
                 </p>
               </div>
 
-              <div className="flex justify-between items-baseline border-t border-accent/15 pt-2">
+              <div className="flex justify-between items-baseline gap-2 border-t border-accent/15 pt-2">
                 <p className="font-medium text-ink text-[11px]">{labels.monthlyLabel}</p>
-                <p className="font-mono font-bold text-xs text-warm-ink">
+                <p className="font-mono font-bold text-xs text-warm-ink whitespace-nowrap">
                   {prices.currencySymbol}{ongoingMonthly.toLocaleString('en-US', { minimumFractionDigits: 2 })}/{isFrench ? 'mois' : 'mo'}
                 </p>
               </div>
             </div>
 
-            <p className="text-[11px] text-muted leading-relaxed pt-2">
+            <p className="text-[11px] text-muted leading-relaxed pt-2 break-words">
               {labels.paymentTermsNotice}
             </p>
 
-            <div className="border-t border-line pt-4 text-[11px] text-muted">
+            <div className="border-t border-line pt-4 text-[11px] text-muted break-words">
               <p>{labels.questionsDirect}</p>
             </div>
           </div>

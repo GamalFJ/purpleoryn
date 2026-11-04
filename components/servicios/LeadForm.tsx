@@ -86,14 +86,14 @@ export function LeadForm({ tiers, addons, marketId }: { tiers: Tier[]; addons: A
   const errors: LeadFieldErrors = state.status === "error" ? (state.fieldErrors ?? {}) : {};
 
   return (
-    <section id="elegir-plan" aria-labelledby="formulario-titulo" className="mx-auto max-w-6xl px-4 pt-24 sm:px-6 md:pt-32">
+    <section id="elegir-plan" aria-labelledby="formulario-titulo" className="mx-auto max-w-6xl px-4 pt-16 sm:px-6 md:pt-32">
       <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
         <div>
           <IconTile icon={PaperPlaneTilt} tone="violet" size="lg" className="mb-5" />
-          <h2 id="formulario-titulo" className="text-3xl font-semibold sm:text-4xl">
+          <h2 id="formulario-titulo" className="text-2xl xs:text-3xl font-semibold sm:text-4xl break-words">
             {CTA.plan}
           </h2>
-          <p className="mt-4 max-w-[46ch] text-lg leading-relaxed text-body">
+          <p className="mt-4 max-w-[46ch] text-base sm:text-lg leading-relaxed text-body">
             Enviar este formulario es su pedido: constituye una orden formal, con el mismo peso que una confirmación
             por WhatsApp o correo, y reserva su cupo por 7 días calendario.
           </p>
@@ -129,7 +129,7 @@ export function LeadForm({ tiers, addons, marketId }: { tiers: Tier[]; addons: A
             startTransition(() => formAction(fd));
           }}
           noValidate
-          className="relative overflow-hidden rounded-[var(--radius-panel)] border border-accent/25 bg-surface p-6 shadow-[0_28px_60px_-40px_rgb(109_47_216/0.55)] sm:p-8"
+          className="relative overflow-hidden rounded-[var(--radius-panel)] border border-accent/25 bg-surface p-4 sm:p-8 shadow-[0_28px_60px_-40px_rgb(109_47_216/0.55)]"
         >
           <fieldset aria-describedby={errors.plan ? "plan-error" : undefined}>
             <legend className="text-[15px] font-semibold">Plan</legend>

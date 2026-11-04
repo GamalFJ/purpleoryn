@@ -38,25 +38,25 @@ export function RoiTeaser({ tiers }: { tiers: Tier[] }) {
   if (asv) params.set("venta", String(asv));
 
   return (
-    <div className="mt-12 rounded-[28px] border border-warm-line bg-linear-to-br from-warm-soft via-warm-soft to-rose-soft shadow-[0_28px_60px_-40px_rgb(180_83_9/0.6)] p-6 sm:p-8 md:p-10">
+    <div className="mt-12 rounded-[28px] border border-warm-line bg-linear-to-br from-warm-soft via-warm-soft to-rose-soft shadow-[0_28px_60px_-40px_rgb(180_83_9/0.6)] p-4 sm:p-8 md:p-10">
       <div className="grid gap-8 md:grid-cols-[1fr_1fr] md:gap-12">
         <div>
           <RoiBadge />
-          <h3 className="mt-4 text-2xl font-semibold leading-tight sm:text-[1.75rem]">¿Cuántas ventas necesita para recuperarlo?</h3>
+          <h3 className="mt-4 text-2xl font-semibold leading-tight sm:text-[1.75rem] break-words">¿Cuántas ventas necesita para recuperarlo?</h3>
 
           <fieldset className="mt-6">
             <legend className="text-[15px] font-semibold">Plan</legend>
-            <div className="mt-2.5 grid grid-cols-3 gap-2">
+            <div className="mt-2.5 grid grid-cols-3 gap-1.5 sm:gap-2">
               {tiers.map((t) => (
                 <label
                   key={t.slug}
                   className={cn(
-                    "flex h-11 cursor-pointer items-center justify-center rounded-full border text-sm font-medium transition-colors has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-accent sm:text-[15px]",
+                    "flex h-11 cursor-pointer items-center justify-center rounded-full border text-xs xs:text-sm font-medium transition-colors has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-accent sm:text-[15px] px-1 sm:px-2 truncate",
                     slug === t.slug ? "border-transparent bg-linear-to-r from-accent to-fuchsia text-accent-ink shadow-[0_8px_18px_-10px_rgb(109_47_216/0.7)]" : "border-line bg-surface text-muted hover:border-accent hover:text-ink",
                   )}
                 >
                   <input type="radio" name="teaser-plan" value={t.slug} checked={slug === t.slug} onChange={() => setSlug(t.slug)} className="sr-only" />
-                  {t.name}
+                  <span className="truncate">{t.name}</span>
                 </label>
               ))}
             </div>
@@ -67,7 +67,7 @@ export function RoiTeaser({ tiers }: { tiers: Tier[] }) {
               Valor promedio de una venta
             </label>
             <div className="relative">
-              <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted">RD$</span>
+              <span className="pointer-events-none absolute left-3.5 sm:left-4 top-1/2 -translate-y-1/2 text-sm sm:text-base text-muted font-mono font-medium">RD$</span>
               <input
                 id={asvId}
                 inputMode="decimal"
@@ -75,7 +75,7 @@ export function RoiTeaser({ tiers }: { tiers: Tier[] }) {
                 placeholder="Ej.: 3,500"
                 value={asvRaw}
                 onChange={(e) => setAsvRaw(e.target.value)}
-                className="tabular h-12 w-full rounded-[var(--radius-field)] border border-line bg-surface pl-14 pr-4 text-lg outline-none transition-colors placeholder:text-muted focus:border-accent"
+                className="tabular h-12 w-full rounded-[var(--radius-field)] border border-line bg-surface pl-12 sm:pl-14 pr-4 text-base sm:text-lg outline-none transition-colors placeholder:text-muted focus:border-accent"
               />
             </div>
           </div>

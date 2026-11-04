@@ -32,15 +32,15 @@ export function Hero({ settings }: { settings: SiteSettings }) {
             </span>
           </p>
           {/* pb keeps descenders inside the clipped gradient. */}
-          <h1 className="text-gradient-brand pb-[0.1em] text-[2.25rem] font-semibold leading-[1.06] sm:text-[2.75rem] lg:text-[3.25rem]">
+          <h1 className="text-gradient-brand pb-[0.1em] text-[1.85rem] xs:text-[2.25rem] font-semibold leading-[1.08] sm:text-[2.75rem] lg:text-[3.25rem] break-words">
             {settings.heroHeadline}
           </h1>
-          <p className="mt-5 max-w-[46ch] text-lg leading-relaxed text-body">{settings.heroSubheadline}</p>
+          <p className="mt-4 sm:mt-5 max-w-[46ch] text-base sm:text-lg leading-relaxed text-body">{settings.heroSubheadline}</p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <Link href="/servicios#elegir-plan" className={buttonClass("primary", "lg")}>
+            <Link href="/servicios#elegir-plan" className={buttonClass("primary", "lg", "w-full sm:w-auto")}>
               {CTA.plan}
             </Link>
-            <TrackedLink href={calUrl()} event="cal_click" location="hero" className={buttonClass("secondary", "lg")}>
+            <TrackedLink href={calUrl()} event="cal_click" location="hero" className={buttonClass("secondary", "lg", "w-full sm:w-auto")}>
               {CTA.call}
             </TrackedLink>
           </div>

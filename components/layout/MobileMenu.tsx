@@ -45,7 +45,7 @@ export function MobileMenu({ links }: { links: readonly { href: string; label: s
             animate={{ opacity: 1, y: 0 }}
             exit={reduce ? { opacity: 0 } : { opacity: 0, y: -8 }}
             transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute inset-x-0 top-16 border-b border-line bg-paper px-4 pb-6 pt-2 shadow-[0_24px_40px_-24px_rgb(28_16_48/0.35)]"
+            className="absolute inset-x-0 top-16 max-h-[calc(100dvh-4rem)] overflow-y-auto border-b border-line bg-paper px-4 pb-6 pt-2 shadow-[0_24px_40px_-24px_rgb(28_16_48/0.35)]"
           >
             <nav aria-label="Menú móvil">
               <ul className="divide-y divide-line">

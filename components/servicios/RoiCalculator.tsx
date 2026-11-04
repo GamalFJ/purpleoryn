@@ -99,8 +99,8 @@ export function RoiCalculator({ tiers }: { tiers: Tier[] }) {
   const breakEvenPct = result ? (result.breakEvenSales / result.targetSalesPerYear) * 100 : 0;
 
   return (
-    <section id="calculadora" aria-labelledby="calculadora-titulo" className="mx-auto max-w-6xl px-4 pt-24 sm:px-6 md:pt-32">
-      <div className="rounded-[28px] border border-warm-line bg-linear-to-br from-warm-soft via-warm-soft to-rose-soft shadow-[0_28px_60px_-40px_rgb(180_83_9/0.6)] p-5 sm:p-8 md:p-10">
+    <section id="calculadora" aria-labelledby="calculadora-titulo" className="mx-auto max-w-6xl px-4 pt-16 sm:px-6 md:pt-32">
+      <div className="rounded-[28px] border border-warm-line bg-linear-to-br from-warm-soft via-warm-soft to-rose-soft shadow-[0_28px_60px_-40px_rgb(180_83_9/0.6)] p-4 sm:p-8 md:p-10">
         <div className="flex max-w-3xl flex-col gap-6 sm:flex-row sm:items-start sm:gap-8">
           {/* Decorative: the badge beside it names the method. Drop-shadow, not
               box-shadow, because the mark has transparent corners. */}
@@ -109,29 +109,29 @@ export function RoiCalculator({ tiers }: { tiers: Tier[] }) {
             alt=""
             width={512}
             height={512}
-            className="h-24 w-24 shrink-0 drop-shadow-[0_18px_30px_rgb(180_83_9/0.4)] sm:h-28 sm:w-28"
+            className="h-20 w-20 sm:h-28 sm:w-28 shrink-0 drop-shadow-[0_18px_30px_rgb(180_83_9/0.4)]"
           />
           <div>
             <RoiBadge className="mb-4" />
-            <h2 id="calculadora-titulo" className="text-3xl font-semibold sm:text-4xl">
+            <h2 id="calculadora-titulo" className="text-2xl xs:text-3xl font-semibold sm:text-4xl break-words">
               ¿Cuántas ventas necesita para que se pague solo?
             </h2>
-            <p className="mt-4 text-lg leading-relaxed text-body">
+            <p className="mt-3 sm:mt-4 text-base sm:text-lg leading-relaxed text-body">
               Elija un plan y escriba cuánto vale una venta promedio en su negocio. El resultado se actualiza al escribir.
             </p>
           </div>
         </div>
 
-        <div className="mt-10 grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-          <div className="rounded-[var(--radius-panel)] border border-line bg-surface p-6 sm:p-8">
+        <div className="mt-8 sm:mt-10 grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+          <div className="rounded-[var(--radius-panel)] border border-line bg-surface p-4 sm:p-8">
             <fieldset>
               <legend className="text-[15px] font-semibold">Plan</legend>
-              <div className="mt-3 grid grid-cols-3 gap-2">
+              <div className="mt-3 grid grid-cols-3 gap-1.5 sm:gap-2">
                 {tiers.map((t) => (
                   <label
                     key={t.slug}
                     className={cn(
-                      "flex h-12 cursor-pointer items-center justify-center rounded-full border text-[15px] font-medium transition-colors has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-accent",
+                      "flex h-11 sm:h-12 cursor-pointer items-center justify-center rounded-full border text-xs xs:text-sm sm:text-[15px] font-medium transition-colors px-1 sm:px-2 truncate has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-accent",
                       slug === t.slug ? "border-transparent bg-linear-to-r from-accent to-fuchsia text-accent-ink shadow-[0_8px_18px_-10px_rgb(109_47_216/0.7)]" : "border-line text-muted hover:border-accent hover:text-ink",
                     )}
                   >
@@ -143,7 +143,7 @@ export function RoiCalculator({ tiers }: { tiers: Tier[] }) {
                       onChange={() => setSlug(t.slug)}
                       className="sr-only"
                     />
-                    {t.name}
+                    <span className="truncate">{t.name}</span>
                   </label>
                 ))}
               </div>
@@ -165,7 +165,7 @@ export function RoiCalculator({ tiers }: { tiers: Tier[] }) {
                 Valor promedio de una venta
               </label>
               <div className="relative">
-                <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted">RD$</span>
+                <span className="pointer-events-none absolute left-3.5 sm:left-4 top-1/2 -translate-y-1/2 text-sm sm:text-base text-muted font-mono font-medium">RD$</span>
                 <input
                   id={asvId}
                   inputMode="decimal"
@@ -173,7 +173,7 @@ export function RoiCalculator({ tiers }: { tiers: Tier[] }) {
                   value={asvRaw}
                   onChange={(e) => setAsvRaw(e.target.value)}
                   aria-describedby={`${asvId}-help`}
-                  className="tabular h-12 w-full rounded-[var(--radius-field)] border border-line bg-paper pl-14 pr-4 text-lg outline-none transition-colors focus:border-accent"
+                  className="tabular h-12 w-full rounded-[var(--radius-field)] border border-line bg-paper pl-12 sm:pl-14 pr-4 text-base sm:text-lg outline-none transition-colors focus:border-accent"
                 />
               </div>
               <p id={`${asvId}-help`} className="text-sm text-muted">
@@ -182,7 +182,7 @@ export function RoiCalculator({ tiers }: { tiers: Tier[] }) {
             </div>
           </div>
 
-          <div className="rounded-[var(--radius-panel)] border border-line bg-surface p-6 sm:p-8" aria-live="polite">
+          <div className="rounded-[var(--radius-panel)] border border-line bg-surface p-4 sm:p-8" aria-live="polite">
             <AnimatePresence mode="wait" initial={false}>
               {result ? (
                 <motion.div

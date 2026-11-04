@@ -312,7 +312,7 @@ export function ChatPanel({ open, onClose, market = "dr", locale = "es" }: ChatP
               e.preventDefault();
               void send(input);
             }}
-            className="border-t border-line p-3"
+            className="border-t border-line p-3 pb-[max(0.75rem,env(safe-area-inset-bottom,0.75rem))]"
           >
             <div className="flex items-end gap-2">
               <label htmlFor="chat-input" className="sr-only">

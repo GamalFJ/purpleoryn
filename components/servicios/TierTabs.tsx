@@ -27,7 +27,7 @@ export function TierTabs({ tiers }: { tiers: Tier[] }) {
             aria-controls={`panel-${t.slug}`}
             onClick={() => setActive(t.slug)}
             className={cn(
-              "h-11 cursor-pointer rounded-full text-[15px] font-medium transition-colors",
+              "h-11 cursor-pointer rounded-full text-xs xs:text-sm sm:text-[15px] font-medium transition-colors px-1 sm:px-2.5 truncate",
               active === t.slug ? "bg-linear-to-r from-accent to-fuchsia text-accent-ink" : "text-muted hover:text-ink",
             )}
           >

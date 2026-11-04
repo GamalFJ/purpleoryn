@@ -194,8 +194,11 @@ function StepCard({
         aria-label={step.title}
         aria-hidden={!open}
         className={cn(
-          "pointer-events-none absolute inset-x-0 top-full z-20 mt-2 rounded-[var(--radius-panel)] border border-accent/25 bg-surface p-4 text-left shadow-[0_28px_60px_-32px_rgb(28_16_48/0.6)]",
+          "pointer-events-none absolute top-full z-20 mt-2 rounded-[var(--radius-panel)] border border-accent/25 bg-surface p-4 text-left shadow-[0_28px_60px_-32px_rgb(28_16_48/0.6)]",
           "transition-[opacity,translate] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none",
+          index % 2 === 0
+            ? "left-0 w-[min(260px,calc(100vw-2.5rem))] sm:w-auto sm:inset-x-0"
+            : "right-0 w-[min(260px,calc(100vw-2.5rem))] sm:w-auto sm:inset-x-0",
           open ? "translate-y-0 opacity-100" : "-translate-y-1 opacity-0",
         )}
       >
