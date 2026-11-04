@@ -82,3 +82,61 @@ export async function notifyNewLead(lead: LeadAlert): Promise<void> {
     console.error("[lead] Telegram alert failed:", err instanceof Error ? err.message : err);
   }
 }
+
+
+export interface MarketOrderAlert {
+  marketId: string;
+  host: string;
+  planName: string;
+  withVoiceAddon: boolean;
+  currency: string;
+  oneTimeTotal: number;
+  monthlyTotal: number;
+  businessName: string;
+  contactName: string;
+  email: string;
+  phone: string;
+  preferredContact: string;
+  notes?: string | null;
+  averageSaleValue?: number | null;
+  utmSource?: string | null;
+}
+
+export async function notifyMarketOrder(alert: MarketOrderAlert): Promise<void> {
+  const token = process.env.TELEGRAM_BOT_TOKEN;
+  const chatId = process.env.TELEGRAM_CHAT_ID;
+  if (!token || !chatId) return;
+
+  const lines = [
+    `Nuevo pedido en ${alert.host} (${alert.marketId.toUpperCase()})`,
+    "",
+    `Plan: ${alert.planName}`,
+    `Modulo de Voz: ${alert.withVoiceAddon ? "Si (300 min/mes)" : "No"}`,
+    `Inversion inicial (50% plan + 100% voz): ${alert.currency} ${alert.oneTimeTotal.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+    `Abono mensual: ${alert.currency} ${alert.monthlyTotal.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}/mes`,
+    "",
+    `Negocio: ${alert.businessName}`,
+    `Contacto: ${alert.contactName}`,
+    `Telefono: ${alert.phone}`,
+    `Correo: ${alert.email}`,
+    `Canal preferido: ${alert.preferredContact}`,
+    alert.notes ? `Notas: ${alert.notes.slice(0, 500)}` : null,
+    alert.averageSaleValue ? `Venta promedio: ${alert.currency} ${alert.averageSaleValue}` : null,
+    alert.utmSource ? `Origen: ${alert.utmSource}` : null,
+    "",
+    "Cupo reservado por 7 dias calendario.",
+    `Ver pedidos: https://purpleoryn.com/admin/market-orders`,
+  ].filter((l): l is string => l !== null);
+
+  try {
+    const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ chat_id: chatId, text: lines.join("\n"), disable_web_page_preview: true }),
+      signal: AbortSignal.timeout(5000),
+    });
+    if (!res.ok) console.error("[market-order] Telegram alert failed:", res.status);
+  } catch (err) {
+    console.error("[market-order] Telegram alert failed:", err instanceof Error ? err.message : err);
+  }
+}

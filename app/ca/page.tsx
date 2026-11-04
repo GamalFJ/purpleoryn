@@ -6,9 +6,9 @@ import { MarketLanding } from '@/components/market/MarketLanding';
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'Purple Cove Labs Canada | Digital Growth Infrastructure',
+  title: 'Oryn Presence Canada | Système Commercial et Croissance Numérique',
   description:
-    'Web development, SEO, and AI phone agents for Canadian businesses. Bilingual execution in English and French.',
+    'Développement web de conversion, visibilité Google locale et qualification par SMS 24h/24 pour entreprises canadiennes. Bilingue français et anglais.',
   robots: {
     index: true,
     follow: true,
@@ -26,6 +26,5 @@ export default async function CaMarketPage({ searchParams }: PageProps) {
 
   const locale = langParam && config.supportedLocales.includes(langParam) ? langParam : config.defaultLocale;
 
-  // Standalone CA site: CAD, consultation pricing, bilingual toggle
   return <MarketLanding config={config} showPrices={true} locale={locale} />;
 }

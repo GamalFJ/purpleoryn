@@ -6,9 +6,9 @@ import { MarketLanding } from '@/components/market/MarketLanding';
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'Purple Cove Labs Haïti | Croissance Numérique et IA',
+  title: 'Oryn Presence Haïti | Croissance Commerciale et IA WhatsApp',
   description:
-    'Développement web de haute performance, SEO et agents téléphoniques IA pour entreprises en Haïti et dans la diaspora.',
+    'Site web haute performance, visibilité Google locale et agents d’IA sur WhatsApp 24h/24 pour entreprises en Haïti. L’entreprise qui répond la première remporte le client.',
   robots: {
     index: true,
     follow: true,
@@ -26,6 +26,5 @@ export default async function HtMarketPage({ searchParams }: PageProps) {
 
   const locale = langParam && config.supportedLocales.includes(langParam) ? langParam : config.defaultLocale;
 
-  // Standalone HT site: USD, approved pricing visible, French default
   return <MarketLanding config={config} showPrices={true} locale={locale} />;
 }

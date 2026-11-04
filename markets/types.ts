@@ -5,6 +5,7 @@ export interface TierPricing {
   monthly: number | null;
   conversationsIncluded?: number | null;
   overageRate?: number | string | null;
+  year1Total?: number | null;
 }
 
 export interface AddonPricing {
@@ -13,6 +14,7 @@ export interface AddonPricing {
   includedUnits?: number | null;
   unitLabel?: string;
   overageRate?: number | string | null;
+  channelNote?: string;
 }
 
 export interface MarketPrices {
@@ -31,6 +33,14 @@ export interface MarketHero {
   ctaText: string;
 }
 
+export interface MarketProblemInsight {
+  tag: string;
+  title: string;
+  statCallout: string;
+  description: string;
+  hoursComparison: string;
+}
+
 export interface MarketSystemPart {
   step: string;
   title: string;
@@ -41,8 +51,8 @@ export interface MarketSystem {
   sectionTitle: string;
   sectionSubtitle: string;
   parts: [MarketSystemPart, MarketSystemPart, MarketSystemPart];
-  demoNotice: string;
-  demoLinkText: string;
+  demoNotice?: string;
+  demoLinkText?: string;
 }
 
 export interface MarketBonus {
@@ -52,9 +62,16 @@ export interface MarketBonus {
 
 export interface MarketGuarantee {
   title: string;
-  deliveryGuarantee: string;
+  hasDeliveryGuarantee?: boolean;
+  deliveryGuarantee?: string;
   capacityLimit: string;
   bonuses: MarketBonus[];
+}
+
+export interface MarketFounderNote {
+  name: string;
+  title: string;
+  text: string;
 }
 
 export interface MarketFaqItem {
@@ -74,14 +91,32 @@ export interface MarketLegal {
   footerText: string;
 }
 
+export interface MarketServiceRow {
+  label: string;
+  presence: string;
+  conversion: string;
+  authority: string;
+}
+
+export interface MarketTierHighlights {
+  presence: string[];
+  conversion: string[];
+  authority: string[];
+}
+
 export interface MarketContent {
   hero: MarketHero;
+  problemInsight?: MarketProblemInsight;
   system: MarketSystem;
   guarantee: MarketGuarantee;
+  founderNote?: MarketFounderNote;
   faq: MarketFaqItem[];
   paymentNote: string;
   cta: MarketCta;
   legal: MarketLegal;
+  serviceRows?: MarketServiceRow[];
+  tierHighlights?: MarketTierHighlights;
+  askOrynName?: string;
 }
 
 export interface MarketConfig {

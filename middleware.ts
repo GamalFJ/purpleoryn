@@ -19,7 +19,18 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // 2. Supabase auth check (strictly scoped to /admin routes to avoid blocking public pages)
+  // 2. Canonical admin access: Ensure all domains connect to purpleoryn.com/admin
+  const rawHost = (request.headers.get("x-forwarded-host") || request.headers.get("host") || "").toLowerCase();
+  const host = rawHost.split(":")[0];
+  const search = request.nextUrl.search;
+
+  if (pathname.startsWith("/admin") || pathname.startsWith("/auth")) {
+    if (host.endsWith("purpleoryn.com") && host !== "purpleoryn.com" && host !== "www.purpleoryn.com") {
+      return NextResponse.redirect(new URL(`https://purpleoryn.com${pathname}${search}`));
+    }
+  }
+
+  // 3. Supabase auth check (strictly scoped to /admin routes to avoid blocking public pages)
   if (isSupabaseConfigured() && pathname.startsWith("/admin")) {
     let response = NextResponse.next({ request });
     const supabase = createServerClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
@@ -50,10 +61,7 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // 3. Standalone Domain & Direct Route Resolution
-  const rawHost = (request.headers.get("x-forwarded-host") || request.headers.get("host") || "").toLowerCase();
-  const host = rawHost.split(":")[0];
-  const search = request.nextUrl.search;
+  // 4. Standalone Domain & Direct Route Resolution
   const langQuery = request.nextUrl.searchParams.get("lang")?.toLowerCase();
 
   const requestHeaders = new Headers(request.headers);

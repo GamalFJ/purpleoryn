@@ -30,7 +30,17 @@ export function ChatLauncher({ market = "dr", locale = "es" }: ChatLauncherProps
     return () => window.removeEventListener(OPEN_CHAT_EVENT, launch);
   }, [launch]);
 
-  if (pathname.startsWith("/admin") || pathname.startsWith("/auth")) return null;
+  // The chatbot is disabled on non-DR markets (US, CA, HT) until live functional release.
+  if (
+    pathname.startsWith("/admin") ||
+    pathname.startsWith("/auth") ||
+    pathname.startsWith("/us") ||
+    pathname.startsWith("/ca") ||
+    pathname.startsWith("/ht") ||
+    market !== "dr"
+  ) {
+    return null;
+  }
 
   const isEn = locale.startsWith("en");
   const isFr = locale.startsWith("fr");

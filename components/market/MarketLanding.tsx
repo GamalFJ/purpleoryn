@@ -1,3 +1,6 @@
+'use client';
+
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
@@ -16,13 +19,17 @@ import {
   Microphone,
   Globe,
   Robot,
-} from '@phosphor-icons/react/dist/ssr';
+  UserCheck,
+  Clock,
+  ArrowDown,
+} from '@phosphor-icons/react';
 import { buttonClass } from '@/components/ui/button';
 import { IconTile } from '@/components/ui/IconTile';
-import { BrandLogo } from '@/components/ui/BrandLogo';
 import { cn } from '@/lib/cn';
 import { TONE } from '@/lib/tone';
 import type { MarketConfig } from '@/markets/types';
+import { MarketRoiCalculator } from './MarketRoiCalculator';
+import { MarketOrderForm } from './MarketOrderForm';
 
 interface MarketLandingProps {
   config: MarketConfig;
@@ -35,64 +42,69 @@ function formatPriceNumber(num: number | null | undefined, symbol: string): stri
   return `${symbol}${num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
-// Heights matching the Dominican TierStairs progression
-const STEP_HEIGHT = ['md:min-h-[34rem]', 'md:min-h-[38rem]', 'md:min-h-[42rem]'];
-
 export function MarketLanding({ config, showPrices, locale }: MarketLandingProps) {
   const content = config.content[locale] || config.content[config.defaultLocale] || Object.values(config.content)[0];
-  const { hero, system, guarantee, faq, paymentNote, cta, legal } = content;
+  const { hero, problemInsight, system, guarantee, founderNote, faq, paymentNote, cta, legal, askOrynName } = content;
   const prices = config.prices;
 
-  const hasAnyPrice =
-    showPrices &&
-    (prices.presence.monthly !== null ||
-      prices.conversion.monthly !== null ||
-      prices.authority.monthly !== null);
+  const [selectedPlan, setSelectedPlan] = useState<'presence' | 'conversion' | 'authority'>('conversion');
+  const [averageSaleValue, setAverageSaleValue] = useState<number | null>(null);
 
   const isFrench = locale.startsWith('fr');
 
   const copy = {
-    demoBadge: isFrench ? 'Démonstrateur Interactif' : 'Live Interactive Demo',
-    demoLinkText: isFrench ? 'Tester le démonstrateur en direct' : 'Test the live interactive demo',
     plansTitle: isFrench ? 'Plans et investissement' : 'Plans and Investment',
     plansSubtitle: isFrench
-      ? 'Une infrastructure complète, sans frais cachés. Un paiement unique de mise en place et un abonnement mensuel d entretien.'
-      : 'Complete infrastructure with zero hidden fees. One-time deployment fee and predictable monthly management.',
-    consultationPricingText: isFrench
-      ? 'Les tarifs sont partagés lors de votre consultation'
-      : 'Pricing is shared during your consultation',
-    consultationPricingSub: isFrench
-      ? 'Nous analysons votre volume de demandes et configurons la solution adaptée à votre modèle commercial.'
-      : 'We evaluate your inbound volume and configure the ideal setup for your business.',
-    bookConsultationAction: isFrench ? 'Réserver une consultation' : 'Book a Consultation',
+      ? 'Une infrastructure complète, sans frais cachés. Un paiement initial de mise en place et un abonnement mensuel d’entretien.'
+      : 'Complete commercial infrastructure with zero hidden fees. One-time deployment fee and predictable monthly management.',
     recommendedBadge: isFrench ? 'Recommandé' : 'Recommended',
     setupLabel: isFrench ? 'Mise en place' : 'One-time setup',
     monthlyLabel: isFrench ? '/mois' : '/mo',
     convosLabel: isFrench ? 'conversations / mois incluses' : 'conversations / month included',
     overageLabel: isFrench ? 'Conversation supplémentaire:' : 'Extra conversation:',
-    voiceAddonTitle: isFrench ? 'Module Agente de Voz IA' : 'AI Voice Agent Add-on',
+    year1Label: isFrench ? 'Total An 1:' : 'Year 1 Total:',
+    explorePlans: isFrench ? 'Consulter les formules' : 'Explore Plans & Pricing',
+    voiceAddonTitle: isFrench ? 'Module Agence Vocale IA' : 'AI Voice Agent Add-on',
     voiceAddonDesc: isFrench
-      ? 'Prenez en charge les appels vocaux entrants 24h/24 avec une voix naturelle.'
-      : 'Handle inbound customer voice calls 24/7 with human-grade natural speech.',
+      ? 'Prenez en charge les appels vocaux entrants 24h/24 avec une voix naturelle, répondez aux questions et prenez des rendez-vous.'
+      : 'Handle inbound customer voice calls 24/7 with human-grade conversational voice, answer customer questions, and book appointments.',
     voiceMinutes: isFrench ? '300 minutes / mois incluses' : '300 minutes / month included',
     voiceOverage: isFrench ? 'Minute supplémentaire:' : 'Extra minute:',
+    voiceLineType: isFrench
+      ? config.id === 'ht'
+        ? 'Appels WhatsApp sur votre numéro d’entreprise'
+        : 'Ligne téléphonique professionnelle dédiée'
+      : config.id === 'ht'
+      ? 'WhatsApp calling on your business number'
+      : 'Dedicated regular business phone line',
     faqTitle: isFrench ? 'Questions fréquentes' : 'Frequently Asked Questions',
     paymentHeading: isFrench ? 'Modalités de règlement' : 'Payment Rails and Terms',
     ctaSecondaryText: isFrench
-      ? 'Accompagnement direct par nos fondateurs.'
-      : 'Direct execution by senior technical founders.',
+      ? 'Chaque projet est personnellement conçu et déployé par Gamal chez Purple Cove Labs.'
+      : 'Every project is personally built and directed by Gamal at Purple Cove Labs.',
+    selectTierBtn: isFrench ? 'Choisir cette formule' : 'Select This Plan',
+    guaranteeTitle: guarantee.title,
+    capTitle: isFrench ? 'Limite stricte de 4 entreprises par mois' : 'Strict 4-Client Monthly Cap',
+    bonusesTitle: isFrench ? 'Deux bonus de lancement inclus' : 'Two Included Launch Bonuses',
+    walkthroughLabel: isFrench ? 'Réserver un échange de 20 minutes' : 'Book a 20-Minute Walkthrough',
   };
 
   const channelIcon =
-    cta.type === 'sms' ? (
+    config.primaryChannel === 'sms' ? (
       <ChatCircleText size={18} weight="bold" />
-    ) : cta.type === 'whatsapp' ? (
+    ) : config.primaryChannel === 'whatsapp' ? (
       <ChatCircleText size={18} weight="bold" />
     ) : (
       <CalendarCheck size={18} weight="bold" />
     );
 
-  const destination = cta.destination;
+  const scrollToOrder = (plan?: 'presence' | 'conversion' | 'authority') => {
+    if (plan) setSelectedPlan(plan);
+    const el = document.getElementById('order');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
     <div className="min-h-screen bg-paper text-body selection:bg-accent selection:text-accent-ink">
@@ -140,15 +152,14 @@ export function MarketLanding({ config, showPrices, locale }: MarketLandingProps
               </div>
             )}
 
-            <a
-              href={destination}
-              target={destination.startsWith('http') ? '_blank' : undefined}
-              rel={destination.startsWith('http') ? 'noopener noreferrer' : undefined}
+            <button
+              type="button"
+              onClick={() => scrollToOrder('conversion')}
               className={buttonClass('primary', 'sm')}
             >
               {channelIcon}
               <span>{cta.label}</span>
-            </a>
+            </button>
           </div>
         </div>
       </header>
@@ -182,29 +193,26 @@ export function MarketLanding({ config, showPrices, locale }: MarketLandingProps
             </p>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <a
-                href={destination}
-                target={destination.startsWith('http') ? '_blank' : undefined}
-                rel={destination.startsWith('http') ? 'noopener noreferrer' : undefined}
+              <button
+                type="button"
+                onClick={() => scrollToOrder('conversion')}
                 className={buttonClass('primary', 'lg')}
               >
                 {channelIcon}
                 <span>{hero.ctaText}</span>
-              </a>
+              </button>
 
               <a
-                href="https://demo.purpleoryn.com"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="#pricing"
                 className={buttonClass('secondary', 'lg')}
               >
-                <span>{copy.demoLinkText}</span>
-                <ArrowUpRight size={16} weight="bold" />
+                <span>{copy.explorePlans}</span>
+                <ArrowDown size={16} weight="bold" />
               </a>
             </div>
           </div>
 
-          {/* Hero Visual Card with Oryn Presence branding */}
+          {/* Hero Visual Card */}
           <div className="relative mx-auto w-full max-w-sm overflow-hidden rounded-[28px] border border-line bg-surface p-6 shadow-[0_24px_50px_-20px_rgb(28_16_48/0.2)] md:max-w-none">
             <div className="flex items-center gap-4 border-b border-line pb-4">
               <Image
@@ -217,39 +225,83 @@ export function MarketLanding({ config, showPrices, locale }: MarketLandingProps
               />
               <div>
                 <p className="font-display text-lg font-semibold text-ink">Oryn Presence</p>
-                <p className="text-xs text-muted">Complete Commercial Growth System</p>
+                <p className="text-xs text-muted">Complete Commercial Client Engine</p>
               </div>
             </div>
 
             <div className="mt-4 space-y-2.5 text-xs text-body">
               <div className="flex items-center justify-between rounded-xl bg-paper px-3 py-2">
                 <span className="font-medium text-ink">Website Architecture</span>
-                <span className="font-mono text-teal-ink font-semibold">Sub-second Next.js</span>
+                <span className="font-mono text-teal-ink font-semibold">Conversion Next.js</span>
               </div>
               <div className="flex items-center justify-between rounded-xl bg-paper px-3 py-2">
-                <span className="font-medium text-ink">Local Search Engine</span>
-                <span className="font-mono text-accent font-semibold">Structured Geo-SEO</span>
+                <span className="font-medium text-ink">Google Local Engine</span>
+                <span className="font-mono text-accent font-semibold">Profile + Geo-SEO</span>
               </div>
               <div className="flex items-center justify-between rounded-xl bg-paper px-3 py-2">
-                <span className="font-medium text-ink">Lead Intake Channel</span>
-                <span className="font-mono text-warm-ink font-semibold uppercase">{config.primaryChannel} 24/7</span>
+                <span className="font-medium text-ink">24/7 AI Qualification</span>
+                <span className="font-mono text-warm-ink font-semibold uppercase">{config.primaryChannel} + Web</span>
               </div>
             </div>
 
-            <a
-              href="https://demo.purpleoryn.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-5 flex items-center justify-between rounded-xl border border-accent/20 bg-accent-soft px-4 py-3 text-xs font-semibold text-accent hover:border-accent hover:text-accent-hover transition-colors"
-            >
-              <span>{copy.demoBadge}</span>
-              <span className="flex items-center gap-1 font-mono">
-                demo.purpleoryn.com <ArrowUpRight size={14} weight="bold" />
+            <div className="mt-5 flex items-center justify-between rounded-xl border border-line bg-paper/70 px-4 py-3 text-xs font-semibold text-ink">
+              <span className="text-muted">{isFrench ? 'Exécution technique' : 'Implementation'}</span>
+              <span className="font-mono text-accent font-medium">
+                {isFrench ? 'Personnellement par Gamal' : 'Personally Built by Gamal'}
               </span>
-            </a>
+            </div>
           </div>
         </section>
       </div>
+
+      {/* ─── Problem Insight Section (Challenger Pitch) ───────────────── */}
+      {problemInsight && (
+        <section className="mx-auto max-w-6xl px-4 pt-20 sm:px-6 md:pt-28">
+          <div className="rounded-[var(--radius-panel)] border border-line bg-surface p-8 sm:p-12 shadow-xs">
+            <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
+              <div>
+                <span className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-warm-ink">
+                  <Clock size={16} weight="bold" />
+                  {problemInsight.tag}
+                </span>
+                <h2 className="mt-3 text-2xl font-semibold sm:text-3xl text-ink leading-tight">
+                  {problemInsight.title}
+                </h2>
+                <div className="mt-4 rounded-xl border border-accent/20 bg-accent-soft/30 p-4 text-sm font-medium text-ink">
+                  {problemInsight.statCallout}
+                </div>
+                <p className="mt-4 text-base leading-relaxed text-body">
+                  {problemInsight.description}
+                </p>
+              </div>
+
+              <div className="space-y-4 rounded-2xl border border-line bg-paper/60 p-6 text-xs text-body">
+                <div className="flex items-start gap-3">
+                  <div className="rounded-full bg-teal-soft p-2 text-teal-ink">
+                    <UserCheck size={20} weight="bold" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-ink text-sm">
+                      {isFrench ? 'Soutien direct de votre équipe' : 'Staff Support, Not Replacement'}
+                    </p>
+                    <p className="mt-1 leading-relaxed text-muted">
+                      {isFrench
+                        ? 'Les agents filtrent les demandes secondaires et qualifient les besoins pour que vos collaborateurs n’échangent qu’avec des acheteurs prêts.'
+                        : 'The agents handle nights, weekends, and initial minutes, qualifying buyer criteria so your team only spends time closing ready buyers.'}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="border-t border-line/60 pt-4">
+                  <p className="font-mono text-xs font-semibold text-accent">
+                    {problemInsight.hoursComparison}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ─── The Three-Part System ───────────────────────────────────── */}
       <section className="mx-auto max-w-6xl px-4 pt-24 sm:px-6 md:pt-32">
@@ -257,7 +309,7 @@ export function MarketLanding({ config, showPrices, locale }: MarketLandingProps
           <span className="text-xs font-semibold uppercase tracking-wider text-accent">
             Architecture
           </span>
-          <h2 className="mt-2 text-3xl font-semibold leading-tight sm:text-4xl">
+          <h2 className="mt-2 text-3xl font-semibold leading-tight sm:text-4xl text-ink">
             {system.sectionTitle}
           </h2>
           <p className="mt-4 text-lg leading-relaxed text-body">
@@ -297,21 +349,23 @@ export function MarketLanding({ config, showPrices, locale }: MarketLandingProps
           })}
         </ol>
 
-        {/* Realistic Interactive Phone Mock (SMS for US, Messaging for CA/HT) */}
+        {/* Realistic Interactive Phone Mock (SMS for US/CA, WhatsApp for HT) */}
         <div className="mt-16 grid items-center gap-10 md:grid-cols-[1fr_1.1fr] md:gap-14">
           <figure className="mx-auto w-full max-w-[22rem]">
             <div className="overflow-hidden rounded-[2.5rem] border-[10px] border-[#1c1c1e] bg-[#1c1c1e] shadow-[0_32px_64px_-32px_rgb(28_16_48/0.55)]">
               {/* Phone Header */}
               <div className="flex items-center gap-3 bg-[#f5f5f7] px-4 py-3 text-ink dark:bg-[#1f1f23] dark:text-[#f1ecf8]">
                 <div className="flex h-9 w-9 items-center justify-center rounded-full bg-accent/20 text-xs font-bold text-accent">
-                  {config.primaryChannel === 'sms' ? 'US' : 'QC'}
+                  {config.primaryChannel === 'sms' ? 'SMS' : 'WA'}
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="text-xs font-semibold leading-tight">
-                    {config.primaryChannel === 'sms' ? 'New Client Inquiry' : 'Demande Client'}
+                    {isFrench ? 'Nouvelle Demande Client' : 'New Inbound Client Inquiry'}
                   </p>
                   <p className="text-[10px] text-muted font-mono">
-                    {config.primaryChannel === 'sms' ? 'SMS • Qualified by Oryn' : 'WhatsApp • Qualifié par Oryn'}
+                    {config.primaryChannel === 'sms'
+                      ? 'SMS • Qualified by Oryn'
+                      : 'WhatsApp • Qualifié par Oryn'}
                   </p>
                 </div>
               </div>
@@ -327,8 +381,8 @@ export function MarketLanding({ config, showPrices, locale }: MarketLandingProps
                 <div className="max-w-[85%] rounded-2xl rounded-bl-sm bg-surface p-3 text-ink shadow-xs">
                   <p>
                     {isFrench
-                      ? 'Bonjour, j ai trouvé votre site sur Google. Proposez-vous un rendez-vous cette semaine ?'
-                      : 'Hi, I found your company on Google. Do you have availability for a consultation this week?'}
+                      ? 'Bonjour, j’ai trouvé votre entreprise sur Google. Avez-vous une disponibilité cette semaine?'
+                      : 'Hi, I found your business on Google. Do you have availability for a consultation this week?'}
                   </p>
                   <span className="mt-1 block text-right text-[10px] text-muted">9:38 PM</span>
                 </div>
@@ -336,7 +390,7 @@ export function MarketLanding({ config, showPrices, locale }: MarketLandingProps
                 <div className="ml-auto max-w-[85%] rounded-2xl rounded-br-sm bg-gradient-action p-3 text-accent-ink shadow-xs">
                   <p>
                     {isFrench
-                      ? 'Bonjour, avec plaisir! Nous avons des disponibilités mercredi à 14h ou jeudi à 10h. Quel créneau vous convient le mieux ?'
+                      ? 'Bonjour! Oui tout à fait. Nous avons des ouvertures mercredi à 14h ou jeudi à 10h. Quel créneau vous convient le mieux?'
                       : 'Hi Michael, yes we do! We have openings Wednesday at 2:00 PM or Thursday at 10:00 AM. Which day works better for you?'}
                   </p>
                   <span className="mt-1 block text-right text-[10px] text-accent-ink/80">9:39 PM</span>
@@ -355,8 +409,8 @@ export function MarketLanding({ config, showPrices, locale }: MarketLandingProps
                   </p>
                   <p className="text-[10px] text-body mt-0.5">
                     {isFrench
-                      ? 'Client: Michel D. • Créneau: Jeudi 10h00 • Canal: SMS'
-                      : 'Client: Michael D. • Time: Thursday 10:00 AM • Channel: SMS'}
+                      ? `Client: Michel D. • Créneau: Jeudi 10h00 • Canal: ${config.primaryChannel.toUpperCase()}`
+                      : `Client: Michael D. • Time: Thursday 10:00 AM • Channel: ${config.primaryChannel.toUpperCase()}`}
                   </p>
                 </div>
               </div>
@@ -367,15 +421,15 @@ export function MarketLanding({ config, showPrices, locale }: MarketLandingProps
             <span className="text-xs font-semibold uppercase tracking-wider text-teal-ink">
               Seamless Handoff
             </span>
-            <h3 className="mt-2 text-2xl font-semibold sm:text-3xl">
+            <h3 className="mt-2 text-2xl font-semibold sm:text-3xl text-ink">
               {isFrench
                 ? 'Ne laissez plus refroidir aucun prospect qualifié'
-                : 'Never let a qualified prospective client go cold'}
+                : 'Never let a qualified prospective buyer go cold'}
             </h3>
             <p className="mt-4 text-base leading-relaxed text-body">
               {isFrench
-                ? 'Votre site web convertit immédiatement. L agent d intelligence artificielle engage chaque visiteur à toute heure du jour et de la nuit, valide leurs besoins spécifiques et vous transmet l opportunité directement.'
-                : 'Your website captures instant intent. The AI agent engages visitors at any hour, collects the required project details, and hands over a hot lead ready for closing.'}
+                ? 'Votre site web convertit immédiatement. L’agent d’intelligence artificielle engage chaque visiteur à toute heure du jour et de la nuit, valide leurs besoins spécifiques et vous transmet l’opportunité directement.'
+                : 'Your website captures instant intent. The AI agent engages visitors at any hour, asks 3 to 5 key qualifying questions, and hands over a hot lead ready for closing.'}
             </p>
             <div className="mt-6 flex items-center gap-3">
               <IconTile icon={CheckCircle} tone="teal" size="sm" />
@@ -393,7 +447,7 @@ export function MarketLanding({ config, showPrices, locale }: MarketLandingProps
           <span className="text-xs font-semibold uppercase tracking-wider text-warm-ink">
             Investment
           </span>
-          <h2 className="mt-2 text-3xl font-semibold leading-tight sm:text-4xl">
+          <h2 className="mt-2 text-3xl font-semibold leading-tight sm:text-4xl text-ink">
             {copy.plansTitle}
           </h2>
           <p className="mt-4 text-lg leading-relaxed text-body">
@@ -401,356 +455,481 @@ export function MarketLanding({ config, showPrices, locale }: MarketLandingProps
           </p>
         </div>
 
-        {hasAnyPrice ? (
-          <>
-            {/* 3 Stepped Tiers (TierStairs style) */}
-            <ol className="mt-12 grid gap-4 md:grid-cols-3 md:items-end">
-              {/* Tier 1: Presence */}
-              <li>
-                <article
-                  className={cn(
-                    'group relative flex h-full flex-col overflow-hidden rounded-[var(--radius-panel)] border bg-surface p-6 transition-transform duration-300 hover:-translate-y-1 sm:p-7',
-                    TONE['teal'].border,
-                    STEP_HEIGHT[0],
-                  )}
-                >
-                  <span
-                    aria-hidden="true"
-                    className={cn('absolute inset-x-0 top-0 h-1.5 bg-linear-to-r', TONE['teal'].bar)}
-                  />
-                  <div className="flex items-center justify-between gap-2">
-                    <IconTile icon={Sparkle} tone="teal" />
-                  </div>
-                  <h3 className={cn('mt-4 text-2xl font-semibold', TONE['teal'].text)}>
-                    Oryn Presence
-                  </h3>
-                  <p className="mt-2 text-[15px] leading-relaxed text-body">
-                    {isFrench
-                      ? 'Fondation numérique essentielle avec captation automatique.'
-                      : 'Essential digital foundation with automatic lead intake.'}
+        {/* 3 Stepped Tiers */}
+        <ol className="mt-12 grid gap-6 md:grid-cols-3 md:items-stretch">
+          {/* Tier 1: Presence */}
+          <li className="flex">
+            <article
+              className={cn(
+                'group relative flex w-full flex-col overflow-hidden rounded-[var(--radius-panel)] border bg-surface p-6 transition-transform duration-300 hover:-translate-y-1 sm:p-7 shadow-xs',
+                TONE['teal'].border,
+              )}
+            >
+              <span
+                aria-hidden="true"
+                className={cn('absolute inset-x-0 top-0 h-1.5 bg-linear-to-r', TONE['teal'].bar)}
+              />
+              <div className="flex items-center justify-between gap-2">
+                <IconTile icon={Sparkle} tone="teal" />
+              </div>
+              <h3 className={cn('mt-4 text-2xl font-semibold', TONE['teal'].text)}>
+                {isFrench ? 'Oryn Présence' : 'Oryn Presence'}
+              </h3>
+              <p className="mt-2 text-[15px] leading-relaxed text-body">
+                {isFrench
+                  ? 'Fondation numérique essentielle avec captation et qualification automatique.'
+                  : 'Essential digital foundation with automatic lead intake and qualification.'}
+              </p>
+
+              <div className="mt-6 border-t border-line pt-5">
+                <p className="text-xs text-muted uppercase tracking-wider font-semibold">
+                  {copy.setupLabel}
+                </p>
+                <p className="tabular text-2xl font-semibold text-ink">
+                  {formatPriceNumber(prices.presence.setup, prices.currencySymbol)}
+                </p>
+
+                <div className="mt-4">
+                  <p className="text-xs text-muted uppercase tracking-wider font-semibold">
+                    {isFrench ? 'Abonnement mensuel' : 'Monthly retainer'}
                   </p>
-
-                  <div className="mt-6 border-t border-line pt-5">
-                    <p className="text-xs text-muted uppercase tracking-wider font-semibold">
-                      {copy.setupLabel}
-                    </p>
-                    <p className="tabular text-2xl font-semibold text-ink">
-                      {formatPriceNumber(prices.presence.setup, prices.currencySymbol)}
-                    </p>
-
-                    <div className="mt-4">
-                      <p className="text-xs text-muted uppercase tracking-wider font-semibold">
-                        Monthly retainer
-                      </p>
-                      <div className="flex items-baseline gap-1">
-                        <span className="tabular text-3xl font-bold text-ink">
-                          {formatPriceNumber(prices.presence.monthly, prices.currencySymbol)}
-                        </span>
-                        <span className="text-sm text-muted">{copy.monthlyLabel}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <ul className="mt-6 space-y-2.5 text-[15px] flex-1">
-                    <li className="flex gap-2.5">
-                      <CheckCircle
-                        size={20}
-                        weight="duotone"
-                        className={cn('mt-px shrink-0', TONE['teal'].text)}
-                      />
-                      <span>
-                        {prices.presence.conversationsIncluded} {copy.convosLabel}
-                      </span>
-                    </li>
-                    {prices.presence.overageRate && (
-                      <li className="flex gap-2.5 text-xs text-muted">
-                        <span>
-                          {copy.overageLabel} {prices.presence.overageRate}
-                        </span>
-                      </li>
-                    )}
-                  </ul>
-
-                  <a
-                    href={destination}
-                    target={destination.startsWith('http') ? '_blank' : undefined}
-                    rel={destination.startsWith('http') ? 'noopener noreferrer' : undefined}
-                    className={buttonClass('secondary', 'md', 'mt-8 w-full')}
-                  >
-                    <span>{cta.label}</span>
-                  </a>
-                </article>
-              </li>
-
-              {/* Tier 2: Conversion (RECOMMENDED) */}
-              <li>
-                <article
-                  className={cn(
-                    'group relative flex h-full flex-col overflow-hidden rounded-[var(--radius-panel)] bg-surface p-6 transition-transform duration-300 hover:-translate-y-1 sm:p-7 border-glow shadow-[0_28px_56px_-30px_rgb(162_28_175/0.55)]',
-                    STEP_HEIGHT[1],
-                  )}
-                >
-                  <span
-                    aria-hidden="true"
-                    className={cn('absolute inset-x-0 top-0 h-1.5 bg-linear-to-r', TONE['violet'].bar)}
-                  />
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <IconTile icon={TrendUp} tone="violet" />
-                    <span className="inline-flex w-fit items-center rounded-full bg-warm px-2.5 py-0.5 text-xs font-semibold text-on-warm">
-                      {copy.recommendedBadge}
+                  <div className="flex items-baseline gap-1">
+                    <span className="tabular text-3xl font-bold text-ink">
+                      {formatPriceNumber(prices.presence.monthly, prices.currencySymbol)}
                     </span>
-                  </div>
-                  <h3 className={cn('mt-4 text-2xl font-semibold', TONE['violet'].text)}>
-                    Oryn Conversion
-                  </h3>
-                  <p className="mt-2 text-[15px] leading-relaxed text-body">
-                    {isFrench
-                      ? 'Pour les entreprises actives qui veulent dominer leur secteur local.'
-                      : 'For active businesses aiming to lead their regional market.'}
-                  </p>
-
-                  <div className="mt-6 border-t border-line pt-5">
-                    <p className="text-xs text-muted uppercase tracking-wider font-semibold">
-                      {copy.setupLabel}
-                    </p>
-                    <p className="tabular text-2xl font-semibold text-ink">
-                      {formatPriceNumber(prices.conversion.setup, prices.currencySymbol)}
-                    </p>
-
-                    <div className="mt-4">
-                      <p className="text-xs text-muted uppercase tracking-wider font-semibold">
-                        Monthly retainer
-                      </p>
-                      <div className="flex items-baseline gap-1">
-                        <span className="tabular text-3xl font-bold text-warm-ink">
-                          {formatPriceNumber(prices.conversion.monthly, prices.currencySymbol)}
-                        </span>
-                        <span className="text-sm text-muted">{copy.monthlyLabel}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <ul className="mt-6 space-y-2.5 text-[15px] flex-1">
-                    <li className="flex gap-2.5">
-                      <CheckCircle
-                        size={20}
-                        weight="duotone"
-                        className={cn('mt-px shrink-0', TONE['violet'].text)}
-                      />
-                      <span>
-                        {prices.conversion.conversationsIncluded} {copy.convosLabel}
-                      </span>
-                    </li>
-                    {prices.conversion.overageRate && (
-                      <li className="flex gap-2.5 text-xs text-muted">
-                        <span>
-                          {copy.overageLabel} {prices.conversion.overageRate}
-                        </span>
-                      </li>
-                    )}
-                  </ul>
-
-                  <a
-                    href={destination}
-                    target={destination.startsWith('http') ? '_blank' : undefined}
-                    rel={destination.startsWith('http') ? 'noopener noreferrer' : undefined}
-                    className={buttonClass('primary', 'md', 'mt-8 w-full shadow-md')}
-                  >
-                    <span>{cta.label}</span>
-                  </a>
-                </article>
-              </li>
-
-              {/* Tier 3: Authority */}
-              <li>
-                <article
-                  className={cn(
-                    'group relative flex h-full flex-col overflow-hidden rounded-[var(--radius-panel)] border bg-surface p-6 transition-transform duration-300 hover:-translate-y-1 sm:p-7',
-                    TONE['rose'].border,
-                    STEP_HEIGHT[2],
-                  )}
-                >
-                  <span
-                    aria-hidden="true"
-                    className={cn('absolute inset-x-0 top-0 h-1.5 bg-linear-to-r', TONE['rose'].bar)}
-                  />
-                  <div className="flex items-center justify-between gap-2">
-                    <IconTile icon={Crown} tone="rose" />
-                  </div>
-                  <h3 className={cn('mt-4 text-2xl font-semibold', TONE['rose'].text)}>
-                    Oryn Authority
-                  </h3>
-                  <p className="mt-2 text-[15px] leading-relaxed text-body">
-                    {isFrench
-                      ? 'Infrastructure de pointe, multi-secteurs et volume élevé.'
-                      : 'Top-tier infrastructure for maximum scale and volume.'}
-                  </p>
-
-                  <div className="mt-6 border-t border-line pt-5">
-                    <p className="text-xs text-muted uppercase tracking-wider font-semibold">
-                      {copy.setupLabel}
-                    </p>
-                    <p className="tabular text-2xl font-semibold text-ink">
-                      {formatPriceNumber(prices.authority.setup, prices.currencySymbol)}
-                    </p>
-
-                    <div className="mt-4">
-                      <p className="text-xs text-muted uppercase tracking-wider font-semibold">
-                        Monthly retainer
-                      </p>
-                      <div className="flex items-baseline gap-1">
-                        <span className="tabular text-3xl font-bold text-ink">
-                          {formatPriceNumber(prices.authority.monthly, prices.currencySymbol)}
-                        </span>
-                        <span className="text-sm text-muted">{copy.monthlyLabel}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <ul className="mt-6 space-y-2.5 text-[15px] flex-1">
-                    <li className="flex gap-2.5">
-                      <CheckCircle
-                        size={20}
-                        weight="duotone"
-                        className={cn('mt-px shrink-0', TONE['rose'].text)}
-                      />
-                      <span>
-                        {prices.authority.conversationsIncluded} {copy.convosLabel}
-                      </span>
-                    </li>
-                    {prices.authority.overageRate && (
-                      <li className="flex gap-2.5 text-xs text-muted">
-                        <span>
-                          {copy.overageLabel} {prices.authority.overageRate}
-                        </span>
-                      </li>
-                    )}
-                  </ul>
-
-                  <a
-                    href={destination}
-                    target={destination.startsWith('http') ? '_blank' : undefined}
-                    rel={destination.startsWith('http') ? 'noopener noreferrer' : undefined}
-                    className={buttonClass('secondary', 'md', 'mt-8 w-full')}
-                  >
-                    <span>{cta.label}</span>
-                  </a>
-                </article>
-              </li>
-            </ol>
-
-            {/* AI Voice Agent Addon (AddonSection style) */}
-            {prices.voiceAddon && prices.voiceAddon.monthly !== null && (
-              <div className="mt-10 overflow-hidden rounded-[var(--radius-panel)] border border-teal/30 bg-linear-to-br from-teal-soft via-surface to-accent-soft/60 p-6 sm:p-8">
-                <span
-                  aria-hidden="true"
-                  className="absolute inset-x-0 top-0 h-1.5 bg-linear-to-r from-teal via-accent to-fuchsia"
-                />
-                <div className="grid gap-6 md:grid-cols-[1.3fr_1fr] md:items-center">
-                  <div className="flex gap-4">
-                    <IconTile icon={Microphone} tone="teal" size="lg" />
-                    <div>
-                      <h3 className="text-2xl font-semibold text-teal-ink">
-                        {copy.voiceAddonTitle}
-                      </h3>
-                      <p className="mt-2 text-[15px] leading-relaxed text-body">
-                        {copy.voiceAddonDesc}
-                      </p>
-                      <p className="mt-3 text-sm font-medium text-ink">
-                        {copy.voiceMinutes} • {copy.voiceOverage} {prices.voiceAddon.overageRate}
-                      </p>
-                      <div className="mt-4 flex items-center gap-2">
-                        <span className="text-xs text-muted">Powered by</span>
-                        <span className="inline-flex items-center gap-1.5 rounded-full border border-line bg-surface px-3 py-1 text-xs font-semibold text-ink">
-                          <BrandLogo logo="elevenlabs" size={16} /> ElevenLabs
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="rounded-2xl border border-line bg-surface p-5 text-right md:text-left">
-                    <p className="text-xs text-muted uppercase font-semibold">
-                      {copy.setupLabel}: {formatPriceNumber(prices.voiceAddon.setup, prices.currencySymbol)}
-                    </p>
-                    <div className="mt-1 flex items-baseline justify-end md:justify-start gap-1">
-                      <span className="tabular text-3xl font-bold text-ink">
-                        {formatPriceNumber(prices.voiceAddon.monthly, prices.currencySymbol)}
-                      </span>
-                      <span className="text-sm text-muted">{copy.monthlyLabel}</span>
-                    </div>
-                    <a
-                      href={destination}
-                      target={destination.startsWith('http') ? '_blank' : undefined}
-                      rel={destination.startsWith('http') ? 'noopener noreferrer' : undefined}
-                      className={buttonClass('primary', 'sm', 'mt-4 w-full')}
-                    >
-                      <span>Add Voice Agent</span>
-                    </a>
+                    <span className="text-sm text-muted">{copy.monthlyLabel}</span>
                   </div>
                 </div>
+
+                {prices.presence.year1Total && (
+                  <p className="mt-3 text-xs text-muted font-mono">
+                    <span className="font-semibold text-ink">{copy.year1Label}</span> {formatPriceNumber(prices.presence.year1Total, prices.currencySymbol)}
+                  </p>
+                )}
               </div>
-            )}
-          </>
-        ) : (
-          /* Consultation Pricing Card when showPrices=false or prices null (CA or /choose pick) */
-          <div className="mt-12 rounded-[var(--radius-panel)] border border-line bg-surface p-8 sm:p-12 text-center shadow-sm">
-            <div className="mx-auto flex justify-center">
-              <IconTile icon={CalendarCheck} tone="violet" size="lg" />
-            </div>
-            <h3 className="mt-4 text-2xl sm:text-3xl font-semibold text-ink">
-              {copy.consultationPricingText}
-            </h3>
-            <p className="mt-3 max-w-xl mx-auto text-base text-body leading-relaxed">
-              {copy.consultationPricingSub}
-            </p>
-            <div className="mt-8 flex justify-center">
-              <a
-                href={destination}
-                target={destination.startsWith('http') ? '_blank' : undefined}
-                rel={destination.startsWith('http') ? 'noopener noreferrer' : undefined}
-                className={buttonClass('primary', 'lg')}
+
+              <ul className="mt-6 space-y-2.5 text-[15px] flex-1">
+                <li className="flex gap-2.5">
+                  <CheckCircle
+                    size={20}
+                    weight="duotone"
+                    className={cn('mt-px shrink-0', TONE['teal'].text)}
+                  />
+                  <span className="font-medium text-ink">
+                    {prices.presence.conversationsIncluded} {copy.convosLabel}
+                  </span>
+                </li>
+                {prices.presence.overageRate && (
+                  <li className="flex gap-2.5 text-xs text-muted pl-7">
+                    <span>
+                      {copy.overageLabel} {prices.presence.overageRate}
+                    </span>
+                  </li>
+                )}
+                {content.tierHighlights?.presence.map((h, i) => (
+                  <li key={i} className="flex gap-2.5 text-sm text-body">
+                    <CheckCircle
+                      size={18}
+                      weight="bold"
+                      className={cn('mt-0.5 shrink-0', TONE['teal'].text)}
+                    />
+                    <span>{h}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <button
+                type="button"
+                onClick={() => scrollToOrder('presence')}
+                className={buttonClass('secondary', 'md', 'mt-8 w-full')}
               >
-                {channelIcon}
-                <span>{copy.bookConsultationAction}</span>
-              </a>
+                <span>{copy.selectTierBtn}</span>
+              </button>
+            </article>
+          </li>
+
+          {/* Tier 2: Conversion (RECOMMENDED) */}
+          <li className="flex">
+            <article
+              className={cn(
+                'group relative flex w-full flex-col overflow-hidden rounded-[var(--radius-panel)] bg-surface p-6 transition-transform duration-300 hover:-translate-y-1 sm:p-7 border-glow shadow-[0_28px_56px_-30px_rgb(162_28_175/0.55)]',
+              )}
+            >
+              <span
+                aria-hidden="true"
+                className={cn('absolute inset-x-0 top-0 h-1.5 bg-linear-to-r', TONE['violet'].bar)}
+              />
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <IconTile icon={TrendUp} tone="violet" />
+                <span className="inline-flex w-fit items-center rounded-full bg-warm px-2.5 py-0.5 text-xs font-semibold text-on-warm">
+                  {copy.recommendedBadge}
+                </span>
+              </div>
+              <h3 className={cn('mt-4 text-2xl font-semibold', TONE['violet'].text)}>
+                {isFrench ? 'Oryn Conversion' : 'Oryn Conversion'}
+              </h3>
+              <p className="mt-2 text-[15px] leading-relaxed text-body">
+                {isFrench
+                  ? 'Pour les entreprises actives qui veulent dominer leur secteur et convertir chaque demande.'
+                  : 'For active businesses aiming to lead their regional market and systematically close leads.'}
+              </p>
+
+              <div className="mt-6 border-t border-line pt-5">
+                <p className="text-xs text-muted uppercase tracking-wider font-semibold">
+                  {copy.setupLabel}
+                </p>
+                <p className="tabular text-2xl font-semibold text-ink">
+                  {formatPriceNumber(prices.conversion.setup, prices.currencySymbol)}
+                </p>
+
+                <div className="mt-4">
+                  <p className="text-xs text-muted uppercase tracking-wider font-semibold">
+                    {isFrench ? 'Abonnement mensuel' : 'Monthly retainer'}
+                  </p>
+                  <div className="flex items-baseline gap-1">
+                    <span className="tabular text-3xl font-bold text-warm-ink">
+                      {formatPriceNumber(prices.conversion.monthly, prices.currencySymbol)}
+                    </span>
+                    <span className="text-sm text-muted">{copy.monthlyLabel}</span>
+                  </div>
+                </div>
+
+                {prices.conversion.year1Total && (
+                  <p className="mt-3 text-xs text-muted font-mono">
+                    <span className="font-semibold text-ink">{copy.year1Label}</span> {formatPriceNumber(prices.conversion.year1Total, prices.currencySymbol)}
+                  </p>
+                )}
+              </div>
+
+              <ul className="mt-6 space-y-2.5 text-[15px] flex-1">
+                <li className="flex gap-2.5">
+                  <CheckCircle
+                    size={20}
+                    weight="duotone"
+                    className={cn('mt-px shrink-0', TONE['violet'].text)}
+                  />
+                  <span className="font-medium text-ink">
+                    {prices.conversion.conversationsIncluded} {copy.convosLabel}
+                  </span>
+                </li>
+                {prices.conversion.overageRate && (
+                  <li className="flex gap-2.5 text-xs text-muted pl-7">
+                    <span>
+                      {copy.overageLabel} {prices.conversion.overageRate}
+                    </span>
+                  </li>
+                )}
+                {content.tierHighlights?.conversion.map((h, i) => {
+                  const isInheritLine = h.startsWith('Everything in') || h.startsWith('Tout ce qui est inclus');
+                  return (
+                    <li key={i} className={cn('flex gap-2.5 text-sm', isInheritLine ? 'font-semibold text-ink pt-2 border-t border-line/60 mt-1' : 'text-body')}>
+                      {!isInheritLine && (
+                        <CheckCircle
+                          size={18}
+                          weight="bold"
+                          className={cn('mt-0.5 shrink-0', TONE['violet'].text)}
+                        />
+                      )}
+                      <span>{h}</span>
+                    </li>
+                  );
+                })}
+              </ul>
+
+              <button
+                type="button"
+                onClick={() => scrollToOrder('conversion')}
+                className={buttonClass('primary', 'md', 'mt-8 w-full shadow-md')}
+              >
+                <span>{copy.selectTierBtn}</span>
+              </button>
+            </article>
+          </li>
+
+          {/* Tier 3: Authority */}
+          <li className="flex">
+            <article
+              className={cn(
+                'group relative flex w-full flex-col overflow-hidden rounded-[var(--radius-panel)] border bg-surface p-6 transition-transform duration-300 hover:-translate-y-1 sm:p-7 shadow-xs',
+                TONE['rose'].border,
+              )}
+            >
+              <span
+                aria-hidden="true"
+                className={cn('absolute inset-x-0 top-0 h-1.5 bg-linear-to-r', TONE['rose'].bar)}
+              />
+              <div className="flex items-center justify-between gap-2">
+                <IconTile icon={Crown} tone="rose" />
+              </div>
+              <h3 className={cn('mt-4 text-2xl font-semibold', TONE['rose'].text)}>
+                {isFrench ? 'Oryn Autorité' : 'Oryn Authority'}
+              </h3>
+              <p className="mt-2 text-[15px] leading-relaxed text-body">
+                {isFrench
+                  ? 'Infrastructure complète de haute performance avec réservation automatique et CRM léger.'
+                  : 'Top-tier infrastructure with autonomous booking, order handling, and continuous testing.'}
+              </p>
+
+              <div className="mt-6 border-t border-line pt-5">
+                <p className="text-xs text-muted uppercase tracking-wider font-semibold">
+                  {copy.setupLabel}
+                </p>
+                <p className="tabular text-2xl font-semibold text-ink">
+                  {formatPriceNumber(prices.authority.setup, prices.currencySymbol)}
+                </p>
+
+                <div className="mt-4">
+                  <p className="text-xs text-muted uppercase tracking-wider font-semibold">
+                    {isFrench ? 'Abonnement mensuel' : 'Monthly retainer'}
+                  </p>
+                  <div className="flex items-baseline gap-1">
+                    <span className="tabular text-3xl font-bold text-ink">
+                      {formatPriceNumber(prices.authority.monthly, prices.currencySymbol)}
+                    </span>
+                    <span className="text-sm text-muted">{copy.monthlyLabel}</span>
+                  </div>
+                </div>
+
+                {prices.authority.year1Total && (
+                  <p className="mt-3 text-xs text-muted font-mono">
+                    <span className="font-semibold text-ink">{copy.year1Label}</span> {formatPriceNumber(prices.authority.year1Total, prices.currencySymbol)}
+                  </p>
+                )}
+              </div>
+
+              <ul className="mt-6 space-y-2.5 text-[15px] flex-1">
+                <li className="flex gap-2.5">
+                  <CheckCircle
+                    size={20}
+                    weight="duotone"
+                    className={cn('mt-px shrink-0', TONE['rose'].text)}
+                  />
+                  <span className="font-medium text-ink">
+                    {prices.authority.conversationsIncluded} {copy.convosLabel}
+                  </span>
+                </li>
+                {prices.authority.overageRate && (
+                  <li className="flex gap-2.5 text-xs text-muted pl-7">
+                    <span>
+                      {copy.overageLabel} {prices.authority.overageRate}
+                    </span>
+                  </li>
+                )}
+                {content.tierHighlights?.authority.map((h, i) => {
+                  const isInheritLine = h.startsWith('Everything in') || h.startsWith('Tout ce qui est inclus');
+                  return (
+                    <li key={i} className={cn('flex gap-2.5 text-sm', isInheritLine ? 'font-semibold text-ink pt-2 border-t border-line/60 mt-1' : 'text-body')}>
+                      {!isInheritLine && (
+                        <CheckCircle
+                          size={18}
+                          weight="bold"
+                          className={cn('mt-0.5 shrink-0', TONE['rose'].text)}
+                        />
+                      )}
+                      <span>{h}</span>
+                    </li>
+                  );
+                })}
+              </ul>
+
+              <button
+                type="button"
+                onClick={() => scrollToOrder('authority')}
+                className={buttonClass('secondary', 'md', 'mt-8 w-full')}
+              >
+                <span>{copy.selectTierBtn}</span>
+              </button>
+            </article>
+          </li>
+        </ol>
+
+        {/* AI Voice Agent Addon (Secondary add-on) */}
+        {prices.voiceAddon && (
+          <div className="mt-10 overflow-hidden rounded-[var(--radius-panel)] border border-teal/30 bg-linear-to-br from-teal-soft via-surface to-accent-soft/60 p-6 sm:p-8">
+            <span
+              aria-hidden="true"
+              className="absolute inset-x-0 top-0 h-1.5 bg-linear-to-r from-teal via-accent to-fuchsia"
+            />
+            <div className="grid gap-6 md:grid-cols-[1.3fr_1fr] md:items-center">
+              <div className="flex gap-4">
+                <IconTile icon={Microphone} tone="teal" size="lg" />
+                <div>
+                  <h3 className="text-2xl font-semibold text-teal-ink">
+                    {copy.voiceAddonTitle}
+                  </h3>
+                  <p className="mt-2 text-[15px] leading-relaxed text-body">
+                    {copy.voiceAddonDesc}
+                  </p>
+                  <p className="mt-2 text-xs text-muted font-medium">
+                    {copy.voiceLineType}
+                  </p>
+                  <p className="mt-3 text-sm font-medium text-ink">
+                    {prices.voiceAddon.includedUnits || 300} {copy.voiceMinutes}
+                    {prices.voiceAddon.overageRate && ` • ${copy.voiceOverage} ${prices.voiceAddon.overageRate}`}
+                  </p>
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-line bg-surface p-5 text-right md:text-left">
+                <p className="text-xs text-muted uppercase font-semibold">
+                  {copy.setupLabel}: {formatPriceNumber(prices.voiceAddon.setup, prices.currencySymbol)}
+                </p>
+                <div className="mt-1 flex items-baseline justify-end md:justify-start gap-1">
+                  <span className="tabular text-3xl font-bold text-ink">
+                    {formatPriceNumber(prices.voiceAddon.monthly, prices.currencySymbol)}
+                  </span>
+                  <span className="text-sm text-muted">{copy.monthlyLabel}</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => scrollToOrder('conversion')}
+                  className={buttonClass('primary', 'sm', 'mt-4 w-full')}
+                >
+                  <span>{isFrench ? 'Ajouter l’option vocale' : 'Configure with Voice'}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ─── Detailed Service Comparison Table ─────────────────────── */}
+        {content.serviceRows && content.serviceRows.length > 0 && (
+          <div className="mt-16">
+            <div className="text-center mb-8">
+              <h3 className="text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
+                {isFrench ? 'Comparaison détaillée des services' : 'Detailed Service Comparison'}
+              </h3>
+              <p className="mt-2 text-sm text-muted max-w-xl mx-auto">
+                {isFrench
+                  ? 'Tous les composants inclus dans chaque formule, configurés pour votre marché.'
+                  : 'Every component included across all three tiers, fully configured for your market.'}
+              </p>
+            </div>
+
+            {/* Desktop side-by-side table */}
+            <div className="hidden overflow-hidden rounded-[var(--radius-panel)] border border-line bg-surface md:block shadow-xs">
+              <table className="w-full table-fixed border-collapse text-left">
+                <colgroup>
+                  <col className="w-[20%]" />
+                  <col className="w-[26%]" />
+                  <col className="w-[28%]" />
+                  <col className="w-[26%]" />
+                </colgroup>
+                <thead>
+                  <tr className="border-b border-line bg-paper/60">
+                    <th scope="col" className="p-5 text-xs font-semibold text-muted uppercase tracking-wider">
+                      {isFrench ? 'Composant' : 'Service Component'}
+                    </th>
+                    <th scope="col" className="p-5 border-l border-line">
+                      <span className={cn('font-display text-lg font-semibold', TONE['teal'].text)}>
+                        {isFrench ? 'Oryn Présence' : 'Oryn Presence'}
+                      </span>
+                    </th>
+                    <th scope="col" className="p-5 border-l border-line bg-accent-soft/30">
+                      <div className="flex items-center gap-2">
+                        <span className={cn('font-display text-lg font-semibold', TONE['violet'].text)}>
+                          {isFrench ? 'Oryn Conversion' : 'Oryn Conversion'}
+                        </span>
+                        <span className="rounded-full bg-warm px-2 py-0.5 text-[10px] font-semibold text-on-warm">
+                          {copy.recommendedBadge}
+                        </span>
+                      </div>
+                    </th>
+                    <th scope="col" className="p-5 border-l border-line">
+                      <span className={cn('font-display text-lg font-semibold', TONE['rose'].text)}>
+                        {isFrench ? 'Oryn Autorité' : 'Oryn Authority'}
+                      </span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-line">
+                  {content.serviceRows.map((row) => (
+                    <tr key={row.label} className="align-top hover:bg-paper/30 transition-colors">
+                      <th scope="row" className="p-5 text-sm font-semibold text-ink">
+                        {row.label}
+                      </th>
+                      <td className="p-5 border-l border-line text-sm leading-relaxed text-body">
+                        {row.presence}
+                      </td>
+                      <td className="p-5 border-l border-line text-sm leading-relaxed text-body bg-accent-soft/15 font-medium text-ink">
+                        {row.conversion}
+                      </td>
+                      <td className="p-5 border-l border-line text-sm leading-relaxed text-body">
+                        {row.authority}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile accordion-like stacked cards */}
+            <div className="space-y-4 md:hidden">
+              {content.serviceRows.map((row) => (
+                <div key={row.label} className="rounded-xl border border-line bg-surface p-4 shadow-xs">
+                  <p className="font-semibold text-ink text-base">{row.label}</p>
+                  <div className="mt-3 space-y-2 text-xs">
+                    <div className="rounded-lg bg-paper p-3 border border-line/50">
+                      <p className="font-semibold text-teal-ink mb-1">Presence</p>
+                      <p className="text-body leading-relaxed">{row.presence}</p>
+                    </div>
+                    <div className="rounded-lg bg-accent-soft/50 p-3 border border-accent/20">
+                      <p className="font-semibold text-accent mb-1">Conversion (Recommended)</p>
+                      <p className="text-body leading-relaxed">{row.conversion}</p>
+                    </div>
+                    <div className="rounded-lg bg-paper p-3 border border-line/50">
+                      <p className="font-semibold text-rose-ink mb-1">Authority</p>
+                      <p className="text-body leading-relaxed">{row.authority}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         )}
       </section>
 
-      {/* ─── Guarantee, Cap & Bonuses (OfferBlock style) ─────────────── */}
+      {/* ─── Guarantee, Cap & Bonuses ────────────────────────────────── */}
       <section className="mx-auto max-w-6xl px-4 pt-24 sm:px-6 md:pt-32">
-        <h2 className="text-3xl font-semibold sm:text-4xl">
-          {guarantee.title}
+        <h2 className="text-3xl font-semibold sm:text-4xl text-ink">
+          {copy.guaranteeTitle}
         </h2>
 
-        <ul className="mt-8 grid gap-4 md:grid-cols-3">
-          <li className="group rounded-[var(--radius-panel)] border border-line bg-surface p-6 shadow-xs">
-            <IconTile icon={ShieldCheck} tone="teal" size="lg" />
-            <h3 className="mt-4 text-xl font-semibold text-ink">
-              {isFrench ? 'Garantie de livraison 7 jours' : '7-Business-Day Delivery'}
-            </h3>
-            <p className="mt-2 text-[15px] leading-relaxed text-body">
-              {guarantee.deliveryGuarantee}
-            </p>
-          </li>
+        <ul className={cn(
+          'mt-8 grid gap-4',
+          guarantee.hasDeliveryGuarantee ? 'md:grid-cols-3' : 'md:grid-cols-2'
+        )}>
+          {/* Delivery Guarantee ONLY shown when hasDeliveryGuarantee is true (Haiti) */}
+          {guarantee.hasDeliveryGuarantee && guarantee.deliveryGuarantee && (
+            <li className="group rounded-[var(--radius-panel)] border border-line bg-surface p-6 shadow-xs">
+              <IconTile icon={ShieldCheck} tone="teal" size="lg" />
+              <h3 className="mt-4 text-xl font-semibold text-ink">
+                {isFrench ? 'Garantie de livraison 14 jours' : '14-Business-Day Delivery'}
+              </h3>
+              <p className="mt-2 text-[15px] leading-relaxed text-body">
+                {guarantee.deliveryGuarantee}
+              </p>
+            </li>
+          )}
 
+          {/* Strict 4-Client Capacity Cap */}
           <li className="group rounded-[var(--radius-panel)] border border-line bg-surface p-6 shadow-xs">
             <IconTile icon={UsersThree} tone="amber" size="lg" />
             <h3 className="mt-4 text-xl font-semibold text-ink">
-              {isFrench ? 'Limite stricte de 4 clients' : 'Strict 4-Client Monthly Cap'}
+              {copy.capTitle}
             </h3>
             <p className="mt-2 text-[15px] leading-relaxed text-body">
               {guarantee.capacityLimit}
             </p>
           </li>
 
+          {/* Two Included Bonuses */}
           <li className="group rounded-[var(--radius-panel)] border border-line bg-surface p-6 shadow-xs">
             <IconTile icon={Gift} tone="violet" size="lg" />
             <h3 className="mt-4 text-xl font-semibold text-ink">
-              {isFrench ? 'Deux bonus inclus' : 'Two Included Launch Bonuses'}
+              {copy.bonusesTitle}
             </h3>
-            <ul className="mt-2 space-y-1.5 text-[15px] text-body">
+            <ul className="mt-2 space-y-2 text-[15px] text-body">
               {guarantee.bonuses.map((b) => (
                 <li key={b.title} className="flex flex-col gap-0.5">
                   <span className="font-medium text-ink">• {b.title}</span>
@@ -762,9 +941,51 @@ export function MarketLanding({ config, showPrices, locale }: MarketLandingProps
         </ul>
       </section>
 
+      {/* ─── Founder Note ────────────────────────────────────────────── */}
+      {founderNote && (
+        <section className="mx-auto max-w-6xl px-4 pt-20 sm:px-6">
+          <div className="rounded-[var(--radius-panel)] border border-line bg-surface/70 p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center gap-5">
+            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-accent/15 text-accent font-display text-xl font-bold">
+              G
+            </div>
+            <div>
+              <p className="text-xs uppercase font-semibold text-accent tracking-wider">
+                {founderNote.title}
+              </p>
+              <p className="mt-1 text-sm sm:text-[15px] leading-relaxed text-body">
+                {founderNote.text}
+              </p>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ─── ROI Calculator Section ──────────────────────────────────── */}
+      <section className="mx-auto max-w-6xl px-4 pt-24 sm:px-6 md:pt-32">
+        <MarketRoiCalculator
+          prices={prices}
+          locale={locale}
+          selectedPlan={selectedPlan}
+          onSelectPlan={setSelectedPlan}
+          averageSaleValue={averageSaleValue}
+          onAverageSaleChange={setAverageSaleValue}
+        />
+      </section>
+
+      {/* ─── Order Form Section (Formal Intake) ───────────────────────── */}
+      <section className="mx-auto max-w-6xl px-4 pt-24 sm:px-6 md:pt-32">
+        <MarketOrderForm
+          config={config}
+          locale={locale}
+          selectedPlan={selectedPlan}
+          onSelectPlan={setSelectedPlan}
+          averageSaleValue={averageSaleValue}
+        />
+      </section>
+
       {/* ─── FAQ Section ─────────────────────────────────────────────── */}
       <section className="mx-auto max-w-6xl px-4 pt-24 sm:px-6 md:pt-32">
-        <h2 className="text-3xl font-semibold sm:text-4xl">{copy.faqTitle}</h2>
+        <h2 className="text-3xl font-semibold sm:text-4xl text-ink">{copy.faqTitle}</h2>
 
         <div className="mt-8 grid gap-4 md:grid-cols-2">
           {faq.map((item) => (
@@ -790,7 +1011,7 @@ export function MarketLanding({ config, showPrices, locale }: MarketLandingProps
         </div>
       </section>
 
-      {/* ─── Closing Deep Plum CTA Block ─────────────────────────────── */}
+      {/* ─── Closing Deep Plum CTA Block (Secondary Walkthrough CTA) ─── */}
       <section className="mx-auto max-w-6xl px-4 py-24 sm:px-6 md:py-32">
         <div className="relative isolate overflow-hidden rounded-[28px] bg-plum p-8 text-plum-ink shadow-2xl sm:p-14">
           <div
@@ -805,14 +1026,23 @@ export function MarketLanding({ config, showPrices, locale }: MarketLandingProps
               {copy.ctaSecondaryText}
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <a
-                href={destination}
-                target={destination.startsWith('http') ? '_blank' : undefined}
-                rel={destination.startsWith('http') ? 'noopener noreferrer' : undefined}
+              <button
+                type="button"
+                onClick={() => scrollToOrder('conversion')}
                 className={buttonClass('onPlum', 'lg')}
               >
                 {channelIcon}
                 <span>{cta.label}</span>
+              </button>
+
+              <a
+                href="https://cal.com/purple-cove-labs/20-min-cafe-virtual"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-plum-line bg-plum-surface px-6 py-3.5 text-base font-semibold text-plum-ink hover:border-plum-accent hover:text-white transition-colors"
+              >
+                <CalendarCheck size={18} weight="bold" />
+                <span>{copy.walkthroughLabel}</span>
               </a>
             </div>
           </div>
@@ -834,7 +1064,18 @@ export function MarketLanding({ config, showPrices, locale }: MarketLandingProps
             <span>• {config.name}</span>
           </div>
 
-          <p>{legal.footerText}</p>
+          <div className="flex items-center gap-6">
+            <a
+              href="https://wa.me/18096034113"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-ink transition-colors flex items-center gap-1.5"
+            >
+              <ChatCircleText size={15} />
+              <span>WhatsApp: +1 809 603 4113</span>
+            </a>
+            <p>{legal.footerText}</p>
+          </div>
         </div>
       </footer>
     </div>
