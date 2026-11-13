@@ -39,7 +39,7 @@ export function buildHandoffUrl(reason: HandoffReason, known: Qualification, pla
 
 // Pages and documents the agent may point to. The model passes only the key; the link comes from here.
 export const AGENT_PAGES = {
-  servicios: { label: "Ver planes y precios", href: "/servicios", newTab: false },
+  servicios: { label: "Ver planes y alcance", href: "/servicios", newTab: false },
   como_trabajamos: { label: "Cómo trabajamos", href: "/como-trabajamos", newTab: false },
   pdf_oryn_presence: { label: "Documento: Oryn Presence (PDF)", href: "/docs/oryn-presence.pdf", newTab: true },
   pdf_como_trabajamos: { label: "Documento: Cómo trabajamos (PDF)", href: "/docs/como-trabajamos.pdf", newTab: true },

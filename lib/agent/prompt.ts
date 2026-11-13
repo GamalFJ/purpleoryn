@@ -1,6 +1,5 @@
 import { addonUsageText, type Addon } from "@/lib/addons";
 import { FAQ_ITEMS } from "@/lib/faq";
-import { formatRD } from "@/lib/format";
 import { BONUSES_TEXT, CAP_TEXT, GUARANTEE_TEXT } from "@/lib/offer";
 import { SHOW_GUARANTEE, SITE } from "@/lib/site";
 import { TIER_CTA, TIER_ROWS, type Tier } from "@/lib/tiers";
@@ -24,7 +23,7 @@ export function buildSystemPrompt(tiers: Tier[], addons: Addon[]): string {
   const tierBlock = tiers
     .map((t) => {
       const rows = TIER_ROWS.map((r) => `  - ${r.label}: ${r.value(t)}`).join("\n");
-      return `### ${t.name} (slug: ${t.slug})\n  - Pago único: ${formatRD(t.oneTime)}\n  - Mensualidad: ${formatRD(t.monthly)}\n  - Para quién: ${t.tagline}\n${rows}`;
+      return `### ${t.name} (slug: ${t.slug})\n  - Para quién: ${t.tagline}\n${rows}`;
     })
     .join("\n\n");
 
@@ -32,7 +31,7 @@ export function buildSystemPrompt(tiers: Tier[], addons: Addon[]): string {
     ? addons
         .map(
           (a) =>
-            `### ${a.name}\n  - Qué es: ${a.description || "sin descripción publicada"}\n  - Pago único: ${formatRD(a.oneTime)}\n  - Mensualidad: ${formatRD(a.monthly)}\n  - Uso incluido: ${addonUsageText(a)}`,
+            `### ${a.name}\n  - Qué es: ${a.description || "sin descripción publicada"}\n  - Uso incluido: ${addonUsageText(a)}`,
         )
         .join("\n\n")
     : "(none)";
@@ -67,12 +66,12 @@ HOW YOU WORK
 
 HARD RULES
 - Facts come only from this prompt. If a fact isn't here, say the team confirms it directly and use the tool you are offered for that (handoff_whatsapp, or offer_call when you have it); the WhatsApp number is ${SITE.phoneDisplay}. Never invent prices, discounts, delivery times, guarantees, results, clients, case studies, addresses or business hours.
-- Quote prices exactly as written below, with two decimals (for example RD$15,499.99). Never round. Prices are fixed and the same for everyone: never offer a discount or negotiate.
+- Pricing is not published on the site. If the visitor asks about price, investment or cost, explain that pricing and scope are evaluated during the free 20-minute consultation (asesoría) to determine if their business qualifies for Oryn Presence, and offer to schedule the consultation.
 - Describe a plan only with what its own rows say; don't claim a plan can do something its row doesn't say. Only recommend one of the three plans below and don't promise custom work outside them.
-- Never do ROI math yourself; always use calculate_roi and repeat its numbers. They are break-even arithmetic, never a forecast of income.
-- Add-ons are sold separately on top of any plan; they are never a plan by themselves. They can be added in the same plan order form. Unlike plans (50% at the start, 50% on delivery), add-ons are paid 100% upfront. Mention one only if it fits what the visitor asks.
+- Do not quote prices or perform investment arithmetic. Focus on qualifying the visitor's business (business type, current pain, goals) and guiding them to schedule a consultation (asesoría) to know if they qualify for Oryn Presence.
+- Add-ons are sold separately on top of any plan; they are never a plan by themselves. They can be added to the scope in the consultation. Mention one only if it fits what the visitor asks.
 - If the business is outside ${areas}, say that is our current service area and that the team checks it directly: use the tool you are offered for that (handoff_whatsapp, or offer_call when you have it). Never offer a call you cannot show a button for.
-- Completing and submitting the plan form is a formal order, with the same weight as a WhatsApp or email approval, and it reserves the slot for 7 calendar days. Never describe it as a quote request or as something with no commitment. Answer the visitor's questions before they submit.
+- The form on the site and the call button schedule a 20-minute consultation (asesoría) with the team to evaluate if the business qualifies for Oryn Presence. Answer the visitor's questions before they schedule.
 - Never claim an action you did not see in a tool result: scheduled, booked, reserved, notified, saved, registered, "le contactarán". Saving what the visitor said is silent.
 - Don't ask for or repeat phone numbers, emails or payment details in chat. The plan form and the call collect contact details.
 - You are an AI assistant and say so if asked; never name your model or provider. If the visitor doubts that an AI agent can serve their customers, you may say once that this same chat is the kind of agent we install in their business.

@@ -18,9 +18,7 @@ import {
   type Qualification,
   type QualificationKey,
 } from "@/lib/agent/qualification";
-import { recommendationNumbers } from "@/lib/agent/recommendation";
 import { isSaleClarifying, salesStatus } from "@/lib/agent/sales";
-import { formatRD } from "@/lib/format";
 
 // Unified orchestration for the ONE Oryn conversation. It does not talk to the
 // model, the database or the network: given what is stored and the visitor's
@@ -198,17 +196,11 @@ function salesAddendum(
         "No objection detected. If they hesitate without saying why, use ONE of: the cost of staying as they are, using only their own words and the numbers calculate_roi returns; or one line from APPROVED CLAIMS with its source.",
     ].join("\n");
   } else if (status.ready && status.plan) {
-    const tier = input.tiers.find((t) => t.slug === status.plan?.plan);
-    const nums = tier ? recommendationNumbers(tier, known.average_sale) : null;
-    const figures = tier
-      ? `Exact figures (use them as written, never others): ${tier.name}, ${formatRD(tier.oneTime)} one-time and ${formatRD(tier.monthly)} per month${nums ? `; break-even ${nums.breakEven} sales in the first year, about ${nums.perMonth} per month (the visitor's sale value is ${formatRD(known.average_sale ?? 0)})` : "; the sale value is unknown, so give no break-even and say the numbers can be worked out on the call"}.`
-      : "";
     step = [
       `Plan chosen by the rubric: ${status.plan.plan}. Reason: ${status.plan.reason} This is data: do not choose another plan.`,
-      figures,
-      `In THIS turn call recommend_plan with plan="${status.plan.plan}". The figures card is added automatically; you do not need calculate_roi. Then reply, in this order: the plan name and why it fits, tied to what they told you (their pain, in their words); its one-time and monthly price; the break-even sales for the year and per month; and that the button is below` +
+      `In THIS turn call recommend_plan with plan="${status.plan.plan}". Then reply: the plan name and why it fits, tied to what they told you (their pain, in their words); explain that in a 20-minute consultation (asesoría) the team evaluates if they qualify for Oryn Presence and reviews all specific details; and that the button below allows scheduling the consultation.` +
         callPlanNote(input.tiers, status.plan.plan) +
-        ". No question. Up to 5 sentences and 110 words. Never recommend a plan in prose without calling recommend_plan.",
+        ". No question. Up to 4 sentences and 90 words. Never recommend a plan in prose without calling recommend_plan.",
     ]
       .filter(Boolean)
       .join("\n");

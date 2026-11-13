@@ -14,7 +14,7 @@ export const leadSchema = z.object({
   // the server too: a disabled submit button is a courtesy, not a record.
   confirmed: z
     .string()
-    .refine((v) => v === "on", "Marque la confirmación para enviar su pedido."),
+    .refine((v) => v === "on", "Marque la confirmación para solicitar su asesoría."),
   // Add-on slugs; checked against the live `addons` table in the action.
   addons: z.array(z.string().trim().min(1).max(60)).max(10),
   name: z.string().trim().min(2, "Escriba su nombre.").max(120),

@@ -22,7 +22,7 @@ export const DOCUMENTS: Record<DocumentSlug, SiteDocument> = {
   "oryn-presence": {
     slug: "oryn-presence",
     title: "Oryn Presence",
-    description: "El sistema completo antes de invertir: qué es, cómo funciona, los tres planes con su precio y el método Oryn ROI.",
+    description: "El sistema completo: qué es, cómo funciona, el alcance de los tres planes y cómo transforma la presencia de su negocio.",
     href: "/docs/oryn-presence.pdf",
     fileName: "Oryn Presence - Purple Cove Labs.pdf",
     pages: 19,

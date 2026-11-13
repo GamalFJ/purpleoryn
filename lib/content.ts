@@ -14,7 +14,7 @@ export interface SiteSettings {
 // Factual placeholder copy falling back if remote database is unreachable.
 export const DEFAULT_SETTINGS: SiteSettings = {
   heroHeadline: "Sitios web, SEO y agentes de IA para negocios en Santo Domingo",
-  heroSubheadline: "Tres planes con precio fijo para que su negocio aparezca en Google y reciba clientes por WhatsApp.",
+  heroSubheadline: "Tres planes para que su negocio aparezca en Google y reciba clientes por WhatsApp. Agende una asesoría para evaluar si califica para Oryn Presence.",
   heroImageUrl: "/media/fundador.webp",
   aboutImageUrl: "/media/fundador-2.webp",
   aboutBio:

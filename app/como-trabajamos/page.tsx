@@ -12,7 +12,7 @@ import { pageMetadata } from "@/lib/seo";
 export const metadata = pageMetadata({
   title: "Cómo trabajamos",
   description:
-    "El proceso de un proyecto en Purple Cove Labs, paso por paso: presentación, elección del plan, confirmación, primer pago, inicio y construcción, revisión y entrega.",
+    "El proceso de un proyecto en Purple Cove Labs, paso por paso: presentación, evaluación y plan, confirmación, inicio y configuración, construcción, revisión y entrega.",
   path: "/como-trabajamos",
 });
 
@@ -29,7 +29,7 @@ export default function ComoTrabajamosPage() {
             Cómo trabajamos
           </h1>
           <p className="mt-4 max-w-[58ch] text-lg leading-relaxed text-body">
-            Todo inicia con una conversación de diagnóstico, sin costo y sin compromiso. Desde la presentación del
+            Todo inicia con una asesoría de diagnóstico, sin costo y sin compromiso. Desde la presentación del
             sistema en adelante, este es el camino que recorremos juntos. Siete pasos, sin sorpresas.
           </p>
           <div className="mt-8">
@@ -39,7 +39,7 @@ export default function ComoTrabajamosPage() {
               location="como_trabajamos_inicio"
               className={buttonClass("primary", "lg")}
             >
-              Agende su diagnóstico gratis
+              Agende su asesoría gratis
             </TrackedLink>
           </div>
           <p className="mt-10 text-sm text-muted">
@@ -67,14 +67,13 @@ export default function ComoTrabajamosPage() {
 
         <section aria-labelledby="empezar-titulo" className="mx-auto max-w-6xl px-4 pb-20 pt-16 sm:px-6">
           <h2 id="empezar-titulo" className="text-3xl font-semibold leading-tight sm:text-4xl">
-            Ya conoces el camino
+            Ya conoce el camino
           </h2>
           <p className="mt-4 max-w-[52ch] text-lg leading-relaxed text-body">
-            Elija su plan y envíe el formulario. Ese envío es el paso 02: su pedido en firme y su cupo reservado por 7
-            días.
+            Agende su asesoría de 20 minutos para evaluar si su negocio califica para Oryn Presence y definir el alcance ideal.
           </p>
           <Link href="/servicios#elegir-plan" className={buttonClass("primary", "lg", "mt-8")}>
-            Empiece su proyecto
+            Agendar asesoría
           </Link>
         </section>
       </main>

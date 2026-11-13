@@ -103,7 +103,7 @@ export async function Footer() {
       </div>
       <div className="border-t border-line">
         <p className="mx-auto max-w-6xl px-4 py-5 text-xs text-muted sm:px-6">
-          © {new Date().getFullYear()} {SITE.name}. Precios en pesos dominicanos.
+          © {new Date().getFullYear()} {SITE.name}. Todos los derechos reservados.
         </p>
       </div>
     </footer>

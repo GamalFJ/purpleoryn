@@ -1,4 +1,3 @@
-import { formatRD } from "@/lib/format";
 import type { Objection } from "@/lib/agent/objections";
 import { stepDownFrom } from "@/lib/agent/plan-rubric";
 import type { Tier, TierSlug } from "@/lib/tiers";
@@ -17,24 +16,19 @@ const SHAPE =
   "Shape of the reply: one short sentence naming their concern in their own words (never start with 'pero'); one reframe using only plan facts and tool numbers; then exactly ONE next step, a question or a button, never both. No discount, no negotiation, no invented results, no urgency.";
 
 function priceCard(ctx: CardContext): string {
-  const plan = ctx.tiers.find((t) => t.slug === ctx.recommendedPlan);
   const lowerSlug = ctx.recommendedPlan ? stepDownFrom(ctx.recommendedPlan) : null;
   const lower = ctx.tiers.find((t) => t.slug === lowerSlug);
-  const reframe = plan
-    ? `Call calculate_roi for ${plan.name} and restate the cost as sales: break-even sales for the year and per month (break_even_sales_per_month), using their own sale value.`
-    : "If the value of one sale is known, call calculate_roi and restate the cost as sales.";
   const stepDown = lower
-    ? `Then offer ONE step down, saying what it lacks compared with the recommended plan according to the plan rows: ${lower.name}, ${formatRD(lower.oneTime)} one-time and ${formatRD(lower.monthly)} per month. If they pick it, call recommend_plan for ${lower.name}.`
-    : "There is no cheaper plan to offer; do not invent one. Explain what the monthly fee covers using only the plan rows.";
+    ? `If appropriate, mention that ${lower.name} is a lighter alternative focused on ${lower.tagline}.`
+    : "";
   return [
-    "OBJECTION: PRICE (they say it is expensive or outside their budget).",
-    reframe,
+    "OBJECTION: PRICE (they ask about cost or express concern about budget).",
+    "Explain that pricing and investment are reviewed during the 20-minute consultation (asesoría) once we evaluate their business and confirm if they qualify for Oryn Presence.",
     stepDown,
-    "Prices are fixed and the same for everyone; never discount. If asked, say so in one sentence.",
-    "Next step: ask which of the two ways suits them better now.",
+    "Next step: invite them to schedule the 20-minute consultation to see if their business qualifies.",
     SHAPE,
-    "Reference: «Entiendo, es una inversión seria para un negocio. Visto en ventas son X en todo el año, unas Y al mes. Si prefiere empezar más liviano, {plan} cuesta ... pero ahí {lo que no incluye}. ¿Cuál de las dos formas le sirve más ahora?»",
-  ].join("\n");
+    "Reference: «Entiendo, cuidar la inversión es clave para cualquier negocio. Por eso en la asesoría de 20 minutos evaluamos primero si su negocio califica para Oryn Presence y el alcance exacto antes de cualquier compromiso. ¿Le gustaría que coordinemos esa llamada?»",
+  ].filter(Boolean).join("\n");
 }
 
 const STATIC_CARDS: Record<Exclude<Objection, "price">, string> = {

@@ -30,8 +30,8 @@ export const NAV_LINKS = [
 
 // One label per intent, used identically everywhere on the site.
 export const CTA = {
-  plan: "Elija su plan",
-  call: "Agende una llamada gratis",
+  plan: "Conocer los planes",
+  call: "Agendar asesoría",
   whatsapp: "Escríbanos por WhatsApp",
 } as const;
 

@@ -22,7 +22,7 @@ export function ClosingCta({ location }: { location: string }) {
           ¿Cuál plan le conviene a su negocio?
         </h2>
         <p className="mt-4 max-w-[52ch] text-base sm:text-lg leading-relaxed text-plum-muted">
-          Compare los tres planes o reserve 20 minutos para decidirlo con nosotros.
+          Conozca los tres planes y reserve una asesoría de 20 minutos para evaluar si su negocio califica para Oryn Presence.
         </p>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
           <Link href="/servicios#elegir-plan" className={buttonClass("onPlum", "lg", "w-full sm:w-auto")}>

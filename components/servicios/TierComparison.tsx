@@ -1,11 +1,9 @@
-import { Price } from "@/components/tiers/Price";
 import { TierCta } from "@/components/tiers/TierCta";
 import { ROW_THEME, TIER_THEME } from "@/components/tiers/theme";
 import { IconTile } from "@/components/ui/IconTile";
 import { cn } from "@/lib/cn";
 import { TONE } from "@/lib/tone";
 import { RecommendedBadge } from "@/components/tiers/RecommendedBadge";
-import { formatRD } from "@/lib/format";
 import { TIER_ROWS, type Tier } from "@/lib/tiers";
 import { TierTabs } from "./TierTabs";
 
@@ -19,7 +17,7 @@ export function TierComparison({ tiers }: { tiers: Tier[] }) {
       {/* Desktop and tablet: full side-by-side table. */}
       <div className="hidden overflow-hidden rounded-[var(--radius-panel)] border border-line bg-surface md:block">
         <table className="w-full table-fixed border-collapse text-left">
-          <caption className="sr-only">Qué incluye cada plan y cuánto cuesta</caption>
+          <caption className="sr-only">Qué incluye cada plan de Oryn Presence</caption>
           <colgroup>
             <col className="w-[19%]" />
             {tiers.map((t) => (
@@ -37,12 +35,7 @@ export function TierComparison({ tiers }: { tiers: Tier[] }) {
                     <span className={cn("font-display text-2xl font-semibold", TONE[TIER_THEME[t.slug].tone].text)}>{t.name}</span>
                     {t.recommended && <RecommendedBadge />}
                   </span>
-                  <span className="mt-4 block font-display text-[1.9rem] font-semibold leading-none text-warm-ink">
-                    <Price amount={t.oneTime} />
-                  </span>
-                  <span className="mt-2 block text-sm text-muted">
-                    pago único, más <span className="tabular text-ink">{formatRD(t.monthly)}</span> al mes
-                  </span>
+                  <p className="mt-4 min-h-[3rem] text-[15px] leading-relaxed text-body">{t.tagline}</p>
                   <TierCta tier={t} location="comparison_table" mode="select" size="sm" className="mt-5 w-full" />
                 </th>
               ))}

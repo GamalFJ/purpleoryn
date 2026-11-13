@@ -31,8 +31,8 @@ const STORAGE_PREFIX = "pcl_chat_";
 
 const LOCALIZED_COPY = {
   es: {
-    greeting: "Hola, soy Oryn, el asistente de IA de Purple Cove Labs. Puedo explicarle los planes, ayudarle a elegir el suyo o ponerle en contacto con el equipo.",
-    starters: ["Ver planes y precios", "Ayúdeme a elegir un plan", "Hablar con una persona"],
+    greeting: "Hola, soy Oryn, el asistente de IA de Purple Cove Labs. Puedo explicarle el alcance de los planes, evaluar si su negocio califica para Oryn Presence o ayudarle a agendar una asesoría.",
+    starters: ["Conocer los planes", "¿Cómo califico para Oryn Presence?", "Agendar una asesoría"],
     subtitle: "Asistente de IA de Purple Cove Labs. Puede equivocarse.",
     typing: "Escribiendo...",
     inputLabel: "Escriba su mensaje",

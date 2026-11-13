@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     template: "%s | Purple Cove Labs",
   },
   description:
-    "Sitios web, SEO local, Google Business Profile y agentes de IA para negocios en Santo Domingo. Tres planes con precio publicado.",
+    "Sitios web, SEO local, Google Business Profile y agentes de IA para negocios en Santo Domingo. Agende una asesoría para evaluar si califica para Oryn Presence.",
   applicationName: SITE.name,
   openGraph: { type: "website", locale: SITE.locale, siteName: SITE.name },
   twitter: { card: "summary_large_image" },

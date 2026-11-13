@@ -19,17 +19,15 @@ export async function generateMetadata({ searchParams }: { searchParams: SearchP
   const { origen } = await searchParams;
   const fromCall = origen === "llamada";
   return pageMetadata({
-    title: fromCall ? "Llamada agendada" : "Pedido confirmado",
-    description: fromCall ? "Su llamada quedó agendada." : "Su pedido quedó confirmado.",
+    title: fromCall ? "Llamada agendada" : "Asesoría solicitada",
+    description: fromCall ? "Su llamada quedó agendada." : "Su solicitud de asesoría fue recibida.",
     path: "/gracias",
     noIndex: true,
   });
 }
 
-// Two arrivals: after the plan order form (?plan=...) and after booking a call,
-// if the Cal.com event redirects here (?origen=llamada). GA4 goals key off this
-// URL. The order wording belongs only to the first arrival: submitting the plan
-// form is a formal order, booking a call is not.
+// Two arrivals: after the plan form (?plan=...) and after booking a call,
+// if the Cal.com event redirects here (?origen=llamada).
 export default async function GraciasPage({ searchParams }: { searchParams: SearchParams }) {
   const { plan: planParam, origen, modulos } = await searchParams;
   const [tiers, addons, currentMarket] = await Promise.all([getTiers(), getAddons(), getCurrentMarket()]);
@@ -61,13 +59,12 @@ export default async function GraciasPage({ searchParams }: { searchParams: Sear
           </>
         ) : (
           <>
-            <h1 className="mt-5 text-4xl font-semibold leading-tight sm:text-5xl">Su pedido está confirmado</h1>
+            <h1 className="mt-5 text-4xl font-semibold leading-tight sm:text-5xl">Solicitud de asesoría recibida</h1>
             <p className="mt-4 text-lg leading-relaxed text-body">
-              {plan ? `Registramos su pedido del plan ${plan.name}` : "Registramos su pedido"}
+              {plan ? `Registramos su interés en el plan ${plan.name}` : "Registramos su solicitud"}
               {orderedAddons.length > 0 && ` con ${orderedAddons.map((a) => `el módulo ${a.name}`).join(" y ")}`}
               {". "}
-              Su cupo queda reservado por 7 días calendario. Le escribimos por WhatsApp para hacer el seguimiento. Si
-              desea adelantar, elija una de estas opciones.
+              El siguiente paso es elegir el día y la hora de su llamada para evaluar si su negocio califica para Oryn Presence.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <TrackedLink
@@ -77,13 +74,13 @@ export default async function GraciasPage({ searchParams }: { searchParams: Sear
                 plan={plan?.slug}
                 className={buttonClass("primary", "lg")}
               >
-                {CTA.call}
+                Elegir fecha y hora de la asesoría
               </TrackedLink>
               <TrackedLink
                 href={whatsappUrl(
                   plan
-                    ? `Hola Purple Cove Labs, acabo de confirmar mi pedido del plan ${plan.name}.`
-                    : "Hola Purple Cove Labs, acabo de confirmar un pedido en su sitio web.",
+                    ? `Hola Purple Cove Labs, acabo de solicitar una asesoría para el plan ${plan.name}.`
+                    : "Hola Purple Cove Labs, acabo de solicitar una asesoría en su sitio web.",
                 )}
                 event="whatsapp_click"
                 market={marketId}

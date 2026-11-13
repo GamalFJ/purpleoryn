@@ -1,13 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Price } from "@/components/tiers/Price";
 import { TierCta } from "@/components/tiers/TierCta";
 import { ROW_THEME, TIER_THEME } from "@/components/tiers/theme";
 import { IconTile } from "@/components/ui/IconTile";
 import { RecommendedBadge } from "@/components/tiers/RecommendedBadge";
 import { cn } from "@/lib/cn";
-import { formatRD } from "@/lib/format";
 import { TIER_ROWS, type Tier } from "@/lib/tiers";
 import { TONE } from "@/lib/tone";
 
@@ -50,12 +48,7 @@ export function TierTabs({ tiers }: { tiers: Tier[] }) {
             <IconTile icon={TIER_THEME[t.slug].icon} tone={TIER_THEME[t.slug].tone} />
             {t.recommended && <RecommendedBadge />}
           </div>
-          <p className="font-display text-[2rem] font-semibold leading-none text-warm-ink">
-            <Price amount={t.oneTime} />
-          </p>
-          <p className="mt-2 text-sm text-muted">
-            pago único, más <span className="tabular text-ink">{formatRD(t.monthly)}</span> al mes
-          </p>
+          <p className="text-[15px] leading-relaxed text-body">{t.tagline}</p>
           <dl className="mt-6 space-y-5">
             {TIER_ROWS.map((row) => (
               <div key={row.label}>

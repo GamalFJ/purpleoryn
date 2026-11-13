@@ -7,7 +7,6 @@ import { AddonSection } from "@/components/servicios/AddonSection";
 import { OfferBlock } from "@/components/servicios/OfferBlock";
 import { LeadForm } from "@/components/servicios/LeadForm";
 import { PlanSelectionProvider } from "@/components/servicios/PlanSelection";
-import { RoiCalculator } from "@/components/servicios/RoiCalculator";
 import { TierComparison } from "@/components/servicios/TierComparison";
 import { getAddons, getTiers } from "@/lib/content";
 import { DOCUMENTS, documentMeta } from "@/lib/documents";
@@ -17,9 +16,9 @@ import { pageMetadata } from "@/lib/seo";
 export const revalidate = 300;
 
 export const metadata = pageMetadata({
-  title: "Planes y precios",
+  title: "Planes y alcance",
   description:
-    "Compare los planes Presencia, Conversión y Autoridad: sitio web, SEO local, Google Business Profile, analítica y agente de IA. Calcule su retorno y elija su plan.",
+    "Compare los planes Presencia, Conversión y Autoridad: sitio web, SEO local, Google Business Profile, analítica y agente de IA. Agende una asesoría para evaluar si califica para Oryn Presence.",
   path: "/servicios",
 });
 
@@ -33,12 +32,12 @@ export default async function ServiciosPage() {
       <main id="contenido">
         <PlanSelectionProvider>
           <div className="mx-auto max-w-6xl px-4 pt-10 sm:px-6 md:pt-16">
-            <h1 className="text-gradient-brand pb-[0.1em] text-[2.35rem] font-semibold leading-[1.06] sm:text-5xl">Planes y precios</h1>
+            <h1 className="text-gradient-brand pb-[0.1em] text-[2.35rem] font-semibold leading-[1.06] sm:text-5xl">Planes y alcance</h1>
             <p className="mt-4 max-w-[58ch] text-lg leading-relaxed text-body">
-              Cada plan tiene un pago único y una mensualidad, y cada uno incluye todo lo del anterior. Precios en pesos dominicanos.
+              Cada plan amplía el alcance de su presencia digital y automatización. Agende una asesoría de 20 minutos para evaluar si su negocio califica para Oryn Presence.
             </p>
             <p className="mt-3 text-[15px] text-muted">
-              ¿Desea todo el detalle antes de elegir?{" "}
+              ¿Desea todo el detalle del sistema antes de agendar?{" "}
               <DownloadLink
                 slug="oryn-presence"
                 location="servicios_intro"
@@ -52,7 +51,6 @@ export default async function ServiciosPage() {
           <TierComparison tiers={tiers} />
           <AddonSection addons={addons} marketId={marketId} />
           <OfferBlock />
-          <RoiCalculator tiers={tiers} />
           <LeadForm tiers={tiers} addons={addons} marketId={marketId} />
         </PlanSelectionProvider>
         <ClosingCta location="servicios_closing" />

@@ -2,7 +2,7 @@
 
 import { startTransition, useActionState, useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
-import { Info, PaperPlaneTilt, Sparkle } from "@phosphor-icons/react";
+import { PaperPlaneTilt, Sparkle } from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
 import { submitLead } from "@/app/servicios/actions";
 import { readAttribution, type Attribution } from "@/components/analytics/Attribution";
@@ -10,11 +10,10 @@ import { TrackedLink } from "@/components/analytics/TrackedLink";
 import { DownloadLink } from "@/components/documents/DownloadLink";
 import { buttonClass } from "@/components/ui/button";
 import { IconTile } from "@/components/ui/IconTile";
-import { ADDON_PAYMENT_RULE, type Addon } from "@/lib/addons";
+import type { Addon } from "@/lib/addons";
 import { LEAD_FLAG, track } from "@/lib/analytics";
 import { openChat } from "@/lib/chat";
 import { cn } from "@/lib/cn";
-import { formatRD } from "@/lib/format";
 import { BUSINESS_NICHE_SUGGESTIONS, type LeadActionState, type LeadFieldErrors } from "@/lib/leads";
 import { WHATSAPP_GENERAL, whatsappUrl } from "@/lib/links";
 import { OFFER_HEADING, OFFER_POINTS } from "@/lib/offer";
@@ -91,17 +90,15 @@ export function LeadForm({ tiers, addons, marketId }: { tiers: Tier[]; addons: A
         <div>
           <IconTile icon={PaperPlaneTilt} tone="violet" size="lg" className="mb-5" />
           <h2 id="formulario-titulo" className="text-2xl xs:text-3xl font-semibold sm:text-4xl break-words">
-            {CTA.plan}
+            Agende su asesoría
           </h2>
           <p className="mt-4 max-w-[46ch] text-base sm:text-lg leading-relaxed text-body">
-            Enviar este formulario es su pedido: constituye una orden formal, con el mismo peso que una confirmación
-            por WhatsApp o correo, y reserva su cupo por 7 días calendario.
+            Coordine una asesoría de 20 minutos con nosotros para analizar su negocio, revisar el alcance que necesita y evaluar si califica para Oryn Presence.
           </p>
           <p className="mt-4 max-w-[46ch] text-[15px] leading-relaxed text-muted">
-            Lea toda la información del sitio antes de enviarlo. Después confirmamos su pedido y le enviamos el
-            formulario de configuración de su plan.{" "}
+            Sin costo ni compromiso. Revisamos su presencia actual y le explicamos el proceso paso a paso.{" "}
             <Link href="/como-trabajamos" className="font-medium text-accent underline-offset-4 hover:underline">
-              Ver los siete pasos
+              Ver cómo trabajamos
             </Link>
             .
           </p>
@@ -132,7 +129,7 @@ export function LeadForm({ tiers, addons, marketId }: { tiers: Tier[]; addons: A
           className="relative overflow-hidden rounded-[var(--radius-panel)] border border-accent/25 bg-surface p-4 sm:p-8 shadow-[0_28px_60px_-40px_rgb(109_47_216/0.55)]"
         >
           <fieldset aria-describedby={errors.plan ? "plan-error" : undefined}>
-            <legend className="text-[15px] font-semibold">Plan</legend>
+            <legend className="text-[15px] font-semibold">Plan de interés</legend>
             <div className="mt-3 grid gap-2 sm:grid-cols-3">
               {tiers.map((t) => (
                 <label
@@ -154,7 +151,7 @@ export function LeadForm({ tiers, addons, marketId }: { tiers: Tier[]; addons: A
                     className="sr-only"
                   />
                   <span className="font-medium">{t.name}</span>
-                  <span className="tabular mt-1 text-sm text-muted">{formatRD(t.oneTime)}</span>
+                  <span className="mt-1 line-clamp-2 text-xs text-muted">{t.tagline}</span>
                 </label>
               ))}
             </div>
@@ -166,9 +163,9 @@ export function LeadForm({ tiers, addons, marketId }: { tiers: Tier[]; addons: A
           </fieldset>
 
           {addons.length > 0 && (
-            <fieldset className="mt-6" aria-describedby="modulos-regla">
+            <fieldset className="mt-6">
               <legend className="text-[15px] font-semibold">
-                Módulos adicionales <span className="font-normal text-muted">(opcional, con cualquier plan)</span>
+                Módulos adicionales de interés <span className="font-normal text-muted">(opcional)</span>
               </legend>
               <div className="mt-3 grid gap-2">
                 {addons.map((a) => {
@@ -191,20 +188,12 @@ export function LeadForm({ tiers, addons, marketId }: { tiers: Tier[]; addons: A
                       />
                       <span>
                         <span className="block font-medium text-ink">{a.name}</span>
-                        <span className="tabular mt-1 block text-sm text-muted">
-                          {formatRD(a.oneTime)} pago único, más {formatRD(a.monthly)} al mes
-                        </span>
+                        {a.description && <span className="mt-1 block text-sm text-muted">{a.description}</span>}
                       </span>
                     </label>
                   );
                 })}
               </div>
-              {/* The one payment rule that differs from the plan, next to the
-                  thing it applies to, before anyone confirms. */}
-              <p id="modulos-regla" className="mt-3 flex items-start gap-2 text-sm leading-relaxed text-body">
-                <Info size={18} weight="duotone" aria-hidden="true" className="mt-0.5 shrink-0 text-teal-ink" />
-                <span>{ADDON_PAYMENT_RULE}</span>
-              </p>
               {errors.addons && <p className="mt-2 text-sm text-danger">{errors.addons}</p>}
             </fieldset>
           )}
@@ -328,8 +317,7 @@ export function LeadForm({ tiers, addons, marketId }: { tiers: Tier[]; addons: A
                 className="mt-0.5 h-5 w-5 shrink-0 cursor-pointer accent-accent"
               />
               <span className="text-[15px] font-semibold leading-relaxed text-ink">
-                He leído la información de este sitio y confirmo mi pedido del plan seleccionado
-                {chosenAddons.length > 0 && " y de los módulos adicionales marcados"}.
+                Deseo agendar una asesoría de 20 minutos para evaluar si mi negocio califica para Oryn Presence.
               </span>
             </label>
             {errors.confirmed && (
@@ -359,7 +347,7 @@ export function LeadForm({ tiers, addons, marketId }: { tiers: Tier[]; addons: A
               .
             </p>
             <button type="submit" disabled={pending || !confirmed} className={buttonClass("primary", "lg", "shrink-0")}>
-              {pending ? "Enviando..." : "Confirmar mi pedido"}
+              {pending ? "Enviando..." : "Solicitar asesoría"}
             </button>
           </div>
         </form>

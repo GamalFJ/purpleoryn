@@ -1,4 +1,4 @@
-import { formatCount, formatRD } from "@/lib/format";
+import { formatCount } from "@/lib/format";
 
 // Tier data shape + the launch content. Once Supabase is connected the admin
 // panel owns this data (table `tiers`); DEFAULT_TIERS is only the seed and the
@@ -27,7 +27,7 @@ export interface Tier {
 }
 
 export function conversationsText(t: Pick<Tier, "conversationsIncluded" | "conversationOverage">): string {
-  return `${formatCount(t.conversationsIncluded)} al mes. Cada conversación adicional: ${formatRD(t.conversationOverage)}`;
+  return `${formatCount(t.conversationsIncluded)} conversaciones incluidas al mes.`;
 }
 
 // Rows of the comparison table (and the agent's plan facts), in order.
@@ -44,9 +44,9 @@ export const TIER_ROWS: { label: string; value: (t: Tier) => string }[] = [
 // Each plan's call to action uses its own words. Autoridad opens the call
 // booking; the other two preselect the plan in the /servicios form.
 export const TIER_CTA: Record<TierSlug, { label: string; action: "form" | "call" }> = {
-  presencia: { label: "Empezar", action: "form" },
-  conversion: { label: "Elegir Conversión", action: "form" },
-  autoridad: { label: "Hablar de Autoridad", action: "call" },
+  presencia: { label: "Agendar asesoría", action: "form" },
+  conversion: { label: "Agendar asesoría", action: "form" },
+  autoridad: { label: "Agendar asesoría", action: "form" },
 };
 
 export function recommendedTier(tiers: Tier[]): Tier {

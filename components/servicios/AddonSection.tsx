@@ -1,11 +1,9 @@
 import { Microphone } from "@phosphor-icons/react/dist/ssr";
 import { TrackedLink } from "@/components/analytics/TrackedLink";
-import { Price } from "@/components/tiers/Price";
 import { BrandLogo } from "@/components/ui/BrandLogo";
 import { buttonClass } from "@/components/ui/button";
 import { IconTile } from "@/components/ui/IconTile";
-import { ADDON_PAYMENT_RULE, ADDONS_ANCHOR, addonUsageText, type Addon } from "@/lib/addons";
-import { formatRD } from "@/lib/format";
+import { ADDONS_ANCHOR, addonUsageText, type Addon } from "@/lib/addons";
 import { whatsappUrl } from "@/lib/links";
 import { LOGOS, type LogoKey } from "@/lib/logos";
 import { AddAddonButton } from "./PlanSelection";
@@ -25,7 +23,7 @@ export function AddonSection({ addons, marketId }: { addons: Addon[]; marketId: 
         Complementos
       </h2>
       <p className="mt-4 max-w-[58ch] text-lg leading-relaxed text-body">
-        Se suman a cualquier plan y los puede agregar en el mismo formulario de su pedido. {ADDON_PAYMENT_RULE}
+        Se suman a cualquier plan para expandir las capacidades de su presencia y automatización.
       </p>
 
       <ul className="mt-10 space-y-4">
@@ -60,19 +58,10 @@ export function AddonSection({ addons, marketId }: { addons: Addon[]; marketId: 
               </div>
             </div>
 
-            <div className="flex flex-col gap-5 border-t border-teal/25 pt-6 md:border-l md:border-t-0 md:pl-10 md:pt-0">
-              <div>
-                <p className="font-display text-[2rem] font-semibold leading-none text-warm-ink">
-                  <Price amount={a.oneTime} />
-                </p>
-                <p className="mt-2 text-sm text-body">
-                  pago único al 100% por adelantado, más <span className="tabular font-semibold text-ink">{formatRD(a.monthly)}</span> al
-                  mes
-                </p>
-              </div>
+            <div className="flex flex-col justify-center gap-4 border-t border-teal/25 pt-6 md:border-l md:border-t-0 md:pl-10 md:pt-0">
               <div className="flex flex-col gap-3 sm:flex-row md:flex-col lg:flex-row">
                 <AddAddonButton slug={a.slug} className={buttonClass("primary", "md", "w-full sm:w-fit")}>
-                  Agregar a mi pedido
+                  Incluir en mi asesoría
                 </AddAddonButton>
                 <TrackedLink
                   href={whatsappUrl(`Hola Purple Cove Labs, quiero información sobre el ${a.name}.`)}

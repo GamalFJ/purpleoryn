@@ -1,4 +1,4 @@
-import { formatCount, formatRD } from "@/lib/format";
+import { formatCount } from "@/lib/format";
 
 // Add-ons are sold on top of a plan and are never shown as a fourth plan
 // card. Table `addons` owns this data; DEFAULT_ADDONS is the seed and the
@@ -22,7 +22,7 @@ export const ADDONS_ANCHOR = "complementos";
 // words wherever an add-on can be bought (order form, add-on section), and
 // mirrored in the "Cómo trabajamos" document.
 export const ADDON_PAYMENT_RULE =
-  "Los módulos adicionales se pagan al 100% por adelantado, a diferencia de los planes, que se pagan 50% al inicio y 50% contra entrega.";
+  "Los módulos adicionales se integran a cualquier plan para expandir las capacidades de su presencia y automatización.";
 
 // What an order records about each add-on: the name and prices agreed to at
 // submission time, so a later price change never rewrites a past order.
@@ -52,6 +52,5 @@ export const DEFAULT_ADDONS: Addon[] = [
 
 // "300 minutos al mes. Cada minuto adicional: RD$25.00"
 export function addonUsageText(a: Pick<Addon, "includedUnits" | "unitLabel" | "overageRate">): string {
-  const singular = a.unitLabel.replace(/s$/, "");
-  return `${formatCount(a.includedUnits)} ${a.unitLabel} al mes. Cada ${singular} adicional: ${formatRD(a.overageRate)}`;
+  return `${formatCount(a.includedUnits)} ${a.unitLabel} al mes incluidos.`;
 }

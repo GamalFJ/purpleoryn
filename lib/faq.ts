@@ -8,13 +8,13 @@ import { SHOW_GUARANTEE } from "@/lib/site";
 export const FAQ_ITEMS: { id: string; q: string; a: string }[] = [
   {
     id: "incluye",
-    q: "¿Qué cubre el pago único y qué cubre la mensualidad?",
-    a: "El pago único cubre la construcción: el sitio web, la configuración de su Google Business Profile, la analítica y el agente de IA. La mensualidad mantiene todo funcionando y cubre lo que se repite cada mes según su plan, como el soporte y las conversaciones del agente.",
+    q: "¿Qué incluye Oryn Presence?",
+    a: "Oryn Presence incluye el diseño y desarrollo de su sitio web enfocado en conversión, la configuración completa de su Google Business Profile, analítica digital y un agente de IA que atiende clientes 24/7 y los transfiere calificados a WhatsApp. Cada nivel amplía el alcance de estas áreas según las metas de su negocio.",
   },
   {
     id: "retorno",
-    q: "¿Cómo sé si la inversión vale la pena para mi negocio?",
-    a: "Use la calculadora de la página de servicios. Con el valor promedio de una venta de su negocio le dice cuántas ventas necesita para recuperar la inversión del primer año y cuántas para triplicarla.",
+    q: "¿Cómo sé si mi negocio califica para Oryn Presence?",
+    a: "Agende una asesoría de 20 minutos con nosotros. Evaluamos su volumen actual de clientes, su proceso de atención y sus metas comerciales para confirmar si Oryn Presence es la solución adecuada para su negocio.",
   },
   {
     id: "empezar",
@@ -28,8 +28,8 @@ export const FAQ_ITEMS: { id: string; q: string; a: string }[] = [
   },
   {
     id: "pago",
-    q: "¿Cómo se paga?",
-    a: "El pago único de su plan se divide 50% al confirmar su pedido y 50% contra entrega. Los módulos adicionales no siguen esa división: se pagan 100% por adelantado. La mensualidad (la de su plan más la de cualquier módulo adicional, sumadas en un solo cobro) no se paga por adelantado: se factura a partir del mes siguiente a la salida en vivo de su sistema. Aceptamos efectivo y transferencia bancaria.",
+    q: "¿Cómo es el proceso de contratación?",
+    a: "Iniciamos con una asesoría sin costo donde evaluamos su negocio y confirmamos si califica. Luego definimos el plan y alcance ideal para sus necesidades, y coordinamos los detalles de inicio y configuración.",
   },
   {
     id: "zonas",

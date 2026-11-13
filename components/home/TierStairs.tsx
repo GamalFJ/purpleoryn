@@ -1,31 +1,28 @@
 import Link from "next/link";
 import { CheckCircle } from "@phosphor-icons/react/dist/ssr";
-import { Price } from "@/components/tiers/Price";
 import { RecommendedBadge } from "@/components/tiers/RecommendedBadge";
 import { TierCta } from "@/components/tiers/TierCta";
 import { TIER_THEME } from "@/components/tiers/theme";
 import { IconTile } from "@/components/ui/IconTile";
 import { ADDONS_ANCHOR, type Addon } from "@/lib/addons";
 import { cn } from "@/lib/cn";
-import { formatRD } from "@/lib/format";
 import type { Tier } from "@/lib/tiers";
 import { TONE } from "@/lib/tone";
-import { RoiTeaser } from "./RoiTeaser";
 import { StairStep } from "./StairStep";
 
 // Each plan includes everything in the one before it, so the columns step up
 // in height left to right: the layout itself shows the progression.
-const STEP_HEIGHT = ["md:min-h-[34rem]", "md:min-h-[38rem]", "md:min-h-[42rem]"];
+const STEP_HEIGHT = ["md:min-h-[30rem]", "md:min-h-[34rem]", "md:min-h-[38rem]"];
 
 export function TierStairs({ tiers, addons }: { tiers: Tier[]; addons: Addon[] }) {
   return (
     <section aria-labelledby="planes-titulo" className="mx-auto max-w-6xl px-4 pt-16 sm:px-6 md:pt-32">
       <div className="max-w-2xl">
         <h2 id="planes-titulo" className="text-2xl xs:text-3xl font-semibold leading-tight sm:text-4xl break-words">
-          Tres planes con precio publicado
+          Tres planes para su negocio
         </h2>
         <p className="mt-4 text-base sm:text-lg leading-relaxed text-body">
-          Un pago único para construirlo y una mensualidad para mantenerlo funcionando. Cada plan incluye todo lo del anterior.
+          Cada plan amplía el alcance de su presencia digital y automatización. Agende una asesoría para evaluar si califica para Oryn Presence.
         </p>
       </div>
 
@@ -61,13 +58,7 @@ export function TierStairs({ tiers, addons }: { tiers: Tier[]; addons: Addon[] }
                   </ul>
 
                   <div className="mt-auto border-t border-line pt-6">
-                    <p className="font-display text-[2rem] font-semibold leading-none text-warm-ink">
-                      <Price amount={tier.oneTime} />
-                    </p>
-                    <p className="mt-2 text-sm text-muted">
-                      pago único, más <span className="tabular text-ink">{formatRD(tier.monthly)}</span> al mes
-                    </p>
-                    <TierCta tier={tier} location="home_tiers" mode="link" className="mt-6 w-full" />
+                    <TierCta tier={tier} location="home_tiers" mode="link" className="w-full" />
                   </div>
                 </article>
               </StairStep>
@@ -85,8 +76,6 @@ export function TierStairs({ tiers, addons }: { tiers: Tier[]; addons: Addon[] }
           , un complemento aparte de los planes.
         </p>
       )}
-
-      <RoiTeaser tiers={tiers} />
     </section>
   );
 }

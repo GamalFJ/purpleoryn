@@ -1,5 +1,4 @@
 import { SITE } from "@/lib/site";
-import { formatRD } from "@/lib/format";
 import type { Addon } from "@/lib/addons";
 import type { Tier } from "@/lib/tiers";
 
@@ -47,40 +46,31 @@ export function websiteSchema() {
   };
 }
 
-function offer(name: string, description: string, oneTime: number, monthly: number) {
-  return {
-    "@type": "Offer",
-    name,
-    description,
-    price: oneTime.toFixed(2),
-    priceCurrency: "DOP",
-    seller: { "@id": `${SITE.url}/#business` },
-    priceSpecification: [
-      { "@type": "UnitPriceSpecification", price: oneTime.toFixed(2), priceCurrency: "DOP", name: "Pago único" },
-      {
-        "@type": "UnitPriceSpecification",
-        price: monthly.toFixed(2),
-        priceCurrency: "DOP",
-        name: "Mensualidad",
-        billingDuration: "P1M",
-        unitCode: "MON",
-      },
-    ],
-  };
-}
-
 export function offerCatalogSchema(tiers: Tier[], addons: Addon[]) {
   return {
     "@context": "https://schema.org",
-    "@type": "OfferCatalog",
-    name: "Planes y complementos de Purple Cove Labs",
+    "@type": "Service",
+    name: "Planes de Oryn Presence - Purple Cove Labs",
     url: `${SITE.url}/servicios`,
-    itemListElement: [
-      ...tiers.map((t) => offer(`Plan ${t.name}`, `${t.tagline} Pago único de ${formatRD(t.oneTime)} más ${formatRD(t.monthly)} al mes.`, t.oneTime, t.monthly)),
-      ...addons.map((a) =>
-        offer(a.name, `${a.description} Pago único de ${formatRD(a.oneTime)} más ${formatRD(a.monthly)} al mes.`.trim(), a.oneTime, a.monthly),
-      ),
-    ],
+    provider: { "@id": `${SITE.url}/#business` },
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: "Planes y complementos de Purple Cove Labs",
+      itemListElement: [
+        ...tiers.map((t) => ({
+          "@type": "Offer",
+          name: `Plan ${t.name}`,
+          description: t.tagline,
+          seller: { "@id": `${SITE.url}/#business` },
+        })),
+        ...addons.map((a) => ({
+          "@type": "Offer",
+          name: a.name,
+          description: a.description,
+          seller: { "@id": `${SITE.url}/#business` },
+        })),
+      ],
+    },
   };
 }
 

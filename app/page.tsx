@@ -21,7 +21,7 @@ export const metadata = pageMetadata({
   // The root layout title template does not apply to its own segment.
   title: "Purple Cove Labs | Sitios web, SEO y agentes de IA en Santo Domingo",
   description:
-    "Sitios web, SEO local, Google Business Profile y agentes de IA para negocios en Santo Domingo. Tres planes con precio publicado desde RD$15,499.99.",
+    "Sitios web, SEO local, Google Business Profile y agentes de IA para negocios en Santo Domingo. Agende una asesoría para evaluar si califica para Oryn Presence.",
   path: "/",
 });
 
