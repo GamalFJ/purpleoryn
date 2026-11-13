@@ -22,11 +22,13 @@ const fold = (text: string) =>
     .replace(/[̀-ͯ]/g, "");
 
 // The reply names the plan.
-export function replyMatchesRecommendation(reply: string, tier: Tier): boolean {
+export function replyMatchesRecommendation(reply: string, tier: Tier, nums?: RecommendationNumbers | null): boolean {
+  void nums;
   const text = fold(reply);
   return text.includes(fold(tier.name));
 }
 
-export function buildRecommendationReply(tier: Tier): string {
+export function buildRecommendationReply(tier: Tier, nums?: RecommendationNumbers | null): string {
+  void nums;
   return `Para su negocio le recomiendo el plan ${tier.name}: ${tier.tagline.replace(/^Para /, "para ").replace(/\.$/, "")}. En una asesoría de 20 minutos evaluamos los detalles específicos y confirmamos si su negocio califica para Oryn Presence. El botón de abajo le permite agendar su asesoría.`;
 }
