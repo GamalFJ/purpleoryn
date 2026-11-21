@@ -2,6 +2,8 @@ export type MarketId = 'dr' | 'us' | 'ca' | 'ht';
 
 export interface TierPricing {
   setup: number | null;
+  deposit?: number | null;
+  balance?: number | null;
   monthly: number | null;
   conversationsIncluded?: number | null;
   overageRate?: number | string | null;
@@ -24,6 +26,8 @@ export interface MarketPrices {
   conversion: TierPricing;
   authority: TierPricing;
   voiceAddon: AddonPricing;
+  starter?: TierPricing;
+  premium?: TierPricing;
 }
 
 export interface MarketHero {

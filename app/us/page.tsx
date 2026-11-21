@@ -1,28 +1,28 @@
 import 'server-only';
 import type { Metadata } from 'next';
 import { getMarketConfig } from '@/markets';
-import { MarketLanding } from '@/components/market/MarketLanding';
+import { UsLeadResponseLanding } from '@/components/market/UsLeadResponseLanding';
 
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'Oryn Presence USA | Turn Search Into Inbound Clients',
+  title: "Purple Oryn | Lead Response System for U.S. Home-Service Businesses",
   description:
-    'High-conversion web development, Google search visibility, and 24/7 SMS AI agents for US businesses. The business that answers first wins the customer.',
+    "Your Next Customer Shouldn't Have to Wait. Capture, qualify, and follow up with potential customers automatically—so your team can focus on delivering great service.",
   openGraph: {
-    title: 'Oryn Presence USA | Turn Search Into Inbound Clients',
+    title: "Purple Oryn | Lead Response System for U.S. Home-Service Businesses",
     description:
-      'High-conversion web development, Google search visibility, and 24/7 SMS AI agents for US businesses. The business that answers first wins the customer.',
+      "Your Next Customer Shouldn't Have to Wait. Capture, qualify, and follow up with potential customers automatically—so your team can focus on delivering great service.",
     url: 'https://us.purpleoryn.com',
-    siteName: 'Purple Cove Labs',
+    siteName: 'Purple Oryn',
     locale: 'en_US',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Oryn Presence USA | Turn Search Into Inbound Clients',
+    title: "Purple Oryn | Lead Response System for U.S. Home-Service Businesses",
     description:
-      'High-conversion web development, Google search visibility, and 24/7 SMS AI agents for US businesses. The business that answers first wins the customer.',
+      "Your Next Customer Shouldn't Have to Wait. Capture, qualify, and follow up with potential customers automatically—so your team can focus on delivering great service.",
   },
   robots: {
     index: true,
@@ -32,5 +32,5 @@ export const metadata: Metadata = {
 
 export default async function UsMarketPage() {
   const config = await getMarketConfig('us');
-  return <MarketLanding config={config} showPrices={true} locale="en" />;
+  return <UsLeadResponseLanding config={config} />;
 }

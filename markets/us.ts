@@ -13,207 +13,207 @@ export const config: MarketConfig = {
   prices: {
     currency: 'USD',
     currencySymbol: '$',
+    // Frozen Packages
+    starter: {
+      setup: 1250.0,
+      deposit: 875.0,
+      balance: 375.0,
+      monthly: 297.0,
+      conversationsIncluded: 250,
+      overageRate: '$0.50',
+      year1Total: 4517.0, // 1250 + (297 * 11)
+    },
+    premium: {
+      setup: 2500.0,
+      deposit: 1750.0,
+      balance: 750.0,
+      monthly: 397.0,
+      conversationsIncluded: 500,
+      overageRate: '$0.45',
+      year1Total: 6867.0, // 2500 + (397 * 11)
+    },
+    // Retained for backward-compatibility with generic market interfaces
     presence: {
-      setup: 1489.99,
-      monthly: 197.99,
-      conversationsIncluded: 150,
-      overageRate: '$0.80',
-      year1Total: 3865.87,
+      setup: 1250.0,
+      deposit: 875.0,
+      balance: 375.0,
+      monthly: 297.0,
+      conversationsIncluded: 250,
+      overageRate: '$0.50',
+      year1Total: 4517.0,
     },
     conversion: {
-      setup: 2489.0,
-      monthly: 347.99,
-      conversationsIncluded: 300,
-      overageRate: '$0.65',
-      year1Total: 6664.88,
+      setup: 2500.0,
+      deposit: 1750.0,
+      balance: 750.0,
+      monthly: 397.0,
+      conversationsIncluded: 500,
+      overageRate: '$0.45',
+      year1Total: 6867.0,
     },
     authority: {
-      setup: 3989.99,
-      monthly: 697.99,
-      conversationsIncluded: 600,
-      overageRate: '$0.65',
-      year1Total: 12365.87,
+      setup: 2500.0,
+      deposit: 1750.0,
+      balance: 750.0,
+      monthly: 397.0,
+      conversationsIncluded: 500,
+      overageRate: '$0.45',
+      year1Total: 6867.0,
     },
     voiceAddon: {
-      setup: 989.99,
-      monthly: 197.99,
-      includedUnits: 300,
+      setup: 0.0,
+      monthly: 0.0,
+      includedUnits: 0,
       unitLabel: 'minutes',
-      overageRate: '$0.85/min',
-      channelNote: 'Answers inbound calls 24/7 on a dedicated business phone line with natural conversational speech, answers questions, and books appointments.',
+      overageRate: null,
+      channelNote: 'Inbound voice receptionist workflow is built directly into the Premium package.',
     },
   },
   content: {
     en: {
       hero: {
-        badge: 'The Complete Commercial System',
-        title: 'The business that answers first wins the customer.',
-        subtitle: 'A high-conversion website, verified Google local visibility, and 24/7 AI agents that qualify leads instantly by text message and hand ready buyers to your team.',
-        ctaText: 'Reserve Your Plan',
+        badge: 'Purple Oryn Lead Response System',
+        title: "Your Next Customer Shouldn't Have to Wait.",
+        subtitle:
+          'Capture, qualify, and follow up with potential customers automatically—so your team can focus on delivering great service.',
+        ctaText: 'Book a Free 15-Minute Demo',
       },
       problemInsight: {
-        tag: 'Speed to Lead',
-        title: 'Responding within an hour makes qualifying a lead nearly 7x more likely.',
-        statCallout: 'Harvard Business Review (2011) verified that companies responding to queries within an hour are nearly 7 times more likely to qualify the buyer than those waiting even one hour longer.',
-        description: 'Most businesses lose high-intent buyers simply because customer inquiries arrive when staff is busy, after hours, or during weekends. Oryn responds in seconds, qualifies buyer requirements, and keeps opportunities warm.',
-        hoursComparison: '168 hours of coverage every week versus roughly 44 hours for a single staff member.',
+        tag: 'Operational Bottlenecks in Home Services',
+        title: 'High-intent inquiries slip through when technicians are busy doing the work.',
+        statCallout:
+          'Common challenges across home-service businesses: missed calls during peak service hours, inquiries waiting hours for an email reply, and callbacks delayed until the customer has already contacted a competitor.',
+        description:
+          'When an emergency AC failure or burst pipe happens, homeowners reach out to multiple local providers. If an inquiry sits in an unmonitored inbox or goes to voicemail, the job usually goes to whoever answers first with clear, qualified answers.',
+        hoursComparison: 'Continuous 24/7 lead capture vs. inquiries waiting for the morning office shift.',
       },
       system: {
-        sectionTitle: 'The Three-Part System',
-        sectionSubtitle: 'Oryn Presence is always deployed as one integrated commercial engine: website, Google visibility, and AI messaging agents working in synergy.',
+        sectionTitle: 'A Practical Four-Step Response Workflow',
+        sectionSubtitle:
+          'Not a novelty chatbot or generic AI agency. The Lead Response System is a structured inquiry capture, qualification, and routing workflow built for home-service contractors.',
         parts: [
           {
             step: '01',
-            title: 'High-Converting Website',
-            description: 'Ultra-fast mobile architecture built on modern web standards to convert incoming visitors into verified client inquiries.',
+            title: 'Customer Contacts Your Business',
+            description:
+              'A potential customer reaches out via your website assistant or calls your dedicated inbound phone line seeking service.',
           },
           {
             step: '02',
-            title: 'Google and Search Visibility',
-            description: 'Google Business Profile setup and upkeep, on-page SEO, GA4 and Search Console tracking, and consistent local search presence.',
+            title: 'Assistant Responds & Collects Details',
+            description:
+              'The system answers immediately, greets the customer warmly, answers approved FAQs, and gathers essential service details.',
           },
           {
             step: '03',
-            title: 'AI Agents on Web and SMS',
-            description: 'Intelligent agents running on your website chat and business SMS number that respond instantly, qualify leads, and dispatch ready buyers to your staff.',
+            title: 'System Qualifies & Records Inquiry',
+            description:
+              'It identifies service type, job urgency, property location, and timeline, producing a clean, structured lead summary.',
           },
         ],
       },
       founderNote: {
-        name: 'Gamal',
-        title: 'Founder and Lead Engineer, Purple Cove Labs',
-        text: 'Every Oryn Presence system is personally built and directed by Gamal at Purple Cove Labs. We do not sell simple chat widgets or disjointed websites. We deliver an end-to-end commercial client acquisition system built to turn search traffic into booked revenue.',
+        name: 'Purple Cove Labs',
+        title: 'Implementation & Engineering Standards',
+        text: 'Every Lead Response System implementation is configured, thoroughly tested against realistic customer questions, and verified with your approved business data before production launch.',
       },
       guarantee: {
-        title: 'Onboarding Capacity and Exclusive Launch Bonuses',
+        title: 'Implementation Process & Guardrails',
         hasDeliveryGuarantee: false,
-        capacityLimit: 'Capacity is strictly capped at 4 new businesses per month. Gamal builds every project personally, with one build start per week.',
+        capacityLimit:
+          'Each implementation is personally configured and tested with verified business information, service area constraints, and approved emergency escalation protocols.',
         bonuses: [
           {
-            title: 'Bonus 1: Google Launch Checklist',
-            description: 'A client-facing checklist covering every single technical step executed for your Google presence, on-page SEO, and Search Console setup.',
+            title: 'Approved FAQ & Knowledge Repository',
+            description:
+              'Custom knowledge base structured around your specific HVAC/plumbing service offerings, pricing guidance, and dispatch areas.',
           },
           {
-            title: 'Bonus 2: SMS Quick-Reply Playbook',
-            description: 'High-converting messaging templates for your team to communicate rapidly and close qualified leads alongside the AI agent.',
+            title: 'Urgent Dispatch Escalation Protocol',
+            description:
+              'Configured notification routing via SMS and email so emergency service requests immediately reach the right on-call technician or dispatcher.',
           },
         ],
       },
       faq: [
         {
-          question: 'Why is Oryn Presence sold only as a complete system?',
-          answer: 'An AI assistant without high-intent web traffic has no one to qualify. A website without instant response loses hot leads to faster competitors. By unifying conversion web design, Google visibility, and 24/7 SMS qualification, your business captures and converts every inquiry.',
+          question: 'Does this replace my office staff?',
+          answer:
+            'No. The system is designed to support your office and field team, not replace them. It handles initial customer contact, repetitive qualification questions, and after-hours inquiries so your staff can focus on dispatch, scheduling confirmations, and delivering great on-site service.',
         },
         {
-          question: 'How do the agents interact with our prospective clients?',
-          answer: 'The same agent answers both the website chat and text messages sent to your business line. It greets visitors immediately, answers FAQs, asks 3 to 5 qualifying questions, and hands qualified buyer notes straight to your team by text message.',
+          question: 'Can it answer questions about my services?',
+          answer:
+            'Yes. The assistant is loaded exclusively with your approved business information, including your service list, covered service areas, typical diagnostic fees or policies, operating hours, and standard service FAQs. It does not invent policies or make unauthorized commitments.',
         },
         {
-          question: 'Does the AI agent replace our current staff?',
-          answer: 'Never. The agent is built to support your staff during nights, weekends, and high-volume moments when fast response is critical. It filters out spam and tire-kickers so your team only spends time with serious, qualified buyers.',
+          question: 'Can it handle phone calls?',
+          answer:
+            'Yes, when you choose the Premium package. The Premium package includes an inbound voice receptionist workflow that answers incoming calls, asks qualification questions, summarizes the customer request, and routes the lead immediately. The Starter package focuses on website assistant and messaging capture.',
         },
         {
-          question: 'How does the SMS channel function for US businesses?',
-          answer: 'Your agent texts from a dedicated business phone number set up for your company. Your staff has full visibility into the conversation at all times and can take over the text thread whenever ready.',
+          question: 'Can it book appointments?',
+          answer:
+            'The system captures the customer’s preferred date and appointment window, qualifies urgency, and can route directly into an approved, supported calendar or CRM integration where technically available. If an automated confirmation integration is not connected, your staff confirms the final booking using the organized inquiry summary.',
         },
         {
-          question: 'What are the ongoing monthly maintenance terms and overages?',
-          answer: 'The monthly fee begins the month after your system goes live. It includes managed hosting, ongoing Google optimization, AI inference, and included monthly conversations. Extra conversations are billed at $0.80 (Presence), $0.65 (Conversion), and $0.65 (Authority).',
+          question: 'What happens when the assistant is uncertain?',
+          answer:
+            'When a customer asks a question outside the approved knowledge base or requests something requiring human judgment, the assistant transparently informs the customer that a team specialist will confirm the details. It logs the full inquiry and triggers an escalation notification directly to your team.',
         },
         {
-          question: 'What are the steps from order to launch?',
-          answer: 'Our process follows 7 clear steps: short live walkthrough or PDF review, plan selection, order confirmation with setup form, 50% initial payment, build phase, final delivery sign-off, and monthly maintenance commencing the following month.',
+          question: 'Are phone and messaging costs included?',
+          answer:
+            'No. Third-party telecommunications, telephony provider minutes, and carrier SMS messaging fees are billed separately based on your actual monthly volume through the respective provider. We do not markup carrier telecom rates.',
+        },
+        {
+          question: 'How long does implementation take?',
+          answer:
+            'Implementation typically takes 7 to 14 business days from the receipt of your approved business information, FAQs, and integration credentials. Both Starter and Premium workflows undergo thorough scenario testing and client approval before production launch.',
+        },
+        {
+          question: 'Do I need to replace my existing website?',
+          answer:
+            'No. The Lead Response System is designed to connect directly into your existing website. You do not need to rebuild or replace your current web presence. We provide a lightweight, clean snippet that embeds the assistant onto your site seamlessly.',
         },
       ],
-      paymentNote: 'Payment terms: 50% upon order confirmation, 50% on milestone delivery. Voice add-on is 100% upfront. Payment methods: bank transfer or PayPal. Submitting your order reserves your onboarding spot for 7 calendar days.',
+      paymentNote:
+        'Implementation pricing requires a deposit upfront to begin configuration, with the remaining balance due upon testing approval before production launch. Ongoing maintenance and support is billed monthly starting after launch. Third-party telecommunications and usage charges are billed separately.',
       cta: {
-        type: 'sms',
-        label: 'Select Your Plan',
-        destination: '#order',
-        note: 'Order formal submission reserves your spot for 7 calendar days.',
+        type: 'booking',
+        label: 'Book a Free 15-Minute Demo',
+        destination: '#demo',
+        note: 'Schedule a 15-minute live walkthrough of the Lead Response System.',
       },
       legal: {
-        paymentNote: 'Plans require 50% upon order confirmation and 50% on final delivery. Add-on modules require 100% upfront payment. Maintenance billed monthly from the month after go-live.',
-        footerText: '© Purple Cove Labs. All rights reserved. Visit purpleoryn.com.',
+        paymentNote:
+          'Starter implementation: $1,250 ($875 deposit / $375 launch balance) + $297/mo. Premium implementation: $2,500 ($1,750 deposit / $750 launch balance) + $397/mo. Third-party provider and carrier usage charges billed separately.',
+        footerText: '© Purple Cove Labs. All rights reserved. us.purpleoryn.com',
       },
       askOrynName: 'Ask Oryn',
       tierHighlights: {
         presence: [
-          'One-page conversion website with fast mobile architecture',
-          'Basic on-page SEO: metadata, schema markup, and XML sitemap',
-          'Complete Google Business Profile setup and upkeep',
-          'GA4 and Google Search Console conversion tracking',
-          'Receptionist agent ("Smart Qualifier"): answers inquiries 24/7, asks 3 to 5 qualifying questions',
-          'Instant lead dispatch to SMS and email with structured details',
-          '150 agent conversations per month included',
-          'Email and SMS support with standard business hours response',
+          'One website assistant for customer inquiry capture',
+          'Approved business information and FAQ repository',
+          'Service and urgency qualification workflows',
+          'Instant lead notifications via email and SMS',
+          'One agreed follow-up workflow',
+          'Basic lead tracking and dispatch logging',
         ],
         conversion: [
-          'Everything in Presence, plus:',
-          'Multi-page website with dedicated service pages and bookings or catalog',
-          '1 targeted SEO blog article per month and local citation building',
-          'Monthly Google Business Profile posts and AI-assisted review replies',
-          'Monthly executive performance report and lead insights',
-          'Sales agent: lead scoring and automated 24-hour SMS follow-up sequence',
-          'Simple commercial pipeline view to track opportunities',
-          '300 agent conversations per month included',
-          'Monthly strategic follow-up review meeting',
+          'Everything in Starter, plus:',
+          'One inbound voice receptionist workflow',
+          'Automated call summaries and intelligent lead routing',
+          'One supported calendar or CRM integration (where technically available)',
+          'Human escalation workflow for complex or emergency inquiries',
+          'Priority implementation review and ongoing system tuning',
         ],
         authority: [
-          'Everything in Conversion, plus:',
-          'Continuous conversion rate optimization (CRO) with active A/B testing',
-          'Competitor search monitoring and quarterly content calendar',
-          'Weekly Google Business Profile posts and review generation campaign',
-          'Booking agent (full agent): autonomous Google Calendar scheduling and customer order handling',
-          'Lightweight CRM dashboard',
-          '600 agent conversations per month included',
-          'Quarterly leadership strategy call and dedicated priority VIP support line',
+          'Enterprise multi-trade configuration and multi-location routing',
+          'Advanced CRM synchronization and dedicated SLA monitoring',
+          'Custom after-hours emergency dispatch integrations',
         ],
       },
-      serviceRows: [
-        {
-          label: 'Website Architecture',
-          presence: 'One-page site: hero, service highlights, trust indicators, and SMS contact trigger',
-          conversion: 'Multi-page site: dedicated service pages plus bookings or structured product/service presentation',
-          authority: 'Everything in Conversion, plus continuous conversion rate optimization with active A/B testing',
-        },
-        {
-          label: 'Google Visibility & SEO',
-          presence: 'Basic on-page SEO: metadata, schema markup, XML sitemap, and mobile Core Web Vitals tuning',
-          conversion: 'Everything in Presence, plus local citation building and 1 targeted SEO blog article per month',
-          authority: 'Everything in Conversion, plus continuous competitor monitoring and a quarterly content calendar',
-        },
-        {
-          label: 'Google Business Profile',
-          presence: 'Full setup and upkeep: categories, operating hours, business details, and launch posts',
-          conversion: 'Everything in Presence, plus monthly Google Business posts and AI-assisted customer review replies',
-          authority: 'Everything in Conversion, plus weekly Google Business posts and proactive review campaigns',
-        },
-        {
-          label: 'Analytics & Reporting',
-          presence: 'GA4 and Google Search Console integration with fundamental conversion tracking',
-          conversion: 'Everything in Presence, plus monthly performance report and lead insights',
-          authority: 'Everything in Conversion, plus deep strategic analytics and quarterly executive review call',
-        },
-        {
-          label: 'AI Agent Role',
-          presence: 'Receptionist ("Smart Qualifier"): answers inquiries 24/7, asks 3 to 5 qualifying questions, and hands lead notes to staff',
-          conversion: 'Sales Agent: lead scoring, automatic 24-hour SMS follow-up sequence, and simple pipeline view',
-          authority: 'Booking Agent (Full Agent): autonomous Google Calendar booking, customer orders, and lightweight CRM overview',
-        },
-        {
-          label: 'Included Conversations',
-          presence: '150 conversations per month included. Extra conversation: $0.80',
-          conversion: '300 conversations per month included. Extra conversation: $0.65',
-          authority: '600 conversations per month included. Extra conversation: $0.65',
-        },
-        {
-          label: 'Support Channel',
-          presence: 'Email and SMS support, standard business hours response',
-          conversion: 'Everything in Presence, plus monthly follow-up review meeting',
-          authority: 'Quarterly strategic advisory call and dedicated priority VIP support line',
-        },
-      ],
     },
   },
 };

@@ -11,17 +11,18 @@ import { notifyMarketOrder } from '@/lib/telegram';
 const marketOrderSchema = z.object({
   marketId: z.enum(['us', 'ca', 'ht', 'dr']),
   locale: z.string().default('en'),
-  plan: z.enum(['presence', 'conversion', 'authority']),
+  plan: z.enum(['presence', 'conversion', 'authority', 'starter', 'premium']),
   withVoiceAddon: z.boolean().default(false),
   businessName: z.string().trim().min(2, 'Please enter your business name.'),
   contactName: z.string().trim().min(2, 'Please enter your name.'),
   email: z.string().trim().email('Please enter a valid email address.'),
   phone: z.string().trim().min(7, 'Please enter a valid phone number.'),
   preferredContact: z.enum(['sms', 'whatsapp', 'email', 'phone']).default('sms'),
+  trade: z.string().optional(),
   notes: z.string().trim().max(1000).optional(),
   averageSaleValue: z.number().nullable().optional(),
   confirmed: z.boolean().refine((val) => val === true, {
-    message: 'Please confirm your order to reserve your spot.',
+    message: 'Please confirm your request.',
   }),
   utmSource: z.string().optional(),
   referrer: z.string().optional(),
@@ -56,16 +57,26 @@ export async function submitMarketOrder(data: MarketOrderInput): Promise<MarketO
 
   const input = parsed.data;
   const config = await getMarketConfig(input.marketId as MarketId);
-  const tierPrice = config.prices[input.plan];
+  const tierPrice =
+    input.plan === 'starter'
+      ? config.prices.starter
+      : input.plan === 'premium'
+      ? config.prices.premium
+      : input.plan === 'conversion'
+      ? config.prices.conversion
+      : input.plan === 'authority'
+      ? config.prices.authority
+      : config.prices.presence;
   const voicePrice = config.prices.voiceAddon;
 
-  const planSetup = tierPrice.setup ?? 0;
-  const planMonthly = tierPrice.monthly ?? 0;
-  const voiceSetup = input.withVoiceAddon ? (voicePrice.setup ?? 0) : 0;
-  const voiceMonthly = input.withVoiceAddon ? (voicePrice.monthly ?? 0) : 0;
+  const planSetup = tierPrice?.setup ?? 0;
+  const planDeposit = tierPrice?.deposit ?? Math.round(planSetup * 0.5 * 100) / 100;
+  const planMonthly = tierPrice?.monthly ?? 0;
+  const voiceSetup = input.withVoiceAddon ? (voicePrice?.setup ?? 0) : 0;
+  const voiceMonthly = input.withVoiceAddon ? (voicePrice?.monthly ?? 0) : 0;
 
-  // 50% plan setup + 100% voice add-on upfront
-  const oneTimeTotal = Math.round((planSetup * 0.5 + voiceSetup) * 100) / 100;
+  // Deposit for plan + 100% voice add-on upfront
+  const oneTimeTotal = Math.round((planDeposit + voiceSetup) * 100) / 100;
   const monthlyTotal = Math.round((planMonthly + voiceMonthly) * 100) / 100;
 
   if (isSupabaseConfigured()) {
@@ -82,7 +93,7 @@ export async function submitMarketOrder(data: MarketOrderInput): Promise<MarketO
           phone: input.phone,
           channel: 'form',
           tier_interest: `${input.plan}${input.withVoiceAddon ? ' + voice' : ''}`,
-          message: `Preferred contact: ${input.preferredContact}. Notes: ${input.notes || 'None'}`,
+          message: `${input.trade ? `[Trade: ${input.trade}] ` : ''}Preferred contact: ${input.preferredContact}. Notes: ${input.notes || 'None'}`,
           source: input.utmSource || input.referrer || 'direct',
           status: 'new',
         })

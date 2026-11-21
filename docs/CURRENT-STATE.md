@@ -123,6 +123,22 @@ is `unknown`; a genuinely off-topic message inside an active flow keeps that flo
   purpleoryn Supabase project's SQL editor — it was NOT applied from the repo session, and the Supabase connector there
   points at a different project.
 
+## Multi-market Architecture & US Lead Response System Update (2026-11)
+
+- Subdomain routing via `middleware.ts`:
+  - `us.purpleoryn.com` rewrites `/` to `/us` with `x-market: us`, `x-market-locale: en`.
+  - `ca.purpleoryn.com` rewrites `/` to `/ca`, `ht.purpleoryn.com` rewrites `/` to `/ht`.
+  - Default domain `purpleoryn.com` serves the Dominican Republic site.
+- **U.S. Market Offer (`/us`)**:
+  - Positioned as the **Purple Oryn Lead Response System** for U.S. home-service contractors (HVAC & plumbing, with initial prospecting focus in Dallas–Fort Worth, Texas).
+  - Primary Message: "Your Next Customer Shouldn't Have to Wait."
+  - Supporting Message: "Capture, qualify, and follow up with potential customers automatically—so your team can focus on delivering great service."
+  - Frozen Packages:
+    - **Starter — Lead Response Sprint**: $1,250 implementation ($875 deposit, $375 remaining balance before production launch), $297/month ongoing.
+    - **Premium — Phone + Web Conversion System**: $2,500 implementation ($1,750 deposit, $750 remaining balance before production launch), $397/month ongoing.
+    - Clear disclaimers that third-party telecommunications and carrier usage charges are separate.
+  - Components: Dedicated `UsLeadResponseLanding` with interactive HVAC/Plumbing workflow simulation, 5 operational challenge callouts, 4-step solution sequence, 5-step implementation roadmap, 8 accurate FAQs, Cal.com calendar integration (`CAL_URL`), and direct demo request capture wired to `submitMarketOrder` (`market_leads` & Telegram notifications).
+
 ## Known gaps / risks
 
 1. Migration history in Supabase is out of sync with the repo (see above); the deployed code that calls
