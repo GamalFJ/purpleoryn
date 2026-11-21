@@ -395,3 +395,15 @@ export async function setOrderPaymentStatus(id: string, paymentStatus: string): 
   revalidatePath("/admin", "layout");
   return { success: true };
 }
+
+export async function updateBookingStatus(id: string, formData: FormData) {
+  await requireAdmin();
+  const status = String(formData.get("status") ?? "").trim();
+  if (!["created", "rescheduled", "cancelled"].includes(status)) return;
+  await serviceClient().from("market_bookings").update({
+    booking_status: status,
+    updated_at: new Date().toISOString(),
+  }).eq("id", id);
+  revalidatePath("/admin/market-leads", "layout");
+}
+

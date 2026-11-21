@@ -162,7 +162,7 @@ export function MarketOrderForm({
 
         <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
           <a
-            href="https://cal.com/purple-cove-labs/20-min-cafe-virtual"
+            href="https://cal.com/purple-cove-labs/purple-oryn-free-15-minute-lead-response-demo"
             target="_blank"
             rel="noopener noreferrer"
             className={buttonClass('primary', 'md')}

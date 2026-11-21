@@ -1,12 +1,14 @@
 'use server';
 
 import { after } from 'next/server';
+import { headers } from 'next/headers';
 import { z } from 'zod';
 import { getMarketConfig } from '@/markets';
 import type { MarketId } from '@/markets/types';
 import { isSupabaseConfigured } from '@/lib/supabase/env';
 import { serviceClient } from '@/lib/supabase/service';
-import { notifyMarketOrder } from '@/lib/telegram';
+import { notifyMarketOrder, notifyUsWebsiteLead } from '@/lib/telegram';
+import { checkRateLimit, normalizeEmail, normalizePhone } from '@/lib/lead-validation';
 
 const marketOrderSchema = z.object({
   marketId: z.enum(['us', 'ca', 'ht', 'dr']),
@@ -17,6 +19,7 @@ const marketOrderSchema = z.object({
   contactName: z.string().trim().min(2, 'Please enter your name.'),
   email: z.string().trim().email('Please enter a valid email address.'),
   phone: z.string().trim().min(7, 'Please enter a valid phone number.'),
+  website: z.string().trim().max(300).optional(),
   preferredContact: z.enum(['sms', 'whatsapp', 'email', 'phone']).default('sms'),
   trade: z.string().optional(),
   notes: z.string().trim().max(1000).optional(),
@@ -26,6 +29,8 @@ const marketOrderSchema = z.object({
   }),
   utmSource: z.string().optional(),
   referrer: z.string().optional(),
+  // Honeypot field for bot spam prevention: should always be empty
+  hp_field: z.string().max(200).optional(),
 });
 
 export type MarketOrderInput = z.infer<typeof marketOrderSchema>;
@@ -38,6 +43,35 @@ export interface MarketOrderResult {
 }
 
 export async function submitMarketOrder(data: MarketOrderInput): Promise<MarketOrderResult> {
+  // 1. Silent spam honeypot check: If bot filled the honeypot, fake success without saving
+  if (data.hp_field && data.hp_field.trim().length > 0) {
+    return {
+      success: true,
+      spotReservedDays: 7,
+      message: 'Your onboarding spot has been reserved for 7 calendar days.',
+    };
+  }
+
+  // 2. Rate limiting check per client IP
+  try {
+    const headerList = await headers();
+    const forwarded = headerList.get('x-forwarded-for');
+    const realIp = headerList.get('x-real-ip');
+    const ip = forwarded ? forwarded.split(',')[0].trim() : realIp || '127.0.0.1';
+
+    const rateLimit = checkRateLimit(ip, 5, 10 * 60 * 1000);
+    if (!rateLimit.allowed) {
+      return {
+        success: false,
+        message: 'Too many submissions. Please wait a few minutes before submitting again.',
+      };
+    }
+  } catch (err) {
+    // If headers() is unavailable in certain test environments, proceed safely
+    console.warn('[market-order] rate limit header lookup skipped:', err);
+  }
+
+  // 3. Schema validation
   const parsed = marketOrderSchema.safeParse(data);
 
   if (!parsed.success) {
@@ -79,6 +113,16 @@ export async function submitMarketOrder(data: MarketOrderInput): Promise<MarketO
   const oneTimeTotal = Math.round((planDeposit + voiceSetup) * 100) / 100;
   const monthlyTotal = Math.round((planMonthly + voiceMonthly) * 100) / 100;
 
+  // 4. Input Normalization
+  const normalizedEmail = normalizeEmail(input.email);
+  const normalizedPhone = normalizePhone(input.phone);
+  const leadSource =
+    input.marketId === 'us'
+      ? input.utmSource
+        ? `US_WEBSITE [utm: ${input.utmSource}]`
+        : 'US_WEBSITE'
+      : input.utmSource || input.referrer || 'direct';
+
   if (isSupabaseConfigured()) {
     try {
       const supabase = serviceClient();
@@ -89,13 +133,17 @@ export async function submitMarketOrder(data: MarketOrderInput): Promise<MarketO
           market_id: input.marketId,
           name: input.contactName,
           business_name: input.businessName,
-          email: input.email,
-          phone: input.phone,
+          email: normalizedEmail,
+          phone: normalizedPhone,
+          website: input.website || null,
+          service_category: input.trade || (input.marketId === 'us' ? 'HVAC/Plumbing' : 'General'),
+          notes: input.notes || null,
           channel: 'form',
           tier_interest: `${input.plan}${input.withVoiceAddon ? ' + voice' : ''}`,
           message: `${input.trade ? `[Trade: ${input.trade}] ` : ''}Preferred contact: ${input.preferredContact}. Notes: ${input.notes || 'None'}`,
-          source: input.utmSource || input.referrer || 'direct',
+          source: leadSource,
           status: 'new',
+          last_activity_at: new Date().toISOString(),
         })
         .select('id')
         .single();
@@ -123,14 +171,32 @@ export async function submitMarketOrder(data: MarketOrderInput): Promise<MarketO
     }
   }
 
-  // Telegram alert sent asynchronously
+  // 5. Telegram alerts sent asynchronously
   after(async () => {
     const planDisplayNames: Record<string, string> = {
+      starter: 'Starter Sprint ($1,250)',
+      premium: 'Premium System ($2,500)',
       presence: 'Presence',
       conversion: 'Conversion (Recommended)',
       authority: 'Authority',
     };
 
+    // Specific alert for US website leads
+    if (input.marketId === 'us') {
+      await notifyUsWebsiteLead({
+        contactName: input.contactName,
+        businessName: input.businessName,
+        phone: normalizedPhone,
+        email: normalizedEmail,
+        trade: input.trade,
+        plan: planDisplayNames[input.plan] || input.plan,
+        withVoiceAddon: input.withVoiceAddon,
+        notes: input.notes,
+        source: leadSource,
+      });
+    }
+
+    // Retain existing multi-market order alert
     await notifyMarketOrder({
       marketId: input.marketId,
       host: config.host,
@@ -141,8 +207,8 @@ export async function submitMarketOrder(data: MarketOrderInput): Promise<MarketO
       monthlyTotal,
       businessName: input.businessName,
       contactName: input.contactName,
-      email: input.email,
-      phone: input.phone,
+      email: normalizedEmail,
+      phone: normalizedPhone,
       preferredContact: input.preferredContact,
       notes: input.notes,
       averageSaleValue: input.averageSaleValue,

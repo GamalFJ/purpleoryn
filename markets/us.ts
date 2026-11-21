@@ -164,12 +164,12 @@ export const config: MarketConfig = {
         {
           question: 'Are phone and messaging costs included?',
           answer:
-            'No. Third-party telecommunications, telephony provider minutes, and carrier SMS messaging fees are billed separately based on your actual monthly volume through the respective provider. We do not markup carrier telecom rates.',
+            'No. Phone line minutes and text message (SMS) fees are billed directly at cost by the carrier based on your actual monthly usage. We never add any markup to phone or texting costs.',
         },
         {
           question: 'How long does implementation take?',
           answer:
-            'Implementation typically takes 7 to 14 business days from the receipt of your approved business information, FAQs, and integration credentials. Both Starter and Premium workflows undergo thorough scenario testing and client approval before production launch.',
+            'Setup typically takes 7 to 14 business days once we receive your business information, FAQs, and phone line details. Both Starter and Premium systems are thoroughly tested with realistic customer scenarios and approved by your team before going live.',
         },
         {
           question: 'Do I need to replace my existing website?',

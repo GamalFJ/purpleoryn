@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ChatCircleText, Gauge, ImageSquare, Receipt, Tag, UsersThree } from "@phosphor-icons/react/dist/ssr";
+import { CalendarCheck, ChatCircleText, Gauge, ImageSquare, Receipt, Tag, UsersThree } from "@phosphor-icons/react/dist/ssr";
 import { IconTile } from "@/components/ui/IconTile";
 import { requireAdmin } from "@/lib/admin";
 import { serviceClient } from "@/lib/supabase/service";
@@ -18,6 +18,8 @@ export default async function AdminHome() {
     { count: chats },
     { count: totalOrders },
     { count: pendingOrders },
+    { count: marketLeadsCount },
+    { count: bookingsCount },
   ] = await Promise.all([
     supabase.from("leads").select("id", { count: "exact", head: true }).eq("status", "nuevo"),
     supabase.from("portfolio_items").select("id", { count: "exact", head: true }).eq("published", true),
@@ -25,6 +27,8 @@ export default async function AdminHome() {
     supabase.from("chat_sessions").select("id", { count: "exact", head: true }),
     svc.from("orders").select("id", { count: "exact", head: true }),
     svc.from("orders").select("id", { count: "exact", head: true }).eq("payment_status", "pending_first_payment"),
+    svc.from("market_leads").select("id", { count: "exact", head: true }),
+    svc.from("market_bookings").select("id", { count: "exact", head: true }),
   ]);
 
   const cards: { href: string; title: string; desc: string; icon: typeof Gauge; tone: Tone }[] = [
@@ -36,9 +40,16 @@ export default async function AdminHome() {
       tone: "rose",
     },
     {
+      href: "/admin/market-leads",
+      title: "Inquiries & CRM",
+      desc: `${marketLeadsCount ?? 0} website inquiries & ${bookingsCount ?? 0} Cal.com demo bookings.`,
+      icon: CalendarCheck,
+      tone: "teal",
+    },
+    {
       href: "/admin/prospectos?estado=nuevo",
-      title: "Leads",
-      desc: `${newLeads ?? 0} new, not yet contacted.`,
+      title: "Dominican Leads",
+      desc: `${newLeads ?? 0} new local leads, not yet contacted.`,
       icon: UsersThree,
       tone: "violet",
     },

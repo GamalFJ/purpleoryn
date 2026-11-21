@@ -108,10 +108,10 @@ is `unknown`; a genuinely off-topic message inside an active flow keeps that flo
 
 | Integration | Reality |
 | --- | --- |
-| Cal.com | Link only (`CAL_URL`, prefilled plan/notes, click event). No API/webhook. |
+| Cal.com | Webhook endpoint (`POST /api/webhooks/calcom`) with HMAC-SHA256 signature verification (`CAL_WEBHOOK_SECRET`), idempotent `BOOKING_CREATED`, `BOOKING_RESCHEDULED`, `BOOKING_CANCELLED` sync to `market_bookings` and `market_leads`, and direct `CAL_URL` links. |
 | WhatsApp | `wa.me` links and a click-attribution beacon (`/api/go/whatsapp` → `market_leads`). Not connected to chat sessions; no chat handoff channel. |
-| Telegram | Alerts for `/servicios` orders (direct call) and `market_leads`/`orders` (edge function via dashboard webhook). None for chat. |
-| Supabase | Anon, cookie and service-role clients; RLS on; migrations in repo. |
+| Telegram | Alerts for `/servicios` orders, U.S. website leads (`notifyUsWebsiteLead`), Cal.com bookings created/rescheduled/cancelled, and critical webhook errors via `lib/telegram.ts`. Multi-market edge function (`telegram-notify`) also available. |
+| Supabase | Anon, cookie and service-role clients; RLS on; migrations in repo (including `20261121000000_crm_calcom_integration.sql`). |
 | Kapso | Not present. |
 
 ## Portfolio

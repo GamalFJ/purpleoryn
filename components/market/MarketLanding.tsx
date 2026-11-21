@@ -1044,7 +1044,7 @@ export function MarketLanding({ config, locale }: MarketLandingProps) {
               </button>
 
               <a
-                href="https://cal.com/purple-cove-labs/20-min-cafe-virtual"
+                href="https://cal.com/purple-cove-labs/purple-oryn-free-15-minute-lead-response-demo"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full border border-plum-line bg-plum-surface px-6 py-3.5 text-base font-semibold text-plum-ink hover:border-plum-accent hover:text-white transition-colors"

@@ -37,7 +37,7 @@ const NAV: { href: string; label: string; icon: Icon; tone: Tone }[] = [
   // Multi-market configuration
   { href: "/admin/market-pricing", label: "Market Pricing", icon: CurrencyCircleDollar, tone: "amber" },
   { href: "/admin/market-content", label: "Market Content", icon: Translate, tone: "violet" },
-  { href: "/admin/market-leads", label: "Market Leads", icon: MapPinLine, tone: "teal" },
+  { href: "/admin/market-leads", label: "Inquiries & CRM", icon: MapPinLine, tone: "teal" },
 ];
 
 // One literal class per tone: Tailwind needs the full strings in source to

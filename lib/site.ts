@@ -15,7 +15,8 @@ export const SITE = {
   instagramHandle: "@purplecovelabs.ai",
 } as const;
 
-export const CAL_URL = "https://cal.com/purple-cove-labs/20-min-cafe-virtual";
+export const CAL_URL = "https://cal.com/purple-cove-labs/purple-oryn-free-15-minute-lead-response-demo";
+export const CAL_URL_US = "https://cal.com/purple-cove-labs/purple-oryn-free-15-minute-lead-response-demo";
 
 // Link to paste into the Google Business Profile "website" field so GA4 can
 // attribute Business Profile traffic. Canonical tags ignore the query string.
