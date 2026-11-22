@@ -8,11 +8,11 @@ export const dynamic = 'force-dynamic';
 export const metadata: Metadata = {
   title: "Purple Oryn | Lead Response System for U.S. Home-Service Businesses",
   description:
-    "Your Next Customer Shouldn't Have to Wait. Capture, qualify, and follow up with potential customers automatically—so your team can focus on delivering great service.",
+    "Your Next Customer Shouldn't Have to Wait. Capture, qualify, and follow up with potential customers automatically, so your team can focus on delivering great service.",
   openGraph: {
     title: "Purple Oryn | Lead Response System for U.S. Home-Service Businesses",
     description:
-      "Your Next Customer Shouldn't Have to Wait. Capture, qualify, and follow up with potential customers automatically—so your team can focus on delivering great service.",
+      "Your Next Customer Shouldn't Have to Wait. Capture, qualify, and follow up with potential customers automatically, so your team can focus on delivering great service.",
     url: 'https://us.purpleoryn.com',
     siteName: 'Purple Oryn',
     locale: 'en_US',
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: "Purple Oryn | Lead Response System for U.S. Home-Service Businesses",
     description:
-      "Your Next Customer Shouldn't Have to Wait. Capture, qualify, and follow up with potential customers automatically—so your team can focus on delivering great service.",
+      "Your Next Customer Shouldn't Have to Wait. Capture, qualify, and follow up with potential customers automatically, so your team can focus on delivering great service.",
   },
   robots: {
     index: true,

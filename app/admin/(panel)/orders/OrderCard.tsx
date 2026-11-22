@@ -369,7 +369,7 @@ export function OrderCard({ order }: { order: OrderItem }) {
           {order.email && (
             <a
               href={`mailto:${order.email}?subject=${encodeURIComponent(
-                `Purple Cove Labs — Your ${order.tierName} Plan Confirmation`,
+                `Purple Cove Labs: Your ${order.tierName} Plan Confirmation`,
               )}`}
               className="flex items-center gap-1.5 rounded-full border border-line bg-paper px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:text-ink hover:border-accent/40"
             >

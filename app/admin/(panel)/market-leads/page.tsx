@@ -360,7 +360,7 @@ export default async function MarketLeadsPage({ searchParams }: { searchParams: 
                           <span>Scheduled Time</span>
                         </p>
                         <p className="text-body font-mono">
-                          {dateTimeFormat.format(new Date(booking.booking_start))} —{" "}
+                          {dateTimeFormat.format(new Date(booking.booking_start))} -{" "}
                           {new Intl.DateTimeFormat("en-US", { hour: "numeric", minute: "2-digit" }).format(
                             new Date(booking.booking_end)
                           )}

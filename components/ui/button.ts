@@ -4,7 +4,7 @@ type Variant = "primary" | "secondary" | "onPlum" | "onPlumSecondary";
 type Size = "sm" | "md" | "lg";
 
 const base =
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full font-medium cursor-pointer select-none transition-[background-color,background-position,border-color,color,transform,box-shadow] duration-300 active:translate-y-px disabled:cursor-not-allowed disabled:opacity-60";
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full font-medium cursor-pointer select-none touch-manipulation transition-[background-color,background-position,border-color,color,transform,box-shadow] duration-300 active:translate-y-px active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60";
 
 const variants: Record<Variant, string> = {
   // Violet→fuchsia gradient that slides on hover (see globals.css).

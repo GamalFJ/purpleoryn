@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
@@ -58,7 +58,35 @@ export function UsLeadResponseLanding({ config }: UsLeadResponseLandingProps) {
   // Workflow Demo Simulation State
   const [activeWorkflowTab, setActiveWorkflowTab] = useState<'hvac' | 'plumbing'>('hvac');
 
+  const triggerHaptic = (duration = 10) => {
+    if (typeof window !== 'undefined' && 'vibrate' in navigator) {
+      try {
+        navigator.vibrate(duration);
+      } catch {
+        // Silently ignore unsupported browsers
+      }
+    }
+  };
+
+  // Close modal on Escape key and prevent background body scrolling
+  useEffect(() => {
+    if (!isModalOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsModalOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [isModalOpen]);
+
   const openDemoModal = (pkg: 'starter' | 'premium' = 'premium') => {
+    triggerHaptic(12);
     setSelectedPackage(pkg);
     setSubmitResult(null);
     setFieldErrors({});
@@ -67,6 +95,7 @@ export function UsLeadResponseLanding({ config }: UsLeadResponseLandingProps) {
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    triggerHaptic(15);
     setFieldErrors({});
 
     startTransition(async () => {
@@ -88,6 +117,9 @@ export function UsLeadResponseLanding({ config }: UsLeadResponseLandingProps) {
       });
 
       setSubmitResult(result);
+      if (result.success) {
+        triggerHaptic(25);
+      }
       if (result.fieldErrors) {
         setFieldErrors(result.fieldErrors);
       }
@@ -181,7 +213,7 @@ export function UsLeadResponseLanding({ config }: UsLeadResponseLandingProps) {
                 Purple Oryn Lead Response System
               </span>
               <span className="inline-flex items-center gap-1 rounded-full border border-line bg-surface px-2.5 py-1 text-xs font-medium text-muted">
-                <span>📍 Dallas–Fort Worth &amp; U.S. Contractors</span>
+                <span>📍 Dallas-Fort Worth &amp; U.S. Contractors</span>
               </span>
             </div>
 
@@ -190,7 +222,7 @@ export function UsLeadResponseLanding({ config }: UsLeadResponseLandingProps) {
             </h1>
 
             <p className="mt-4 sm:mt-5 max-w-[50ch] text-base sm:text-lg leading-relaxed text-body">
-              Answer calls and website messages right away, qualify emergency repairs, and send organized job notes straight to your team—24 hours a day, 7 days a week.
+              Answer calls and website messages right away, qualify emergency repairs, and send organized job notes straight to your team, 24 hours a day, 7 days a week.
             </p>
 
             {/* Target contractor badges */}
@@ -264,7 +296,7 @@ export function UsLeadResponseLanding({ config }: UsLeadResponseLandingProps) {
                 <PhoneCall size={18} className="text-teal-ink shrink-0 mt-0.5" weight="bold" />
                 <div>
                   <p className="font-semibold text-ink">Inbound Voice Receptionist</p>
-                  <p className="text-muted mt-0.5">Answers calls 24/7 with a natural, friendly voice—no robot sound.</p>
+                  <p className="text-muted mt-0.5">Answers calls 24/7 with a natural, friendly voice, with no robot sound.</p>
                 </div>
               </div>
 
@@ -313,7 +345,7 @@ export function UsLeadResponseLanding({ config }: UsLeadResponseLandingProps) {
               Missed Calls While Technicians Are on Jobs
             </h3>
             <p className="mt-2 text-sm leading-relaxed text-body">
-              When technicians are in attics, crawlspaces, or driving between jobs, calls go straight to voicemail. Homeowners in an emergency rarely leave messages—they just hang up and call the next contractor on Google.
+              When technicians are in attics, crawlspaces, or driving between jobs, calls go straight to voicemail. Homeowners in an emergency rarely leave messages; they just hang up and call the next contractor on Google.
             </p>
           </div>
 
@@ -357,7 +389,7 @@ export function UsLeadResponseLanding({ config }: UsLeadResponseLandingProps) {
               Incomplete Customer Information When Following Up
             </h3>
             <p className="mt-2 text-sm leading-relaxed text-body">
-              {"When office staff calls back, they often only have a bare phone number. They don't know the equipment age, unit brand, problem symptoms, or property address—forcing a repetitive discovery conversation from scratch."}
+              {"When office staff calls back, they often only have a bare phone number. They don't know the equipment age, unit brand, problem symptoms, or property address, forcing a repetitive discovery conversation from scratch."}
             </p>
           </div>
         </div>
@@ -550,7 +582,7 @@ export function UsLeadResponseLanding({ config }: UsLeadResponseLandingProps) {
 
                   <div className="ml-auto max-w-[85%] rounded-2xl rounded-br-sm bg-gradient-action p-3 text-accent-ink shadow-xs">
                     <p className="text-[11px] font-semibold text-accent-soft/90 mb-1">Purple Oryn Assistant</p>
-                    <p>{`"I'm sorry to hear that—staying cool in this heat is a priority. Yes, we service Plano. Is the outside fan blade spinning at all, and is this a central heat pump or standard split AC system?"`}</p>
+                    <p>{`"I'm sorry to hear that! Staying cool in this heat is a priority. Yes, we service Plano. Is the outside fan blade spinning at all, and is this a central heat pump or standard split AC system?"`}</p>
                     <span className="mt-1 block text-right text-[10px] text-accent-ink/80">2:14 PM (Instant)</span>
                   </div>
 
@@ -845,7 +877,7 @@ export function UsLeadResponseLanding({ config }: UsLeadResponseLandingProps) {
                 <ul className="space-y-2.5 text-sm text-body">
                   <li className="flex items-start gap-2.5 font-medium text-ink">
                     <CheckCircle size={18} className="text-accent shrink-0 mt-0.5" weight="bold" />
-                    <span><strong>24/7 Inbound Voice Receptionist:</strong> Answers incoming calls right away with a natural, friendly voice—no robot sound.</span>
+                    <span><strong>24/7 Inbound Voice Receptionist:</strong> Answers incoming calls right away with a natural, friendly voice, with no robot sound.</span>
                   </li>
                   <li className="flex items-start gap-2.5">
                     <CheckCircle size={18} className="text-accent shrink-0 mt-0.5" weight="bold" />
@@ -1040,7 +1072,7 @@ export function UsLeadResponseLanding({ config }: UsLeadResponseLandingProps) {
               Book a free 15-minute demo to see how Purple Oryn captures, qualifies, and routes customer inquiries for your trade.
             </p>
 
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row items-center">
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
               <button
                 type="button"
                 onClick={() => openDemoModal('premium')}
@@ -1113,284 +1145,312 @@ export function UsLeadResponseLanding({ config }: UsLeadResponseLandingProps) {
         <div
           role="dialog"
           aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/60 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-ink/70 backdrop-blur-md overflow-hidden"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              triggerHaptic(10);
+              setIsModalOpen(false);
+            }
+          }}
         >
-          <div className="relative w-full max-w-lg overflow-hidden rounded-[24px] border border-line bg-surface p-6 shadow-2xl animate-in fade-in zoom-in-95 duration-200">
-            {/* Close button */}
-            <button
-              type="button"
-              onClick={() => setIsModalOpen(false)}
-              className="absolute right-4 top-4 rounded-full p-2 text-muted hover:bg-paper hover:text-ink transition-colors"
-              aria-label="Close modal"
-            >
-              <X size={20} weight="bold" />
-            </button>
-
-            {submitResult?.success ? (
-              <div className="py-6 text-center">
-                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-teal-soft text-teal-ink">
-                  <CheckCircle size={32} weight="duotone" />
-                </div>
-                <h3 className="mt-4 text-xl font-bold text-ink">Demo Request Received!</h3>
-                <p className="mt-2 text-sm text-body leading-relaxed">
-                  {"Thank you! We've received your request for the"}{' '}
-                  <strong className="text-ink">
-                    {selectedPackage === 'premium' ? 'Premium System' : 'Starter Sprint'}
-                  </strong>.
-                  Our team will reach out promptly at your provided contact info.
-                </p>
-
-                <div className="mt-6 rounded-xl border border-line bg-paper p-4 text-xs text-left">
-                  <p className="font-semibold text-ink">Want to test the system while you wait?</p>
-                  <p className="text-muted mt-1">
-                    Try out the interactive demo or book a specific 15-minute consultation on our calendar:
-                  </p>
-                  <div className="mt-3 flex flex-col sm:flex-row gap-2">
-                    <a
-                      href="https://demo.us.purpleoryn.com/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={buttonClass('secondary', 'sm', 'w-full justify-center')}
-                    >
-                      <span>See the Live Demonstration</span>
-                      <ArrowSquareOut size={14} weight="bold" />
-                    </a>
-                    <a
-                      href={CAL_URL}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={buttonClass('primary', 'sm', 'w-full justify-center')}
-                    >
-                      <CalendarCheck size={16} weight="bold" />
-                      <span>Open Calendar Scheduling</span>
-                    </a>
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => setIsModalOpen(false)}
-                  className={buttonClass('secondary', 'sm', 'mt-4 w-full')}
-                >
-                  Done
-                </button>
+          <div className="relative w-full max-w-lg max-h-[92dvh] flex flex-col rounded-[24px] sm:rounded-[28px] border border-line/80 bg-surface shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            {/* Sticky Header with Prominent Close Button */}
+            <div className="sticky top-0 z-30 flex items-center justify-between border-b border-line bg-surface/95 px-5 py-3.5 sm:px-6 sm:py-4 backdrop-blur-md shrink-0">
+              <div className="pr-3">
+                <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-accent font-mono block">
+                  {submitResult?.success ? 'Confirmed' : 'Free 15-Minute Consultation'}
+                </span>
+                <h3 className="text-base sm:text-lg font-bold text-ink leading-snug">
+                  {submitResult?.success ? 'Demo Request Received' : 'Book Your Lead Response Demo'}
+                </h3>
               </div>
-            ) : (
-              <div>
-                <div className="border-b border-line pb-4 pr-8">
-                  <span className="text-[11px] font-semibold uppercase tracking-wider text-accent font-mono">
-                    Free 15-Minute Consultation
-                  </span>
-                  <h3 className="mt-1 text-xl font-bold text-ink">
-                    Book Your Lead Response Demo
-                  </h3>
-                  <p className="mt-1 text-xs text-muted">
-                    {"We'll show you how the system captures, qualifies, and routes inquiries for your specific trade."}
+
+              {/* Close button - Always prominent, pinned at the top right, never cut off */}
+              <button
+                type="button"
+                onClick={() => {
+                  triggerHaptic(10);
+                  setIsModalOpen(false);
+                }}
+                className="shrink-0 flex items-center justify-center h-9 w-9 rounded-full bg-paper hover:bg-line text-ink border border-line shadow-2xs transition-all hover:scale-105 active:scale-95 touch-manipulation focus:outline-none focus:ring-2 focus:ring-accent"
+                aria-label="Close modal"
+              >
+                <X size={18} weight="bold" />
+              </button>
+            </div>
+
+            {/* Scrollable Modal Body */}
+            <div className="flex-1 overflow-y-auto overscroll-contain px-5 py-4 sm:px-6 sm:py-5">
+              {submitResult?.success ? (
+                <div className="py-2 text-center">
+                  <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-teal-soft text-teal-ink">
+                    <CheckCircle size={32} weight="duotone" />
+                  </div>
+                  <h3 className="mt-3 text-xl font-bold text-ink">Demo Request Received!</h3>
+                  <p className="mt-2 text-sm text-body leading-relaxed">
+                    {"Thank you! We've received your request for the"}{' '}
+                    <strong className="text-ink">
+                      {selectedPackage === 'premium' ? 'Premium System' : 'Starter Sprint'}
+                    </strong>.
+                    Our team will reach out promptly at your provided contact info.
                   </p>
-                </div>
 
-                <form onSubmit={handleFormSubmit} className="mt-4 space-y-3.5 text-xs">
-                  {/* Package Selector */}
-                  <div>
-                    <label className="block text-[11px] font-semibold text-ink uppercase tracking-wider mb-1.5">
-                      Selected Package
-                    </label>
-                    <div className="grid grid-cols-2 gap-2">
-                      <button
-                        type="button"
-                        onClick={() => setSelectedPackage('starter')}
-                        className={cn(
-                          'rounded-xl border p-2.5 text-left transition-all',
-                          selectedPackage === 'starter'
-                            ? 'border-accent bg-accent-soft/40 text-ink shadow-2xs font-semibold'
-                            : 'border-line bg-paper text-muted hover:text-ink'
-                        )}
+                  <div className="mt-5 rounded-2xl border border-line bg-paper p-4 text-xs text-left">
+                    <p className="font-semibold text-ink text-sm">Want to test the system while you wait?</p>
+                    <p className="text-muted mt-1 leading-relaxed">
+                      Try out the interactive demo or book a specific 15-minute consultation on our calendar:
+                    </p>
+                    <div className="mt-3.5 flex flex-col gap-2.5 w-full">
+                      <a
+                        href="https://demo.us.purpleoryn.com/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={buttonClass('secondary', 'md', 'w-full justify-center text-center whitespace-normal py-3 active:scale-[0.98] transition-transform touch-manipulation')}
                       >
-                        <p className="text-xs">Starter Sprint</p>
-                        <p className="text-[11px] font-mono text-muted mt-0.5">$1,250 + $297/mo</p>
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => setSelectedPackage('premium')}
-                        className={cn(
-                          'rounded-xl border p-2.5 text-left transition-all',
-                          selectedPackage === 'premium'
-                            ? 'border-accent bg-accent-soft/40 text-ink shadow-2xs font-semibold'
-                            : 'border-line bg-paper text-muted hover:text-ink'
-                        )}
+                        <span>See the Live Demonstration</span>
+                        <ArrowSquareOut size={16} weight="bold" />
+                      </a>
+                      <a
+                        href={CAL_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={buttonClass('primary', 'md', 'w-full justify-center text-center whitespace-normal py-3 active:scale-[0.98] transition-transform touch-manipulation shadow-md')}
                       >
-                        <p className="text-xs flex items-center justify-between">
-                          <span>Premium</span>
-                          <span className="text-[9px] text-accent uppercase font-bold">Rec.</span>
-                        </p>
-                        <p className="text-[11px] font-mono text-muted mt-0.5">$2,500 + $397/mo</p>
-                      </button>
+                        <CalendarCheck size={18} weight="bold" />
+                        <span>Open Calendar Scheduling</span>
+                      </a>
                     </div>
                   </div>
 
-                  {/* Trade Selector */}
-                  <div>
-                    <label className="block text-[11px] font-semibold text-ink uppercase tracking-wider mb-1.5">
-                      Your Primary Trade
-                    </label>
-                    <div className="grid grid-cols-3 gap-2">
-                      {(['HVAC', 'Plumbing', 'Other'] as const).map((t) => (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      triggerHaptic(10);
+                      setIsModalOpen(false);
+                    }}
+                    className={buttonClass('secondary', 'sm', 'mt-5 w-full active:scale-[0.98] transition-transform touch-manipulation')}
+                  >
+                    Done
+                  </button>
+                </div>
+              ) : (
+                <div>
+                  <p className="text-xs text-muted mb-4">
+                    {"We'll show you how the system captures, qualifies, and routes inquiries for your specific trade."}
+                  </p>
+
+                  <form onSubmit={handleFormSubmit} className="space-y-4 text-xs">
+                    {/* Package Selector */}
+                    <div>
+                      <label className="block text-[11px] font-semibold text-ink uppercase tracking-wider mb-1.5">
+                        Selected Package
+                      </label>
+                      <div className="grid grid-cols-2 gap-2">
                         <button
-                          key={t}
                           type="button"
-                          onClick={() => setTradeSelection(t)}
+                          onClick={() => {
+                            triggerHaptic(10);
+                            setSelectedPackage('starter');
+                          }}
                           className={cn(
-                            'rounded-xl border py-2 text-center text-xs font-medium transition-all',
-                            tradeSelection === t
-                              ? 'border-teal-ink bg-teal-soft text-teal-ink font-semibold'
+                            'rounded-xl border p-2.5 text-left transition-all active:scale-[0.98] touch-manipulation',
+                            selectedPackage === 'starter'
+                              ? 'border-accent bg-accent-soft/40 text-ink shadow-2xs font-semibold'
                               : 'border-line bg-paper text-muted hover:text-ink'
                           )}
                         >
-                          {t}
+                          <p className="text-xs">Starter Sprint</p>
+                          <p className="text-[11px] font-mono text-muted mt-0.5">$1,250 + $297/mo</p>
                         </button>
-                      ))}
-                    </div>
-                  </div>
 
-                  {/* Inputs */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            triggerHaptic(10);
+                            setSelectedPackage('premium');
+                          }}
+                          className={cn(
+                            'rounded-xl border p-2.5 text-left transition-all active:scale-[0.98] touch-manipulation',
+                            selectedPackage === 'premium'
+                              ? 'border-accent bg-accent-soft/40 text-ink shadow-2xs font-semibold'
+                              : 'border-line bg-paper text-muted hover:text-ink'
+                          )}
+                        >
+                          <p className="text-xs flex items-center justify-between">
+                            <span>Premium</span>
+                            <span className="text-[9px] text-accent uppercase font-bold">Rec.</span>
+                          </p>
+                          <p className="text-[11px] font-mono text-muted mt-0.5">$2,500 + $397/mo</p>
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Trade Selector */}
                     <div>
-                      <label className="block font-medium text-ink mb-1">Your Name *</label>
+                      <label className="block text-[11px] font-semibold text-ink uppercase tracking-wider mb-1.5">
+                        Your Primary Trade
+                      </label>
+                      <div className="grid grid-cols-3 gap-2">
+                        {(['HVAC', 'Plumbing', 'Other'] as const).map((t) => (
+                          <button
+                            key={t}
+                            type="button"
+                            onClick={() => {
+                              triggerHaptic(10);
+                              setTradeSelection(t);
+                            }}
+                            className={cn(
+                              'rounded-xl border py-2.5 text-center text-xs font-medium transition-all active:scale-[0.98] touch-manipulation',
+                              tradeSelection === t
+                                ? 'border-teal-ink bg-teal-soft text-teal-ink font-semibold shadow-2xs'
+                                : 'border-line bg-paper text-muted hover:text-ink'
+                            )}
+                          >
+                            {t}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Inputs - Mobile-friendly 16px to prevent iOS auto-zoom */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block font-medium text-ink mb-1">Your Name *</label>
+                        <input
+                          type="text"
+                          required
+                          value={contactName}
+                          onChange={(e) => setContactName(e.target.value)}
+                          placeholder="John Smith"
+                          className="w-full rounded-xl border border-line bg-paper px-3 py-2.5 text-[16px] sm:text-xs text-ink outline-none focus:border-accent transition-colors touch-manipulation"
+                        />
+                        {fieldErrors.contactName && (
+                          <p className="text-danger text-[10px] mt-1">{fieldErrors.contactName}</p>
+                        )}
+                      </div>
+
+                      <div>
+                        <label className="block font-medium text-ink mb-1">Business Name *</label>
+                        <input
+                          type="text"
+                          required
+                          value={businessName}
+                          onChange={(e) => setBusinessName(e.target.value)}
+                          placeholder="Apex Heating & Air"
+                          className="w-full rounded-xl border border-line bg-paper px-3 py-2.5 text-[16px] sm:text-xs text-ink outline-none focus:border-accent transition-colors touch-manipulation"
+                        />
+                        {fieldErrors.businessName && (
+                          <p className="text-danger text-[10px] mt-1">{fieldErrors.businessName}</p>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block font-medium text-ink mb-1">Phone Number (SMS/Call) *</label>
+                        <input
+                          type="tel"
+                          required
+                          value={phone}
+                          onChange={(e) => setPhone(e.target.value)}
+                          placeholder="(214) 555-0192"
+                          className="w-full rounded-xl border border-line bg-paper px-3 py-2.5 text-[16px] sm:text-xs text-ink outline-none focus:border-accent transition-colors touch-manipulation"
+                        />
+                        {fieldErrors.phone && (
+                          <p className="text-danger text-[10px] mt-1">{fieldErrors.phone}</p>
+                        )}
+                      </div>
+
+                      <div>
+                        <label className="block font-medium text-ink mb-1">Business Email *</label>
+                        <input
+                          type="email"
+                          required
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          placeholder="john@apexairdfw.com"
+                          className="w-full rounded-xl border border-line bg-paper px-3 py-2.5 text-[16px] sm:text-xs text-ink outline-none focus:border-accent transition-colors touch-manipulation"
+                        />
+                        {fieldErrors.email && (
+                          <p className="text-danger text-[10px] mt-1">{fieldErrors.email}</p>
+                        )}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block font-medium text-ink mb-1">
+                        Company Website (Optional)
+                      </label>
                       <input
                         type="text"
-                        required
-                        value={contactName}
-                        onChange={(e) => setContactName(e.target.value)}
-                        placeholder="John Smith"
-                        className="w-full rounded-xl border border-line bg-paper px-3 py-2 text-xs text-ink outline-none focus:border-accent"
+                        value={website}
+                        onChange={(e) => setWebsite(e.target.value)}
+                        placeholder="https://apexheating.com"
+                        className="w-full rounded-xl border border-line bg-paper px-3 py-2.5 text-[16px] sm:text-xs text-ink outline-none focus:border-accent transition-colors touch-manipulation"
                       />
-                      {fieldErrors.contactName && (
-                        <p className="text-danger text-[10px] mt-1">{fieldErrors.contactName}</p>
-                      )}
                     </div>
 
-                    <div>
-                      <label className="block font-medium text-ink mb-1">Business Name *</label>
+                    {/* Honeypot field - visually hidden, traps spam bots */}
+                    <div className="hidden" aria-hidden="true" style={{ display: 'none' }}>
+                      <label htmlFor="hp_field">Do not fill this</label>
                       <input
+                        id="hp_field"
+                        name="hp_field"
                         type="text"
-                        required
-                        value={businessName}
-                        onChange={(e) => setBusinessName(e.target.value)}
-                        placeholder="Apex Heating & Air"
-                        className="w-full rounded-xl border border-line bg-paper px-3 py-2 text-xs text-ink outline-none focus:border-accent"
+                        tabIndex={-1}
+                        autoComplete="off"
+                        value={hpField}
+                        onChange={(e) => setHpField(e.target.value)}
                       />
-                      {fieldErrors.businessName && (
-                        <p className="text-danger text-[10px] mt-1">{fieldErrors.businessName}</p>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label className="block font-medium text-ink mb-1">Phone Number (SMS/Call) *</label>
-                      <input
-                        type="tel"
-                        required
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        placeholder="(214) 555-0192"
-                        className="w-full rounded-xl border border-line bg-paper px-3 py-2 text-xs text-ink outline-none focus:border-accent"
-                      />
-                      {fieldErrors.phone && (
-                        <p className="text-danger text-[10px] mt-1">{fieldErrors.phone}</p>
-                      )}
                     </div>
 
                     <div>
-                      <label className="block font-medium text-ink mb-1">Business Email *</label>
-                      <input
-                        type="email"
-                        required
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="john@apexairdfw.com"
-                        className="w-full rounded-xl border border-line bg-paper px-3 py-2 text-xs text-ink outline-none focus:border-accent"
+                      <label className="block font-medium text-ink mb-1">
+                        Notes or Current Inbound Challenges (Optional)
+                      </label>
+                      <textarea
+                        rows={2}
+                        value={notes}
+                        onChange={(e) => setNotes(e.target.value)}
+                        placeholder="e.g. Currently missing calls after 5 PM and need better qualification before dispatching."
+                        className="w-full rounded-xl border border-line bg-paper px-3 py-2.5 text-[16px] sm:text-xs text-ink outline-none focus:border-accent resize-none transition-colors touch-manipulation"
                       />
-                      {fieldErrors.email && (
-                        <p className="text-danger text-[10px] mt-1">{fieldErrors.email}</p>
-                      )}
                     </div>
-                  </div>
 
-                  <div>
-                    <label className="block font-medium text-ink mb-1">
-                      Company Website (Optional)
-                    </label>
-                    <input
-                      type="text"
-                      value={website}
-                      onChange={(e) => setWebsite(e.target.value)}
-                      placeholder="https://apexheating.com"
-                      className="w-full rounded-xl border border-line bg-paper px-3 py-2 text-xs text-ink outline-none focus:border-accent"
-                    />
-                  </div>
+                    <div className="pt-1">
+                      <button
+                        type="submit"
+                        disabled={isPending}
+                        className={buttonClass('primary', 'md', 'w-full active:scale-[0.98] transition-transform touch-manipulation')}
+                      >
+                        {isPending ? 'Submitting Request...' : 'Confirm Demo Request'}
+                      </button>
+                    </div>
 
-                  {/* Honeypot field - visually hidden, traps spam bots */}
-                  <div className="hidden" aria-hidden="true" style={{ display: 'none' }}>
-                    <label htmlFor="hp_field">Do not fill this</label>
-                    <input
-                      id="hp_field"
-                      name="hp_field"
-                      type="text"
-                      tabIndex={-1}
-                      autoComplete="off"
-                      value={hpField}
-                      onChange={(e) => setHpField(e.target.value)}
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block font-medium text-ink mb-1">
-                      Notes or Current Inbound Challenges (Optional)
-                    </label>
-                    <textarea
-                      rows={2}
-                      value={notes}
-                      onChange={(e) => setNotes(e.target.value)}
-                      placeholder="e.g. Currently missing calls after 5 PM and need better qualification before dispatching."
-                      className="w-full rounded-xl border border-line bg-paper px-3 py-2 text-xs text-ink outline-none focus:border-accent resize-none"
-                    />
-                  </div>
-
-                  <div className="pt-2">
-                    <button
-                      type="submit"
-                      disabled={isPending}
-                      className={buttonClass('primary', 'md', 'w-full')}
-                    >
-                      {isPending ? 'Submitting Request...' : 'Confirm Demo Request'}
-                    </button>
-                  </div>
-
-                  <div className="flex items-center justify-between text-[11px] text-muted pt-1 border-t border-line/60">
-                    <a
-                      href="https://demo.us.purpleoryn.com/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="font-medium text-muted hover:text-ink flex items-center gap-1"
-                    >
-                      <span>See the Live Demonstration</span>
-                      <ArrowSquareOut size={12} />
-                    </a>
-                    <a
-                      href={CAL_URL}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="font-semibold text-accent hover:underline flex items-center gap-1"
-                    >
-                      <span>Direct Cal.com Link</span>
-                      <ArrowSquareOut size={12} />
-                    </a>
-                  </div>
-                </form>
-              </div>
-            )}
+                    <div className="flex items-center justify-between text-[11px] text-muted pt-2 border-t border-line/60">
+                      <a
+                        href="https://demo.us.purpleoryn.com/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-medium text-muted hover:text-ink flex items-center gap-1 transition-colors"
+                      >
+                        <span>See the Live Demonstration</span>
+                        <ArrowSquareOut size={12} />
+                      </a>
+                      <a
+                        href={CAL_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-semibold text-accent hover:underline flex items-center gap-1 transition-colors"
+                      >
+                        <span>Direct Cal.com Link</span>
+                        <ArrowSquareOut size={12} />
+                      </a>
+                    </div>
+                  </form>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}

@@ -18,7 +18,7 @@ export default async function MarketPricingPage() {
     <div>
       <h1 className="text-3xl font-semibold">Market pricing</h1>
       <p className="mt-2 max-w-[60ch] text-muted">
-        Pricing per market. Feeds each domain&apos;s homepage. Leave a price blank until the real cost is confirmed — blank prices don&apos;t
+        Pricing per market. Feeds each domain&apos;s homepage. Leave a price blank until the real cost is confirmed; blank prices don&apos;t
         render on the public site.
       </p>
 

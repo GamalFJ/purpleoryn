@@ -186,31 +186,7 @@ export async function POST(req: NextRequest) {
         }
       }
 
-      // Insert new booking record
-      const { error: insertBookingErr } = await supabase.from("market_bookings").insert({
-        external_booking_id: externalBookingId,
-        lead_id: leadId,
-        market_id: "us",
-        event_title: eventTitle,
-        event_type: eventType,
-        attendee_name: attendeeName,
-        attendee_email: attendeeEmail,
-        attendee_phone: attendeePhone,
-        attendee_time_zone: attendeeTimeZone,
-        booking_start: new Date(startTime).toISOString(),
-        booking_end: new Date(endTime).toISOString(),
-        booking_status: "created",
-        booking_source: bookingSource,
-        notes: notes || null,
-        raw_payload: payload,
-      });
-
-      if (insertBookingErr) {
-        console.error("[calcom-webhook] Failed to insert booking:", insertBookingErr.message);
-        throw new Error(`Failed to persist booking: ${insertBookingErr.message}`);
-      }
-
-      // Send Telegram notification (failure will NOT rollback database record)
+      // 1. Send Telegram notification immediately so the alert is NEVER blocked by DB delays
       const tgResult = await notifyBookingCreated({
         bookingId: externalBookingId,
         attendeeName,
@@ -226,14 +202,34 @@ export async function POST(req: NextRequest) {
         notes,
       });
 
-      // Update notification status on booking record
-      await supabase
-        .from("market_bookings")
-        .update({
+      // 2. Insert new booking record (resilient against database migration timing)
+      try {
+        const { error: insertBookingErr } = await supabase.from("market_bookings").insert({
+          external_booking_id: externalBookingId,
+          lead_id: leadId,
+          market_id: "us",
+          event_title: eventTitle,
+          event_type: eventType,
+          attendee_name: attendeeName,
+          attendee_email: attendeeEmail,
+          attendee_phone: attendeePhone,
+          attendee_time_zone: attendeeTimeZone,
+          booking_start: new Date(startTime).toISOString(),
+          booking_end: new Date(endTime).toISOString(),
+          booking_status: "created",
+          booking_source: bookingSource,
+          notes: notes || null,
           telegram_notified: tgResult.success,
           telegram_error: tgResult.error || null,
-        })
-        .eq("external_booking_id", externalBookingId);
+          raw_payload: payload,
+        });
+
+        if (insertBookingErr) {
+          console.error("[calcom-webhook] Failed to insert booking in database:", insertBookingErr.message);
+        }
+      } catch (dbErr) {
+        console.error("[calcom-webhook] DB exception during booking insert:", dbErr);
+      }
 
       return NextResponse.json({
         received: true,

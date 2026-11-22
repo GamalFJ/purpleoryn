@@ -16,7 +16,7 @@ export default async function MarketContentPage() {
     <div>
       <h1 className="text-3xl font-semibold">Market content</h1>
       <p className="mt-2 max-w-[60ch] text-muted">
-        Copy per market. US/CA/HT have no rows yet — saving here creates them (upsert), nothing to set up first. Add a new field by extending{" "}
+        Copy per market. US/CA/HT have no rows yet - saving here creates them (upsert), nothing to set up first. Add a new field by extending{" "}
         <code className="rounded bg-line px-1.5 py-0.5 text-sm">MARKET_CONTENT_SECTIONS</code> in <code className="rounded bg-line px-1.5 py-0.5 text-sm">lib/marketContent.ts</code>.
       </p>
       <div className="mt-10 space-y-10">

@@ -75,7 +75,7 @@ export const config: MarketConfig = {
         badge: 'Purple Oryn Lead Response System',
         title: "Your Next Customer Shouldn't Have to Wait.",
         subtitle:
-          'Capture, qualify, and follow up with potential customers automatically—so your team can focus on delivering great service.',
+          'Capture, qualify, and follow up with potential customers automatically, so your team can focus on delivering great service.',
         ctaText: 'Book a Free 15-Minute Demo',
       },
       problemInsight: {

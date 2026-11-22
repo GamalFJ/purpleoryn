@@ -26,8 +26,8 @@ export interface LeadAlert {
 // Oryn chat alert: a visitor was sent to WhatsApp or shown the call button. Same channel and
 // env vars, same rule: off when unset, never throws. The caller sends each kind once per chat.
 export async function notifyChatEvent(text: string): Promise<void> {
-  const token = process.env.TELEGRAM_BOT_TOKEN;
-  const chatId = process.env.TELEGRAM_CHAT_ID;
+  const token = process.env.TELEGRAM_BOT_TOKEN_US || process.env.TELEGRAM_BOT_TOKEN;
+  const chatId = process.env.TELEGRAM_CHAT_ID_US || process.env.TELEGRAM_CHAT_ID;
   if (!token || !chatId) return;
   try {
     const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
@@ -43,8 +43,8 @@ export async function notifyChatEvent(text: string): Promise<void> {
 }
 
 export async function notifyNewLead(lead: LeadAlert): Promise<void> {
-  const token = process.env.TELEGRAM_BOT_TOKEN;
-  const chatId = process.env.TELEGRAM_CHAT_ID;
+  const token = process.env.TELEGRAM_BOT_TOKEN_US || process.env.TELEGRAM_BOT_TOKEN;
+  const chatId = process.env.TELEGRAM_CHAT_ID_US || process.env.TELEGRAM_CHAT_ID;
   if (!token || !chatId) return;
 
   const lines = [
@@ -103,8 +103,8 @@ export interface MarketOrderAlert {
 }
 
 export async function notifyMarketOrder(alert: MarketOrderAlert): Promise<void> {
-  const token = process.env.TELEGRAM_BOT_TOKEN;
-  const chatId = process.env.TELEGRAM_CHAT_ID;
+  const token = process.env.TELEGRAM_BOT_TOKEN_US || process.env.TELEGRAM_BOT_TOKEN;
+  const chatId = process.env.TELEGRAM_CHAT_ID_US || process.env.TELEGRAM_CHAT_ID;
   if (!token || !chatId) return;
 
   const lines = [
@@ -171,9 +171,10 @@ export interface BookingAlert {
 }
 
 export async function sendTelegramMessage(text: string): Promise<{ success: boolean; error?: string }> {
-  const token = process.env.TELEGRAM_BOT_TOKEN;
-  const chatId = process.env.TELEGRAM_CHAT_ID;
+  const token = process.env.TELEGRAM_BOT_TOKEN_US || process.env.TELEGRAM_BOT_TOKEN;
+  const chatId = process.env.TELEGRAM_CHAT_ID_US || process.env.TELEGRAM_CHAT_ID;
   if (!token || !chatId) {
+    console.warn("[telegram] skipped alert: neither TELEGRAM_BOT_TOKEN_US nor TELEGRAM_BOT_TOKEN is set");
     return { success: false, error: "Telegram credentials not configured" };
   }
 
@@ -186,7 +187,7 @@ export async function sendTelegramMessage(text: string): Promise<{ success: bool
         text: text.slice(0, 4000),
         disable_web_page_preview: true,
       }),
-      signal: AbortSignal.timeout(5000),
+      signal: AbortSignal.timeout(8000),
     });
 
     if (!res.ok) {
@@ -238,7 +239,7 @@ export async function notifyBookingCreated(alert: BookingAlert): Promise<{ succe
   }
 
   const lines = [
-    "🟣 PURPLE ORYN — NEW DEMO BOOKING",
+    "🟣 PURPLE ORYN - NEW DEMO BOOKING",
     "",
     `Name: ${alert.attendeeName}`,
     `Business: ${alert.businessName || "Not specified"}`,
@@ -281,7 +282,7 @@ export async function notifyBookingRescheduled(alert: BookingAlert): Promise<{ s
   }
 
   const lines = [
-    "🔄 PURPLE ORYN — BOOKING RESCHEDULED",
+    "🔄 PURPLE ORYN - BOOKING RESCHEDULED",
     "",
     `Name: ${alert.attendeeName}`,
     `Business: ${alert.businessName || "Not specified"}`,
@@ -318,7 +319,7 @@ export async function notifyBookingCancelled(alert: BookingAlert): Promise<{ suc
   }
 
   const lines = [
-    "❌ PURPLE ORYN — BOOKING CANCELLED",
+    "❌ PURPLE ORYN - BOOKING CANCELLED",
     "",
     `Name: ${alert.attendeeName}`,
     `Business: ${alert.businessName || "Not specified"}`,

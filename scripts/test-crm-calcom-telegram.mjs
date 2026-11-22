@@ -11,7 +11,7 @@ import assert from "node:assert/strict";
 import crypto from "node:crypto";
 
 console.log("================================================================================");
-console.log("PURPLE ORYN — INTEGRATION TEST SUITE: CRM, CAL.COM & TELEGRAM");
+console.log("PURPLE ORYN - INTEGRATION TEST SUITE: CRM, CAL.COM & TELEGRAM");
 console.log("================================================================================\n");
 
 let passedTests = 0;
@@ -379,7 +379,7 @@ runTest("7. Telegram notification payload formatting (accurate business details 
 
   // B. Cal.com booking notification format
   const bookingAlertLines = [
-    "🟣 PURPLE ORYN — NEW DEMO BOOKING",
+    "🟣 PURPLE ORYN - NEW DEMO BOOKING",
     "",
     "Name: John Smith",
     "Business: Northstar Heating & Air",
@@ -391,7 +391,7 @@ runTest("7. Telegram notification payload formatting (accurate business details 
     "Admin: https://purpleoryn.com/admin/market-leads?tab=bookings",
   ];
   const bookingText = bookingAlertLines.join("\n");
-  assert.ok(bookingText.includes("🟣 PURPLE ORYN — NEW DEMO BOOKING"));
+  assert.ok(bookingText.includes("🟣 PURPLE ORYN - NEW DEMO BOOKING"));
   assert.ok(bookingText.includes("Northstar Heating & Air"));
   assert.ok(bookingText.includes("northstar-example.com"));
   assert.ok(bookingText.includes("Free 15-Minute Demo"));

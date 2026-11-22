@@ -11,7 +11,7 @@ export function formatRD(amount: number): string {
 // Market pricing spans currencies (DOP, USD, CAD); unlike formatRD, the
 // symbol/placement follows the market's own currency, not a fixed RD$ prefix.
 export function formatMarketPrice(amount: number | null, currency: string): string {
-  if (amount === null) return "—";
+  if (amount === null) return "-";
   return new Intl.NumberFormat("en-US", { style: "currency", currency }).format(amount);
 }
 

@@ -1,6 +1,5 @@
 'use server';
 
-import { after } from 'next/server';
 import { headers } from 'next/headers';
 import { z } from 'zod';
 import { getMarketConfig } from '@/markets';
@@ -127,7 +126,7 @@ export async function submitMarketOrder(data: MarketOrderInput): Promise<MarketO
     try {
       const supabase = serviceClient();
 
-      const { data: leadRow, error: leadError } = await supabase
+      let { data: leadRow, error: leadError } = await supabase
         .from('market_leads')
         .insert({
           market_id: input.marketId,
@@ -147,6 +146,29 @@ export async function submitMarketOrder(data: MarketOrderInput): Promise<MarketO
         })
         .select('id')
         .single();
+
+      // Graceful fallback if new schema columns are still pending in Supabase
+      if (leadError && (leadError.message.includes('column') || leadError.code === '42703')) {
+        console.warn('[market-order] Retrying lead insert with core columns:', leadError.message);
+        const retryResult = await supabase
+          .from('market_leads')
+          .insert({
+            market_id: input.marketId,
+            name: input.contactName,
+            business_name: input.businessName,
+            email: normalizedEmail,
+            phone: normalizedPhone,
+            channel: 'form',
+            tier_interest: `${input.plan}${input.withVoiceAddon ? ' + voice' : ''}`,
+            message: `${input.trade ? `[Trade: ${input.trade}] ` : ''}${input.website ? `[Website: ${input.website}] ` : ''}Preferred: ${input.preferredContact}. Notes: ${input.notes || 'None'}`,
+            source: leadSource,
+            status: 'new',
+          })
+          .select('id')
+          .single();
+        leadRow = retryResult.data;
+        leadError = retryResult.error;
+      }
 
       if (leadError) {
         console.error('[market-order] lead insert failed:', leadError.message);
@@ -171,8 +193,8 @@ export async function submitMarketOrder(data: MarketOrderInput): Promise<MarketO
     }
   }
 
-  // 5. Telegram alerts sent asynchronously
-  after(async () => {
+  // 5. Telegram alerts (sent directly before returning, guaranteed execution in serverless)
+  try {
     const planDisplayNames: Record<string, string> = {
       starter: 'Starter Sprint ($1,250)',
       premium: 'Premium System ($2,500)',
@@ -181,40 +203,50 @@ export async function submitMarketOrder(data: MarketOrderInput): Promise<MarketO
       authority: 'Authority',
     };
 
+    const alertPromises: Promise<unknown>[] = [];
+
     // Specific alert for US website leads
     if (input.marketId === 'us') {
-      await notifyUsWebsiteLead({
-        contactName: input.contactName,
-        businessName: input.businessName,
-        phone: normalizedPhone,
-        email: normalizedEmail,
-        trade: input.trade,
-        plan: planDisplayNames[input.plan] || input.plan,
-        withVoiceAddon: input.withVoiceAddon,
-        notes: input.notes,
-        source: leadSource,
-      });
+      alertPromises.push(
+        notifyUsWebsiteLead({
+          contactName: input.contactName,
+          businessName: input.businessName,
+          phone: normalizedPhone,
+          email: normalizedEmail,
+          trade: input.trade,
+          plan: planDisplayNames[input.plan] || input.plan,
+          withVoiceAddon: input.withVoiceAddon,
+          notes: input.notes,
+          source: leadSource,
+        })
+      );
     }
 
     // Retain existing multi-market order alert
-    await notifyMarketOrder({
-      marketId: input.marketId,
-      host: config.host,
-      planName: planDisplayNames[input.plan] || input.plan,
-      withVoiceAddon: input.withVoiceAddon,
-      currency: config.prices.currencySymbol,
-      oneTimeTotal,
-      monthlyTotal,
-      businessName: input.businessName,
-      contactName: input.contactName,
-      email: normalizedEmail,
-      phone: normalizedPhone,
-      preferredContact: input.preferredContact,
-      notes: input.notes,
-      averageSaleValue: input.averageSaleValue,
-      utmSource: input.utmSource,
-    });
-  });
+    alertPromises.push(
+      notifyMarketOrder({
+        marketId: input.marketId,
+        host: config.host,
+        planName: planDisplayNames[input.plan] || input.plan,
+        withVoiceAddon: input.withVoiceAddon,
+        currency: config.prices.currencySymbol,
+        oneTimeTotal,
+        monthlyTotal,
+        businessName: input.businessName,
+        contactName: input.contactName,
+        email: normalizedEmail,
+        phone: normalizedPhone,
+        preferredContact: input.preferredContact,
+        notes: input.notes,
+        averageSaleValue: input.averageSaleValue,
+        utmSource: input.utmSource,
+      })
+    );
+
+    await Promise.allSettled(alertPromises);
+  } catch (tgErr) {
+    console.error('[market-order] Telegram alert dispatch error:', tgErr);
+  }
 
   return {
     success: true,
